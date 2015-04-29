@@ -8,5 +8,4 @@ public class Main {
 		XMLParser xmlp = new XMLParser("src/main/data/ExampleStatSensor.xml");
 		xmlp.parse();
 	}
-
 }

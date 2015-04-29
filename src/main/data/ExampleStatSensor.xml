@@ -1,17 +1,18 @@
 <?xml version="1.0"?>
 <document id="StatSensor">
-	<path> data/xxx.txt </path>
-	<start> 7 </start>
+	<path>data/xxx.txt</path>
+	<start>7</start>
+	<delimiter> </delimiter>
 	<column id="2">
-		<name> value </name>
-		<type> Integer </type>
+		<name>value</name>
+		<type>Integer</type>
 	</column>
 	<column id="5">
-		<name> date </name>
-		<type> String </type>
+		<name>date</name>
+		<type>String</type>
 	</column>
 	<column id="6">
-		<name> time </name>
-		<type> String </type>
+		<name>time</name>
+		<type>String</type>
 	</column>
 </document>
