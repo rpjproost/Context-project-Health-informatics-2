@@ -14,7 +14,7 @@ public class ParserTest {
 	@DataPoints
 	public static Parser[] parsers() {
 		XMLParser xmlp = new XMLParser("test");
-		TXTParser txtp = new TXTParser("test");
+		TXTParser txtp = new TXTParser("test", 0, null);
 		return new Parser[] { xmlp, txtp};
 	}
 	
