@@ -12,30 +12,35 @@ import java.sql.Statement;
  *
  */
 public class Db {
-	
+
 	private String db;
-	
+
 	/**
 	 * Sets up connection.
 	 * @throws SQLException 
 	 */
-	public void setupConn() throws SQLException {
-		//setDb("jdbc:derby:C:/db/analyze;create=true");
-		Connection conn = DriverManager.getConnection(db);
-		//Check connection
-		if (conn != null) {
-			System.out.println("Connected to database");
-		}
-		else {
-			System.out.println("Could not connect to database");
+	public void setupConn() {
+		db = ("jdbc:derby:C:/db/analyzea;create=true");
+		Connection conn;
+		try {
+			conn = DriverManager.getConnection(db);
+			//Check connection
+			if (conn != null) {
+				System.out.println("Connected to database");
+			}
+			else {
+				System.out.println("Could not connect to database");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 
 	/**
 	 * 
-	 * @return db string.
+	 * @return db path string.
 	 */
-	public String getDb() {
+	public String getDbPath() {
 		return db;
 	}
 
