@@ -34,7 +34,6 @@ public class TXTParser extends Parser {
 			this.file = openFile(fileName);
 			this.sc = new Scanner(file);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
