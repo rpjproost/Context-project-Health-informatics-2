@@ -2,20 +2,25 @@ package context.healthinformatics.Parser;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
+import org.xml.sax.SAXException;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
  * Reading XML files with specifications for other files that must be read.
  */
 public class XMLParser extends Parser {
-
+	
+	private Document doc;
 	private String docName;
 	private String delimiter;
 	private String path;
@@ -31,36 +36,33 @@ public class XMLParser extends Parser {
 	public XMLParser(String fileName) {
 		super(fileName);
 		columns = new ArrayList<Column>();
+		startLine = 1;
 	}
 
 	/**
 	 * Parse the XML file to objects.
 	 */
 	@Override
-	public void parse() {
+	public void parse() throws IOException {
 		try {
 
 			File xml = new File(getFileName());
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(xml);
+			doc = dBuilder.parse(xml);
 
-			// optional, but recommended
 			// read this -
 			// http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
 			doc.getDocumentElement().normalize();
 
 			setDocName(doc.getDocumentElement().getAttribute("id"));
-			setPath(doc.getElementsByTagName("path").item(0).getTextContent());
-			setStartLine(Integer.parseInt(doc.getElementsByTagName("start")
-					.item(0).getTextContent()));
-			setDelimiter(doc.getElementsByTagName("delimiter").item(0)
-					.getTextContent());
+			setPath(getString(null, "path"));
+			setStartLine(getInt("start"));
+			setDelimiter(getString(null, "delimiter"));
 			NodeList columnList = doc.getElementsByTagName("column");
 			parseColumns(columnList);
-
-		} catch (Exception e) {
-			System.out.println(e.toString());
+		} catch (ParserConfigurationException | SAXException e) {
+			throw new FileNotFoundException();
 		}
 	}
 
@@ -76,12 +78,46 @@ public class XMLParser extends Parser {
 			if (nColumn.getNodeType() == Node.ELEMENT_NODE) {
 				Element e = (Element) nColumn;
 				int id = Integer.parseInt(e.getAttribute("id"));
-				String cName = e.getElementsByTagName("name").item(0).getTextContent();
-				String cType = e.getElementsByTagName("type").item(0).getTextContent();
+				String cName = getString(e, "name");
+				String cType = getString(e, "type");
 				Column c = new Column(id, cName, cType);
 				columns.add(c);
 			}
 		}
+	}
+
+	/**
+	 * Get a Integer at the place of the tag in the xml.
+	 * When there isn't a Integer, it will be set on a default 1.
+	 * @param s the tag in the xml
+	 * @return int or default 1
+	 */
+	private int getInt(String s) {
+		try {
+			return Integer.parseInt(getString(null, s));
+		} catch (NumberFormatException e) {
+			return 1;
+		}
+	}
+
+	/**
+	 * Get a String at the place of the tag in the xml.
+	 * @param e a specific element in the xml, 
+	 * 		when you want to search the whole document fill in null.
+	 * @param s the tag you are looking for.
+	 * @return the String in the tag.
+	 */
+	private String getString(Element e, String s) {
+		String res = "";
+		if(e != null) {
+			res = e.getElementsByTagName(s).item(0).getTextContent();
+		} else {
+			res = doc.getElementsByTagName(s).item(0).getTextContent();
+		}
+		if(res.isEmpty()) {
+			throw new NullPointerException();
+		}
+		return res;
 	}
 
 	/**
