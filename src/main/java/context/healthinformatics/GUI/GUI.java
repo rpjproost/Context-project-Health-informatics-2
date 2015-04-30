@@ -7,12 +7,16 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import context.healthinformatics.Parser.TXTParser;
+import context.healthinformatics.Parser.XMLParser;
 
 public class GUI {
 	
@@ -120,7 +124,15 @@ public class GUI {
 		 */
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == button) {
-				input = txt.getText(); 
+				input = txt.getText();
+				XMLParser xmlp = new XMLParser(input);
+				try {
+					xmlp.parse();
+					TXTParser txtp = new TXTParser(xmlp.getPath(),xmlp.getStartLine(),xmlp.getDelimiter(), xmlp.getColumns());
+					txtp.parse();
+				} catch (IOException e1) {
+					System.out.println("No such file... Try again!");;
+				}
 			}
 		}
 	}
