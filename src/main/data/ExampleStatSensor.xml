@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <document id="StatSensor">
-	<path>data/xxx.txt</path>
-	<start>7</start>
-	<delimiter> </delimiter>
+	<path>src/main/data/ExampleTXT.txt</path>
+	<start>6</start>
+	<delimiter>,</delimiter>
 	<column id="2">
 		<name>value</name>
 		<type>Integer</type>

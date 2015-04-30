@@ -2,6 +2,7 @@ package context.healthinformatics.Parser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -15,6 +16,7 @@ public class TXTParser extends Parser {
 	private int startLine;
 	private File file;
 	private Scanner sc;
+	private ArrayList<Column> columns;
 
 	/**
 	 * Constructor of the TXTParser.
@@ -26,10 +28,12 @@ public class TXTParser extends Parser {
 	 * @param delimiter
 	 *            the delimiter of the data
 	 */
-	public TXTParser(String fileName, int startLine, String delimiter) {
+	public TXTParser(String fileName, int startLine, String delimiter,
+			ArrayList<Column> columns) {
 		super(fileName);
 		this.startLine = startLine;
 		this.delimiter = delimiter;
+		this.columns = columns;
 		try {
 			this.file = openFile(fileName);
 			this.sc = new Scanner(file);
@@ -66,7 +70,7 @@ public class TXTParser extends Parser {
 	 * Skip the first lines till the relevant data.
 	 */
 	public void skipFirxtXLines() {
-		for (int i = 0; i < startLine; i++) {
+		for (int i = 1; i < startLine; i++) {
 			if (sc.hasNextLine()) {
 				sc.nextLine();
 			}
@@ -82,19 +86,32 @@ public class TXTParser extends Parser {
 		while (sc.hasNextLine()) {
 			String line = sc.nextLine();
 			// TODO insert splitted string into db.
-			// String[] splittedLine = splitLine(line);
-			System.out.println(line);
+			String[] splittedLine = splitLine(line);
+			System.out.println(splittedLine[0] + " " + splittedLine[1] + " "
+					+ splittedLine[2]);
 		}
 		sc.close();
 	}
 
 	/**
 	 * Split a line into a String array on the delimiter.
-	 * @param line the line to split
+	 * 
+	 * @param line
+	 *            the line to split
 	 * @return the split line.
 	 */
 	public String[] splitLine(String line) {
-		return line.split(delimiter);
+		String[] res = new String[columns.size()];
+		String[] strings = line.split(delimiter);
+		try{
+			for (int i = 0; i < columns.size(); i++) {
+				res[i] = strings[columns.get(i).getColumnNumber() - 1];
+			}
+			return res;
+		}catch(ArrayIndexOutOfBoundsException e){
+			System.out.println(e.toString());
+			return res;
+		}
 	}
 
 }
