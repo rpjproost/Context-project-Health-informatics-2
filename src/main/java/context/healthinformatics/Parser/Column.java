@@ -50,4 +50,8 @@ public class Column {
 		}
 		return false;
 	}
+	
+	public String toString() {
+		return "<" + columnNumber + " " + columnName + " " + columnType + ">";
+	}
 }

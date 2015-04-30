@@ -3,10 +3,14 @@ package context.healthinformatics.Parser;
 import static org.junit.Assert.*;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.xml.sax.SAXException;
 
 public class XMLParserTest {
 	XMLParser xmlp;
@@ -17,7 +21,7 @@ public class XMLParserTest {
 	}
 	
 	@Test
-	public void correctTest() {
+	public void correctTest() throws IOException {
 		xmlp.setFileName("src/test/data/goodXML.xml");
 		xmlp.parse();
 		assertEquals(xmlp.getDelimiter(), ",");
@@ -33,39 +37,38 @@ public class XMLParserTest {
 	}
 		
 	@Test(expected=NullPointerException.class)
-	public void emptyFieldTest() {
+	public void emptyFieldTest() throws IOException {
 		xmlp.setFileName("src/test/data/emptyField.xml");
 		xmlp.parse();
 	}
 
 	@Test(expected=NullPointerException.class)
-	public void noDelimiterTest() {
+	public void noDelimiterTest() throws IOException {
 		xmlp.setFileName("src/test/data/noDelimiter.xml");
 		xmlp.parse();
 	}
 	
 	@Test(expected=NumberFormatException.class)
-	public void noIDsTest() {
+	public void noIDsTest() throws IOException {
 		xmlp.setFileName("src/test/data/noIDs.xml");
 		xmlp.parse();
 	}
 	
 	@Test(expected=NullPointerException.class)
-	public void noPathTest() {
+	public void noPathTest() throws IOException {
 		xmlp.setFileName("src/test/data/noPath.xml");
 		xmlp.parse();
 	}
 	
 	@Test
-	public void noStartTest() {
-		xmlp.setFileName("src/test/data/noStart.xml");
+	public void noStartTest() throws IOException {
+		xmlp.setFileName("src/test/data/wrongStart.xml");
 		xmlp.parse();
 		assertTrue((xmlp.getStartLine() == 1));
-		
 	}
 	
 	@Test(expected=FileNotFoundException.class)
-	public void fileNotFoundTest() {
+	public void fileNotFoundTest() throws IOException {
 		xmlp.setFileName("yolo.xml");
 		xmlp.parse();
 	}
