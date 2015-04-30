@@ -22,5 +22,7 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="C:/Program Files/Java/jdk1.8.0_40/db/lib/derby.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Program Files/Java/jdk1.8.0_40/db/lib/derbyclient.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
