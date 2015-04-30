@@ -1,5 +1,7 @@
 package context.healthinformatics.Parser;
 
+import java.io.IOException;
+
 /**
  * Abstract class to specify what other Parsers must override.
  * And every Parser needs a file name to read from.
@@ -32,7 +34,8 @@ public abstract class Parser {
 	}
 	
 	/**
-	 * Abstract method which children must override.
+	 * Abstract method which children must override. 
+	 * @throws IOException throws when the file doesn't exists.
 	 */
-	public abstract void parse();
+	public abstract void parse() throws IOException;
 }

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<document>
+	<path>data/xxx.txt</path>
+	<start>7</start>
+	<delimiter>,</delimiter>
+	<column>
+		<name>value</name>
+		<type>Integer</type>
+	</column>
+	<column>
+		<name>date</name>
+		<type>String</type>
+	</column>
+	<column>
+		<name>time</name>
+		<type>String</type>
+	</column>
+</document>

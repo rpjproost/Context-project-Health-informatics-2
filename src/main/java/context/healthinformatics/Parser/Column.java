@@ -1,77 +1,57 @@
 package context.healthinformatics.Parser;
 
-/**
- * Column Object keeps track of the specifics of a column.
- * @author Wim Spaargaren, April 2014
- *
- */
 public class Column {
-
-	/**
-	 * The column attributes.
-	 */
-	private int id;
-	private String cName;
-	private String cTYpe;
 	
-	/**
-	 * Constructor.
-	 * @param id the column id
-	 * @param cName the column name
-	 * @param cType the column type
-	 */
+	private int columnNumber;
+	private String columnName;
+	private String columnType;
+	
 	public Column(int id, String cName, String cType) {
-		this.id = id;
-		this.cName = cName;
-		this.cTYpe = cType;
+		setColumnNumber(id);
+		setColumnName(cName);
+		setColumnType(cType);
 	}
 
-	/**\
-	 * Get the id.
-	 * @return the column id
-	 */
-	public int getId() {
-		return id;
+	public int getColumnNumber() {
+		return columnNumber;
 	}
 
-	/**
-	 * Set the id.
-	 * @param id the column id
-	 */
-	public void setId(int id) {
-		this.id = id;
+	public void setColumnNumber(int columnNumber) {
+		this.columnNumber = columnNumber;
 	}
 
-	/**
-	 * Get the column name.
-	 * @return the column name
-	 */
-	public String getcName() {
-		return cName;
+	public String getColumnName() {
+		return columnName;
 	}
 
-	/**
-	 * Set the column name.
-	 * @param cName the column name
-	 */
-	public void setcName(String cName) {
-		this.cName = cName;
+	public void setColumnName(String columnName) {
+		this.columnName = columnName;
 	}
 
-	/**
-	 * Get the column type.
-	 * @return the column type
-	 */
-	public String getcTYpe() {
-		return cTYpe;
+	public String getColumnType() {
+		return columnType;
 	}
 
-	/**
-	 * Set the column type.
-	 * @param cTYpe the column type
-	 */
-	public void setcTYpe(String cTYpe) {
-		this.cTYpe = cTYpe;
+	public void setColumnType(String columnType) {
+		this.columnType = columnType;
 	}
-
+	
+	@Override
+	public boolean equals(Object o){
+		if(o == null)
+			return false;
+		if(o instanceof Column){
+			Column c = (Column) o;
+			if(getColumnName().equals(c.getColumnName()) &&
+					getColumnNumber() == c.getColumnNumber() &&
+					getColumnType().equals(c.getColumnType())){
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public String toString() {
+		return "<" + columnNumber + " " + columnName + " " + columnType + ">";
+	}
 }
