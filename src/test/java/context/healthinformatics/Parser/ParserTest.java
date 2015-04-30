@@ -2,6 +2,8 @@ package context.healthinformatics.Parser;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
+
 import org.junit.experimental.theories.DataPoints;
 import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
@@ -14,7 +16,7 @@ public class ParserTest {
 	@DataPoints
 	public static Parser[] parsers() {
 		XMLParser xmlp = new XMLParser("test");
-		TXTParser txtp = new TXTParser("test", 0, null);
+		TXTParser txtp = new TXTParser("test", 0, null, new ArrayList<Column>());
 		return new Parser[] { xmlp, txtp};
 	}
 	

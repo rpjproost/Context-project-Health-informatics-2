@@ -7,9 +7,6 @@ import java.util.Scanner;
 
 /**
  * Class TxtParser.
- * 
- * @author Wim Spaargaren, April 2014
- *
  */
 public class TXTParser extends Parser {
 	private String delimiter;
@@ -34,13 +31,6 @@ public class TXTParser extends Parser {
 		this.startLine = startLine;
 		this.delimiter = delimiter;
 		this.columns = columns;
-		try {
-			this.file = openFile(fileName);
-			this.sc = new Scanner(file);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -82,6 +72,12 @@ public class TXTParser extends Parser {
 	 */
 	@Override
 	public void parse() {
+		try {
+			this.file = openFile(this.getFileName());
+			this.sc = new Scanner(file);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 		skipFirxtXLines();
 		while (sc.hasNextLine()) {
 			String line = sc.nextLine();
@@ -103,12 +99,12 @@ public class TXTParser extends Parser {
 	public String[] splitLine(String line) {
 		String[] res = new String[columns.size()];
 		String[] strings = line.split(delimiter);
-		try{
+		try {
 			for (int i = 0; i < columns.size(); i++) {
 				res[i] = strings[columns.get(i).getColumnNumber() - 1];
 			}
 			return res;
-		}catch(ArrayIndexOutOfBoundsException e){
+		} catch (ArrayIndexOutOfBoundsException e) {
 			System.out.println(e.toString());
 			return res;
 		}
