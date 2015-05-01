@@ -1,6 +1,6 @@
 package context.healthinformatics.Parser;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 
@@ -9,10 +9,16 @@ import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
 
+/**
+ * General test for parsers.
+ */
 @RunWith(Theories.class)
 public class ParserTest {
-	Parser p;
 	
+	/**
+	 * method that creates each parser to be tested.
+	 * @return an array of the parsers to test.
+	 */
 	@DataPoints
 	public static Parser[] parsers() {
 		XMLParser xmlp = new XMLParser("test");
