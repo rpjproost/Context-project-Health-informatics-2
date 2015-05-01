@@ -24,6 +24,8 @@ public class TXTParser extends Parser {
 	 *            line where relevant data starts
 	 * @param delimiter
 	 *            the delimiter of the data
+	 * @param columns
+	 *            the arraylist with columns
 	 */
 	public TXTParser(String fileName, int startLine, String delimiter,
 			ArrayList<Column> columns) {
@@ -41,6 +43,53 @@ public class TXTParser extends Parser {
 	 */
 	public void setDelimiter(String delimiter) {
 		this.delimiter = delimiter;
+	}
+
+	/**
+	 * Getter for delimiter.
+	 * 
+	 * @return the delimiter
+	 */
+	public String getDelimiter() {
+		return this.delimiter;
+	}
+
+	/**
+	 * Get the startline.
+	 * 
+	 * @return startline
+	 */
+	public int getStartLine() {
+		return startLine;
+	}
+
+	/**
+	 * Set the start line.
+	 * 
+	 * @param startLine
+	 *            the starting line
+	 */
+	public void setStartLine(int startLine) {
+		this.startLine = startLine;
+	}
+
+	/**
+	 * Get columns.
+	 * 
+	 * @return the columns
+	 */
+	public ArrayList<Column> getColumns() {
+		return columns;
+	}
+
+	/**
+	 * Set the columns arraylist.
+	 * 
+	 * @param columns
+	 *            the columns arraylist
+	 */
+	public void setColumns(ArrayList<Column> columns) {
+		this.columns = columns;
 	}
 
 	/**
