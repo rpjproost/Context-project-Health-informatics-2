@@ -19,7 +19,7 @@ public class XMLParserTest {
 	/**
 	 * variable used to save the newly created parser.
 	 */
-	XMLParser xmlp;
+	private XMLParser xmlp;
 	
 	/**
 	 * this method is called before each test and
@@ -44,9 +44,9 @@ public class XMLParserTest {
 		assertEquals(xmlp.getStartLine(), 7);
 		
 		ArrayList<Column> cols = new ArrayList<Column>();
-		cols.add(new Column(2,"value","Integer"));
-		cols.add(new Column(5,"date","String"));
-		cols.add(new Column(6,"time","String"));
+		cols.add(new Column(2, "value", "Integer"));
+		cols.add(new Column(5, "date", "String"));
+		cols.add(new Column(6, "time", "String"));
 		assertTrue(compare(xmlp.getColumns(), cols));
 		}
 		catch (Exception e) {
