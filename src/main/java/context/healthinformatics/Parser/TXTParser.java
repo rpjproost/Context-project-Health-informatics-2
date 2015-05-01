@@ -30,6 +30,7 @@ public class TXTParser extends Parser {
 	public TXTParser(String fileName, int startLine, String delimiter,
 			ArrayList<Column> columns) {
 		super(fileName);
+		assert (startLine >= 0);
 		this.startLine = startLine;
 		this.delimiter = delimiter;
 		this.columns = columns;
@@ -70,6 +71,7 @@ public class TXTParser extends Parser {
 	 *            the starting line
 	 */
 	public void setStartLine(int startLine) {
+		assert (startLine >= 0);
 		this.startLine = startLine;
 	}
 
@@ -101,7 +103,7 @@ public class TXTParser extends Parser {
 	 * @throws FileNotFoundException
 	 *             if file not found throw exception
 	 */
-	public File openFile(String filename) throws FileNotFoundException {
+	public File openFile(String filename) {
 		return new File(filename);
 	}
 
@@ -118,14 +120,17 @@ public class TXTParser extends Parser {
 
 	/**
 	 * Parse the relevant lines to the database.
+	 * 
+	 * @throws FileNotFoundException
+	 *             if the file is not found throw FileNotFoundException
 	 */
 	@Override
-	public void parse() {
+	public void parse() throws FileNotFoundException {
 		try {
 			this.file = openFile(this.getFileName());
 			this.sc = new Scanner(file);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			throw new FileNotFoundException();
 		}
 		skipFirxtXLines();
 		while (sc.hasNextLine()) {
@@ -154,8 +159,7 @@ public class TXTParser extends Parser {
 			}
 			return res;
 		} catch (ArrayIndexOutOfBoundsException e) {
-			System.out.println(e.toString());
-			return res;
+			throw new ArrayIndexOutOfBoundsException();
 		}
 	}
 
