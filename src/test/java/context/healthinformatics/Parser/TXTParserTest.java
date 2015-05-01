@@ -54,7 +54,7 @@ public class TXTParserTest {
 	public void testStartLine() {
 		assertEquals(txtp.getStartLine(), FIVE);
 		txtp.setStartLine(0);
-		assertEquals(txtp.getStartLine(), 0);
+		assertEquals(txtp.getStartLine(), 1);
 		txtp.setStartLine(FIVE);
 		assertEquals(txtp.getStartLine(), FIVE);
 	}
@@ -62,10 +62,11 @@ public class TXTParserTest {
 	/**
 	 * Make sure a negative startline cannot be set.
 	 */
-	@Test(expected = AssertionError.class)
+	@Test
 	public void testNegativeStartLine() {
 		txtp.setStartLine(NEGATIVEINT);
-		assertEquals(txtp.getStartLine(), FIVE);
+		System.out.println(txtp.getStartLine());
+		assertEquals(txtp.getStartLine(), 1);
 	}
 
 	/**

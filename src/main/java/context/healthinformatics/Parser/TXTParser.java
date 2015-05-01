@@ -30,8 +30,7 @@ public class TXTParser extends Parser {
 	public TXTParser(String fileName, int startLine, String delimiter,
 			ArrayList<Column> columns) {
 		super(fileName);
-		assert (startLine >= 0);
-		this.startLine = startLine;
+		setStartLine(startLine);
 		this.delimiter = delimiter;
 		this.columns = columns;
 	}
@@ -71,8 +70,11 @@ public class TXTParser extends Parser {
 	 *            the starting line
 	 */
 	public void setStartLine(int startLine) {
-		assert (startLine >= 0);
+		if(startLine > 0){
 		this.startLine = startLine;
+		}else{
+			this.startLine = 1;
+		}
 	}
 
 	/**
