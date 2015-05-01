@@ -6,11 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.junit.Before;
 import org.junit.Test;
-import org.xml.sax.SAXException;
 
 public class XMLParserTest {
 	XMLParser xmlp;
@@ -69,7 +66,7 @@ public class XMLParserTest {
 	
 	@Test(expected=FileNotFoundException.class)
 	public void fileNotFoundTest() throws IOException {
-		xmlp.setFileName("yolo.xml");
+		xmlp.setFileName("nonexistent.xml");
 		xmlp.parse();
 	}
 	
