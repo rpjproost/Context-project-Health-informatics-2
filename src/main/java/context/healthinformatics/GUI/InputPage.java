@@ -6,18 +6,16 @@ import javax.swing.JPanel;
 
 public class InputPage implements PanelState {
 	
-	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
+	//private Color color = Color.green;
+	MainFrame mf;
 	
 	public InputPage(MainFrame mainFrame) {
-		// TODO Auto-generated constructor stub
+		this.mf = mainFrame;
 	}
 
 	public JPanel loadPanel() {
-		JPanel panel = GUI.createPanel(Color.blue,100,200);
+		JPanel panel = MainFrame.createPanel(Color.gray, mf.getTabsX(), mf.getStatePanelSize());
 		return panel;
 	}
 	

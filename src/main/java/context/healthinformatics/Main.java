@@ -1,13 +1,11 @@
 package context.healthinformatics;
 
 import java.io.IOException;
-
-import context.healthinformatics.GUI.GUI;
-import context.healthinformatics.Parser.*;
+import context.healthinformatics.GUI.MainFrame;
 
 public class Main {
 
 	public static void main(String[] args) throws IOException {
-		GUI.main(args);
+		MainFrame mf = new MainFrame();
 	}
 }
