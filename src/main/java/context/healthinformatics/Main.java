@@ -7,8 +7,8 @@ import context.healthinformatics.Parser.*;
 
 public class Main {
 
-	public static void main(String[] args) throws IOException {
-		Db test = new Db("anal", null);
+	public static void main(String[] args) throws NullPointerException {
+		Db test = new Db("a", "");
 		String[] col = new String[2];
 		String[] t = new String[2];
 		col[0] = "testC1";
@@ -22,6 +22,6 @@ public class Main {
 		//test.insert("test", v);
 		//test.select("test", "testC2");
 		//test.dropTable("test");
-		test.dropDatabase("anal");
+		//test.dropDatabase("not important");
 	}
 }

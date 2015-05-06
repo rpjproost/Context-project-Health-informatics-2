@@ -1,5 +1,6 @@
 package context.healthinformatics.Database;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -23,12 +24,26 @@ public class Db {
 	 * 
 	 * @param databaseName name of database you connect to.
 	 * @param p directory for the database to be stored.
+	 * @throws NullPointerException when input is null.
 	 */
-	public Db(String databaseName, String p) {
-		dName = databaseName;
-		if (p != null) {
+	public Db(String databaseName, String p) throws NullPointerException {
+		if (p == null || databaseName == null) {
+			throw new NullPointerException();
+		}
+		boolean isWhitespace = databaseName.matches("^\\s*$");
+		boolean isWhitespace2 = p.matches("^\\s*$");
+
+		if (!isWhitespace) {
+			dName = databaseName;
+		}
+		else {
+			dName = "default";
+		}
+		if (!isWhitespace2) {
 			pad = p;
 		}
+		File delDb = new File(pad + dName);
+		removeDirectory(delDb);
 		setupConn();
 	}
 
@@ -59,17 +74,12 @@ public class Db {
 	 * @param types type specifications.
 	 */
 	public void createTable(String tableName, String[] columns, String[] types) {
-		if (conn != null) {
-			try {
-				stmt = conn.createStatement();
-				String sql = "CREATE TABLE " + tableName + createTableColumns(columns, types);
-				stmt.executeUpdate(sql);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		else {
-			System.out.println("Connection is not set.");
+		try {
+			stmt = conn.createStatement();
+			String sql = "CREATE TABLE " + tableName + createTableColumns(columns, types);
+			stmt.executeUpdate(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -100,25 +110,20 @@ public class Db {
 	 * @param values variables to insert.
 	 */
 	public void insert(String tableName, String[] values) {
-		if (conn != null) {
-			try {
-				stmt = conn.createStatement();
-				String sql = "INSERT INTO " + tableName + " VALUES (";
-				for (int i = 0; i < values.length; i++) {
-					if (i == values.length - 1) {
-						sql = sql + values[i] + ")";
-					}
-					else {
-						sql = sql + values[i] + ",";
-					}
+		try {
+			stmt = conn.createStatement();
+			String sql = "INSERT INTO " + tableName + " VALUES (";
+			for (int i = 0; i < values.length; i++) {
+				if (i == values.length - 1) {
+					sql = sql + values[i] + ")";
 				}
-				stmt.executeUpdate(sql);
-			} catch (SQLException e) {
-				e.printStackTrace();
+				else {
+					sql = sql + values[i] + ",";
+				}
 			}
-		}
-		else {
-			System.out.println("Connection is not set.");
+			stmt.executeUpdate(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -130,21 +135,18 @@ public class Db {
 	 */
 	public String select(String tableName, String variable) {
 		String res = "";
-		if (conn != null) {
-			try {
-				stmt = conn.createStatement();
-				String sql = "SELECT " + variable + " FROM " + tableName;
-				ResultSet rs = stmt.executeQuery(sql);
-				while (rs.next()) {
-					res = rs.getString(variable);
-					System.out.println(res);
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
+		try {
+			stmt = conn.createStatement();
+			String sql = "SELECT " + variable + " FROM " + tableName;
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				res = rs.getString(variable);
+				//hier moet nog iets beters gereturned worden.
+				System.out.println(res);
 			}
-		}
-		else {
-			System.out.println("Connection is not set.");
+		} catch (SQLException e) {
+			res = "Data not found";
+			e.printStackTrace();
 		}
 		return res;
 	}
@@ -154,39 +156,14 @@ public class Db {
 	 * @param tableName name of table to drop.
 	 */
 	public void dropTable(String tableName) {
-		if (conn != null) {
-			try {
-				stmt = conn.createStatement();
-				String sql = "DROP TABLE " + tableName;
-				stmt.executeUpdate(sql);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		else {
-			System.out.println("Connection is not set.");
+		try {
+			stmt = conn.createStatement();
+			String sql = "DROP TABLE " + tableName;
+			stmt.executeUpdate(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 	}
-	
-	/**
-	 * 
-	 * @param databaseName name of database to be dropped.
-	 */
-	public void dropDatabase(String databaseName) {
-		if (conn != null) {
-			try {
-				stmt = conn.createStatement();
-				String sql = "DROP DATABASE " + databaseName;
-				stmt.executeUpdate(sql);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		else {
-			System.out.println("Connection is not set.");
-		}
-	}
-
 
 	/**
 	 * 
@@ -206,13 +183,45 @@ public class Db {
 
 	/**
 	 * 
-	 * @param path specifies path to db.
+	 * @param path path where database is going to be stored.
+	 * @param dbName name of database.
 	 */
 	public void setDb(String path, String dbName) {
 		String prefix = "jdbc:derby:";
 		String suffix = ";create=true";
 		String temp = prefix + path + dbName + suffix;
 		this.db = temp;
+	}
+
+	/**
+	 * 
+	 * @param dir database directory to delete.
+	 * @return true if directory deleted.
+	 */
+	public boolean removeDirectory(File dir) {
+		if (dir != null) { 
+
+			String[] list = dir.list();
+
+			if (list != null) {
+				for (int i = 0; i < list.length; i++) {
+					File file = new File(dir, list[i]);
+
+
+					if (file.isDirectory()) {
+						if (!removeDirectory(file)) {
+							return false;
+						}
+					}
+					else {
+						if (!file.delete()) {
+							return false;
+						}
+					}
+				}
+			}
+		}
+		return dir.delete();
 	}
 
 }
