@@ -14,16 +14,30 @@ import java.sql.Statement;
 public class Db {
 
 	private String db; //db query.
-	private String pad = "C:/db/analyze"; //default path for testing.
+	private String dName;
+	private String pad = "C:/db/"; //default path for testing.
 	private Connection conn;
 	private Statement stmt = null;
+
+	/**
+	 * 
+	 * @param databaseName name of database you connect to.
+	 * @param p directory for the database to be stored.
+	 */
+	public Db(String databaseName, String p) {
+		dName = databaseName;
+		if (p != null) {
+			pad = p;
+		}
+		setupConn();
+	}
 
 	/**
 	 * Sets up connection.
 	 * @throws SQLException 
 	 */
 	public void setupConn() {
-		setDb(pad);
+		setDb(pad, dName);
 		try {
 			conn = DriverManager.getConnection(db);
 			//Check connection
@@ -107,7 +121,7 @@ public class Db {
 			System.out.println("Connection is not set.");
 		}
 	}
-	
+
 	/**NEEDS WORK!
 	 * 
 	 * @param tableName name of table to select variables from.
@@ -122,7 +136,8 @@ public class Db {
 				String sql = "SELECT " + variable + " FROM " + tableName;
 				ResultSet rs = stmt.executeQuery(sql);
 				while (rs.next()) {
-					res = rs.getString("test2");
+					res = rs.getString(variable);
+					System.out.println(res);
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -152,6 +167,26 @@ public class Db {
 			System.out.println("Connection is not set.");
 		}
 	}
+	
+	/**
+	 * 
+	 * @param databaseName name of database to be dropped.
+	 */
+	public void dropDatabase(String databaseName) {
+		if (conn != null) {
+			try {
+				stmt = conn.createStatement();
+				String sql = "DROP DATABASE " + databaseName;
+				stmt.executeUpdate(sql);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		else {
+			System.out.println("Connection is not set.");
+		}
+	}
+
 
 	/**
 	 * 
@@ -173,10 +208,10 @@ public class Db {
 	 * 
 	 * @param path specifies path to db.
 	 */
-	public void setDb(String path) {
+	public void setDb(String path, String dbName) {
 		String prefix = "jdbc:derby:";
 		String suffix = ";create=true";
-		String temp = prefix + path + suffix;
+		String temp = prefix + path + dbName + suffix;
 		this.db = temp;
 	}
 
