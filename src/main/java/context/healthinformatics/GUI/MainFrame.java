@@ -22,58 +22,65 @@ import context.healthinformatics.Parser.XMLParser;
 public class MainFrame extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	protected PanelState state;
-	protected PanelState inputState = new InputPage(this);
-	protected PanelState codeState = new CodePage(this);
-	protected PanelState outputState = new OutputPage(this);
+	protected static PanelState state;
+	protected static PanelState inputState = new InputPage();
+	protected static PanelState codeState = new CodePage();
+	protected static PanelState outputState = new OutputPage();
 	
 	private static int tabsX;
-	private static int tabsY = 200;
+	private static int tabsY = 120;
+	private static int screenWidth;
 	
 	static GridBagConstraints c;
-	static JPanel mainPanel;
+	JPanel mainPanel;
 	static JFrame f;
-	static JButton button;
-	static Dimension dim;
-	static MouseHandler mouse = new MouseHandler();
+	static JPanel p1;
+	static JPanel p2;
+	static JPanel p3;
+	static JPanel varPanel = new JPanel();
+	MouseHandler mouse = new MouseHandler();
 	
 	public MainFrame() {
 		state = inputState;		
 		load();
 	}
 	
-	public void setState(PanelState p) {
+	public static void setState(PanelState p) {
 		state = p;
+	}
+	
+	public static int getScreenWidth(){
+		return screenWidth;
 	}
 
 	public void load() {
 		makeFrame();
-		dim = new Dimension(100,40);
 		c = new GridBagConstraints();
 		mainPanel = new JPanel(new GridBagLayout());
 		f.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		int width = screenSize.width;
-		tabsX = width / 3;
+		screenWidth = screenSize.width;
+		tabsX = screenWidth / 3;
 		
-		JPanel panel1 = createPanel(Color.gray, width, tabsY);
+		JPanel panel1 = createPanel(Color.gray, screenWidth, tabsY);
 		panel1.setLayout(new GridBagLayout());
-		JPanel p1 = createTab("stap 1", 0, Color.red);
+		p1 = createTab("stap 1", 0, Color.decode("#81DAF5"));
 		panel1.add(p1, c);
-		JPanel p2 = createTab("stap 2", 1, Color.green);
+		p2 = createTab("stap 2", 1, Color.decode("#01A9DB"));
 		panel1.add(p2, c);
-		JPanel p3 = createTab("stap 3", 2, Color.orange);
+		p3 = createTab("stap 3", 2, Color.decode("#086A87"));
 		panel1.add(p3, c);
 		
 		c.gridx = 0;
 		c.gridy = 0;
 		mainPanel.add(panel1, c);
 		
-		JPanel panel2 = this.state.loadPanel();		
+		varPanel.setLayout(new GridBagLayout());
+		varPanel.add(MainFrame.state.loadPanel());
 		c.gridx = 0;
 		c.gridy = 1;
-		mainPanel.add(panel2, c);
+		mainPanel.add(varPanel, c);
 		
 		mainPanel.setBackground(Color.gray);
 		
@@ -93,7 +100,7 @@ public class MainFrame extends JPanel {
 		return page;
 	}
 	
-	public int getStatePanelSize() {
+	public static int getStatePanelSize() {
 		return Toolkit.getDefaultToolkit().getScreenSize().height - tabsY;
 	}
 	
@@ -142,55 +149,22 @@ public class MainFrame extends JPanel {
 		f.dispose();
 	}
 	
-	/**
-	 * Method which creates a button.
-	 * @param input buuton
-	 */
-//	public void makeButton(JButton input) {
-//		input.setPreferredSize(dim);
-//		input.addActionListener(new ActionHandler());
-//		input.setFont(new Font("Arial", Font.PLAIN, 30));
-//	}
-	
-//	/**
-//	 * Class which handles the actions when buttons are clicked.
-//	 */
-//	static class ActionHandler implements ActionListener {
-//
-//		/**
-//		 * Method which is fired after a certain event.
-//		 * @param e event
-//		 */
-//		public void actionPerformed(ActionEvent e) {
-//			if (e.getSource() == button) {
-//				input = txt.getText();
-//				XMLParser xmlp = new XMLParser(input);
-//				try {
-//					xmlp.parse();
-//					TXTParser txtp = new TXTParser(xmlp.getPath(),
-//								xmlp.getStartLine(), xmlp.getDelimiter(), xmlp.getColumns());
-//					txtp.parse();
-//				} catch (IOException e1) {
-//					System.out.println("No such file... Try again!");
-//				}
-//			}
-//		}
-//	}
-	
 	static class MouseHandler implements MouseListener {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-//			f.dispose();
-//			if(e.getSource() == MainFrame.p1) {
-//				
-//			}
-//			else if(e.getSource() == MainFrame.p2) {
-//							
-//			}
-//			else if(e.getSource() == MainFrame.p3) {
-//				
-//			}
+			varPanel.removeAll();
+			if (e.getSource() == MainFrame.p1) {
+				MainFrame.setState(inputState);
+			}
+			else if (e.getSource() == MainFrame.p2) {
+				MainFrame.setState(codeState);
+			}
+			else if (e.getSource() == MainFrame.p3) {
+				MainFrame.setState(outputState);
+			}
+			varPanel.add(MainFrame.state.loadPanel());
+			varPanel.revalidate();
 		}
 
 		@Override

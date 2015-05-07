@@ -1,17 +1,17 @@
 package context.healthinformatics.GUI;
 
+import java.awt.Color;
+
 import javax.swing.JPanel;
 
 public class OutputPage implements PanelState{
 
-	public OutputPage(MainFrame mainFrame) {
-		// TODO Auto-generated constructor stub
-	}
+	public OutputPage() {}
 
 	@Override
 	public JPanel loadPanel() {
-		// TODO Auto-generated method stub
-		return null;
+		JPanel panel = MainFrame.createPanel(Color.decode("#086A87"), MainFrame.getScreenWidth(), MainFrame.getStatePanelSize());
+		return panel;
 	}
 	
 
