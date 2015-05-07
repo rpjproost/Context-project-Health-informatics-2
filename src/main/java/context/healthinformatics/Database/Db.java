@@ -50,21 +50,21 @@ public class Db {
 	/**Sets up connection.
 	 * 
 	 * @throws SQLException 
+	 * @return true iff connection is set.
 	 */
-	public void setupConn() {
+	public boolean setupConn() {
+		boolean res = false;
 		setDb(pad, dName);
 		try {
 			conn = DriverManager.getConnection(db);
 			//Check connection
 			if (conn != null) {
-				System.out.println("Connected to database");
-			}
-			else {
-				System.out.println("Could not connect to database");
+				res = true;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return res;
 	}
 
 	/** Creates new table.
@@ -72,15 +72,19 @@ public class Db {
 	 * @param tableName name for new table.
 	 * @param columns column names.
 	 * @param types type specifications.
+	 * @return true iff new table is created.
 	 */
-	public void createTable(String tableName, String[] columns, String[] types) {
+	public boolean createTable(String tableName, String[] columns, String[] types) {
+		boolean res = false;
 		try {
 			stmt = conn.createStatement();
 			String sql = "CREATE TABLE " + tableName + createTableColumns(columns, types);
 			stmt.executeUpdate(sql);
+			res = true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return res;
 	}
 
 	/** returns highest Identifier from table, otherwise 1.
@@ -131,11 +135,13 @@ public class Db {
 
 	/** Inserts values into table.
 	 * 
-	 * @param tableName tablename the values go into.
+	 * @param tableName table name the values go into.
 	 * @param values the values to be added.
 	 * @param columns the columns specified for the values.
+	 * @return true iff successfully inserted values.
 	 */
-	public void insert(String tableName, String[] values, String[] columns) {
+	public boolean insert(String tableName, String[] values, String[] columns) {
+		boolean res = false;
 		try {
 			stmt = conn.createStatement();
 			String sql = "INSERT INTO " + tableName + "(";
@@ -157,9 +163,11 @@ public class Db {
 				}
 			}
 			stmt.executeUpdate(sql);
+			res = true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return res;
 	}
 
 	/**NEEDS WORK!
@@ -189,15 +197,19 @@ public class Db {
 	/**Drops a table from database.
 	 * 
 	 * @param tableName name of table to drop.
+	 * @return true iff table is dropped.
 	 */
-	public void dropTable(String tableName) {
+	public boolean dropTable(String tableName) {
+		boolean res = false;
 		try {
 			stmt = conn.createStatement();
 			String sql = "DROP TABLE " + tableName;
 			stmt.executeUpdate(sql);
+			res = true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return res;
 	}
 
 	/**Returns specified path to the database on your computer.
@@ -220,12 +232,14 @@ public class Db {
 	 * 
 	 * @param path path where database is going to be stored.
 	 * @param dbName name of database.
+	 * @return query as a String.
 	 */
-	public void setDb(String path, String dbName) {
+	public String setDb(String path, String dbName) {
 		String prefix = "jdbc:derby:";
 		String suffix = ";create=true";
 		String temp = prefix + path + dbName + suffix;
 		this.db = temp;
+		return db;
 	}
 
 	/**Removes old database at specified path if exists.
