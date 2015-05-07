@@ -15,7 +15,7 @@ public class InputPage implements PanelState {
 	}
 
 	public JPanel loadPanel() {
-		JPanel panel = MainFrame.createPanel(Color.gray, mf.getTabsX(), mf.getStatePanelSize());
+		JPanel panel = MainFrame.createPanel(Color.red, mf.getTabsX(), mf.getStatePanelSize());
 		return panel;
 	}
 	

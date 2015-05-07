@@ -105,6 +105,10 @@ public class MainFrame extends JPanel {
 		return tabsY;
 	}
 	
+	public PanelState getPanelState() {
+		return state;
+	}
+	
 	/**
 	 * @return JPanel with attributes specified by the arguments.
 	 * @param color
@@ -132,6 +136,10 @@ public class MainFrame extends JPanel {
 		f = new JFrame();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		f.setTitle("PRODUCT NAME");
+	}
+	
+	public void closeFrame() {
+		f.dispose();
 	}
 	
 	/**
