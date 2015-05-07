@@ -20,7 +20,7 @@ public class Db {
 	private Connection conn;
 	private Statement stmt = null;
 
-	/**
+	/**Constructor, sets variables and calls setupConn.
 	 * 
 	 * @param databaseName name of database you connect to.
 	 * @param p directory for the database to be stored.
@@ -47,8 +47,8 @@ public class Db {
 		setupConn();
 	}
 
-	/**
-	 * Sets up connection.
+	/**Sets up connection.
+	 * 
 	 * @throws SQLException 
 	 */
 	public void setupConn() {
@@ -67,7 +67,7 @@ public class Db {
 		}
 	}
 
-	/**
+	/** Creates new table.
 	 * 
 	 * @param tableName name for new table.
 	 * @param columns column names.
@@ -83,14 +83,39 @@ public class Db {
 		}
 	}
 
-	/**
+	/** returns highest Identifier from table, otherwise 1.
+	 * 
+	 * @param tableName table to return max indentifier from.
+	 * @return 1 or max id.
+	 */
+	public int getMaxId(String tableName) {
+		int res = 1;
+		try {
+			stmt = conn.createStatement();
+			String sql = "SELECT MAX(ID) FROM " + tableName;
+			ResultSet rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				int max = rs.getInt(1);
+				if (max > res) {
+					res = max;
+				}
+			}
+		} catch (SQLException e) {
+			res = 1;
+			e.printStackTrace();
+		}
+		return res;
+	}
+
+	/** Part of the method CreateTable, creates columns with specified types.
 	 * 
 	 * @param columns column names.
 	 * @param types type specifications.
 	 * @return string for sql building.
 	 */
 	public String createTableColumns(String[] columns, String[] types) {
-		String res = "(";
+		String res = "(ID int not null "
+				+ "primary key GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), ";
 		for (int i = 0; i < columns.length; i++) {
 			if (i == columns.length - 1) {
 				res = res + columns[i] + " ";
@@ -104,15 +129,25 @@ public class Db {
 		return res;
 	}
 
-	/**
+	/** Inserts values into table.
 	 * 
-	 * @param tableName insert into this table.
-	 * @param values variables to insert.
+	 * @param tableName tablename the values go into.
+	 * @param values the values to be added.
+	 * @param columns the columns specified for the values.
 	 */
-	public void insert(String tableName, String[] values) {
+	public void insert(String tableName, String[] values, String[] columns) {
 		try {
 			stmt = conn.createStatement();
-			String sql = "INSERT INTO " + tableName + " VALUES (";
+			String sql = "INSERT INTO " + tableName + "(";
+			for (int i = 0; i < columns.length; i++) {
+				if (i == values.length - 1) {
+					sql = sql + columns[i] + ")";
+				}
+				else {
+					sql = sql + columns[i] + ",";
+				}
+			}
+			sql = sql + " VALUES (";
 			for (int i = 0; i < values.length; i++) {
 				if (i == values.length - 1) {
 					sql = sql + values[i] + ")";
@@ -151,7 +186,7 @@ public class Db {
 		return res;
 	}
 
-	/**
+	/**Drops a table from database.
 	 * 
 	 * @param tableName name of table to drop.
 	 */
@@ -165,7 +200,7 @@ public class Db {
 		}
 	}
 
-	/**
+	/**Returns specified path to the database on your computer.
 	 * 
 	 * @return db path string.
 	 */
@@ -181,7 +216,7 @@ public class Db {
 		pad = path; 
 	}
 
-	/**
+	/**Sets the databasedriver query.
 	 * 
 	 * @param path path where database is going to be stored.
 	 * @param dbName name of database.
@@ -193,7 +228,7 @@ public class Db {
 		this.db = temp;
 	}
 
-	/**
+	/**Removes old database at specified path if exists.
 	 * 
 	 * @param dir database directory to delete.
 	 * @return true if directory deleted.
