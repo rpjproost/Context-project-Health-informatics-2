@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <xml>
-	<document id="StatSensor" type="text">
-		<path>data/xxx.txt</path>
+	<document docname="StatSensor">
+		<doctype>text</doctype>
+		<path>src/test/data/xml/inputTXT.txt</path>
 		<start>7</start>
 		<delimiter>,</delimiter>
 		<column id="2">
@@ -17,8 +18,9 @@
 			<type>String</type>
 		</column>
 	</document>
-	<document id="HospitalRecords" type="excel">
-		<path>data/xml/inputExcel.xlsx</path>
+	<document docname="HospitalRecords">
+		<doctype>EXCEL</doctype>
+		<path>src/test/data/xml/inputExcel.xlsx</path>
 		<column id="2">
 			<name>value</name>
 			<type>Integer</type>

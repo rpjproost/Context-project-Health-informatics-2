@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <xml>
-	<document id="StatSensor" type="text">
+	<document docname="StatSensor">
+		<doctype>text</doctype>
 		<start>7</start>
 		<delimiter>,</delimiter>
 		<column id="2">

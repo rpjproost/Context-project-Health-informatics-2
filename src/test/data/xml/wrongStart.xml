@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <xml>
-	<document id="StatSensor" type="text">
-		<path>data/xxx.txt</path>
+	<document docname="StatSensor">
+		<doctype>text</doctype>
+		<path>src/test/data/xml/inputTXT.txt</path>
 		<start>hoi</start>
 		<delimiter>,</delimiter>
 		<column id="2">

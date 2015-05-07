@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <xml>
 	<document>
-		<path>data/xxx.txt</path>
+		<doctype>text</doctype>
+		<path>src/test/data/xml/inputTXT.txt</path>
 		<start>7</start>
 		<delimiter>,</delimiter>
 		<column>
