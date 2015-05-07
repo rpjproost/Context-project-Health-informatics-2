@@ -84,8 +84,9 @@ public class XMLParser extends Parser {
 	}
 	
 	/**
-	 * handles parsing of a document
-	 * @throws IOException 
+	 * Method that handles parsing for a single document.
+	 * @param n the document node.
+	 * @throws IOException
 	 */
 	private void parseDocument(Node n) throws IOException {
 		Element e = (Element)n;
