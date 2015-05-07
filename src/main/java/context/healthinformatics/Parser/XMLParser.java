@@ -54,13 +54,10 @@ public class XMLParser extends Parser {
 			// read this -
 			// http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
 			doc.getDocumentElement().normalize();
-
-			setDocName(doc.getDocumentElement().getAttribute("id"));
-			setPath(getString(null, "path"));
-			setStartLine(getInt("start"));
-			setDelimiter(getString(null, "delimiter"));
-			NodeList columnList = doc.getElementsByTagName("column");
-			parseColumns(columnList);
+			NodeList nList = doc.getChildNodes();
+			for(int i = 0; i < nList.getLength(); i++){
+				parseDocument(nList.item(i));
+			}
 		} catch (ParserConfigurationException | SAXException e) {
 			throw new FileNotFoundException();
 		}
@@ -84,6 +81,31 @@ public class XMLParser extends Parser {
 				columns.add(c);
 			}
 		}
+	}
+	
+	/**
+	 * handles parsing of a document
+	 * @throws IOException 
+	 */
+	private void parseDocument(Node n) throws IOException {
+		Element e = (Element)n;
+		setDocName(e.getAttribute("id"));
+		setPath(getString(e, "path"));
+		setStartLine(getInt("start"));
+		Parser p;
+		NodeList columnList = e.getElementsByTagName("column");
+		parseColumns(columnList);
+		if(e.getAttribute("type").toLowerCase().equals("text")){
+			setDelimiter(getString(e, "delimiter"));
+			p = new TXTParser(getDocName(),getStartLine(),getDelimiter(),getColumns());
+		}
+		else if(e.getAttribute("type").toLowerCase().equals("text")){
+			p = new ExcelParser(getDocName(),getStartLine(),getColumns());
+		}
+		else{
+			p = null;
+		}
+		p.parse();
 	}
 
 	/**
