@@ -55,7 +55,7 @@ public class XMLParser extends Parser {
 			// http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
 			doc.getDocumentElement().normalize();
 			NodeList nList = doc.getChildNodes();
-			for(int i = 0; i < nList.getLength(); i++){
+			for (int i = 0; i < nList.getLength(); i++) {
 				parseDocument(nList.item(i));
 			}
 		} catch (ParserConfigurationException | SAXException e) {
@@ -89,20 +89,20 @@ public class XMLParser extends Parser {
 	 * @throws IOException
 	 */
 	private void parseDocument(Node n) throws IOException {
-		Element e = (Element)n;
+		Element e = (Element) n;
 		setDocName(e.getAttribute("docname"));
 		setPath(getString(e, "path"));
 		setStartLine(getInt("start"));
 		Parser p;
 		NodeList columnList = e.getElementsByTagName("column");
 		parseColumns(columnList);
-		String type = getString(e,"doctype").toLowerCase();
+		String type = getString(e, "doctype").toLowerCase();
 		if (type.equals("text")) {
 			setDelimiter(getString(e, "delimiter"));
-			p = new TXTParser(getPath(),getStartLine(),getDelimiter(),getColumns());
+			p = new TXTParser(getPath(), getStartLine(), getDelimiter(), getColumns());
 		}
 		else if (type.equals("excel")) {
-			p = new ExcelParser(getPath(),getStartLine(),getColumns());
+			p = new ExcelParser(getPath(), getStartLine(), getColumns());
 		}
 		else {
 			p = null;
@@ -133,12 +133,12 @@ public class XMLParser extends Parser {
 	 */
 	private String getString(Element e, String s) {
 		String res = "";
-		if(e != null) {
+		if (e != null) {
 			res = e.getElementsByTagName(s).item(0).getTextContent();
 		} else {
 			res = doc.getElementsByTagName(s).item(0).getTextContent();
 		}
-		if(res.isEmpty()) {
+		if (res.isEmpty()) {
 			throw new NullPointerException();
 		}
 		return res;
