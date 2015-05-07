@@ -89,22 +89,21 @@ public class XMLParser extends Parser {
 	 */
 	private void parseDocument(Node n) throws IOException {
 		Element e = (Element)n;
-		setDocName(e.getAttribute("id"));
+		setDocName(e.getAttribute("docname"));
 		setPath(getString(e, "path"));
 		setStartLine(getInt("start"));
 		Parser p;
 		NodeList columnList = e.getElementsByTagName("column");
 		parseColumns(columnList);
 		String type = getString(e,"doctype").toLowerCase();
-		System.out.println( " type: "+ type);
-		if(type.equals("text")){
+		if (type.equals("text")) {
 			setDelimiter(getString(e, "delimiter"));
-			p = new TXTParser(getDocName(),getStartLine(),getDelimiter(),getColumns());
+			p = new TXTParser(getPath(),getStartLine(),getDelimiter(),getColumns());
 		}
-		else if(type.equals("excel")){
-			p = new ExcelParser(getDocName(),getStartLine(),getColumns());
+		else if (type.equals("excel")) {
+			p = new ExcelParser(getPath(),getStartLine(),getColumns());
 		}
-		else{
+		else {
 			p = null;
 		}
 		p.parse();
