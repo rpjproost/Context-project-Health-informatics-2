@@ -1,18 +1,20 @@
 <?xml version="1.0"?>
-<document id="StatSensor">
-	<path></path>
-	<start></start>
-	<delimiter></delimiter>
-		<column id="2">
-		<name></name>
-		<type></type>
-	</column>
-	<column id="5">
-		<name></name>
-		<type></type>
-	</column>
-	<column id="6">
-		<name></name>
-		<type></type>
-	</column>
-</document>
+<xml>
+	<document id="StatSensor" type="text">
+		<path></path>
+		<start></start>
+		<delimiter></delimiter>
+			<column id="2">
+			<name></name>
+			<type></type>
+		</column>
+		<column id="5">
+			<name></name>
+			<type></type>
+		</column>
+		<column id="6">
+			<name></name>
+			<type></type>
+		</column>
+	</document>
+</xml>

@@ -95,11 +95,12 @@ public class XMLParser extends Parser {
 		Parser p;
 		NodeList columnList = e.getElementsByTagName("column");
 		parseColumns(columnList);
-		if(e.getAttribute("type").toLowerCase().equals("text")){
+		System.out.println( " type: "+getString(e,"doctype"));
+		if(getString(e,"doctype").toLowerCase().equals("text")){
 			setDelimiter(getString(e, "delimiter"));
 			p = new TXTParser(getDocName(),getStartLine(),getDelimiter(),getColumns());
 		}
-		else if(e.getAttribute("type").toLowerCase().equals("text")){
+		else if(getString(e,"doctype").toLowerCase().equals("excel")){
 			p = new ExcelParser(getDocName(),getStartLine(),getColumns());
 		}
 		else{
