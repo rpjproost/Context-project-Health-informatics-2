@@ -38,7 +38,7 @@ public class XMLParserTest {
 		try {
 		xmlp.setFileName("src/test/data/xml/goodXML.xml");
 		xmlp.parse();
-		assertEquals( "," , xmlp.getDelimiter());
+		assertEquals("," , xmlp.getDelimiter());
 		assertEquals("StatSensor", xmlp.getDocName());
 		assertEquals("src/test/data/xml/inputTXT.txt", xmlp.getPath());
 		assertEquals(7, xmlp.getStartLine());
@@ -92,7 +92,7 @@ public class XMLParserTest {
 	 * throw a nullPointer.
 	 * @throws IOException Should not throw this exception
 	 */
-	@Test(expected  =NullPointerException.class)
+	@Test(expected  = NullPointerException.class)
 	public void noPathTest() throws IOException {
 		xmlp.setFileName("src/test/data/xml/noPath.xml");
 		xmlp.parse();
@@ -139,11 +139,11 @@ public class XMLParserTest {
 	 * @return <code>true</code> when both lists and all
 	 * its elements are equals, otherwise return <code>false</code>
 	 */
-	public boolean compare(ArrayList<Column> l1, ArrayList<Column> l2){
+	public boolean compare(ArrayList<Column> l1, ArrayList<Column> l2) {
 		if (l1.size() == l2.size()) {
 			for (int i = 0; i < l1.size(); i++) {
-				if (!l1.get(i).equals(l2.get(i)))
-					return false;
+				if (!l1.get(i).equals(l2.get(i))) {
+					return false; }
 			}
 		}
 		return true;
