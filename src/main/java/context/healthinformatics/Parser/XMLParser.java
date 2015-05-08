@@ -54,9 +54,11 @@ public class XMLParser extends Parser {
 			// read this -
 			// http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
 			doc.getDocumentElement().normalize();
-			NodeList nList = doc.getChildNodes();
+			NodeList nList = doc.getChildNodes().item(0).getChildNodes();
 			for (int i = 0; i < nList.getLength(); i++) {
-				parseDocument(nList.item(i));
+				if (nList.item(i).getNodeType() == Node.ELEMENT_NODE) {
+					parseDocument(nList.item(i));
+				}
 			}
 		} catch (ParserConfigurationException | SAXException e) {
 			throw new FileNotFoundException();
@@ -69,7 +71,8 @@ public class XMLParser extends Parser {
 	 * @param nList
 	 *            list with Nodes.
 	 */
-	private void parseColumns(NodeList nList) {
+	protected void parseColumns(NodeList nList) {
+		columns = new ArrayList<Column>(); 
 		for (int i = 0; i < nList.getLength(); i++) {
 			Node nColumn = nList.item(i);
 			if (nColumn.getNodeType() == Node.ELEMENT_NODE) {
@@ -93,21 +96,24 @@ public class XMLParser extends Parser {
 		setDocName(e.getAttribute("docname"));
 		setPath(getString(e, "path"));
 		setStartLine(getInt("start"));
-		Parser p;
-		NodeList columnList = e.getElementsByTagName("column");
+		NodeList columnList = e.getElementsByTagName("column"); 
 		parseColumns(columnList);
-		String type = getString(e, "doctype").toLowerCase();
-		if (type.equals("text")) {
-			setDelimiter(getString(e, "delimiter"));
-			p = new TXTParser(getPath(), getStartLine(), getDelimiter(), getColumns());
-		}
-		else if (type.equals("excel")) {
-			p = new ExcelParser(getPath(), getStartLine(), getColumns());
-		}
-		else {
-			p = null;
-		}
-		p.parse();
+		setDelimiter(getString(e, "delimiter"));
+		getParser(getString(e, "doctype")).parse();
+		
+	}
+	
+	/**
+	 * Returns the Parser with the correct settings.
+	 * @param label the String with the parser to use.
+	 * @return The Parser with all settings.
+	 */
+	protected Parser getParser(String label) {
+		switch (label.toLowerCase()) {
+		case "text" : return new TXTParser(getPath(), getStartLine(), getDelimiter(), getColumns());
+		case "excel" : return new ExcelParser(getPath(), getStartLine(), getColumns());
+		default : return null;
+		}		
 	}
 
 	/**
@@ -134,12 +140,16 @@ public class XMLParser extends Parser {
 	private String getString(Element e, String s) {
 		String res = "";
 		if (e != null) {
-			res = e.getElementsByTagName(s).item(0).getTextContent();
+			NodeList nList = e.getElementsByTagName(s);
+			if (nList.item(0) != null) {
+				res = nList.item(0).getTextContent();
+			}
+			
 		} else {
 			res = doc.getElementsByTagName(s).item(0).getTextContent();
 		}
 		if (res.isEmpty()) {
-			throw new NullPointerException();
+			res = null;
 		}
 		return res;
 	}
