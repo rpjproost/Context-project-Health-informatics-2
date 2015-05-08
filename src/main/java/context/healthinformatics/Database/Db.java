@@ -123,52 +123,54 @@ public class Db {
 	 * @return string for sql building.
 	 */
 	public String createTableColumns(String[] columns, String[] types) {
-		String res = "(ID int not null "
-				+ "primary key GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), ";
+		StringBuffer res = new StringBuffer();
+		res.append("(ID int not null "
+				+ "primary key GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), ");
 		for (int i = 0; i < columns.length; i++) {
 			if (i == columns.length - 1) {
-				res = res + columns[i] + " ";
-				res = res + types[i] + ")";
+				res.append(columns[i]); res.append(" ");
+				res.append(types[i]); res.append(")");
 			}
 			else {
-				res = res + columns[i] + " ";
-				res = res + types[i] + ",";
+				res.append(columns[i]); res.append(" ");
+				res.append(types[i]); res.append(",");
 			}
 		}
-		return res;
+		return res.toString();
 	}
 
-	/** Inserts values into table.
+	/**Insert values in to table.
 	 * 
-	 * @param tableName table name the values go into.
-	 * @param values the values to be added.
-	 * @param columns the columns specified for the values.
-	 * @return true iff successfully inserted values.
+	 * @param tableName name of table.
+	 * @param values values to be inserted.
+	 * @param columns columns where values be inserted.
+	 * @return true iff values are inserted.
 	 * @throws SQLException if values could not be inserted.
 	 */
 	public boolean insert(String tableName, String[] values, String[] columns) throws SQLException {
 		boolean res = false;
 		try {
 			stmt = conn.createStatement();
-			String sql = "INSERT INTO " + tableName + "(";
+			StringBuffer sql = new StringBuffer();
+			sql.append("INSERT INTO " + tableName + "(");
 			for (int i = 0; i < columns.length; i++) {
 				if (i == values.length - 1) {
-					sql = sql + columns[i] + ")";
+					sql.append(columns[i]);	sql.append(")");
 				}
 				else {
-					sql = sql + columns[i] + ",";
+					sql.append(columns[i]);	sql.append(",");
 				}
 			}
-			sql = sql + " VALUES (";
+			sql.append(" VALUES (");
 			for (int i = 0; i < values.length; i++) {
 				if (i == values.length - 1) {
-					sql = sql + values[i] + ")";
+					sql.append(values[i]); sql.append(")");
 				}
 				else {
-					sql = sql + values[i] + ",";
+					sql.append(values[i]); sql.append(",");
 				}
 			}
-			stmt.executeUpdate(sql);
+			stmt.executeUpdate(sql.toString());
 			res = true;
 		} catch (SQLException e) {
 			throw new SQLException(e);
