@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 /**
  * Test for database class.
@@ -72,7 +73,7 @@ public class DbTest {
 	@Test
 	public void testCreateTable() throws SQLException {
 		assertTrue(data.createTable(tableName, col, types));
-		assertTrue(data.dropTable("test"));
+		assertTrue(data.dropTable(tableName));
 	}
 
 	/**
@@ -85,7 +86,7 @@ public class DbTest {
 	public void testGetMaxIDDefault() throws SQLException {
 		assertTrue(data.createTable(tableName, col, types));
 		assertEquals(data.getMaxId("test"), 1);
-		assertTrue(data.dropTable("test"));
+		assertTrue(data.dropTable(tableName));
 	}
 
 	/**
@@ -99,7 +100,7 @@ public class DbTest {
 	public void testInsert() throws SQLException {
 		assertTrue(data.createTable(tableName, col, types));
 		assertTrue(data.insert(tableName, values, col));
-		assertTrue(data.dropTable("test"));
+		assertTrue(data.dropTable(tableName));
 	}
 
 	/**
@@ -115,7 +116,7 @@ public class DbTest {
 		assertTrue(data.insert(tableName, values, col));
 		assertTrue(data.insert(tableName, values, col));
 		assertEquals(data.getMaxId("test"), 2);
-		assertTrue(data.dropTable("test"));
+		assertTrue(data.dropTable(tableName));
 	}
 
 	/**
@@ -129,7 +130,7 @@ public class DbTest {
 		assertTrue(data.createTable(tableName, col, types));
 		assertTrue(data.insert(tableName, values, col));
 		assertEquals(data.select(tableName, "Name"), "Rick");
-		assertTrue(data.dropTable("test"));
+		assertTrue(data.dropTable(tableName));
 	}
 
 	/**
@@ -161,6 +162,7 @@ public class DbTest {
 	public void testSetDBPath() {
 		data.setDbPath("test");
 		assertEquals(data.getDbPath(), "test");
+		data.setDbPath(path);
 	}
 
 	/**
@@ -170,6 +172,8 @@ public class DbTest {
 	public void setDB() {
 		assertEquals(data.setDb("path", "DBName"),
 				"jdbc:derby:pathDBName;create=true");
+		assertEquals(data.setDb(path, dbName),
+				"jdbc:derby:C:/db/testDB;create=true");
 	}
 
 	/**
@@ -193,12 +197,62 @@ public class DbTest {
 	public void insertNonExistentTable() throws SQLException {
 		data.insert("nonexistent", values, col);
 	}
-	
+
+	/**
+	 * Try to select from nonexistent table and col.
+	 * 
+	 * @throws SQLException
+	 *             the sql exception
+	 */
+	@Test(expected = SQLException.class)
+	public void selectNonExistent() throws SQLException {
+		data.select("nonexistent", "nonexistent");
+	}
+
+	/**
+	 * Try to select non existent col from existent table.
+	 * 
+	 * @throws SQLException
+	 *             the sql exception
+	 */
 	@Test
-	public void insertNull() throws SQLException{
+	public void selectNonExistentCol() throws SQLException {
 		assertTrue(data.createTable(tableName, col, types));
-		assertTrue(data.insert(tableName, null, null));
+		ExpectedException thrown = ExpectedException.none();
+		try {
+			data.select(tableName, "nonexistentcol");
+		} catch (SQLException e) {
+			thrown.expect(SQLException.class);
+
+		}
 		assertTrue(data.dropTable(tableName));
+	}
+
+	/**
+	 * Try to insert null into table.
+	 * 
+	 * @throws SQLException
+	 *             the sql exception
+	 */
+	@Test
+	public void insertNull() throws SQLException {
+		assertTrue(data.createTable(tableName, col, types));
+		ExpectedException thrown = ExpectedException.none();
+		try {
+			assertTrue(data.insert(tableName, null, null));
+		} catch (SQLException e) {
+			thrown.expect(SQLException.class);
+
+		}
+		assertTrue(data.dropTable(tableName));
+	}
+
+	/**
+	 * Try to remove directory null.
+	 */
+	@Test(expected = NullPointerException.class)
+	public void removeNull() {
+		data.removeDirectory(null);
 	}
 
 }
