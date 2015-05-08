@@ -2,6 +2,8 @@ package context.healthinformatics.Database;
 
 import static org.junit.Assert.*;
 
+import java.sql.SQLException;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,9 +24,11 @@ public class DbTest {
 
 	/**
 	 * Sets up new database for test usage.
+	 * @throws SQLException 
+	 * @throws NullPointerException 
 	 */
 	@Before
-	public void before() {
+	public void before() throws NullPointerException, SQLException {
 		path = "C:/db/";
 		dbName = "testDB";
 		data = new Db(dbName, path);
@@ -47,9 +51,10 @@ public class DbTest {
 	
 	/**
 	 * Test for creating a table.
+	 * @throws SQLException 
 	 */
 	@Test
-	public void testCreateTable() {
+	public void testCreateTable() throws SQLException {
 		data.createTable(tableName, col, types);
 	}
 	
