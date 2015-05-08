@@ -3,7 +3,6 @@ package context.healthinformatics.Database;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
 import java.sql.SQLException;
 
 import org.junit.After;
@@ -12,9 +11,6 @@ import org.junit.Test;
 
 /**
  * Test for database class.
- * 
- * @author Rick
- *
  */
 public class DbTest {
 
@@ -60,12 +56,13 @@ public class DbTest {
 	 * After test is run.
 	 * 
 	 * @throws SQLException
+	 *             the sql exception
 	 */
 	@After
 	public void after() throws SQLException {
-		data.dropTable("test");
+
 	}
-	
+
 	/**
 	 * Test for creating a table.
 	 * 
@@ -75,6 +72,7 @@ public class DbTest {
 	@Test
 	public void testCreateTable() throws SQLException {
 		assertTrue(data.createTable(tableName, col, types));
+		assertTrue(data.dropTable("test"));
 	}
 
 	/**
@@ -87,21 +85,28 @@ public class DbTest {
 	public void testGetMaxIDDefault() throws SQLException {
 		assertTrue(data.createTable(tableName, col, types));
 		assertEquals(data.getMaxId("test"), 1);
+		assertTrue(data.dropTable("test"));
 	}
 
 	/**
+	 * Test insert method.
+	 * 
 	 * @throws SQLException
+	 *             the sql exception
 	 * 
 	 */
 	@Test
 	public void testInsert() throws SQLException {
 		assertTrue(data.createTable(tableName, col, types));
 		assertTrue(data.insert(tableName, values, col));
-
+		assertTrue(data.dropTable("test"));
 	}
 
 	/**
+	 * Test insert max id.
+	 * 
 	 * @throws SQLException
+	 *             the sql exception
 	 * 
 	 */
 	@Test
@@ -110,13 +115,83 @@ public class DbTest {
 		assertTrue(data.insert(tableName, values, col));
 		assertTrue(data.insert(tableName, values, col));
 		assertEquals(data.getMaxId("test"), 2);
+		assertTrue(data.dropTable("test"));
 	}
-	
+
+	/**
+	 * Test select name.
+	 * 
+	 * @throws SQLException
+	 *             the SQL exception
+	 */
 	@Test
-	public void testSelect() throws SQLException{
+	public void testSelectName() throws SQLException {
 		assertTrue(data.createTable(tableName, col, types));
 		assertTrue(data.insert(tableName, values, col));
-		data.select(tableName, "Name");
+		assertEquals(data.select(tableName, "Name"), "Rick");
+		assertTrue(data.dropTable("test"));
+	}
+
+	/**
+	 * Test select age column.
+	 * 
+	 * @throws SQLException
+	 *             the sql exception
+	 */
+	@Test
+	public void testSelectAge() throws SQLException {
+		assertTrue(data.createTable(tableName, col, types));
+		assertTrue(data.insert(tableName, values, col));
+		assertEquals(data.select(tableName, "Age"), "22");
+		assertTrue(data.dropTable("test"));
+	}
+
+	/**
+	 * Test get database path.
+	 */
+	@Test
+	public void testDBPath() {
+		assertEquals(data.getDbPath(), "C:/db/");
+	}
+
+	/**
+	 * Test set database path.
+	 */
+	@Test
+	public void testSetDBPath() {
+		data.setDbPath("test");
+		assertEquals(data.getDbPath(), "test");
+	}
+
+	/**
+	 * Test setDB.
+	 */
+	@Test
+	public void setDB() {
+		assertEquals(data.setDb("path", "DBName"),
+				"jdbc:derby:pathDBName;create=true");
+	}
+
+	/**
+	 * Drop a non existent sql table.
+	 * 
+	 * @throws SQLException
+	 *             the exception
+	 */
+	@Test(expected = SQLException.class)
+	public void dropNonExistentTable() throws SQLException {
+		data.dropTable("nonexistent");
+	}
+
+	/**
+	 * Insert in a nonexistent table.
+	 * 
+	 * @throws SQLException
+	 *             the sql exception
+	 */
+	@Test(expected = SQLException.class)
+	public void insertNonExistentTable() throws SQLException {
+		data.insert("nonexistent", values, col);
 	}
 
 }
