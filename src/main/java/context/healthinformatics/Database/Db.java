@@ -25,8 +25,9 @@ public class Db {
 	 * @param databaseName name of database you connect to.
 	 * @param p directory for the database to be stored.
 	 * @throws NullPointerException when input is null.
+	 * @throws SQLException 
 	 */
-	public Db(String databaseName, String p) throws NullPointerException {
+	public Db(String databaseName, String p) throws NullPointerException, SQLException {
 		if (p == null || databaseName == null) {
 			throw new NullPointerException();
 		}
@@ -49,10 +50,10 @@ public class Db {
 
 	/**Sets up connection.
 	 * 
-	 * @throws SQLException 
+	 * @throws SQLException if database query is incorrect.
 	 * @return true iff connection is set.
 	 */
-	public boolean setupConn() {
+	public boolean setupConn() throws SQLException {
 		boolean res = false;
 		setDb(pad, dName);
 		try {
@@ -62,7 +63,7 @@ public class Db {
 				res = true;
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SQLException(e);
 		}
 		return res;
 	}
@@ -73,8 +74,10 @@ public class Db {
 	 * @param columns column names.
 	 * @param types type specifications.
 	 * @return true iff new table is created.
+	 * @throws SQLException if table could not be created.
 	 */
-	public boolean createTable(String tableName, String[] columns, String[] types) {
+	public boolean createTable(String tableName, String[] columns, String[] types) 
+			throws SQLException {
 		boolean res = false;
 		try {
 			stmt = conn.createStatement();
@@ -82,17 +85,18 @@ public class Db {
 			stmt.executeUpdate(sql);
 			res = true;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SQLException(e);
 		}
 		return res;
 	}
 
 	/** returns highest Identifier from table, otherwise 1.
 	 * 
-	 * @param tableName table to return max indentifier from.
+	 * @param tableName table to return max identifier from.
 	 * @return 1 or max id.
+	 * @throws SQLException if table name is incorrect.
 	 */
-	public int getMaxId(String tableName) {
+	public int getMaxId(String tableName) throws SQLException {
 		int res = 1;
 		try {
 			stmt = conn.createStatement();
@@ -106,7 +110,7 @@ public class Db {
 			}
 		} catch (SQLException e) {
 			res = 1;
-			e.printStackTrace();
+			throw new SQLException(e);
 		}
 		return res;
 	}
@@ -139,8 +143,9 @@ public class Db {
 	 * @param values the values to be added.
 	 * @param columns the columns specified for the values.
 	 * @return true iff successfully inserted values.
+	 * @throws SQLException if values could not be inserted.
 	 */
-	public boolean insert(String tableName, String[] values, String[] columns) {
+	public boolean insert(String tableName, String[] values, String[] columns) throws SQLException {
 		boolean res = false;
 		try {
 			stmt = conn.createStatement();
@@ -165,7 +170,7 @@ public class Db {
 			stmt.executeUpdate(sql);
 			res = true;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SQLException(e);
 		}
 		return res;
 	}
@@ -175,8 +180,9 @@ public class Db {
 	 * @param tableName name of table to select variables from.
 	 * @param variable variables to select.
 	 * @return String with results.
+	 * @throws SQLException if data is not found.
 	 */
-	public String select(String tableName, String variable) {
+	public String select(String tableName, String variable) throws SQLException {
 		String res = "";
 		try {
 			stmt = conn.createStatement();
@@ -189,7 +195,7 @@ public class Db {
 			}
 		} catch (SQLException e) {
 			res = "Data not found";
-			e.printStackTrace();
+			throw new SQLException(e);
 		}
 		return res;
 	}
@@ -198,8 +204,9 @@ public class Db {
 	 * 
 	 * @param tableName name of table to drop.
 	 * @return true iff table is dropped.
+	 * @throws SQLException if table does not exist.
 	 */
-	public boolean dropTable(String tableName) {
+	public boolean dropTable(String tableName) throws SQLException {
 		boolean res = false;
 		try {
 			stmt = conn.createStatement();
@@ -207,7 +214,7 @@ public class Db {
 			stmt.executeUpdate(sql);
 			res = true;
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SQLException(e);
 		}
 		return res;
 	}
