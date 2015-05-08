@@ -193,5 +193,12 @@ public class DbTest {
 	public void insertNonExistentTable() throws SQLException {
 		data.insert("nonexistent", values, col);
 	}
+	
+	@Test
+	public void insertNull() throws SQLException{
+		assertTrue(data.createTable(tableName, col, types));
+		assertTrue(data.insert(tableName, null, null));
+		assertTrue(data.dropTable(tableName));
+	}
 
 }
