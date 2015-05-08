@@ -53,7 +53,7 @@ public class Db {
 	 * @throws SQLException if database query is incorrect.
 	 * @return true iff connection is set.
 	 */
-	public boolean setupConn() throws SQLException {
+	private boolean setupConn() throws SQLException {
 		boolean res = false;
 		setDb(pad, dName);
 		try {
@@ -108,6 +108,7 @@ public class Db {
 					res = max;
 				}
 			}
+			rs.close();
 		} catch (SQLException e) {
 			res = 1;
 			throw new SQLException(e);
@@ -193,6 +194,7 @@ public class Db {
 				//hier moet nog iets beters gereturned worden.
 				System.out.println(res);
 			}
+			rs.close();
 		} catch (SQLException e) {
 			res = "Data not found";
 			throw new SQLException(e);
