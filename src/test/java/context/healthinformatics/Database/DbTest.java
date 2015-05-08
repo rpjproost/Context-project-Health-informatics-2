@@ -55,7 +55,7 @@ public class DbTest {
 	 */
 	@Test
 	public void testCreateTable() throws SQLException {
-		data.createTable(tableName, col, types);
+		assertTrue(data.createTable(tableName, col, types));
 	}
 	
 
