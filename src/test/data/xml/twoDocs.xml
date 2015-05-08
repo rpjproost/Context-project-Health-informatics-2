@@ -22,16 +22,8 @@
 		<doctype>EXCEL</doctype>
 		<path>src/test/data/xml/inputExcel.xlsx</path>
 		<column id="2">
-			<name>value</name>
+			<name>Groep</name>
 			<type>Integer</type>
-		</column>
-		<column id="5">
-			<name>date</name>
-			<type>String</type>
-		</column>
-		<column id="6">
-			<name>time</name>
-			<type>String</type>
 		</column>
 	</document>
 </xml>

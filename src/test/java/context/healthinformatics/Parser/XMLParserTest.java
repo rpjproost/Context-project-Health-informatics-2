@@ -103,11 +103,10 @@ public class XMLParserTest {
 	 * not specified.
 	 * @throws IOException should not throw this.
 	 */
-	@Test
+	@Test(expected = ArrayIndexOutOfBoundsException.class)
 	public void noStartTest() throws IOException {
 		xmlp.setFileName("src/test/data/xml/wrongStart.xml");
 		xmlp.parse();
-		assertTrue((xmlp.getStartLine() == 1));
 	}
 	
 	/**
