@@ -226,7 +226,7 @@ public class Db {
 	 * @return db path string.
 	 */
 	public String getDbPath() {
-		return db;
+		return pad;
 	}
 
 	/**
