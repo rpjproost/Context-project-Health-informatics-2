@@ -62,7 +62,7 @@ public class MainFrameTest {
 	 */
 	@Test
 	public void testGetTabsY() {
-		assertEquals(mf.getTabsY(), 200);
+		assertEquals(mf.getTabsY(), 120);
 	}
 	
 	/**

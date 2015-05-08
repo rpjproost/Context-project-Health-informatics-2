@@ -98,7 +98,7 @@ public class ColumnTest {
 	 */
 	@Test
 	public void testToString() {
-		assertEquals(col.toString(), "<12 Column List>");
+		assertEquals(col.toString(), "Column<12 Column List>");
 	}
 
 }
