@@ -172,7 +172,7 @@ public class Db {
 			}
 			stmt.executeUpdate(sql.toString());
 			res = true;
-		} catch (SQLException e) {
+		} catch (SQLException | NullPointerException e) {
 			throw new SQLException(e);
 		}
 		return res;
