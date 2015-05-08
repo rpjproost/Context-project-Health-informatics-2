@@ -1,21 +1,29 @@
 <?xml version="1.0"?>
 <xml>
-	<document>
+	<document docname="StatSensor">
 		<doctype>text</doctype>
 		<path>src/test/data/xml/inputTXT.txt</path>
 		<start>7</start>
 		<delimiter>,</delimiter>
-		<column>
+		<column id="2">
 			<name>value</name>
 			<type>Integer</type>
 		</column>
-		<column>
+		<column id="5">
 			<name>date</name>
 			<type>String</type>
 		</column>
-		<column>
+		<column id="6">
 			<name>time</name>
 			<type>String</type>
+		</column>
+	</document>
+	<document docname="HospitalRecords">
+		<doctype>EXCEL</doctype>
+		<path>src/test/data/xml/inputExcel.xlsx</path>
+		<column id="2">
+			<name>Groep</name>
+			<type>Integer</type>
 		</column>
 	</document>
 </xml>

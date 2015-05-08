@@ -129,7 +129,6 @@ public class ExcelParser extends Parser {
 		}
 		String[] res = splitLine(cells);
 		// TODO insert splitted string into db.
-		System.out.println(res[0] + " " + res[1] + " " + res[2]);
 	}
 
 	/**

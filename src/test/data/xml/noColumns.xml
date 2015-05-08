@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
-<document id="StatSensor">
-	<path>data/xxx.txt</path>
-	<start>7</start>
-	<delimiter>,</delimiter>
-</document>
+<xml>
+	<document docname="StatSensor">
+		<doctype>text</doctype>
+		<path>src/test/data/xml/inputTXT.txt</path>
+		<start>7</start>
+		<delimiter>,</delimiter>
+	</document>
+</xml>

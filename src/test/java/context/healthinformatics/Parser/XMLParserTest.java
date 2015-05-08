@@ -38,10 +38,10 @@ public class XMLParserTest {
 		try {
 		xmlp.setFileName("src/test/data/xml/goodXML.xml");
 		xmlp.parse();
-		assertEquals(xmlp.getDelimiter(), ",");
-		assertEquals(xmlp.getDocName(), "StatSensor");
-		assertEquals(xmlp.getPath(), "data/xxx.txt");
-		assertEquals(xmlp.getStartLine(), 7);
+		assertEquals("," , xmlp.getDelimiter());
+		assertEquals("StatSensor", xmlp.getDocName());
+		assertEquals("src/test/data/xml/inputTXT.txt", xmlp.getPath());
+		assertEquals(7, xmlp.getStartLine());
 		
 		ArrayList<Column> cols = new ArrayList<Column>();
 		cols.add(new Column(2, "value", "Integer"));
@@ -92,7 +92,7 @@ public class XMLParserTest {
 	 * throw a nullPointer.
 	 * @throws IOException Should not throw this exception
 	 */
-	@Test(expected  =NullPointerException.class)
+	@Test(expected  = NullPointerException.class)
 	public void noPathTest() throws IOException {
 		xmlp.setFileName("src/test/data/xml/noPath.xml");
 		xmlp.parse();
@@ -103,11 +103,10 @@ public class XMLParserTest {
 	 * not specified.
 	 * @throws IOException should not throw this.
 	 */
-	@Test
+	@Test(expected = ArrayIndexOutOfBoundsException.class)
 	public void noStartTest() throws IOException {
 		xmlp.setFileName("src/test/data/xml/wrongStart.xml");
 		xmlp.parse();
-		assertTrue((xmlp.getStartLine() == 1));
 	}
 	
 	/**
@@ -121,17 +120,29 @@ public class XMLParserTest {
 		xmlp.parse();
 	}
 	/**
+	 * tests parsing the settings for 2 documents
+	 * and assigning the different parsers.
+	 * @throws IOException shouldn't throw this.
+	 */
+	@Test
+	public void twoDocsTest() throws IOException {
+		xmlp.setFileName("src/test/data/xml/twoDocs.xml");
+		xmlp.parse();
+		assertEquals("HospitalRecords", xmlp.getDocName());
+		assertEquals("src/test/data/xml/inputExcel.xlsx", xmlp.getPath());
+	}
+	/**
 	 * Method used to compare 2 arraylists of collumns.
 	 * @param l1 The first list to be compared.
 	 * @param l2 The Second list to be compared.
 	 * @return <code>true</code> when both lists and all
 	 * its elements are equals, otherwise return <code>false</code>
 	 */
-	public boolean compare(ArrayList<Column> l1, ArrayList<Column> l2){
+	public boolean compare(ArrayList<Column> l1, ArrayList<Column> l2) {
 		if (l1.size() == l2.size()) {
 			for (int i = 0; i < l1.size(); i++) {
-				if (!l1.get(i).equals(l2.get(i)))
-					return false;
+				if (!l1.get(i).equals(l2.get(i))) {
+					return false; }
 			}
 		}
 		return true;
