@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<xml>
+	<document docname="csv">
+		<doctype>csv</doctype>
+		<path>src/test/data/xml/inputCSV.csv</path>
+		<column id="1">
+			<name>value</name>
+			<type>Integer</type>
+		</column>
+		<column id="2">
+			<name>date</name>
+			<type>String</type>
+		</column>
+		<column id="3">
+			<name>time</name>
+			<type>String</type>
+		</column>
+	</document>
+</xml>
