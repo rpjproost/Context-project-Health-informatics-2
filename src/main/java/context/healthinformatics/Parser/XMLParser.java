@@ -4,6 +4,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
@@ -25,6 +26,7 @@ public class XMLParser extends Parser {
 	private String delimiter;
 	private String path;
 	private int startLine;
+	private int sheet;
 	private ArrayList<Column> columns;
 
 	/**
@@ -41,9 +43,10 @@ public class XMLParser extends Parser {
 
 	/**
 	 * Parse the XML file to objects.
+	 * @throws InvalidFormatException 
 	 */
 	@Override
-	public void parse() throws IOException {
+	public void parse() throws IOException{
 		try {
 
 			File xml = new File(getFileName());
@@ -60,7 +63,7 @@ public class XMLParser extends Parser {
 					parseDocument(nList.item(i));
 				}
 			}
-		} catch (ParserConfigurationException | SAXException e) {
+		} catch (ParserConfigurationException | SAXException | InvalidFormatException e) {
 			throw new FileNotFoundException();
 		}
 	}
@@ -90,8 +93,9 @@ public class XMLParser extends Parser {
 	 * Method that handles parsing for a single document.
 	 * @param n the document node.
 	 * @throws IOException
+	 * @throws InvalidFormatException 
 	 */
-	private void parseDocument(Node n) throws IOException {
+	private void parseDocument(Node n) throws IOException, InvalidFormatException {
 		Element e = (Element) n;
 		setDocName(e.getAttribute("docname"));
 		setPath(getString(e, "path"));
@@ -99,6 +103,7 @@ public class XMLParser extends Parser {
 		NodeList columnList = e.getElementsByTagName("column"); 
 		parseColumns(columnList);
 		setDelimiter(getString(e, "delimiter"));
+		setSheet(getInt(getString(e, "sheet")));
 		getParser(getString(e, "doctype")).parse();
 		
 	}
@@ -111,7 +116,7 @@ public class XMLParser extends Parser {
 	protected Parser getParser(String label) {
 		switch (label.toLowerCase()) {
 		case "text" : return new TXTParser(getPath(), getStartLine(), getDelimiter(), getColumns());
-		case "excel" : return new ExcelParser(getPath(), getStartLine(), getColumns());
+		case "excel" : return new ExcelParser(getPath(), getStartLine(), getColumns(), getSheet());
 		case "csv" : return new TXTParser(getPath(), 1, ";" , getColumns());
 		default : return null;
 		}		
@@ -234,6 +239,22 @@ public class XMLParser extends Parser {
 	 */
 	public ArrayList<Column> getColumns() {
 		return columns;
+	}
+
+	/**
+	 * getter for sheetNumber.
+	 * @return sheet number
+	 */
+	public int getSheet() {
+		return sheet;
+	}
+
+	/**
+	 * setter for sheetNumber.
+	 * @param sheet sheetNumber to set.
+	 */
+	public void setSheet(int sheet) {
+		this.sheet = sheet;
 	}
 
 }
