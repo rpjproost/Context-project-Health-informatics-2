@@ -33,7 +33,7 @@ public class TXTParserTest {
 		cols.add(new Column(2, "value", "Integer"));
 		cols.add(new Column(FIVE, "date", "String"));
 		cols.add(new Column(SIX, "time", "String"));
-		txtp = new TXTParser(path + "correcttest.txt", SEVEN, ",", cols);
+		txtp = new TXTParser(path + "correcttest.txt", SEVEN, ",", cols, "test");
 	}
 
 	/**
@@ -176,7 +176,7 @@ public class TXTParserTest {
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testSplitterNullPointer() throws NullPointerException {
-		txtp = new TXTParser(path + "correcttest.txt", FIVE, ",", null);
+		txtp = new TXTParser(path + "correcttest.txt", FIVE, ",", null, "test");
 		txtp.setDelimiter(", ");
 		txtp.splitLine("a, b");
 	}

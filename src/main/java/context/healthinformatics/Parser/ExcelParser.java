@@ -145,7 +145,6 @@ public class ExcelParser extends Parser {
 		String[] cells = new String[numcells];
 		for (int c = 0; c < numcells; c++) {
 			cells[c] = row.getCell(c).toString();
-			System.out.println(cells[c]);
 		}
 		// String[] res = splitLine(cells);
 		// TODO insert splitted string into db.
@@ -179,25 +178,6 @@ public class ExcelParser extends Parser {
 		}
 		// String[] res = splitLine(cells);
 		// TODO insert splitted string into db.
-	}
-
-	/**
-	 * Get relevant cells based on columns array.
-	 * 
-	 * @param cells
-	 *            the cells from the excel sheet
-	 * @return relevant cells based on columns array
-	 */
-	public String[] splitLine(String[] cells) {
-		String[] res = new String[columns.size()];
-		try {
-			for (int i = 0; i < columns.size(); i++) {
-				res[i] = cells[columns.get(i).getColumnNumber() - 1];
-			}
-			return res;
-		} catch (ArrayIndexOutOfBoundsException e) {
-			throw new ArrayIndexOutOfBoundsException();
-		}
 	}
 
 }

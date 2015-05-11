@@ -11,9 +11,13 @@ import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
+import context.healthinformatics.Database.Db;
+import context.healthinformatics.Database.SingletonDb;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -43,10 +47,11 @@ public class XMLParser extends Parser {
 
 	/**
 	 * Parse the XML file to objects.
+	 * @throws SQLException 
 	 * @throws InvalidFormatException 
 	 */
 	@Override
-	public void parse() throws IOException{
+	public void parse() throws IOException {
 		try {
 
 			File xml = new File(getFileName());
@@ -63,7 +68,8 @@ public class XMLParser extends Parser {
 					parseDocument(nList.item(i));
 				}
 			}
-		} catch (ParserConfigurationException | SAXException | InvalidFormatException e) {
+		} catch (ParserConfigurationException | SAXException 
+				| InvalidFormatException | SQLException e) {
 			throw new FileNotFoundException();
 		}
 	}
@@ -94,8 +100,9 @@ public class XMLParser extends Parser {
 	 * @param n the document node.
 	 * @throws IOException
 	 * @throws InvalidFormatException 
+	 * @throws SQLException 
 	 */
-	private void parseDocument(Node n) throws IOException, InvalidFormatException {
+	private void parseDocument(Node n) throws IOException, InvalidFormatException, SQLException {
 		Element e = (Element) n;
 		setDocName(e.getAttribute("docname"));
 		setPath(getString(e, "path"));
@@ -104,6 +111,7 @@ public class XMLParser extends Parser {
 		parseColumns(columnList);
 		setDelimiter(getString(e, "delimiter"));
 		setSheet(getInt(getString(e, "sheet")));
+		createTableDb();
 		getParser(getString(e, "doctype")).parse();
 		
 	}
@@ -115,11 +123,24 @@ public class XMLParser extends Parser {
 	 */
 	protected Parser getParser(String label) {
 		switch (label.toLowerCase()) {
-		case "text" : return new TXTParser(getPath(), getStartLine(), getDelimiter(), getColumns());
+		case "text" : return new TXTParser(getPath(), getStartLine(), getDelimiter(), getColumns()
+				, getDocName());
 		case "excel" : return new ExcelParser(getPath(), getStartLine(), getColumns(), getSheet());
-		case "csv" : return new TXTParser(getPath(), 1, ";" , getColumns());
+		case "csv" : return new TXTParser(getPath(), 1, ";" , getColumns(), getDocName());
 		default : return null;
 		}		
+	}
+	
+	private void createTableDb() throws SQLException {
+		int length = columns.size();
+		Db data = SingletonDb.getDb();
+		String[] col = new String[length];
+		String[] t = new String[length];
+		for (int i = 0; i < length; i++) {
+			col[i] = columns.get(i).getColumnName();
+			t[i] = columns.get(i).getColumnType();
+		}
+		data.createTable(docName, col, t);
 	}
 
 	/**

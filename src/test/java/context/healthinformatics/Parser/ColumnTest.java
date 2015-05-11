@@ -13,14 +13,15 @@ import org.junit.Test;
 public class ColumnTest {
 	
 	private Column col;
-	private static final int COL_ID = 12;
+	private static final int TWELVE = 12;
+	private static final int FITYFIVE = 55;
 	
 	/**
 	 * Create for each test a new Column to test with.
 	 */
 	@Before
 	public void createColumn() {
-		col = new Column(COL_ID, "Column", "List");
+		col = new Column(TWELVE, "Column", "List");
 	}
 
 	/**
@@ -28,7 +29,7 @@ public class ColumnTest {
 	 */
 	@Test
 	public void testGetColumnNumber() {
-		assertEquals(col.getColumnNumber(), COL_ID);
+		assertEquals(col.getColumnNumber(), TWELVE);
 	}
 
 	/**
@@ -36,9 +37,8 @@ public class ColumnTest {
 	 */
 	@Test
 	public void testSetColumnNumber() {
-		final int wrongID = 55;
-		col.setColumnNumber(wrongID);
-		assertEquals(col.getColumnNumber(), wrongID);
+		col.setColumnNumber(FITYFIVE);
+		assertEquals(col.getColumnNumber(), FITYFIVE);
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class ColumnTest {
 	@Test
 	public void testSetColumnType() {
 		col.setColumnType("String");
-		assertEquals(col.getColumnType(), "String");
+		assertEquals(col.getColumnType(), "varchar(150)");
 	}
 
 	/**
@@ -81,9 +81,9 @@ public class ColumnTest {
 	@Test
 	public void testEqualsObject() {
 		Column wrongNumber = new Column(-1, "Column", "List");
-		Column noName = new Column(COL_ID, null, "List");
-		Column noType = new Column(COL_ID, "Column", null);
-		Column good = new Column(COL_ID, "Column", "List");
+		Column noName = new Column(TWELVE, null, "List");
+		Column noType = new Column(TWELVE, "Column", null);
+		Column good = new Column(TWELVE, "Column", "List");
 		String wrongObject = "";
 		
 		assertFalse(col.equals(null));

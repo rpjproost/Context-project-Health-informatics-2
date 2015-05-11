@@ -2,8 +2,6 @@ package context.healthinformatics.Parser;
 
 import java.io.IOException;
 
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-
 /**
  * Abstract class to specify what other Parsers must override.
  * And every Parser needs a file name to read from.
@@ -39,6 +37,7 @@ public abstract class Parser {
 	 * Abstract method which children must override. 
 	 * @throws IOException throws when the file doesn't exists.
 	 * @throws InvalidFormatException 
+	 * @throws SQLException 
 	 */
-	public abstract void parse() throws IOException, InvalidFormatException;
+	public abstract void parse() throws IOException;
 }
