@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.Toolkit;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -35,9 +36,9 @@ public class MainFrame extends JPanel {
 	private GridBagConstraints c;
 	private JPanel mainPanel;
 	private JFrame f;
-	private JPanel p1;
-	private JPanel p2;
-	private JPanel p3;
+	private JPanel inputTab;
+	private JPanel codeTab;
+	private JPanel outputTab;
 	private JPanel varPanel = new JPanel();
 	private MouseHandler mouse = new MouseHandler();
 	
@@ -80,6 +81,34 @@ public class MainFrame extends JPanel {
 	public PanelState getOutputPage() {
 		return outputState;
 	}
+	
+	/**
+	 * @return input tab as JPanel.
+	 */
+	public JPanel getInputTab() {
+		return inputTab;
+	}
+	
+	/**
+	 * @return code tab as JPanel.
+	 */
+	public JPanel getCodeTab() {
+		return codeTab;
+	}
+	
+	/**
+	 * @return output tab as JPanel.
+	 */
+	public JPanel getOutputTab() {
+		return outputTab;
+	}
+	
+	/**
+	 * @return Variable panel as JPanel.
+	 */
+	public JPanel getVarPanel() {
+		return varPanel;
+	}
 
 	/**
 	 * Method which creates the frame of the GUI and creates the tabs.
@@ -94,12 +123,12 @@ public class MainFrame extends JPanel {
 		
 		JPanel panel1 = createPanel(Color.gray, getScreenWidth(), TABSY);
 		panel1.setLayout(new GridBagLayout());
-		p1 = createTab("stap 1", 0, Color.decode("#81DAF5"));
-		panel1.add(p1, c);
-		p2 = createTab("stap 2", 1, Color.decode("#01A9DB"));
-		panel1.add(p2, c);
-		p3 = createTab("stap 3", 2, Color.decode("#086A87"));
-		panel1.add(p3, c);
+		inputTab = createTab("stap 1", 0, Color.decode("#81DAF5"));
+		panel1.add(inputTab, c);
+		codeTab = createTab("stap 2", 1, Color.decode("#01A9DB"));
+		panel1.add(codeTab, c);
+		outputTab = createTab("stap 3", 2, Color.decode("#086A87"));
+		panel1.add(outputTab, c);
 		c.gridx = 0;
 		c.gridy = 0;
 		mainPanel.add(panel1, c);
@@ -218,13 +247,13 @@ public class MainFrame extends JPanel {
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			varPanel.removeAll();
-			if (e.getSource() == p1) {
+			if (e.getSource() == inputTab) {
 				setState(inputState);
 			}
-			else if (e.getSource() == p2) {
+			else if (e.getSource() == codeTab) {
 				setState(codeState);
 			}
-			else if (e.getSource() == p3) {
+			else if (e.getSource() == outputTab) {
 				setState(outputState);
 			}
 			varPanel.add(state.loadPanel());
@@ -242,6 +271,5 @@ public class MainFrame extends JPanel {
 		
 		@Override
 		public void mouseExited(MouseEvent e) { }
-	}
-	
+	}	
 }

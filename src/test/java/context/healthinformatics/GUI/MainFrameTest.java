@@ -30,7 +30,7 @@ public class MainFrameTest {
 	public void createFrame() {
 		mf = new MainFrame();
 		screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		ml = (MouseHandler) MainFrame.p1.getMouseListeners()[0];
+		ml = (MouseHandler) mf.getInputTab().getMouseListeners()[0];
 	}
 
 	/**
@@ -40,8 +40,8 @@ public class MainFrameTest {
 	public void testState() {
 //		PanelState outputState = new OutputPage(mf);
 //		mf.setState(outputState);
-		PanelState outputState = new OutputPage();
-		MainFrame.setState(outputState);
+		PanelState outputState = new OutputPage(mf);
+		mf.setState(outputState);
 		
 		assertEquals(mf.getPanelState(), outputState);
 	}
@@ -52,7 +52,7 @@ public class MainFrameTest {
 	@Test
 	public void testGetStatePanelSize() {
 		int height = screenSize.height;
-		assertEquals(MainFrame.getStatePanelSize(), height - mf.getTabsY());
+		assertEquals(mf.getStatePanelSize(), height - mf.getTabsY());
 	}
 
 	/**
@@ -77,9 +77,9 @@ public class MainFrameTest {
 	 */
 	@Test
 	public void checkMouseClickEventInputState()  {
-		MouseEvent me = new MouseEvent(MainFrame.p1, 0, 0, 0, 0, 0, 0, false);
+		MouseEvent me = new MouseEvent(mf.getInputTab(), 0, 0, 0, 0, 0, 0, false);
 		ml.mouseClicked(me);
-		assertEquals(mf.getPanelState(), MainFrame.inputState);
+		assertEquals(mf.getPanelState(), mf.getInputPage());
 	}
 	
 	/**
@@ -87,9 +87,9 @@ public class MainFrameTest {
 	 */
 	@Test
 	public void checkMouseClickEventCodePage() {
-		MouseEvent me = new MouseEvent(MainFrame.p2, 0, 0, 0, 0, 0, 0, false);
+		MouseEvent me = new MouseEvent(mf.getCodeTab(), 0, 0, 0, 0, 0, 0, false);
 		ml.mouseClicked(me);
-		assertEquals(mf.getPanelState(), MainFrame.codeState);
+		assertEquals(mf.getPanelState(), mf.getCodePage());
 	}
 	
 	/**
@@ -97,9 +97,9 @@ public class MainFrameTest {
 	 */
 	@Test
 	public void checkMouseClickEventOutputPage() {
-		MouseEvent me = new MouseEvent(MainFrame.p3, 0, 0, 0, 0, 0, 0, false);
+		MouseEvent me = new MouseEvent(mf.getOutputTab(), 0, 0, 0, 0, 0, 0, false);
 		ml.mouseClicked(me);
-		assertEquals(mf.getPanelState(), MainFrame.outputState);
+		assertEquals(mf.getPanelState(), mf.getOutputPage());
 	}
 	
 	/**
@@ -107,9 +107,10 @@ public class MainFrameTest {
 	 */
 	@Test
 	public void checkMouseClickEventVariablePage() {
-		MouseEvent me = new MouseEvent(MainFrame.varPanel, 0, 0, 0, 0, 0, 0, false);
+		PanelState ps = mf.getPanelState();
+		MouseEvent me = new MouseEvent(mf.getVarPanel(), 0, 0, 0, 0, 0, 0, false);
 		ml.mouseClicked(me);
-		assertEquals(mf.getPanelState(), MainFrame.state);
+		assertEquals(mf.getPanelState(), ps);
 	}
 	
 	/**
