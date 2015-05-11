@@ -1,13 +1,22 @@
 package context.healthinformatics;
 
-import java.io.IOException;
-
 import context.healthinformatics.GUI.MainFrame;
-import context.healthinformatics.Parser.*;
 
-public class Main {
+/**
+ * Start this to run the program.
+ */
+public final class Main {
+	
+	/**
+	 * Useless constructor.
+	 */
+	private Main() { }
 
-	public static void main(String[] args) throws IOException {
+	/**
+	 * Method which runs the program.
+	 * @param args no value.
+	 */
+	public static void main(String[] args) {
 		new MainFrame();
 	}
 }

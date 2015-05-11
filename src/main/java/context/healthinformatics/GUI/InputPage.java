@@ -13,7 +13,6 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import context.healthinformatics.Parser.TXTParser;
 import context.healthinformatics.Parser.XMLParser;
 
 /**
@@ -92,9 +91,6 @@ public class InputPage implements PanelState, Serializable {
 				XMLParser xmlp = new XMLParser(input);
 				try {
 					xmlp.parse();
-					TXTParser txtp = new TXTParser(xmlp.getPath(),
-								xmlp.getStartLine(), xmlp.getDelimiter(), xmlp.getColumns());
-					txtp.parse();
 				} catch (IOException e1) {
 					System.out.println("No such file... Try again!");
 				}
