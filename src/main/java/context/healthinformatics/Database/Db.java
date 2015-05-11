@@ -177,6 +177,8 @@ public class Db {
 		}
 		return res;
 	}
+	
+
 
 	/**NEEDS WORK!
 	 * 
@@ -259,6 +261,7 @@ public class Db {
 	 * @return true if directory deleted.
 	 */
 	public boolean removeDirectory(File dir) {
+		boolean res = false;
 		if (dir != null) { 
 
 			String[] list = dir.list();
@@ -280,8 +283,9 @@ public class Db {
 					}
 				}
 			}
+			 res = dir.delete();
 		}
-		return dir.delete();
+		return res;
 	}
 
 }
