@@ -33,7 +33,7 @@ public class ExcelParser extends Parser {
 	 * @param columns
 	 *            the relevant columns in the excel sheet
 	 * @param sheet
-	 *            the sheet in de excel file to be processed
+	 *            the sheet in de excel file to be processed. Sheet int 1 is first sheet.
 	 */
 	public ExcelParser(String fileName, int startLine,
 			ArrayList<Column> columns, int sheet) {
@@ -96,20 +96,26 @@ public class ExcelParser extends Parser {
 	}
 
 	@Override
-	public void parse() throws IOException, InvalidFormatException {
+	public void parse() throws IOException {
 		// Try to open input file
 		FileInputStream fis = openFile(this.getFileName());
 		if (this.getFileName().endsWith(".xls")) {
 			// Open xls file
-			Workbook wb = WorkbookFactory.create(fis);
+			Workbook wb = null;
+			try {
+				wb = WorkbookFactory.create(fis);
+			} catch (InvalidFormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			// Process sheet sheet
-			processXLSSheet(wb.getSheetAt(sheet));
+			processXLSSheet(wb.getSheetAt(sheet - 1));
 			wb.close();
 		} else {
 			// Open Excel file
 			XSSFWorkbook wb = new XSSFWorkbook(fis);
 			// Process sheet sheet
-			processXLSXSheet(wb.getSheetAt(sheet));
+			processXLSXSheet(wb.getSheetAt(sheet - 1));
 			wb.close();
 		}
 
