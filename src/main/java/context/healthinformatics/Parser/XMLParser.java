@@ -112,6 +112,7 @@ public class XMLParser extends Parser {
 		switch (label.toLowerCase()) {
 		case "text" : return new TXTParser(getPath(), getStartLine(), getDelimiter(), getColumns());
 		case "excel" : return new ExcelParser(getPath(), getStartLine(), getColumns());
+		case "csv" : return new TXTParser(getPath(), 1, ";" , getColumns());
 		default : return null;
 		}		
 	}
@@ -125,7 +126,7 @@ public class XMLParser extends Parser {
 	private int getInt(String s) {
 		try {
 			return Integer.parseInt(getString(null, s));
-		} catch (NumberFormatException e) {
+		} catch (Exception e) {
 			return 1;
 		}
 	}
