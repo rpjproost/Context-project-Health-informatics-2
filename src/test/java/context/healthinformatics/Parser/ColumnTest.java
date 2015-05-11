@@ -13,15 +13,23 @@ import org.junit.Test;
 public class ColumnTest {
 	
 	private Column col;
+<<<<<<< HEAD
+	private static final int COL_ID = 12;
+=======
 	private static final int TWELVE = 12;
 	private static final int FITYFIVE = 55;
+>>>>>>> DbParser
 	
 	/**
 	 * Create for each test a new Column to test with.
 	 */
 	@Before
 	public void createColumn() {
+<<<<<<< HEAD
+		col = new Column(COL_ID, "Column", "List");
+=======
 		col = new Column(TWELVE, "Column", "List");
+>>>>>>> DbParser
 	}
 
 	/**
@@ -29,7 +37,11 @@ public class ColumnTest {
 	 */
 	@Test
 	public void testGetColumnNumber() {
+<<<<<<< HEAD
+		assertEquals(col.getColumnNumber(), COL_ID);
+=======
 		assertEquals(col.getColumnNumber(), TWELVE);
+>>>>>>> DbParser
 	}
 
 	/**
@@ -37,8 +49,14 @@ public class ColumnTest {
 	 */
 	@Test
 	public void testSetColumnNumber() {
+<<<<<<< HEAD
+		final int wrongID = 55;
+		col.setColumnNumber(wrongID);
+		assertEquals(col.getColumnNumber(), wrongID);
+=======
 		col.setColumnNumber(FITYFIVE);
 		assertEquals(col.getColumnNumber(), FITYFIVE);
+>>>>>>> DbParser
 	}
 
 	/**
@@ -81,9 +99,15 @@ public class ColumnTest {
 	@Test
 	public void testEqualsObject() {
 		Column wrongNumber = new Column(-1, "Column", "List");
+<<<<<<< HEAD
+		Column noName = new Column(COL_ID, null, "List");
+		Column noType = new Column(COL_ID, "Column", null);
+		Column good = new Column(COL_ID, "Column", "List");
+=======
 		Column noName = new Column(TWELVE, null, "List");
 		Column noType = new Column(TWELVE, "Column", null);
 		Column good = new Column(TWELVE, "Column", "List");
+>>>>>>> DbParser
 		String wrongObject = "";
 		
 		assertFalse(col.equals(null));
