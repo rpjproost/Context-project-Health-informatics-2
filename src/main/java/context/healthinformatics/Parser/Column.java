@@ -81,12 +81,12 @@ public class Column {
 			if (columnType.toLowerCase().equals("string")) {
 				this.columnType = "varchar(150)";
 			}
-			if (columnType.toLowerCase().equals("integer")) {
+			else if (columnType.toLowerCase().equals("integer")) {
 				this.columnType = "INT";
 			}
-		}
-		else {
-			this.columnType = columnType;
+			else {
+				this.columnType = columnType;
+			}
 		}
 	}
 
