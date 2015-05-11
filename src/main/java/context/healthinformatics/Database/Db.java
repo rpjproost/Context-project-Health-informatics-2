@@ -6,6 +6,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+
+import context.healthinformatics.Parser.Column;
 
 /**
  * 
@@ -147,35 +150,52 @@ public class Db {
 	 * @return true iff values are inserted.
 	 * @throws SQLException if values could not be inserted.
 	 */
-	public boolean insert(String tableName, String[] values, String[] columns) throws SQLException {
+	public boolean insert(String tableName, String[] values, ArrayList<Column> columns)
+			throws SQLException {
 		boolean res = false;
 		try {
 			stmt = conn.createStatement();
 			StringBuffer sql = new StringBuffer();
 			sql.append("INSERT INTO " + tableName + "(");
-			for (int i = 0; i < columns.length; i++) {
+			for (int i = 0; i < columns.size(); i++) {
 				if (i == values.length - 1) {
-					sql.append(columns[i]);	sql.append(")");
+					sql.append(columns.get(i).getColumnName());	sql.append(")");
 				}
 				else {
-					sql.append(columns[i]);	sql.append(",");
+					sql.append(columns.get(i).getColumnName());	sql.append(",");
 				}
 			}
 			sql.append(" VALUES (");
-			for (int i = 0; i < values.length; i++) {
-				if (i == values.length - 1) {
-					sql.append(values[i]); sql.append(")");
-				}
-				else {
-					sql.append(values[i]); sql.append(",");
-				}
-			}
+			sql = appendValues(sql, values, columns);
 			stmt.executeUpdate(sql.toString());
 			res = true;
 		} catch (SQLException | NullPointerException e) {
 			throw new SQLException(e);
 		}
 		return res;
+	}
+	
+	/** Append values to sqlbuffer.
+	 * 
+	 * @param s stringbuffer sql query.
+	 * @param values values to be inserted.
+	 * @param columns columns where values will be inserted.
+	 * @return sql appended query.
+	 */
+	public StringBuffer appendValues(StringBuffer s, String[] values, ArrayList<Column> columns) {
+		for (int i = 0; i < values.length; i++) {
+			if (i == values.length - 1) {
+				if (columns.get(i).getColumnType().toLowerCase().startsWith("varchar")) {
+					s.append("'"); s.append(values[i]); s.append("')");
+				}
+			}
+			else {
+				if (columns.get(i).getColumnType().toLowerCase().startsWith("varchar")) {
+					s.append("'"); s.append(values[i]); s.append("',");
+				}
+			}
+		}
+		return s;
 	}
 	
 

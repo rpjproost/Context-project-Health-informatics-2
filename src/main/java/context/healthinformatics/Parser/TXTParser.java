@@ -2,8 +2,12 @@ package context.healthinformatics.Parser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import context.healthinformatics.Database.Db;
+import context.healthinformatics.Database.SingletonDb;
 
 /**
  * Class TxtParser.
@@ -15,6 +19,7 @@ public class TXTParser extends Parser {
 	private File file;
 	private Scanner sc;
 	private ArrayList<Column> columns;
+	private String docName;
 
 	/**
 	 * Constructor of the TXTParser.
@@ -29,11 +34,12 @@ public class TXTParser extends Parser {
 	 *            the arraylist with columns
 	 */
 	public TXTParser(String fileName, int startLine, String delimiter,
-			ArrayList<Column> columns) {
+			ArrayList<Column> columns, String docName) {
 		super(fileName);
 		setStartLine(startLine);
 		this.delimiter = delimiter;
 		this.columns = columns;
+		this.docName = docName;
 	}
 
 	/**
@@ -143,7 +149,13 @@ public class TXTParser extends Parser {
 			if (canSplit(line)) {
 				// TODO insert splitted string into db.
 				String[] splittedLine = splitLine(line);
-				splittedLine.toString();
+				Db data = SingletonDb.getDb();
+				try {
+					data.insert(docName, splittedLine, columns);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		sc.close();

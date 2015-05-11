@@ -51,7 +51,7 @@ public class XMLParser extends Parser {
 	 * @throws InvalidFormatException 
 	 */
 	@Override
-	public void parse() throws IOException{
+	public void parse() throws IOException {
 		try {
 
 			File xml = new File(getFileName());
@@ -123,9 +123,10 @@ public class XMLParser extends Parser {
 	 */
 	protected Parser getParser(String label) {
 		switch (label.toLowerCase()) {
-		case "text" : return new TXTParser(getPath(), getStartLine(), getDelimiter(), getColumns());
+		case "text" : return new TXTParser(getPath(), getStartLine(), getDelimiter(), getColumns()
+				, getDocName());
 		case "excel" : return new ExcelParser(getPath(), getStartLine(), getColumns(), getSheet());
-		case "csv" : return new TXTParser(getPath(), 1, ";" , getColumns());
+		case "csv" : return new TXTParser(getPath(), 1, ";" , getColumns(), getDocName());
 		default : return null;
 		}		
 	}
