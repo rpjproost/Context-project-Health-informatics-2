@@ -53,7 +53,6 @@ public class XMLParser extends Parser {
 	@Override
 	public void parse() throws IOException {
 		try {
-
 			File xml = new File(getFileName());
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -140,7 +139,8 @@ public class XMLParser extends Parser {
 		case "text" : return new TXTParser(getPath(), getStartLine(), getDelimiter(), getColumns()
 				, getDocName());
 		case "excel" : return new ExcelParser(getPath(), getStartLine(), getColumns(), getSheet());
-		case "csv" : return new TXTParser(getPath(), getStartLine(), ";" , getColumns(), getDocName());
+		case "csv" : return new TXTParser(getPath(), getStartLine(), ";" 
+				, getColumns(), getDocName());
 		default : return null;
 		}		
 	}
@@ -319,7 +319,7 @@ class XMLTestParser extends XMLParser {
 	}
 	
 	/**
-	 * Returns a dumy parser and saves the parser genrated
+	 * Returns a dummy parser and saves the parser generated
 	 * by the XMLParser class to an arrayList.
 	 * @param label the String with the parser to use.
 	 * @return The Parser with all settings.
