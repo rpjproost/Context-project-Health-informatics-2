@@ -1,9 +1,6 @@
 package context.healthinformatics.Parser;
 
 import java.io.IOException;
-import java.sql.SQLException;
-
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 /**
  * Abstract class to specify what other Parsers must override.
