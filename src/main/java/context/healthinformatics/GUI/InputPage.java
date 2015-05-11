@@ -7,6 +7,7 @@ import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.io.Serializable;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -18,13 +19,17 @@ import context.healthinformatics.Parser.XMLParser;
 /**
  * Class which represents one of the states for the variabel panel in the mainFrame.
  */
-public class InputPage implements PanelState {
+public class InputPage implements PanelState, Serializable {
 	
-	private static JTextField txt;
-	private static JButton button;
+	private static final long serialVersionUID = 1L;
+
+	private MainFrame mf;
+	
+	private JTextField txt;
+	private JButton button;
 	private Dimension dim;
-	private static String input;
-	private static GridBagConstraints c;
+	private String input;
+	private GridBagConstraints c;
 	
 	public static final int TXTFIELDWIDTH = 50;
 	public static final int BUTTONFONTSIZE = 30;
@@ -33,16 +38,18 @@ public class InputPage implements PanelState {
 	
 	/**
 	 * Constructor.
+	 * @param m is the mainframe object
 	 */
-	public InputPage() { }
+	public InputPage(MainFrame m) {
+		mf = m;
+	}
 
 	/**
 	 * @return Panel of this state.
 	 */
 	public JPanel loadPanel() {
 		JPanel panel = MainFrame.createPanel(Color.decode("#81DAF5"),
-				MainFrame.getScreenWidth(), MainFrame.getStatePanelSize());
-		
+				mf.getScreenWidth(), mf.getStatePanelSize());
 		c = new GridBagConstraints();
 		dim = new Dimension(DIMESIONHEIGHT, DIMESIONWIDTH);
 		txt = new JTextField(TXTFIELDWIDTH);
@@ -73,7 +80,7 @@ public class InputPage implements PanelState {
 	/**
 	 * Class which handles the actions when buttons are clicked.
 	 */
-	static class ActionHandler implements ActionListener {
+	class ActionHandler implements ActionListener {
 
 		/**
 		 * Method which is fired after a certain event.

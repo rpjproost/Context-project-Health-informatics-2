@@ -19,26 +19,26 @@ import javax.swing.border.EmptyBorder;
 public class MainFrame extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	private static PanelState state;
-	private static PanelState inputState = new InputPage();
-	private static PanelState codeState = new CodePage();
-	private static PanelState outputState = new OutputPage();
+	private PanelState state;
+	private PanelState inputState = new InputPage(this);
+	private PanelState codeState = new CodePage(this);
+	private PanelState outputState = new OutputPage(this);
 	
 	public static final int NMBROFTABS = 3;
 	public static final int TABTEXTFONTSIZE = 40;
 	public static final int BORDERSIZE = 10;
 	
-	private static int tabsX;
+	private int tabsX;
 	private static final int TABSY = 120;
-	private static int screenWidth;
+	private int screenWidth;
 	
 	private GridBagConstraints c;
 	private JPanel mainPanel;
 	private JFrame f;
-	private static JPanel p1;
-	private static JPanel p2;
-	private static JPanel p3;
-	private static JPanel varPanel = new JPanel();
+	private JPanel p1;
+	private JPanel p2;
+	private JPanel p3;
+	private JPanel varPanel = new JPanel();
 	private MouseHandler mouse = new MouseHandler();
 	
 	/**
@@ -53,15 +53,32 @@ public class MainFrame extends JPanel {
 	 * Method which sets the state of the GUI.
 	 * @param p which is the desired state.
 	 */
-	public static void setState(PanelState p) {
+	public void setState(PanelState p) {
 		state = p;
 	}
 	
 	/**
-	 * @return return the width of the screen.
+	 * Method which sets the state of the GUI.
+	 * @return inputpage
 	 */
-	public static int getScreenWidth() {
-		return screenWidth;
+	public PanelState getInputPage() {
+		return inputState;
+	}
+	
+	/**
+	 * Method which sets the state of the GUI.
+	 * @return codePAge
+	 */
+	public PanelState getCodePage() {
+		return codeState;
+	}
+	
+	/**
+	 * Method which sets the state of the GUI.
+	 * @return outputPage
+	 */
+	public PanelState getOutputPage() {
+		return outputState;
 	}
 
 	/**
@@ -72,10 +89,10 @@ public class MainFrame extends JPanel {
 		c = new GridBagConstraints();
 		mainPanel = new JPanel(new GridBagLayout());
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		screenWidth = screenSize.width;
-		tabsX = screenWidth / NMBROFTABS;
+		setScreenWidth(screenSize.width);
+		tabsX = getScreenWidth() / NMBROFTABS;
 		
-		JPanel panel1 = createPanel(Color.gray, screenWidth, TABSY);
+		JPanel panel1 = createPanel(Color.gray, getScreenWidth(), TABSY);
 		panel1.setLayout(new GridBagLayout());
 		p1 = createTab("stap 1", 0, Color.decode("#81DAF5"));
 		panel1.add(p1, c);
@@ -88,7 +105,7 @@ public class MainFrame extends JPanel {
 		mainPanel.add(panel1, c);
 		
 		varPanel.setLayout(new GridBagLayout());
-		varPanel.add(MainFrame.state.loadPanel());
+		varPanel.add(state.loadPanel());
 		c.gridx = 0;
 		c.gridy = 1;
 		mainPanel.add(varPanel, c);
@@ -119,7 +136,7 @@ public class MainFrame extends JPanel {
 	/**
 	 * @return the height of the state panel.
 	 */
-	public static int getStatePanelSize() {
+	public int getStatePanelSize() {
 		return Toolkit.getDefaultToolkit().getScreenSize().height - TABSY;
 	}
 	
@@ -180,23 +197,37 @@ public class MainFrame extends JPanel {
 	}
 	
 	/**
+	 * @return return the width of the screen.
+	 */
+	public int getScreenWidth() {
+		return screenWidth;
+	}
+
+	/**
+	 * @param screenWidth the width of the screen.
+	 */
+	public void setScreenWidth(int screenWidth) {
+		this.screenWidth = screenWidth;
+	}
+
+	/**
 	 * Class which handles moue events.
 	 */
-	static class MouseHandler implements MouseListener {
+	class MouseHandler implements MouseListener {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
 			varPanel.removeAll();
-			if (e.getSource() == MainFrame.p1) {
-				MainFrame.setState(inputState);
+			if (e.getSource() == p1) {
+				setState(inputState);
 			}
-			else if (e.getSource() == MainFrame.p2) {
-				MainFrame.setState(codeState);
+			else if (e.getSource() == p2) {
+				setState(codeState);
 			}
-			else if (e.getSource() == MainFrame.p3) {
-				MainFrame.setState(outputState);
+			else if (e.getSource() == p3) {
+				setState(outputState);
 			}
-			varPanel.add(MainFrame.state.loadPanel());
+			varPanel.add(state.loadPanel());
 			varPanel.revalidate();
 		}
 
