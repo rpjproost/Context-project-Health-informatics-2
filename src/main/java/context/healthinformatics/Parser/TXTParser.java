@@ -156,7 +156,7 @@ public class TXTParser extends Parser {
 					data.insert(docName, splittedLine, columns);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					
 				}
 			}
 		}
