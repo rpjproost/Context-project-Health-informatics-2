@@ -7,15 +7,22 @@ import static org.junit.Assert.fail;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import context.healthinformatics.Database.Db;
+import context.healthinformatics.Database.SingletonDb;
 
 /**
  * class that is used to test the xml parser.
  */
 public class XMLParserTest {
+	
+	private Db data = SingletonDb.getDb();
 	/**
 	 * variable used to save the newly created parser.
 	 */
@@ -43,7 +50,7 @@ public class XMLParserTest {
 		xmlp.setFileName("src/test/data/xml/goodXML.xml");
 		xmlp.parse();
 		assertEquals("," , xmlp.getDelimiter());
-		assertEquals("StatSensor", xmlp.getDocName());
+		assertEquals("stat", xmlp.getDocName());
 		assertEquals("src/test/data/xml/inputTXT.txt", xmlp.getPath());
 		assertEquals(startLine, xmlp.getStartLine());
 		
@@ -54,8 +61,9 @@ public class XMLParserTest {
 		assertTrue(compare(xmlp.getColumns(), cols));
 		}
 		catch (Exception e) {
-			fail("an exception occurred: " + e.toString());
 			e.printStackTrace();
+			fail("an exception occurred: " + e.toString());
+			System.out.println(e.toString());
 		}
 	}
 	
@@ -64,7 +72,7 @@ public class XMLParserTest {
 	 * throw a nullpointer.
 	 * @throws IOException Should not throw this exception.
 	 */
-	@Test(expected = NullPointerException.class)
+	@Test(expected = FileNotFoundException.class)
 	public void emptyFieldTest() throws IOException {
 		xmlp.setFileName("src/test/data/xml/emptyField.xml");
 		xmlp.parse();
@@ -75,7 +83,7 @@ public class XMLParserTest {
 	 * throw a nullPointer.
 	 * @throws IOException Should not throw this exception
 	 */
-	@Test(expected = NullPointerException.class)
+	@Test(expected = FileNotFoundException.class)
 	public void noDelimiterTest() throws IOException {
 		xmlp.setFileName("src/test/data/xml/noDelimiter.xml");
 		xmlp.parse();
@@ -97,7 +105,7 @@ public class XMLParserTest {
 	 * throw a nullPointer.
 	 * @throws IOException Should not throw this exception
 	 */
-	@Test(expected  = NullPointerException.class)
+	@Test(expected  = FileNotFoundException.class)
 	public void noPathTest() throws IOException {
 		xmlp.setFileName("src/test/data/xml/noPath.xml");
 		xmlp.parse();
@@ -108,7 +116,7 @@ public class XMLParserTest {
 	 * not specified.
 	 * @throws IOException should not throw this.
 	 */
-	@Test(expected = ArrayIndexOutOfBoundsException.class)
+	@Test(expected = FileNotFoundException.class)
 	public void noStartTest() throws IOException {
 		xmlp.setFileName("src/test/data/xml/wrongStart.xml");
 		xmlp.parse();

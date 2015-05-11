@@ -19,7 +19,7 @@ public class Column {
 	 * String/Integer.
 	 */
 	private String columnType;
-	
+
 	/**
 	 * Constructor for column.
 	 * @param id the columnNumber.
@@ -77,7 +77,18 @@ public class Column {
 	 * @param columnType the type to set.
 	 */
 	public void setColumnType(String columnType) {
-		this.columnType = columnType;
+		if (columnType != null) {
+			if (columnType.toLowerCase().equals("string")) {
+				this.columnType = "varchar(150)";
+			}
+			if (columnType.toLowerCase().equals("integer")) {
+				this.columnType = "INT";
+			}
+		}
+		else {
+			this.columnType = columnType;
+		}
+		System.out.println(this.columnType);
 	}
 
 	@Override
@@ -94,7 +105,7 @@ public class Column {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Creates a String representation of the column object.
 	 * @return returns a String representing a column.

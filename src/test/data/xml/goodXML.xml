@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <xml>
-	<document docname="StatSensor">
+	<document docname="stat">
 		<doctype>text</doctype>
 		<path>src/test/data/xml/inputTXT.txt</path>
 		<start>7</start>

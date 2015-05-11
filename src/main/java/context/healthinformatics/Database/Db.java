@@ -27,7 +27,7 @@ public class Db {
 	 * @throws NullPointerException when input is null.
 	 * @throws SQLException 
 	 */
-	public Db(String databaseName, String p) throws NullPointerException, SQLException {
+	protected Db(String databaseName, String p) throws NullPointerException, SQLException {
 		if (p == null || databaseName == null) {
 			throw new NullPointerException();
 		}
