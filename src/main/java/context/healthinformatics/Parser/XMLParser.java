@@ -279,3 +279,47 @@ public class XMLParser extends Parser {
 	}
 
 }
+
+/**
+ * Class used for testing the XMLParser.
+ * Stops the parsing after the document.
+ */
+class XMLTestParser extends XMLParser {
+
+	/**
+	 * list of parsers.
+	 */
+	private ArrayList<Parser> parsers;
+	/**
+	 * constructor for xmlTestParser.
+	 * @param fileName path to file.
+	 */
+	public XMLTestParser(String fileName) {
+		super(fileName);
+		parsers = new ArrayList<Parser>();
+	}
+	
+	/**
+	 * Returns a dumy parser and saves the parser genrated
+	 * by the XMLParser class to an arrayList.
+	 * @param label the String with the parser to use.
+	 * @return The Parser with all settings.
+	 */
+	@Override
+	protected Parser getParser(String label) {
+		parsers.add(super.getParser(label));
+		Parser p = new TXTParser(null, 0, null, null, null) {
+			@Override
+			public void parse() { };
+		};
+		return p;
+	}
+
+	/**
+	 * getter for the arrayList of parsers.
+	 * @return list of parsers.
+	 */
+	public ArrayList<Parser> getParsers() {
+		return parsers;
+	}	
+}

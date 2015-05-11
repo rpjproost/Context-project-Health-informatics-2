@@ -32,7 +32,7 @@ public class XMLParserTest {
 	 */
 	@Before
 	public void before() {
-		xmlp = new XMLParser("");
+		xmlp = new XMLTestParser("");
 	}
 	
 	/**
