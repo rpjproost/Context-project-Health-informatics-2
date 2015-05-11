@@ -49,8 +49,8 @@ public class DbTest {
 		values = new String[2];
 
 		colArr = new ArrayList<Column>();
-		colArr.add(new Column(0, "Name", "Type"));
-		colArr.add(new Column(0, "Age", "Type"));
+		colArr.add(new Column(0, "Name", "String"));
+		colArr.add(new Column(0, "Age", "Integer"));
 
 		col[0] = "Name";
 		col[1] = "Age";
@@ -58,7 +58,7 @@ public class DbTest {
 		types[0] = "varchar(150)";
 		types[1] = "INT";
 
-		values[0] = "'Rick'";
+		values[0] = "Rick";
 		values[1] = "22";
 	}
 

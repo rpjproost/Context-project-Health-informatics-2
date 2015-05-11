@@ -88,7 +88,6 @@ public class Column {
 		else {
 			this.columnType = columnType;
 		}
-		System.out.println(this.columnType);
 	}
 
 	@Override

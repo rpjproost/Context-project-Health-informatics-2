@@ -59,6 +59,7 @@ public class XMLParserTest {
 		cols.add(new Column(col2, "date", "String"));
 		cols.add(new Column(col3, "time", "String"));
 		assertTrue(compare(xmlp.getColumns(), cols));
+		data.dropTable("stat");
 		}
 		catch (Exception e) {
 			e.printStackTrace();

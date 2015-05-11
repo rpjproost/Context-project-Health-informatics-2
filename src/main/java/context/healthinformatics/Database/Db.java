@@ -188,10 +188,16 @@ public class Db {
 				if (columns.get(i).getColumnType().toLowerCase().startsWith("varchar")) {
 					s.append("'"); s.append(values[i]); s.append("')");
 				}
+				else {
+					s.append(values[i]); s.append(")");
+				}
 			}
 			else {
 				if (columns.get(i).getColumnType().toLowerCase().startsWith("varchar")) {
 					s.append("'"); s.append(values[i]); s.append("',");
+				}
+				else {
+					s.append(values[i]); s.append(",");
 				}
 			}
 		}

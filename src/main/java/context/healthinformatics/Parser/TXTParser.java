@@ -32,6 +32,8 @@ public class TXTParser extends Parser {
 	 *            the delimiter of the data
 	 * @param columns
 	 *            the arraylist with columns
+	 * @param docName name of doc.
+	 * 			
 	 */
 	public TXTParser(String fileName, int startLine, String delimiter,
 			ArrayList<Column> columns, String docName) {

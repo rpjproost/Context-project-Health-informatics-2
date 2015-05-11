@@ -140,7 +140,6 @@ public class XMLParser extends Parser {
 			col[i] = columns.get(i).getColumnName();
 			t[i] = columns.get(i).getColumnType();
 		}
-		System.out.println("docname = " +docName);
 		data.createTable(docName, col, t);
 	}
 
