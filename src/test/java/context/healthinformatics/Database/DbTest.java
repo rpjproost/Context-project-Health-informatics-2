@@ -1,6 +1,7 @@
 package context.healthinformatics.Database;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.sql.SQLException;
@@ -250,9 +251,9 @@ public class DbTest {
 	/**
 	 * Try to remove directory null.
 	 */
-	@Test(expected = NullPointerException.class)
+	@Test
 	public void removeNull() {
-		data.removeDirectory(null);
+		assertFalse(data.removeDirectory(null));
 	}
 
 }
