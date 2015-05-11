@@ -70,7 +70,7 @@ public class XMLParser extends Parser {
 			}
 		} catch (ParserConfigurationException | SAXException 
 				| InvalidFormatException | SQLException e) {
-			throw new FileNotFoundException();
+			throw new FileNotFoundException(e.getMessage());
 		}
 	}
 
@@ -140,14 +140,19 @@ public class XMLParser extends Parser {
 			col[i] = columns.get(i).getColumnName();
 			t[i] = columns.get(i).getColumnType();
 		}
-		data.createTable(docName, col, t);
+		try {
+			data.createTable(docName, col, t);
+		}
+		catch (SQLException e) {
+			throw new SQLException("The Table could not be created.");
+		}
 	}
 
 	/**
 	 * Get a Integer at the place of the tag in the xml.
 	 * When there isn't a Integer, it will be set on a default 1.
 	 * @param s the tag in the xml
-	 * @return int or default 1
+	 * @return parsed int or default 1
 	 */
 	private int getInt(String s) {
 		try {
