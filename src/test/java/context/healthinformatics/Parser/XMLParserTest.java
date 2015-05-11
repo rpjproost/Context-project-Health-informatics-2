@@ -12,10 +12,15 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
+import context.healthinformatics.Database.Db;
+import context.healthinformatics.Database.SingletonDb;
+
 /**
  * class that is used to test the xml parser.
  */
 public class XMLParserTest {
+	
+	private Db data = SingletonDb.getDb();
 	/**
 	 * variable used to save the newly created parser.
 	 */
@@ -35,22 +40,29 @@ public class XMLParserTest {
 	 */
 	@Test
 	public void correctTest() {
+		final int startLine = 7;
+		final int col1 = 2;
+		final int col2 = 5;
+		final int col3 = 6;
 		try {
 		xmlp.setFileName("src/test/data/xml/goodXML.xml");
 		xmlp.parse();
 		assertEquals("," , xmlp.getDelimiter());
-		assertEquals("StatSensor", xmlp.getDocName());
+		assertEquals("stat", xmlp.getDocName());
 		assertEquals("src/test/data/xml/inputTXT.txt", xmlp.getPath());
-		assertEquals(7, xmlp.getStartLine());
+		assertEquals(startLine, xmlp.getStartLine());
 		
 		ArrayList<Column> cols = new ArrayList<Column>();
-		cols.add(new Column(2, "value", "Integer"));
-		cols.add(new Column(5, "date", "String"));
-		cols.add(new Column(6, "time", "String"));
+		cols.add(new Column(col1, "value", "Integer"));
+		cols.add(new Column(col2, "date", "String"));
+		cols.add(new Column(col3, "time", "String"));
 		assertTrue(compare(xmlp.getColumns(), cols));
+		data.dropTable("stat");
 		}
 		catch (Exception e) {
+			e.printStackTrace();
 			fail("an exception occurred: " + e.toString());
+			System.out.println(e.toString());
 		}
 	}
 	
@@ -59,7 +71,7 @@ public class XMLParserTest {
 	 * throw a nullpointer.
 	 * @throws IOException Should not throw this exception.
 	 */
-	@Test(expected = NullPointerException.class)
+	@Test(expected = FileNotFoundException.class)
 	public void emptyFieldTest() throws IOException {
 		xmlp.setFileName("src/test/data/xml/emptyField.xml");
 		xmlp.parse();
@@ -70,7 +82,7 @@ public class XMLParserTest {
 	 * throw a nullPointer.
 	 * @throws IOException Should not throw this exception
 	 */
-	@Test(expected = NullPointerException.class)
+	@Test(expected = FileNotFoundException.class)
 	public void noDelimiterTest() throws IOException {
 		xmlp.setFileName("src/test/data/xml/noDelimiter.xml");
 		xmlp.parse();
@@ -92,7 +104,7 @@ public class XMLParserTest {
 	 * throw a nullPointer.
 	 * @throws IOException Should not throw this exception
 	 */
-	@Test(expected  = NullPointerException.class)
+	@Test(expected  = FileNotFoundException.class)
 	public void noPathTest() throws IOException {
 		xmlp.setFileName("src/test/data/xml/noPath.xml");
 		xmlp.parse();
@@ -103,7 +115,7 @@ public class XMLParserTest {
 	 * not specified.
 	 * @throws IOException should not throw this.
 	 */
-	@Test(expected = ArrayIndexOutOfBoundsException.class)
+	@Test(expected = FileNotFoundException.class)
 	public void noStartTest() throws IOException {
 		xmlp.setFileName("src/test/data/xml/wrongStart.xml");
 		xmlp.parse();
@@ -130,6 +142,18 @@ public class XMLParserTest {
 		xmlp.parse();
 		assertEquals("HospitalRecords", xmlp.getDocName());
 		assertEquals("src/test/data/xml/inputExcel.xlsx", xmlp.getPath());
+	}
+	
+	/**
+	 * tests parsing for a csv document.
+	 * @throws IOException throws if the document is wrong.
+	 */
+	@Test
+	public void csvTest() throws IOException {
+		xmlp.setFileName("src/test/data/xml/csv.xml");
+		xmlp.parse();
+		assertEquals("csv", xmlp.getDocName());
+		assertEquals("src/test/data/xml/inputCSV.csv", xmlp.getPath());
 	}
 	/**
 	 * Method used to compare 2 arraylists of collumns.

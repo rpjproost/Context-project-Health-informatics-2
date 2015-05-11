@@ -6,6 +6,9 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+
+import context.healthinformatics.Parser.Column;
 
 /**
  * 
@@ -27,7 +30,7 @@ public class Db {
 	 * @throws NullPointerException when input is null.
 	 * @throws SQLException 
 	 */
-	public Db(String databaseName, String p) throws NullPointerException, SQLException {
+	protected Db(String databaseName, String p) throws NullPointerException, SQLException {
 		if (p == null || databaseName == null) {
 			throw new NullPointerException();
 		}
@@ -53,7 +56,7 @@ public class Db {
 	 * @throws SQLException if database query is incorrect.
 	 * @return true iff connection is set.
 	 */
-	public boolean setupConn() throws SQLException {
+	private boolean setupConn() throws SQLException {
 		boolean res = false;
 		setDb(pad, dName);
 		try {
@@ -108,6 +111,7 @@ public class Db {
 					res = max;
 				}
 			}
+			rs.close();
 		} catch (SQLException e) {
 			res = 1;
 			throw new SQLException(e);
@@ -122,58 +126,85 @@ public class Db {
 	 * @return string for sql building.
 	 */
 	public String createTableColumns(String[] columns, String[] types) {
-		String res = "(ID int not null "
-				+ "primary key GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), ";
+		StringBuffer res = new StringBuffer();
+		res.append("(ID int not null "
+				+ "primary key GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), ");
 		for (int i = 0; i < columns.length; i++) {
 			if (i == columns.length - 1) {
-				res = res + columns[i] + " ";
-				res = res + types[i] + ")";
+				res.append(columns[i]); res.append(" ");
+				res.append(types[i]); res.append(")");
 			}
 			else {
-				res = res + columns[i] + " ";
-				res = res + types[i] + ",";
+				res.append(columns[i]); res.append(" ");
+				res.append(types[i]); res.append(",");
 			}
 		}
-		return res;
+		return res.toString();
 	}
 
-	/** Inserts values into table.
+	/**Insert values in to table.
 	 * 
-	 * @param tableName table name the values go into.
-	 * @param values the values to be added.
-	 * @param columns the columns specified for the values.
-	 * @return true iff successfully inserted values.
+	 * @param tableName name of table.
+	 * @param values values to be inserted.
+	 * @param columns columns where values be inserted.
+	 * @return true iff values are inserted.
 	 * @throws SQLException if values could not be inserted.
 	 */
-	public boolean insert(String tableName, String[] values, String[] columns) throws SQLException {
+	public boolean insert(String tableName, String[] values, ArrayList<Column> columns)
+			throws SQLException {
 		boolean res = false;
 		try {
 			stmt = conn.createStatement();
-			String sql = "INSERT INTO " + tableName + "(";
-			for (int i = 0; i < columns.length; i++) {
+			StringBuffer sql = new StringBuffer();
+			sql.append("INSERT INTO " + tableName + "(");
+			for (int i = 0; i < columns.size(); i++) {
 				if (i == values.length - 1) {
-					sql = sql + columns[i] + ")";
+					sql.append(columns.get(i).getColumnName());	sql.append(")");
 				}
 				else {
-					sql = sql + columns[i] + ",";
+					sql.append(columns.get(i).getColumnName());	sql.append(",");
 				}
 			}
-			sql = sql + " VALUES (";
-			for (int i = 0; i < values.length; i++) {
-				if (i == values.length - 1) {
-					sql = sql + values[i] + ")";
-				}
-				else {
-					sql = sql + values[i] + ",";
-				}
-			}
-			stmt.executeUpdate(sql);
+			sql.append(" VALUES (");
+			sql = appendValues(sql, values, columns);
+			stmt.executeUpdate(sql.toString());
 			res = true;
-		} catch (SQLException e) {
+		} catch (SQLException | NullPointerException e) {
 			throw new SQLException(e);
 		}
 		return res;
 	}
+	
+	/** Append values to sqlbuffer.
+	 * 
+	 * @param s stringbuffer sql query.
+	 * @param values values to be inserted.
+	 * @param columns columns where values will be inserted.
+	 * @return sql appended query.
+	 */
+	public StringBuffer appendValues(StringBuffer s, String[] values, ArrayList<Column> columns) {
+		for (int i = 0; i < values.length; i++) {
+			if (i == values.length - 1) {
+				if (columns.get(i).getColumnType().toLowerCase().startsWith("varchar")) {
+					s.append("'"); s.append(values[i]); s.append("')");
+				}
+				else {
+					s.append(values[i]); s.append(")");
+				}
+			}
+			else {
+				if (columns.get(i).getColumnType().toLowerCase().startsWith("varchar")) {
+					s.append("'"); s.append(values[i]); s.append("',");
+				}
+				else {
+					s.append(values[i]); s.append(",");
+				}
+			}
+		}
+		return s;
+	}
+	
+
 
 	/**NEEDS WORK!
 	 * 
@@ -193,6 +224,7 @@ public class Db {
 				//hier moet nog iets beters gereturned worden.
 				System.out.println(res);
 			}
+			rs.close();
 		} catch (SQLException e) {
 			res = "Data not found";
 			throw new SQLException(e);
@@ -224,7 +256,7 @@ public class Db {
 	 * @return db path string.
 	 */
 	public String getDbPath() {
-		return db;
+		return pad;
 	}
 
 	/**
@@ -255,6 +287,7 @@ public class Db {
 	 * @return true if directory deleted.
 	 */
 	public boolean removeDirectory(File dir) {
+		boolean res = false;
 		if (dir != null) { 
 
 			String[] list = dir.list();
@@ -276,8 +309,9 @@ public class Db {
 					}
 				}
 			}
+			 res = dir.delete();
 		}
-		return dir.delete();
+		return res;
 	}
 
 }

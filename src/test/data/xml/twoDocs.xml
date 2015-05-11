@@ -20,6 +20,7 @@
 	</document>
 	<document docname="HospitalRecords">
 		<doctype>EXCEL</doctype>
+		<sheet>1</sheet>
 		<path>src/test/data/xml/inputExcel.xlsx</path>
 		<column id="2">
 			<name>Groep</name>
