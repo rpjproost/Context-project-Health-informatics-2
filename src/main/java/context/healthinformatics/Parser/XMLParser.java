@@ -66,11 +66,14 @@ public class XMLParser extends Parser {
 			for (int i = 0; i < nList.getLength(); i++) {
 				if (nList.item(i).getNodeType() == Node.ELEMENT_NODE) {
 					parseDocument(nList.item(i));
+					clear();
 				}
 			}
-		} catch (ParserConfigurationException | SAXException 
-				| InvalidFormatException | SQLException e) {
+		} catch (ParserConfigurationException | InvalidFormatException
+				| SQLException e) {
 			throw new FileNotFoundException(e.getMessage());
+		} catch (SAXException e) {
+			throw new FileNotFoundException("The XML was not formatted correctly");
 		}
 	}
 
@@ -113,9 +116,20 @@ public class XMLParser extends Parser {
 		setSheet(getInt(getString(e, "sheet")));
 		createTableDb();
 		getParser(getString(e, "doctype")).parse();
-		
 	}
-	
+	/**
+	 * clears all settings so the next document doesn't take settings
+	 * from a previous one.
+	 */
+	private void clear() {
+		setDocName(null);
+		setPath(null);
+		setStartLine(1);
+		setDelimiter(null);
+		setPath(null);
+		setSheet(1);
+	}
+
 	/**
 	 * Returns the Parser with the correct settings.
 	 * @param label the String with the parser to use.
@@ -126,7 +140,7 @@ public class XMLParser extends Parser {
 		case "text" : return new TXTParser(getPath(), getStartLine(), getDelimiter(), getColumns()
 				, getDocName());
 		case "excel" : return new ExcelParser(getPath(), getStartLine(), getColumns(), getSheet());
-		case "csv" : return new TXTParser(getPath(), 1, ";" , getColumns(), getDocName());
+		case "csv" : return new TXTParser(getPath(), getStartLine(), ";" , getColumns(), getDocName());
 		default : return null;
 		}		
 	}
