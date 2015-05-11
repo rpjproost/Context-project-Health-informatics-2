@@ -70,9 +70,9 @@ public class TXTParser extends Parser {
 	 *            the starting line
 	 */
 	public void setStartLine(int startLine) {
-		if(startLine > 0){
-		this.startLine = startLine;
-		}else{
+		if (startLine > 0) {
+			this.startLine = startLine;
+		} else {
 			this.startLine = 1;
 		}
 	}
@@ -137,12 +137,27 @@ public class TXTParser extends Parser {
 		skipFirxtXLines();
 		while (sc.hasNextLine()) {
 			String line = sc.nextLine();
-			// TODO insert splitted string into db.
-			String[] splittedLine = splitLine(line);
-			System.out.println(splittedLine[0] + " " + splittedLine[1] + " "
-					+ splittedLine[2]);
+			// System.out.println(line);
+
+			if (canSplit(line)) {
+				// TODO insert splitted string into db.
+				String[] splittedLine = splitLine(line);
+				splittedLine.toString();
+			}
 		}
 		sc.close();
+	}
+
+	/**
+	 * Check if line can be split and added to the database.
+	 * 
+	 * @param line
+	 *            the line to be split
+	 * @return true if can split false if not
+	 */
+	public boolean canSplit(String line) {
+		String[] strings = line.split(delimiter);
+		return strings.length >= columns.size();
 	}
 
 	/**
@@ -155,14 +170,12 @@ public class TXTParser extends Parser {
 	public String[] splitLine(String line) {
 		String[] res = new String[columns.size()];
 		String[] strings = line.split(delimiter);
-		try {
-			for (int i = 0; i < columns.size(); i++) {
-				res[i] = strings[columns.get(i).getColumnNumber() - 1];
-			}
-			return res;
-		} catch (ArrayIndexOutOfBoundsException e) {
-			throw new ArrayIndexOutOfBoundsException();
+
+		for (int i = 0; i < columns.size(); i++) {
+			res[i] = strings[columns.get(i).getColumnNumber() - 1];
 		}
+		return res;
+
 	}
 
 }

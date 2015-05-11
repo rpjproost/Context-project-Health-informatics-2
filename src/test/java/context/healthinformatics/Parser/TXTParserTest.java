@@ -1,6 +1,5 @@
 package context.healthinformatics.Parser;
 
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.junit.Assert.assertArrayEquals;
@@ -20,7 +19,9 @@ public class TXTParserTest {
 	private String path;
 	private static final int FIVE = 5;
 	private static final int SIX = 6;
+	private static final int SEVEN = 7;
 	private static final int NEGATIVEINT = -2;
+	private ArrayList<Column> cols;
 
 	/**
 	 * Before setup a TXTParser object.
@@ -28,11 +29,11 @@ public class TXTParserTest {
 	@Before
 	public void before() {
 		path = "src/test/data/txtparsertestfiles/";
-		ArrayList<Column> cols = new ArrayList<Column>();
+		cols = new ArrayList<Column>();
 		cols.add(new Column(2, "value", "Integer"));
 		cols.add(new Column(FIVE, "date", "String"));
 		cols.add(new Column(SIX, "time", "String"));
-		txtp = new TXTParser(path + "correcttest.txt", FIVE, ",", cols);
+		txtp = new TXTParser(path + "correcttest.txt", SEVEN, ",", cols);
 	}
 
 	/**
@@ -43,6 +44,7 @@ public class TXTParserTest {
 		try {
 			txtp.parse();
 		} catch (FileNotFoundException e) {
+
 			fail("Correct parse failed");
 		}
 	}
@@ -52,7 +54,7 @@ public class TXTParserTest {
 	 */
 	@Test
 	public void testStartLine() {
-		assertEquals(txtp.getStartLine(), FIVE);
+		assertEquals(txtp.getStartLine(), SEVEN);
 		txtp.setStartLine(0);
 		assertEquals(txtp.getStartLine(), 1);
 		txtp.setStartLine(FIVE);
@@ -65,7 +67,6 @@ public class TXTParserTest {
 	@Test
 	public void testNegativeStartLine() {
 		txtp.setStartLine(NEGATIVEINT);
-		System.out.println(txtp.getStartLine());
 		assertEquals(txtp.getStartLine(), 1);
 	}
 
@@ -92,7 +93,7 @@ public class TXTParserTest {
 		txtp.setFileName(path + "nonexistent.txt");
 		txtp.parse();
 	}
-	
+
 	/**
 	 * Tests splitter on empty space.
 	 */
@@ -101,20 +102,20 @@ public class TXTParserTest {
 		String[] res = new String[2];
 		res[0] = "a";
 		res[1] = "b";
-		
+
 		ArrayList<Column> columns = new ArrayList<Column>();
 		Column c1 = new Column(1, "test", "String");
 		Column c2 = new Column(2, "test2", "String");
 		columns.add(c1);
 		columns.add(c2);
-		
+
 		txtp.setDelimiter(" ");
 		txtp.setColumns(columns);
 		String[] test = txtp.splitLine("a b");
-		
+
 		assertArrayEquals(res, test);
 	}
-	
+
 	/**
 	 * tests splitter on comma.
 	 */
@@ -123,20 +124,20 @@ public class TXTParserTest {
 		String[] res = new String[2];
 		res[0] = "a";
 		res[1] = "b";
-		
+
 		ArrayList<Column> columns = new ArrayList<Column>();
 		Column c1 = new Column(1, "test", "String");
 		Column c2 = new Column(2, "test2", "String");
 		columns.add(c1);
 		columns.add(c2);
-		
+
 		txtp.setDelimiter(",");
 		txtp.setColumns(columns);
 		String[] test = txtp.splitLine("a,b");
-		
+
 		assertArrayEquals(res, test);
 	}
-	
+
 	/**
 	 * tests splitter on comma plus space.
 	 */
@@ -145,23 +146,33 @@ public class TXTParserTest {
 		String[] res = new String[2];
 		res[0] = "a";
 		res[1] = "b";
-		
+
 		ArrayList<Column> columns = new ArrayList<Column>();
 		Column c1 = new Column(1, "test", "String");
 		Column c2 = new Column(2, "test2", "String");
 		columns.add(c1);
 		columns.add(c2);
-		
+
 		txtp.setDelimiter(", ");
 		txtp.setColumns(columns);
 		String[] test = txtp.splitLine("a, b");
-		
+
 		assertArrayEquals(res, test);
 	}
-	
+
+	/**
+	 * Test the get column method.
+	 */
+	@Test
+	public void testGetColum() {
+		assertEquals(txtp.getColumns(), cols);
+	}
+
 	/**
 	 * tests splitter without column list.
-	 * @throws NullPointerException because of missing column class what should never happen.
+	 * 
+	 * @throws NullPointerException
+	 *             because of missing column class what should never happen.
 	 */
 	@Test(expected = NullPointerException.class)
 	public void testSplitterNullPointer() throws NullPointerException {
