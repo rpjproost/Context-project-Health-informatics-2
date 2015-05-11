@@ -9,6 +9,7 @@ import java.util.Scanner;
  * Class TxtParser.
  */
 public class TXTParser extends Parser {
+	
 	private String delimiter;
 	private int startLine;
 	private File file;
