@@ -145,7 +145,6 @@ public class ExcelParser extends Parser {
 		String[] cells = new String[numcells];
 		for (int c = 0; c < numcells; c++) {
 			cells[c] = row.getCell(c).toString();
-			System.out.println(cells[c]);
 		}
 		// String[] res = splitLine(cells);
 		// TODO insert splitted string into db.
