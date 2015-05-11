@@ -13,13 +13,14 @@ import org.junit.Test;
 public class ColumnTest {
 	
 	private Column col;
+	private static final int COL_ID = 12;
 	
 	/**
 	 * Create for each test a new Column to test with.
 	 */
 	@Before
 	public void createColumn() {
-		col = new Column(12, "Column", "List");
+		col = new Column(COL_ID, "Column", "List");
 	}
 
 	/**
@@ -27,7 +28,7 @@ public class ColumnTest {
 	 */
 	@Test
 	public void testGetColumnNumber() {
-		assertEquals(col.getColumnNumber(), 12);
+		assertEquals(col.getColumnNumber(), COL_ID);
 	}
 
 	/**
@@ -35,8 +36,9 @@ public class ColumnTest {
 	 */
 	@Test
 	public void testSetColumnNumber() {
-		col.setColumnNumber(55);
-		assertEquals(col.getColumnNumber(), 55);
+		final int wrongID = 55;
+		col.setColumnNumber(wrongID);
+		assertEquals(col.getColumnNumber(), wrongID);
 	}
 
 	/**
@@ -79,9 +81,9 @@ public class ColumnTest {
 	@Test
 	public void testEqualsObject() {
 		Column wrongNumber = new Column(-1, "Column", "List");
-		Column noName = new Column(12, null, "List");
-		Column noType = new Column(12, "Column", null);
-		Column good = new Column(12, "Column", "List");
+		Column noName = new Column(COL_ID, null, "List");
+		Column noType = new Column(COL_ID, "Column", null);
+		Column good = new Column(COL_ID, "Column", "List");
 		String wrongObject = "";
 		
 		assertFalse(col.equals(null));
