@@ -23,7 +23,7 @@ public class ParserTest {
 	public static Parser[] parsers() {
 		XMLParser xmlp = new XMLParser("test");
 		TXTParser txtp = new TXTParser("test", 0, null, new ArrayList<Column>());
-		ExcelParser exlp = new ExcelParser("test", 0, null);
+		ExcelParser exlp = new ExcelParser("test", 0, null, 0);
 		return new Parser[] { xmlp, txtp, exlp};
 	}
 	
