@@ -53,7 +53,6 @@ public class XMLParser extends Parser {
 	@Override
 	public void parse() throws IOException {
 		try {
-
 			File xml = new File(getFileName());
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -66,11 +65,14 @@ public class XMLParser extends Parser {
 			for (int i = 0; i < nList.getLength(); i++) {
 				if (nList.item(i).getNodeType() == Node.ELEMENT_NODE) {
 					parseDocument(nList.item(i));
+					clear();
 				}
 			}
-		} catch (ParserConfigurationException | SAXException 
-				| InvalidFormatException | SQLException e) {
-			throw new FileNotFoundException();
+		} catch (ParserConfigurationException | InvalidFormatException
+				| SQLException e) {
+			throw new FileNotFoundException(e.getMessage());
+		} catch (SAXException e) {
+			throw new FileNotFoundException("The XML was not formatted correctly");
 		}
 	}
 
@@ -113,9 +115,20 @@ public class XMLParser extends Parser {
 		setSheet(getInt(getString(e, "sheet")));
 		createTableDb();
 		getParser(getString(e, "doctype")).parse();
-		
 	}
-	
+	/**
+	 * clears all settings so the next document doesn't take settings
+	 * from a previous one.
+	 */
+	private void clear() {
+		setDocName(null);
+		setPath(null);
+		setStartLine(1);
+		setDelimiter(null);
+		setPath(null);
+		setSheet(1);
+	}
+
 	/**
 	 * Returns the Parser with the correct settings.
 	 * @param label the String with the parser to use.
@@ -126,7 +139,8 @@ public class XMLParser extends Parser {
 		case "text" : return new TXTParser(getPath(), getStartLine(), getDelimiter(), getColumns()
 				, getDocName());
 		case "excel" : return new ExcelParser(getPath(), getStartLine(), getColumns(), getSheet());
-		case "csv" : return new TXTParser(getPath(), 1, ";" , getColumns(), getDocName());
+		case "csv" : return new TXTParser(getPath(), getStartLine(), ";" 
+				, getColumns(), getDocName());
 		default : return null;
 		}		
 	}
@@ -140,14 +154,19 @@ public class XMLParser extends Parser {
 			col[i] = columns.get(i).getColumnName();
 			t[i] = columns.get(i).getColumnType();
 		}
-		data.createTable(docName, col, t);
+		try {
+			data.createTable(docName, col, t);
+		}
+		catch (SQLException e) {
+			throw new SQLException("The Table could not be created.");
+		}
 	}
 
 	/**
 	 * Get a Integer at the place of the tag in the xml.
 	 * When there isn't a Integer, it will be set on a default 1.
 	 * @param s the tag in the xml
-	 * @return int or default 1
+	 * @return parsed int or default 1
 	 */
 	private int getInt(String s) {
 		try {
@@ -278,4 +297,48 @@ public class XMLParser extends Parser {
 		this.sheet = sheet;
 	}
 
+}
+
+/**
+ * Class used for testing the XMLParser.
+ * Stops the parsing after the document.
+ */
+class XMLTestParser extends XMLParser {
+
+	/**
+	 * list of parsers.
+	 */
+	private ArrayList<Parser> parsers;
+	/**
+	 * constructor for xmlTestParser.
+	 * @param fileName path to file.
+	 */
+	public XMLTestParser(String fileName) {
+		super(fileName);
+		parsers = new ArrayList<Parser>();
+	}
+	
+	/**
+	 * Returns a dummy parser and saves the parser generated
+	 * by the XMLParser class to an arrayList.
+	 * @param label the String with the parser to use.
+	 * @return The Parser with all settings.
+	 */
+	@Override
+	protected Parser getParser(String label) {
+		parsers.add(super.getParser(label));
+		Parser p = new TXTParser(null, 0, null, null, null) {
+			@Override
+			public void parse() { };
+		};
+		return p;
+	}
+
+	/**
+	 * getter for the arrayList of parsers.
+	 * @return list of parsers.
+	 */
+	public ArrayList<Parser> getParsers() {
+		return parsers;
+	}	
 }

@@ -104,6 +104,22 @@ public class TXTParser extends Parser {
 	public void setColumns(ArrayList<Column> columns) {
 		this.columns = columns;
 	}
+	
+	/**
+	 * getter for the document name.
+	 * @return String containing the document name.
+	 */
+	public String getDocName() {
+		return docName;
+	}
+
+	/**
+	 * setter for the document name.
+	 * @param docName document name to set.
+	 */
+	public void setDocName(String docName) {
+		this.docName = docName;
+	}
 
 	/**
 	 * Open the file to parse.

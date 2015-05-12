@@ -20,11 +20,20 @@ import context.healthinformatics.Database.SingletonDb;
  */
 public class XMLParserTest {
 	
-	private Db data = SingletonDb.getDb();
 	/**
 	 * variable used to save the newly created parser.
 	 */
-	private XMLParser xmlp;
+	private XMLTestParser xmlp;
+	
+	/**
+	 * path leading to the place of all test files.
+	 */
+	private String path = "src/test/data/xml/";
+	
+	/**
+	 * object calling the database.
+	 */
+	private Db data = SingletonDb.getDb();
 	
 	/**
 	 * this method is called before each test and
@@ -32,7 +41,7 @@ public class XMLParserTest {
 	 */
 	@Before
 	public void before() {
-		xmlp = new XMLParser("");
+		xmlp = new XMLTestParser("");
 	}
 	
 	/**
@@ -45,18 +54,20 @@ public class XMLParserTest {
 		final int col2 = 5;
 		final int col3 = 6;
 		try {
-		xmlp.setFileName("src/test/data/xml/goodXML.xml");
+		xmlp.setFileName(path + "goodXML.xml");
 		xmlp.parse();
-		assertEquals("," , xmlp.getDelimiter());
-		assertEquals("stat", xmlp.getDocName());
-		assertEquals("src/test/data/xml/inputTXT.txt", xmlp.getPath());
-		assertEquals(startLine, xmlp.getStartLine());
+		TXTParser txtp = (TXTParser) xmlp.getParsers().get(0);
+		assertEquals("," , txtp.getDelimiter());
+		assertEquals("stat", txtp.getDocName());
+		assertEquals("src/test/data/xml/inputTXT.txt", txtp.getFileName());
+		assertEquals(startLine, txtp.getStartLine());
 		
 		ArrayList<Column> cols = new ArrayList<Column>();
 		cols.add(new Column(col1, "value", "Integer"));
 		cols.add(new Column(col2, "date", "String"));
 		cols.add(new Column(col3, "time", "String"));
-		assertTrue(compare(xmlp.getColumns(), cols));
+		assertTrue(compare(txtp.getColumns(), cols));
+		
 		data.dropTable("stat");
 		}
 		catch (Exception e) {
@@ -71,10 +82,14 @@ public class XMLParserTest {
 	 * throw a nullpointer.
 	 * @throws IOException Should not throw this exception.
 	 */
-	@Test(expected = FileNotFoundException.class)
+	@Test
 	public void emptyFieldTest() throws IOException {
-		xmlp.setFileName("src/test/data/xml/emptyField.xml");
-		xmlp.parse();
+		xmlp.setFileName(path + "emptyField.xml");
+		try {
+			xmlp.parse(); }
+		catch (FileNotFoundException e) {
+			assertEquals("The Table could not be created.", e.getMessage());
+		}
 	}
 
 	/**
@@ -84,8 +99,13 @@ public class XMLParserTest {
 	 */
 	@Test(expected = FileNotFoundException.class)
 	public void noDelimiterTest() throws IOException {
-		xmlp.setFileName("src/test/data/xml/noDelimiter.xml");
+		xmlp.setFileName(path + "noDelimiter.xml");
 		xmlp.parse();
+		try {
+			data.dropTable("StatSensor");
+		} catch (Exception e) {
+			fail("something went wrong, the table was not created: "  + e.getMessage());
+		}
 	}
 	
 	/**
@@ -95,7 +115,7 @@ public class XMLParserTest {
 	 */
 	@Test(expected = NumberFormatException.class)
 	public void noIDsTest() throws IOException {
-		xmlp.setFileName("src/test/data/xml/noIDs.xml");
+		xmlp.setFileName(path + "noIDs.xml");
 		xmlp.parse();
 	}
 	
@@ -104,10 +124,16 @@ public class XMLParserTest {
 	 * throw a nullPointer.
 	 * @throws IOException Should not throw this exception
 	 */
-	@Test(expected  = FileNotFoundException.class)
+	@Test
 	public void noPathTest() throws IOException {
-		xmlp.setFileName("src/test/data/xml/noPath.xml");
+		xmlp.setFileName(path + "noPath.xml");
 		xmlp.parse();
+		assertEquals(null, xmlp.getParsers().get(0).getFileName());
+		try {
+			data.dropTable("StatSensor");
+		} catch (Exception e) {
+			fail("something went wrong, the table was not created: "  + e.getMessage());
+		}
 	}
 
 	/**
@@ -115,9 +141,9 @@ public class XMLParserTest {
 	 * not specified.
 	 * @throws IOException should not throw this.
 	 */
-	@Test(expected = FileNotFoundException.class)
+	@Test
 	public void noStartTest() throws IOException {
-		xmlp.setFileName("src/test/data/xml/wrongStart.xml");
+		xmlp.setFileName(path + "wrongStart.xml");
 		xmlp.parse();
 	}
 	
@@ -138,10 +164,18 @@ public class XMLParserTest {
 	 */
 	@Test
 	public void twoDocsTest() throws IOException {
-		xmlp.setFileName("src/test/data/xml/twoDocs.xml");
+		xmlp.setFileName(path + "twoDocs.xml");
 		xmlp.parse();
-		assertEquals("HospitalRecords", xmlp.getDocName());
-		assertEquals("src/test/data/xml/inputExcel.xlsx", xmlp.getPath());
+		ArrayList<Parser> parsers = xmlp.getParsers();
+		assertEquals(2, parsers.size());
+		assertEquals("src/test/data/xml/inputTXT.txt", parsers.get(0).getFileName());
+		assertEquals("src/test/data/xml/inputExcel.xlsx", parsers.get(1).getFileName());
+		try {
+		data.dropTable("StatSensor");
+		data.dropTable("HospitalRecords"); }
+		catch (Exception e) {
+			fail("something went wrong, the tables where not created: "  + e.getMessage());
+		}
 	}
 	
 	/**
@@ -150,10 +184,33 @@ public class XMLParserTest {
 	 */
 	@Test
 	public void csvTest() throws IOException {
-		xmlp.setFileName("src/test/data/xml/csv.xml");
+		xmlp.setFileName(path + "csv.xml");
 		xmlp.parse();
-		assertEquals("csv", xmlp.getDocName());
-		assertEquals("src/test/data/xml/inputCSV.csv", xmlp.getPath());
+		TXTParser txtp = (TXTParser) xmlp.getParsers().get(0);
+		assertEquals("csv", txtp.getDocName());
+		assertEquals("src/test/data/xml/inputCSV.csv", txtp.getFileName());
+		assertEquals(";", txtp.getDelimiter());
+		try {
+			data.dropTable("csv");
+		}
+		catch (Exception e) {
+			fail("something went wrong, the table was not created: "  + e.getMessage());
+		}
+	}
+	
+	/**
+	 * tests the parsing of a badly formatted xml file.
+	 * @throws IOException shouldn't throw this.
+	 */
+	@Test
+	public void noEnd() throws IOException {
+		xmlp.setFileName(path + "noEnd.xml");
+		try {
+			xmlp.parse();
+		}
+		catch (FileNotFoundException e) {
+			assertEquals("The XML was not formatted correctly", e.getMessage());
+		}
 	}
 	/**
 	 * Method used to compare 2 arraylists of collumns.
