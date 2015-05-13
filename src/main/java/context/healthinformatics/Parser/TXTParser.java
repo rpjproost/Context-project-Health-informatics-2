@@ -157,7 +157,7 @@ public class TXTParser extends Parser {
 			this.file = openFile(this.getFileName());
 			this.sc = new Scanner(file);
 		} catch (FileNotFoundException e) {
-			throw new FileNotFoundException();
+			throw new FileNotFoundException("The TXT file was not found!");
 		}
 		skipFirxtXLines();
 		while (sc.hasNextLine()) {

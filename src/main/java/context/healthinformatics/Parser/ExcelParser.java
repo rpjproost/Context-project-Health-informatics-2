@@ -3,6 +3,7 @@ package context.healthinformatics.Parser;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
@@ -14,6 +15,9 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import context.healthinformatics.Database.Db;
+import context.healthinformatics.Database.SingletonDb;
+
 /**
  * The ExcelParser class. Parses a Excel sheet.
  *
@@ -22,6 +26,7 @@ public class ExcelParser extends Parser {
 	private int startLine;
 	private ArrayList<Column> columns;
 	private int sheet;
+	private String docName;
 
 	/**
 	 * Constructor for the ExcelParser.
@@ -33,14 +38,19 @@ public class ExcelParser extends Parser {
 	 * @param columns
 	 *            the relevant columns in the excel sheet
 	 * @param sheet
-	 *            the sheet in de excel file to be processed. Sheet int 1 is first sheet.
+	 *            the sheet in de excel file to be processed. Sheet int 1 is
+	 *            first sheet.
+	 * @param docName
+	 *            the name of the document which is also the name of the table
+	 *            to be inserted to
 	 */
 	public ExcelParser(String fileName, int startLine,
-			ArrayList<Column> columns, int sheet) {
+			ArrayList<Column> columns, int sheet, String docName) {
 		super(fileName);
 		this.startLine = startLine;
 		this.columns = columns;
 		this.sheet = sheet;
+		this.docName = docName;
 	}
 
 	/**
@@ -92,11 +102,18 @@ public class ExcelParser extends Parser {
 	 */
 	public FileInputStream openFile(String fileName)
 			throws FileNotFoundException {
-		return new FileInputStream(fileName);
+		FileInputStream fis = null;
+		try {
+			fis = new FileInputStream(fileName);
+		} catch (FileNotFoundException e) {
+			throw new FileNotFoundException("The Excel file was not found!");
+		}
+		return fis;
 	}
 
 	@Override
 	public void parse() throws IOException {
+
 		// Try to open input file
 		FileInputStream fis = openFile(this.getFileName());
 		if (this.getFileName().endsWith(".xls")) {
@@ -106,7 +123,7 @@ public class ExcelParser extends Parser {
 				wb = WorkbookFactory.create(fis);
 			} catch (InvalidFormatException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new IOException("xls file could not be read");
 			}
 			// Process sheet sheet
 			processXLSSheet(wb.getSheetAt(sheet - 1));
@@ -129,7 +146,7 @@ public class ExcelParser extends Parser {
 	 */
 	public void processXLSSheet(Sheet sheet2) {
 		int rowNum = sheet2.getLastRowNum() + 1;
-		for (int i = 0; i < rowNum; i++) {
+		for (int i = startLine; i < rowNum; i++) {
 			processXLSRow(sheet2.getRow(i));
 		}
 	}
@@ -142,12 +159,19 @@ public class ExcelParser extends Parser {
 	 */
 	public void processXLSRow(Row row) {
 		int numcells = row.getLastCellNum();
-		String[] cells = new String[numcells];
-		for (int c = 0; c < numcells; c++) {
-			cells[c] = row.getCell(c).toString();
+		String[] cells = new String[columns.size()];
+		if (canSplit(numcells)) {
+			for (int c = 0; c < columns.size(); c++) {
+				cells[c] = row.getCell(columns.get(c).getColumnNumber() - 1)
+						.toString();
+			}
+			Db data = SingletonDb.getDb();
+			try {
+				data.insert(docName, cells, columns);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+			}
 		}
-		// String[] res = splitLine(cells);
-		// TODO insert splitted string into db.
 	}
 
 	/**
@@ -158,8 +182,8 @@ public class ExcelParser extends Parser {
 	 */
 	public void processXLSXSheet(XSSFSheet ws) {
 		int rowNum = ws.getLastRowNum() + 1;
-		for (int i = 0; i < rowNum; i++) {
-			processRow(ws.getRow(i));
+		for (int i = startLine; i < rowNum; i++) {
+			processXLSXRow(ws.getRow(i));
 
 		}
 	}
@@ -170,14 +194,31 @@ public class ExcelParser extends Parser {
 	 * @param row
 	 *            the row processed.
 	 */
-	public void processRow(XSSFRow row) {
+	public void processXLSXRow(XSSFRow row) {
 		int numcells = row.getLastCellNum();
-		String[] cells = new String[numcells];
-		for (int c = 0; c < numcells; c++) {
-			cells[c] = row.getCell(c).toString();
+		String[] cells = new String[columns.size()];
+		if (canSplit(numcells)) {
+			for (int c = 0; c < columns.size(); c++) {
+				cells[c] = row.getCell(columns.get(c).getColumnNumber() - 1)
+						.toString();
+			}
+			Db data = SingletonDb.getDb();
+			try {
+				data.insert(docName, cells, columns);
+			} catch (SQLException e) {
+
+			}
 		}
-		// String[] res = splitLine(cells);
-		// TODO insert splitted string into db.
 	}
 
+	/**
+	 * If there are enough cells in the sheet returns true.
+	 * 
+	 * @param cellnums
+	 *            the number of cells on a row
+	 * @return true if there are enough cells
+	 */
+	public boolean canSplit(int cellnums) {
+		return cellnums >= columns.size();
+	}
 }

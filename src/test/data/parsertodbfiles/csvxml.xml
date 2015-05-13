@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<xml>
+	<document docname="csvtest">
+		<doctype>csv</doctype>
+		<path>src/test/data/parsertodbfiles/inputCSV.csv</path>
+		<start>1</start>
+		<delimiter>;</delimiter>
+		<column id="1">
+			<name>num1</name>
+			<type>Integer</type>
+		</column>
+		<column id="2">
+			<name>num2</name>
+			<type>Integer</type>
+		</column>
+		<column id="3">
+			<name>num3</name>
+			<type>Integer</type>
+		</column>
+	</document>
+</xml>
