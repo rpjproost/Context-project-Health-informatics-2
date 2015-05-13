@@ -20,20 +20,26 @@ import context.healthinformatics.Parser.Column;
  */
 public class Db {
 
-	private String db; //db query.
+	private String db; // db query.
 	private String dName;
-	private String pad = "C:/db/"; //default path for testing.
+	private String pad = "C:/db/"; // default path for testing.
 	private Connection conn;
 	private Statement stmt = null;
 
-	/**Constructor, sets variables and calls setupConn.
+	/**
+	 * Constructor, sets variables and calls setupConn.
 	 * 
-	 * @param databaseName name of database you connect to.
-	 * @param p directory for the database to be stored.
-	 * @throws NullPointerException when input is null.
-	 * @throws SQLException 
+	 * @param databaseName
+	 *            name of database you connect to.
+	 * @param p
+	 *            directory for the database to be stored.
+	 * @throws NullPointerException
+	 *             when input is null.
+	 * @throws SQLException
+	 *             the sql exception
 	 */
-	protected Db(String databaseName, String p) throws NullPointerException, SQLException {
+	protected Db(String databaseName, String p) throws NullPointerException,
+			SQLException {
 		if (p == null || databaseName == null) {
 			throw new NullPointerException();
 		}
@@ -42,8 +48,7 @@ public class Db {
 
 		if (!isWhitespace) {
 			dName = databaseName;
-		}
-		else {
+		} else {
 			dName = "default";
 		}
 		if (!isWhitespace2) {
@@ -54,9 +59,11 @@ public class Db {
 		setupConn();
 	}
 
-	/**Sets up connection.
+	/**
+	 * Sets up connection.
 	 * 
-	 * @throws SQLException if database query is incorrect.
+	 * @throws SQLException
+	 *             if database query is incorrect.
 	 * @return true iff connection is set.
 	 */
 	private boolean setupConn() throws SQLException {
@@ -64,7 +71,7 @@ public class Db {
 		setDb(pad, dName);
 		try {
 			conn = DriverManager.getConnection(db);
-			//Check connection
+			// Check connection
 			if (conn != null) {
 				res = true;
 			}
@@ -74,20 +81,26 @@ public class Db {
 		return res;
 	}
 
-	/** Creates new table.
+	/**
+	 * Creates new table.
 	 * 
-	 * @param tableName name for new table.
-	 * @param columns column names.
-	 * @param types type specifications.
+	 * @param tableName
+	 *            name for new table.
+	 * @param columns
+	 *            column names.
+	 * @param types
+	 *            type specifications.
 	 * @return true iff new table is created.
-	 * @throws SQLException if table could not be created.
+	 * @throws SQLException
+	 *             if table could not be created.
 	 */
-	public boolean createTable(String tableName, String[] columns, String[] types) 
-			throws SQLException {
+	public boolean createTable(String tableName, String[] columns,
+			String[] types) throws SQLException {
 		boolean res = false;
 		try {
 			stmt = conn.createStatement();
-			String sql = "CREATE TABLE " + tableName + createTableColumns(columns, types);
+			String sql = "CREATE TABLE " + tableName
+					+ createTableColumns(columns, types);
 			stmt.executeUpdate(sql);
 			res = true;
 		} catch (SQLException e) {
@@ -96,11 +109,14 @@ public class Db {
 		return res;
 	}
 
-	/** returns highest Identifier from table, otherwise 1.
+	/**
+	 * returns highest Identifier from table, otherwise 1.
 	 * 
-	 * @param tableName table to return max identifier from.
+	 * @param tableName
+	 *            table to return max identifier from.
 	 * @return 1 or max id.
-	 * @throws SQLException if table name is incorrect.
+	 * @throws SQLException
+	 *             if table name is incorrect.
 	 */
 	public int getMaxId(String tableName) throws SQLException {
 		int res = 1;
@@ -122,10 +138,13 @@ public class Db {
 		return res;
 	}
 
-	/** Part of the method CreateTable, creates columns with specified types.
+	/**
+	 * Part of the method CreateTable, creates columns with specified types.
 	 * 
-	 * @param columns column names.
-	 * @param types type specifications.
+	 * @param columns
+	 *            column names.
+	 * @param types
+	 *            type specifications.
 	 * @return string for sql building.
 	 */
 	public String createTableColumns(String[] columns, String[] types) {
@@ -134,27 +153,35 @@ public class Db {
 				+ "primary key GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), ");
 		for (int i = 0; i < columns.length; i++) {
 			if (i == columns.length - 1) {
-				res.append(columns[i]); res.append(" ");
-				res.append(types[i]); res.append(")");
-			}
-			else {
-				res.append(columns[i]); res.append(" ");
-				res.append(types[i]); res.append(",");
+				res.append(columns[i]);
+				res.append(" ");
+				res.append(types[i]);
+				res.append(")");
+			} else {
+				res.append(columns[i]);
+				res.append(" ");
+				res.append(types[i]);
+				res.append(",");
 			}
 		}
 		return res.toString();
 	}
 
-	/**Insert values in to table.
+	/**
+	 * Insert values in to table.
 	 * 
-	 * @param tableName name of table.
-	 * @param values values to be inserted.
-	 * @param columns columns where values be inserted.
+	 * @param tableName
+	 *            name of table.
+	 * @param values
+	 *            values to be inserted.
+	 * @param columns
+	 *            columns where values be inserted.
 	 * @return true iff values are inserted.
-	 * @throws SQLException if values could not be inserted.
+	 * @throws SQLException
+	 *             if values could not be inserted.
 	 */
-	public boolean insert(String tableName, String[] values, ArrayList<Column> columns)
-			throws SQLException {
+	public boolean insert(String tableName, String[] values,
+			ArrayList<Column> columns) throws SQLException {
 		boolean res = false;
 		try {
 			stmt = conn.createStatement();
@@ -162,10 +189,11 @@ public class Db {
 			sql.append("INSERT INTO " + tableName + "(");
 			for (int i = 0; i < columns.size(); i++) {
 				if (i == values.length - 1) {
-					sql.append(columns.get(i).getColumnName());	sql.append(")");
-				}
-				else {
-					sql.append(columns.get(i).getColumnName());	sql.append(",");
+					sql.append(columns.get(i).getColumnName());
+					sql.append(")");
+				} else {
+					sql.append(columns.get(i).getColumnName());
+					sql.append(",");
 				}
 			}
 			sql.append(" VALUES (");
@@ -177,52 +205,92 @@ public class Db {
 		}
 		return res;
 	}
-	
-	/** Append values to sqlbuffer.
+
+	/**
+	 * Append values to sqlbuffer.
 	 * 
-	 * @param s stringbuffer sql query.
-	 * @param values values to be inserted.
-	 * @param columns columns where values will be inserted.
+	 * @param s
+	 *            stringbuffer sql query.
+	 * @param values
+	 *            values to be inserted.
+	 * @param columns
+	 *            columns where values will be inserted.
 	 * @return sql appended query.
 	 */
-	public StringBuffer appendValues(StringBuffer s, String[] values, ArrayList<Column> columns) {
+	public StringBuffer appendValues(StringBuffer s, String[] values,
+			ArrayList<Column> columns) {
 		for (int i = 0; i < values.length; i++) {
 			if (i == values.length - 1) {
-				if (columns.get(i).getColumnType().toLowerCase().startsWith("varchar")) {
-					s.append("'"); s.append(values[i]); s.append("')");
-				}
-				else if (columns.get(i).getColumnType().toLowerCase().startsWith("date")) {
+				if (columns.get(i).getColumnType().toLowerCase()
+						.startsWith("varchar")) {
+					s.append("'");
+					s.append(values[i]);
+					s.append("')");
+				} else if (columns.get(i).getColumnType().toLowerCase()
+						.startsWith("date")) {
 					String dateT = columns.get(i).getDateType();
-					s.append("'"); s.append(convertDate(values[i], dateT)); s.append("')");
+					s.append("'");
+					s.append(convertDate(values[i], dateT));
+					s.append("')");
+				} else {
+					s.append(values[i]);
+					s.append(")");
 				}
-				else {
-					s.append(values[i]); s.append(")");
-				}
-			}
-			else {
-				if (columns.get(i).getColumnType().toLowerCase().startsWith("varchar")) {
-					s.append("'"); s.append(values[i]); s.append("',");
-				}
-				else if (columns.get(i).getColumnType().toLowerCase().startsWith("date")) {
+			} else {
+				if (columns.get(i).getColumnType().toLowerCase()
+						.startsWith("varchar")) {
+					s.append("'");
+					s.append(values[i]);
+					s.append("',");
+				} else if (columns.get(i).getColumnType().toLowerCase()
+						.startsWith("date")) {
 					String dateT = columns.get(i).getDateType();
-					s.append("'"); s.append(convertDate(values[i], dateT)); s.append("',");
-				}
-				else {
-					s.append(values[i]); s.append(",");
+					s.append("'");
+					s.append(convertDate(values[i], dateT));
+					s.append("',");
+				} else {
+					s.append(values[i]);
+					s.append(",");
 				}
 			}
 		}
 		return s;
 	}
-	
 
-
-	/**NEEDS WORK!
+	/**
+	 * Select variable from tablename.
 	 * 
-	 * @param tableName name of table to select variables from.
-	 * @param variable variables to select.
+	 * @param tableName
+	 *            the table name
+	 * @param variable
+	 *            the variable
+	 * @return the resultset
+	 * @throws SQLException
+	 *             the sql exception
+	 */
+	public ResultSet selectResultSet(String tableName, String variable)
+			throws SQLException {
+		ResultSet rs = null;
+		try {
+			stmt = conn.createStatement();
+			String sql = "SELECT " + variable + " FROM " + tableName;
+			rs = stmt.executeQuery(sql);
+		} catch (SQLException e) {
+			throw new SQLException("ResultSet not created: Data not found");
+		}
+		return rs;
+	}
+
+	/**
+	 * NEEDS WORK!
+	 * 
+	 * @param tableName
+	 *            name of table to select variables from.
+	 * @param variable
+	 *            variables to select.
 	 * @return String with results.
-	 * @throws SQLException if data is not found.
+	 * @throws SQLException
+	 *             if data is not found.
 	 */
 	public String select(String tableName, String variable) throws SQLException {
 		String res = "";
@@ -232,8 +300,8 @@ public class Db {
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				res = rs.getString(variable);
-				//hier moet nog iets beters gereturned worden.
-			//	System.out.println(res);
+				// hier moet nog iets beters gereturned worden.
+				// System.out.println(res);
 			}
 			rs.close();
 		} catch (SQLException e) {
@@ -243,11 +311,14 @@ public class Db {
 		return res;
 	}
 
-	/**Drops a table from database.
+	/**
+	 * Drops a table from database.
 	 * 
-	 * @param tableName name of table to drop.
+	 * @param tableName
+	 *            name of table to drop.
 	 * @return true iff table is dropped.
-	 * @throws SQLException if table does not exist.
+	 * @throws SQLException
+	 *             if table does not exist.
 	 */
 	public boolean dropTable(String tableName) throws SQLException {
 		boolean res = false;
@@ -262,7 +333,8 @@ public class Db {
 		return res;
 	}
 
-	/**Returns specified path to the database on your computer.
+	/**
+	 * Returns specified path to the database on your computer.
 	 * 
 	 * @return db path string.
 	 */
@@ -272,16 +344,20 @@ public class Db {
 
 	/**
 	 * 
-	 * @param path sets db path
+	 * @param path
+	 *            sets db path
 	 */
 	public void setDbPath(String path) {
-		pad = path; 
+		pad = path;
 	}
 
-	/**Sets the databasedriver query.
+	/**
+	 * Sets the databasedriver query.
 	 * 
-	 * @param path path where database is going to be stored.
-	 * @param dbName name of database.
+	 * @param path
+	 *            path where database is going to be stored.
+	 * @param dbName
+	 *            name of database.
 	 * @return query as a String.
 	 */
 	public String setDb(String path, String dbName) {
@@ -292,14 +368,16 @@ public class Db {
 		return db;
 	}
 
-	/**Removes old database at specified path if exists.
+	/**
+	 * Removes old database at specified path if exists.
 	 * 
-	 * @param dir database directory to delete.
+	 * @param dir
+	 *            database directory to delete.
 	 * @return true if directory deleted.
 	 */
 	public boolean removeDirectory(File dir) {
 		boolean res = false;
-		if (dir != null) { 
+		if (dir != null) {
 
 			String[] list = dir.list();
 
@@ -307,38 +385,39 @@ public class Db {
 				for (int i = 0; i < list.length; i++) {
 					File file = new File(dir, list[i]);
 
-
 					if (file.isDirectory()) {
 						if (!removeDirectory(file)) {
 							return false;
 						}
-					}
-					else {
+					} else {
 						if (!file.delete()) {
 							return false;
 						}
 					}
 				}
 			}
-			 res = dir.delete();
+			res = dir.delete();
 		}
 		return res;
 	}
-	
-	/** Converts date to sql date format.
+
+	/**
+	 * Converts date to sql date format.
 	 * 
-	 * @param s date value.
-	 * @param dateT type of date input.
+	 * @param s
+	 *            date value.
+	 * @param dateT
+	 *            type of date input.
 	 * @return date value in sql format.
 	 */
 	public String convertDate(String s, String dateT) {
 		SimpleDateFormat input = new SimpleDateFormat(dateT);
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		String res = " ";
-		try { 
+		try {
 			Date date = input.parse(s);
 			res = formatter.format(date);
-	 
+
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
