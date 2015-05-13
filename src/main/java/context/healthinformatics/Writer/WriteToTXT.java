@@ -33,37 +33,76 @@ public class WriteToTXT {
 	}
 
 	/**
+	 * Try to setup new printwriter at specified path with charset UTF-8.
+	 * 
+	 * @return the printwriter.
+	 * @throws FileNotFoundException
+	 *             FileNotFoundException
+	 * @throws UnsupportedEncodingException
+	 *             unsupportedEncodingException
+	 */
+	public PrintWriter getPrintWriter() throws FileNotFoundException,
+			UnsupportedEncodingException {
+		PrintWriter writer = null;
+
+		try {
+			writer = new PrintWriter(path + fileName, "UTF-8");
+		} catch (FileNotFoundException e) {
+			throw new FileNotFoundException(
+					"The file to write to is not found!");
+		} catch (UnsupportedEncodingException e) {
+			throw new UnsupportedEncodingException(
+					"The encoding for the write to file is not supported!");
+		}
+
+		return writer;
+	}
+
+	/**
 	 * Write to file.
 	 * 
 	 * @throws SQLException
 	 *             the sql exception of resultset
+	 * @throws FileNotFoundException
+	 *             filenotfoundexception
+	 * @throws UnsupportedEncodingException
+	 *             unsupportedencodingexception
 	 */
-	public void writeToFile() throws SQLException {
-		PrintWriter writer = null;
-		try {
-			writer = new PrintWriter(path + fileName, "UTF-8");
-		} catch (FileNotFoundException | UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public void writeToFile() throws SQLException, FileNotFoundException,
+			UnsupportedEncodingException {
+		PrintWriter writer = getPrintWriter();
+
 		writer.println("DATA LIST LIST");
 		ResultSetMetaData rsmd = rs.getMetaData();
-		int numColumns = rsmd.getColumnCount();
-		StringBuffer res = new StringBuffer();
-		for (int i = 0; i < numColumns; i++) {
-			res.append(rsmd.getColumnName(i + 1) + " ");
-		}
-		writer.println("/ " + res.toString());
-		
-		writer.println("BEGIN DATA.");
-			
-		StringBuffer str = processResultSet(numColumns);
-		writer.println(str.toString());
+		writer.println("/ " + processColumnNames(rsmd, rsmd.getColumnCount()).toString());
 
+		writer.println("BEGIN DATA.");
+		writer.println(processResultSet(rsmd.getColumnCount()).toString());
 		writer.println("END DATA.");
-		writer.println("");
+		
+		writer.println();
 		writer.println("LIST.");
 		writer.close();
+	}
+
+	/**
+	 * Process the column names of the table.
+	 * @param rsmd the resultsets meta data
+	 * @param numColumns the number of columns
+	 * @return a stringbuffer with the columnnames
+	 * @throws SQLException the sqlexception
+	 */
+	public StringBuffer processColumnNames(ResultSetMetaData rsmd,
+			int numColumns) throws SQLException {
+		StringBuffer res = new StringBuffer();
+		for (int i = 1; i < numColumns; i++) {
+			if (i == numColumns - 1) {
+				res.append(rsmd.getColumnName(i + 1) + " ");
+			} else {
+				res.append(rsmd.getColumnName(i + 1) + " ");
+			}
+		}
+		return res;
 	}
 
 	/**
