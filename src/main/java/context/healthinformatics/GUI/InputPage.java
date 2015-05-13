@@ -17,12 +17,19 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.JTree;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeSelectionModel;
 
 /**
  * Class which represents one of the states for the variabel panel in the mainFrame.
  */
-public class InputPage implements PanelState, Serializable {
+public class InputPage extends InterfaceHelper implements PanelState,
+	Serializable, TreeSelectionListener {
 	
 	private static final long serialVersionUID = 1L;
 
@@ -38,6 +45,7 @@ public class InputPage implements PanelState, Serializable {
 	private GridBagLayout l;
 	private JPanel panel;
 	private JComboBox<String> box;
+	private JTree tree;
 	
 	public static final int TXTFIELDWIDTH = 50;
 	public static final int BUTTONFONTSIZE = 15;
@@ -59,8 +67,10 @@ public class InputPage implements PanelState, Serializable {
 		folder = new ArrayList<ArrayList<String>>();
 		folder.add(new ArrayList<String>());
 		folder.get(0).add("1");
+		folder.get(0).add("2");
 		folder.add(new ArrayList<String>());
-		folder.get(1).add("2");
+		folder.get(1).add("3");
+		folder.get(1).add("4");
 	}
 
 	/**
@@ -82,9 +92,14 @@ public class InputPage implements PanelState, Serializable {
 		JPanel section2 = makeSection2();
 		c.gridx = 0;
 		c.gridy = 1;
+		panel.add(section2, c);
+		
+		JPanel section3 = makeSection3();
+		c.gridx = 0;
+		c.gridy = 2;
 		c.weighty = 1;
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
-		panel.add(section2, c);
+		panel.add(section3, c);
 		
 		
 		return panel;
@@ -134,7 +149,7 @@ public class InputPage implements PanelState, Serializable {
 		fileLabel.setSize(dim);
 		c.gridx = 0;
 		c.gridy = 0;
-		section2.add(fileLabel, c);
+		section2.add(fileLabel, setGrids(0, 0));
 		
 		txt = new JTextField(TXTFIELDWIDTH);
 		c.gridx = 1;
@@ -155,6 +170,52 @@ public class InputPage implements PanelState, Serializable {
 		return section2;
 	}
 	
+	/**
+	 * @return section3 Panel.
+	 */
+	public JPanel makeSection3() {
+		JPanel section3 = MainFrame.createPanel(Color.decode("#81DAF5"),
+				mf.getScreenWidth(), 400);
+		c = new GridBagConstraints();
+		section3.setLayout(l);
+		
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("PROJECT NAME");
+        addTreeNodes(root);
+
+        tree = new JTree(root);
+        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
+        tree.setVisible(true);
+        tree.setLayout(l);
+        tree.addTreeSelectionListener(this);
+
+        JScrollPane treePane = new JScrollPane(tree);
+        dim.width = 200;
+        dim.height = 200;
+        treePane.setPreferredSize(dim);
+		
+        c = setGrids(0, 0);
+        c.weightx = 1;
+        c.insets = new Insets(PROJECTBUTTONINSETS, PROJECTBUTTONINSETS,
+				PROJECTBUTTONINSETS, PROJECTBUTTONINSETS);
+		c.anchor = GridBagConstraints.LINE_START;
+		section3.add(treePane, c);
+		return section3;
+	}
+	
+	private void addTreeNodes(DefaultMutableTreeNode root) {
+		DefaultMutableTreeNode project = null;
+		DefaultMutableTreeNode file = null;
+		for (int i = 0; i < folder.size(); i++) {
+			project = new DefaultMutableTreeNode(folder.get(i).get(0));
+			for (int j = 1; j < folder.size() - 1; j++) {
+				file = new DefaultMutableTreeNode(folder.get(i).get(j));
+				project.add(file);
+			}
+			root.add(project);
+		}
+		
+	}
+
 	/**
 	 * Method which creates the list of projects.
 	 * @param f the folder object.
@@ -239,5 +300,11 @@ public class InputPage implements PanelState, Serializable {
 				selecter.setVisible(false);
 			}
 		}
+	}
+
+	@Override
+	public void valueChanged(TreeSelectionEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }
