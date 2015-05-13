@@ -222,7 +222,7 @@ public class Db {
 			while (rs.next()) {
 				res = rs.getString(variable);
 				//hier moet nog iets beters gereturned worden.
-				System.out.println(res);
+			//	System.out.println(res);
 			}
 			rs.close();
 		} catch (SQLException e) {

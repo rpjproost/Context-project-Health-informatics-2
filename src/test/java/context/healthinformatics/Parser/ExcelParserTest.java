@@ -14,6 +14,7 @@ import org.junit.Test;
 public class ExcelParserTest {
 
 	private String path;
+	private static final int THREE = 3;
 	private static final int FOUR = 4;
 	private static final int FIVE = 5;
 	private static final int SIX = 6;
@@ -26,9 +27,9 @@ public class ExcelParserTest {
 	public void before() {
 		path = "src/test/data/excelparsertestfiles/";
 		cols = new ArrayList<Column>();
-		cols.add(new Column(0, "value", "Integer"));
-		cols.add(new Column(1, "date", "String"));
-		cols.add(new Column(2, "time", "String"));
+		cols.add(new Column(1, "value", "Integer"));
+		cols.add(new Column(2, "date", "String"));
+		cols.add(new Column(THREE, "time", "String"));
 	}
 
 	/**

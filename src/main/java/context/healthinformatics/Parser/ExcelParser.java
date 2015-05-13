@@ -113,6 +113,7 @@ public class ExcelParser extends Parser {
 
 	@Override
 	public void parse() throws IOException {
+
 		// Try to open input file
 		FileInputStream fis = openFile(this.getFileName());
 		if (this.getFileName().endsWith(".xls")) {
@@ -161,7 +162,7 @@ public class ExcelParser extends Parser {
 		String[] cells = new String[columns.size()];
 		if (canSplit(numcells)) {
 			for (int c = 0; c < columns.size(); c++) {
-				cells[c] = row.getCell(columns.get(c).getColumnNumber())
+				cells[c] = row.getCell(columns.get(c).getColumnNumber() - 1)
 						.toString();
 			}
 			Db data = SingletonDb.getDb();
@@ -182,7 +183,7 @@ public class ExcelParser extends Parser {
 	public void processXLSXSheet(XSSFSheet ws) {
 		int rowNum = ws.getLastRowNum() + 1;
 		for (int i = startLine; i < rowNum; i++) {
-			processRow(ws.getRow(i));
+			processXLSXRow(ws.getRow(i));
 
 		}
 	}
@@ -193,12 +194,12 @@ public class ExcelParser extends Parser {
 	 * @param row
 	 *            the row processed.
 	 */
-	public void processRow(XSSFRow row) {
+	public void processXLSXRow(XSSFRow row) {
 		int numcells = row.getLastCellNum();
 		String[] cells = new String[columns.size()];
 		if (canSplit(numcells)) {
 			for (int c = 0; c < columns.size(); c++) {
-				cells[c] = row.getCell(columns.get(c).getColumnNumber())
+				cells[c] = row.getCell(columns.get(c).getColumnNumber() - 1)
 						.toString();
 			}
 			Db data = SingletonDb.getDb();
