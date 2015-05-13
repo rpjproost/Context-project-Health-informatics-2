@@ -14,6 +14,7 @@ import org.junit.Test;
 public class ExcelParserTest {
 
 	private String path;
+	private static final int FOUR = 4;
 	private static final int FIVE = 5;
 	private static final int SIX = 6;
 	private ArrayList<Column> cols;
@@ -25,9 +26,9 @@ public class ExcelParserTest {
 	public void before() {
 		path = "src/test/data/excelparsertestfiles/";
 		cols = new ArrayList<Column>();
-		cols.add(new Column(2, "value", "Integer"));
-		cols.add(new Column(FIVE, "date", "String"));
-		cols.add(new Column(SIX, "time", "String"));
+		cols.add(new Column(0, "value", "Integer"));
+		cols.add(new Column(1, "date", "String"));
+		cols.add(new Column(2, "time", "String"));
 	}
 
 	/**
@@ -38,7 +39,8 @@ public class ExcelParserTest {
 	 */
 	@Test
 	public void testCorrectXLSX() throws IOException {
-		ExcelParser excelp = new ExcelParser(path + "test.xlsx", FIVE, cols, 1);
+		ExcelParser excelp = new ExcelParser(path + "test.xlsx", 1, cols, 1,
+				"docname");
 		excelp.parse();
 	}
 
@@ -50,7 +52,8 @@ public class ExcelParserTest {
 	 */
 	@Test
 	public void testCorrectXLS() throws IOException {
-		ExcelParser excelp = new ExcelParser(path + "test.xls", FIVE, cols, 1);
+		ExcelParser excelp = new ExcelParser(path + "test.xls", FOUR, cols, 1,
+				"docname");
 		excelp.parse();
 
 	}
@@ -63,7 +66,8 @@ public class ExcelParserTest {
 	 */
 	@Test(expected = IOException.class)
 	public void testWrongInputFile() throws IOException {
-		ExcelParser excelp = new ExcelParser("not exitent file", FIVE, cols, 1);
+		ExcelParser excelp = new ExcelParser("not exitent file", FIVE, cols, 1,
+				"docname");
 		excelp.parse();
 	}
 
@@ -72,7 +76,8 @@ public class ExcelParserTest {
 	 */
 	@Test
 	public void testGetStartLine() {
-		ExcelParser excelp = new ExcelParser(path + "test.xlsx", FIVE, cols, 1);
+		ExcelParser excelp = new ExcelParser(path + "test.xlsx", FIVE, cols, 1,
+				"docname");
 		assertEquals(excelp.getStartLine(), FIVE);
 	}
 
@@ -81,7 +86,8 @@ public class ExcelParserTest {
 	 */
 	@Test
 	public void testSetStartLine() {
-		ExcelParser excelp = new ExcelParser(path + "test.xlsx", FIVE, cols, 1);
+		ExcelParser excelp = new ExcelParser(path + "test.xlsx", FIVE, cols, 1,
+				"docname");
 		assertEquals(excelp.getStartLine(), FIVE);
 		excelp.setStartLine(SIX);
 		assertEquals(excelp.getStartLine(), SIX);
@@ -92,7 +98,8 @@ public class ExcelParserTest {
 	 */
 	@Test
 	public void testGetColumns() {
-		ExcelParser excelp = new ExcelParser(path + "test.xlsx", FIVE, cols, 1);
+		ExcelParser excelp = new ExcelParser(path + "test.xlsx", FIVE, cols, 1,
+				"docname");
 		assertEquals(excelp.getColumns(), cols);
 	}
 
@@ -101,7 +108,8 @@ public class ExcelParserTest {
 	 */
 	@Test
 	public void testSetColumns() {
-		ExcelParser excelp = new ExcelParser(path + "test.xlsx", FIVE, cols, 1);
+		ExcelParser excelp = new ExcelParser(path + "test.xlsx", FIVE, cols, 1,
+				"docname");
 		ArrayList<Column> setCols = new ArrayList<Column>();
 		setCols.add(new Column(2, "value", "Integer"));
 		excelp.setColumns(setCols);
