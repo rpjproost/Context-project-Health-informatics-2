@@ -19,6 +19,6 @@ public class SingletonInterpreter {
 	}
 	
 	private static Interpreter createInterpreter(){
-		
+		return new Interpreter();
 	}
 }
