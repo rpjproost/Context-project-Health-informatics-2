@@ -2,7 +2,7 @@
 <xml>
 	<document docname="exceltest">
 		<doctype>excel</doctype>
-		<path>src/test/data/parsertodbfiles/Overzicht gestarte interventiepatienten-20131014.xls</path>
+		<path>src/test/data/parsertodbfiles/overzicht.xls</path>
 		<start>2</start>
 		<delimiter></delimiter>
 		<column id="1">
