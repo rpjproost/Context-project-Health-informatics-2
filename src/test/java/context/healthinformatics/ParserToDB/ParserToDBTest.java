@@ -30,23 +30,82 @@ public class ParserToDBTest {
 	 */
 	private Db data = SingletonDb.getDb();
 
+	/**
+	 * Test if the xml parser correctly insert the text file with text parser
+	 * into the database.
+	 * 
+	 * @throws IOException
+	 *             the IOException
+	 * @throws SQLException
+	 *             the SQLException
+	 */
 	@Test
 	public void textParsertoDBTest() throws IOException, SQLException {
 		xmlp = new XMLParser(path + "textxml.xml");
 		xmlp.parse();
 		assertNotNull(data.select("stat", "date"));
 		assertNotNull(data.select("stat", "value"));
-		assertNotNull(data.select("stat", "time"));		
+		assertNotNull(data.select("stat", "time"));
 		data.dropTable("stat");
 	}
-	
+
+	/**
+	 * Test if the xml parser correctly insert the excel xlsx file with excel
+	 * parser into the database.
+	 * 
+	 * @throws IOException
+	 *             the IOException
+	 * @throws SQLException
+	 *             the SQLException
+	 */
 	@Test
-	public void excelParsertoDBTest() throws IOException, SQLException{
+	public void excelParsertoDBXLSXTest() throws IOException, SQLException {
 		xmlp = new XMLParser(path + "excelxml.xml");
 		xmlp.parse();
 		assertNotNull(data.select("exceltest", "date"));
 		assertNotNull(data.select("exceltest", "groep"));
 		assertNotNull(data.select("exceltest", "admnr"));
 		assertNotNull(data.select("exceltest", "agendaomschrijving"));
+		data.dropTable("exceltest");
+	}
+
+	/**
+	 * Test if the xml parser correctly insert the excel xls file with excel
+	 * parser into the database.
+	 * 
+	 * @throws IOException
+	 *             the IOException
+	 * @throws SQLException
+	 *             the SQLException
+	 */
+	@Test
+	public void excelParsertoDBXLSTest() throws IOException, SQLException {
+		xmlp = new XMLParser(path + "excelxlsxml.xml");
+		xmlp.parse();
+		assertNotNull(data.select("exceltest", "admnr"));
+		assertNotNull(data.select("exceltest", "monitoring"));
+		assertNotNull(data.select("exceltest", "date"));
+		assertNotNull(data.select("exceltest", "datelogin"));
+		assertNotNull(data.select("exceltest", "remarks"));
+		data.dropTable("exceltest");
+	}
+	
+	/**
+	 * Test if the xml parser correctly insert the csv file with txt
+	 * parser into the database.
+	 * 
+	 * @throws IOException
+	 *             the IOException
+	 * @throws SQLException
+	 *             the SQLException
+	 */
+	@Test
+	public void csvParsertoDBTest() throws IOException, SQLException {
+		xmlp = new XMLParser(path + "csvxml.xml");
+		xmlp.parse();
+		assertNotNull(data.select("csvtest", "num1"));
+		assertNotNull(data.select("csvtest", "num2"));
+		assertNotNull(data.select("csvtest", "num3"));
+		data.dropTable("csvtest");
 	}
 }
