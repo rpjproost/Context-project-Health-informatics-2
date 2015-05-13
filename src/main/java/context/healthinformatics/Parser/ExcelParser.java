@@ -4,9 +4,11 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -162,15 +164,10 @@ public class ExcelParser extends Parser {
 		String[] cells = new String[columns.size()];
 		if (canSplit(numcells)) {
 			for (int c = 0; c < columns.size(); c++) {
-				cells[c] = row.getCell(columns.get(c).getColumnNumber() - 1)
-						.toString();
+				cells[c] = processCell(
+						row.getCell(columns.get(c).getColumnNumber() - 1), c);
 			}
-			Db data = SingletonDb.getDb();
-			try {
-				data.insert(docName, cells, columns);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-			}
+			insertToDb(cells);
 		}
 	}
 
@@ -199,15 +196,29 @@ public class ExcelParser extends Parser {
 		String[] cells = new String[columns.size()];
 		if (canSplit(numcells)) {
 			for (int c = 0; c < columns.size(); c++) {
-				cells[c] = row.getCell(columns.get(c).getColumnNumber() - 1)
-						.toString();
+				cells[c] = processCell(
+						row.getCell(columns.get(c).getColumnNumber() - 1), c);
 			}
-			Db data = SingletonDb.getDb();
-			try {
-				data.insert(docName, cells, columns);
-			} catch (SQLException e) {
+			insertToDb(cells);
+		}
+	}
 
-			}
+	/**
+	 * Process a single cell.
+	 * 
+	 * @param curCell
+	 *            the current cell to be processed
+	 * @param c
+	 *            the integer of the current column
+	 * @return the right formatted cell
+	 */
+	public String processCell(Cell curCell, int c) {
+		if (columns.get(c).getColumnType().equals("date")
+				&& !curCell.toString().equals("")) {
+			return new SimpleDateFormat("yyyy-MM-dd").format(curCell
+					.getDateCellValue());
+		} else {
+			return curCell.toString();
 		}
 	}
 
@@ -220,5 +231,20 @@ public class ExcelParser extends Parser {
 	 */
 	public boolean canSplit(int cellnums) {
 		return cellnums >= columns.size();
+	}
+
+	/**
+	 * Insert a row to the db.
+	 * 
+	 * @param cells
+	 *            the string array with the cell values
+	 */
+	public void insertToDb(String[] cells) {
+		Db data = SingletonDb.getDb();
+		try {
+			data.insert(docName, cells, columns);
+		} catch (SQLException e) {
+
+		}
 	}
 }
