@@ -3,13 +3,11 @@ package context.healthinformatics.Writer;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import org.junit.Test;
 
 import context.healthinformatics.Database.Db;
 import context.healthinformatics.Database.SingletonDb;
-import context.healthinformatics.Parser.Column;
 import context.healthinformatics.Parser.XMLParser;
 
 /**
@@ -33,16 +31,19 @@ public class WriterTest {
 
 	/**
 	 * Setup test.
-	 * @throws SQLException the sqlexception
-	 * @throws IOException 
+	 * 
+	 * @throws SQLException
+	 *             the sqlexception
+	 * @throws IOException the ioException of the writetotxt
 	 */
 	@Test
 	public void testFirst() throws SQLException, IOException {
 		xmlp = new XMLParser(path + "textxml.xml");
 		xmlp.parse();
-		
+
 		ResultSet rs = data.selectResultSet("stat", "*");
-		WriteToTXT wtxt = new WriteToTXT("test.txt", "C:/Users/wim/Desktop/", rs);
+		WriteToTXT wtxt = new WriteToTXT("test.txt", "C:/Users/wim/Desktop/",
+				rs);
 		wtxt.writeToFile();
 	}
 }
