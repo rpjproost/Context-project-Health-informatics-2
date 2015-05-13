@@ -6,7 +6,10 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import context.healthinformatics.Parser.Column;
 
@@ -188,6 +191,10 @@ public class Db {
 				if (columns.get(i).getColumnType().toLowerCase().startsWith("varchar")) {
 					s.append("'"); s.append(values[i]); s.append("')");
 				}
+				else if (columns.get(i).getColumnType().toLowerCase().startsWith("date")) {
+					String dateT = columns.get(i).getDateType();
+					s.append("'"); s.append(convertDate(values[i], dateT)); s.append("')");
+				}
 				else {
 					s.append(values[i]); s.append(")");
 				}
@@ -195,6 +202,10 @@ public class Db {
 			else {
 				if (columns.get(i).getColumnType().toLowerCase().startsWith("varchar")) {
 					s.append("'"); s.append(values[i]); s.append("',");
+				}
+				else if (columns.get(i).getColumnType().toLowerCase().startsWith("date")) {
+					String dateT = columns.get(i).getDateType();
+					s.append("'"); s.append(convertDate(values[i], dateT)); s.append("',");
 				}
 				else {
 					s.append(values[i]); s.append(",");
@@ -310,6 +321,26 @@ public class Db {
 				}
 			}
 			 res = dir.delete();
+		}
+		return res;
+	}
+	
+	/** Converts date to sql date format.
+	 * 
+	 * @param s date value.
+	 * @param dateT type of date input.
+	 * @return date value in sql format.
+	 */
+	public String convertDate(String s, String dateT) {
+		SimpleDateFormat input = new SimpleDateFormat(dateT);
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		String res = " ";
+		try { 
+			Date date = input.parse(s);
+			res = formatter.format(date);
+	 
+		} catch (ParseException e) {
+			e.printStackTrace();
 		}
 		return res;
 	}

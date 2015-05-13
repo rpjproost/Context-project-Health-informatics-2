@@ -117,20 +117,6 @@ public class Column {
 			}
 		}
 	}
-	
-	public String convertDate(String s) {
-		SimpleDateFormat input = new SimpleDateFormat(dateType);
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-		String res = " ";
-		try { 
-			Date date = input.parse(s);
-			res = formatter.format(date);
-	 
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		return res;
-	}
 
 	@Override
 	public boolean equals(Object o) {

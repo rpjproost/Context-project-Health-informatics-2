@@ -263,5 +263,13 @@ public class DbTest {
 	public void removeNull() {
 		assertFalse(data.removeDirectory(null));
 	}
+	
+	/**
+	 * Tests date conversion.
+	 */
+	@Test
+	public void testDateConversion() {
+		assertEquals(data.convertDate("28-10-1992", "dd-MM-yyyy"), "1992-10-28");
+	}
 
 }
