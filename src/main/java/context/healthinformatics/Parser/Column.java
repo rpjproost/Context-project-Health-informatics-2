@@ -1,5 +1,9 @@
 package context.healthinformatics.Parser;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * class for giving information about the columns
  * to the parsers.
@@ -19,6 +23,11 @@ public class Column {
 	 * String/Integer.
 	 */
 	private String columnType;
+	
+	/**
+	 * The type of the date specified.
+	 */
+	private String dateType;
 
 	/**
 	 * Constructor for column.
@@ -71,6 +80,22 @@ public class Column {
 	public String getColumnType() {
 		return columnType;
 	}
+	
+	/** Sets date type.
+	 * 
+	 * @param s specified date.
+	 */
+	public void setDateType(String s) {
+		this.dateType = s;
+	}
+	
+	/** Returns date type.
+	 * 
+	 * @return date type as string.
+	 */
+	public String getDateType() {
+		return this.dateType;
+	}
 
 	/**
 	 * setter for the column type.
@@ -84,10 +109,27 @@ public class Column {
 			else if (columnType.toLowerCase().equals("integer")) {
 				this.columnType = "INT";
 			}
+			else if (columnType.toLowerCase().equals("date")) {
+				this.columnType = "DATE";
+			}
 			else {
 				this.columnType = columnType;
 			}
 		}
+	}
+	
+	public String convertDate(String s) {
+		SimpleDateFormat input = new SimpleDateFormat(dateType);
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		String res = " ";
+		try { 
+			Date date = input.parse(s);
+			res = formatter.format(date);
+	 
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return res;
 	}
 
 	@Override

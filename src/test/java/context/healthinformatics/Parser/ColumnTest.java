@@ -102,5 +102,14 @@ public class ColumnTest {
 	public void testToString() {
 		assertEquals(col.toString(), "Column<12 Column List>");
 	}
+	
+	/**
+	 * Test to convert date.
+	 */
+	@Test
+	public void testDateConversion() {
+		col.setDateType("dd-MM-yyyy");
+		assertEquals(col.convertDate("28-10-1992"), "1992-10-28");
+	}
 
 }
