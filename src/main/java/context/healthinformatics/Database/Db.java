@@ -233,7 +233,13 @@ public class Db {
 				preparedStmt.setDate(i + 1, date);
 			}
 			else if (type.equals("int")) {
-				preparedStmt.setInt(i + 1, Integer.parseInt(values[i]));
+				double value = 0;
+				try {
+					value = Double.parseDouble(values[i]);
+				} catch (Exception e) {
+					System.out.println(e);
+				}
+				preparedStmt.setDouble(i + 1, value);
 			}
 		}
 		return preparedStmt;
