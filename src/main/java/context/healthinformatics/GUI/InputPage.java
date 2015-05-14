@@ -18,11 +18,12 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
+import javax.swing.JTextArea;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
 /**
@@ -36,25 +37,36 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	private MainFrame mf;
 	private ArrayList<ArrayList<String>> folder;
 	
-	private JTextField txt;
+	private JTextArea txt;
 	private JButton projectButton;
 	private JButton fileButton;
 	private JButton selectButton;
+	private JButton helpButton;
+	private JButton analyseButton;
+	private ArrayList<String> selectedFiles;
 	private Dimension dim;
 	private GridBagConstraints c;
 	private GridBagLayout l;
 	private JPanel panel;
 	private JComboBox<String> box;
 	private JTree tree;
+	private DefaultMutableTreeNode root;
+	private DefaultTreeModel model;
+	private JScrollPane treePane;
 	
-	public static final int TXTFIELDWIDTH = 50;
+	public static final int TXTFIELDWIDTH = 500;
+	public static final int TXTFIELDHEIGHT = 30;
 	public static final int BUTTONFONTSIZE = 15;
 	public static final int DIMESIONHEIGHT = 150;
 	public static final int DIMESIONWIDTH = 40;
 	public static final int SECTION1HEIGHT = 100;
 	public static final int PROJECTLABELFONTSIZE = 20;
-	public static final int PROJECTBUTTONINSETS = 10;
+	public static final int BUTTONINSETS = 10;
 	public static final int THREE = 3;
+	public static final int FLAGLENGTH = 13;
+	public static final int TREEPANEWIDTH = 700;
+	public static final int TREEPANEHEIGHT = 300;
+	public static final int SECTION3HEIGHT = 400;
 	
 	/**
 	 * Constructor.
@@ -62,15 +74,18 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 */
 	public InputPage(MainFrame m) {
 		mf = m;
+		selectedFiles = new ArrayList<String>();
+		folder = new ArrayList<ArrayList<String>>();
 		
 		//////////test
-		folder = new ArrayList<ArrayList<String>>();
 		folder.add(new ArrayList<String>());
 		folder.get(0).add("1");
 		folder.get(0).add("2");
+		folder.get(0).add("3");
 		folder.add(new ArrayList<String>());
-		folder.get(1).add("3");
 		folder.get(1).add("4");
+		folder.get(1).add("5");
+		folder.get(1).add("6");
 	}
 
 	/**
@@ -85,22 +100,19 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		dim = new Dimension(DIMESIONHEIGHT, DIMESIONWIDTH);
 		
 		JPanel section1 = makeSection1();
-		c.gridx = 0;
-		c.gridy = 0;
-		panel.add(section1, c);
+		panel.add(section1, setGrids(0, 0));
 		
 		JPanel section2 = makeSection2();
-		c.gridx = 0;
-		c.gridy = 1;
-		panel.add(section2, c);
+		panel.add(section2, setGrids(0, 1));
 		
 		JPanel section3 = makeSection3();
-		c.gridx = 0;
-		c.gridy = 2;
+		panel.add(section3, setGrids(0, 2));
+		
+		JPanel section4 = makeSection4();
+		c = setGrids(0, THREE);
 		c.weighty = 1;
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
-		panel.add(section3, c);
-		
+		panel.add(section4, c);
 		
 		return panel;
 	}
@@ -127,8 +139,8 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		section1.add(box, c);
 		
 		projectButton = makeButton("ADD new Project", 2, 0);
-		c.insets = new Insets(PROJECTBUTTONINSETS, PROJECTBUTTONINSETS,
-				PROJECTBUTTONINSETS, PROJECTBUTTONINSETS);
+		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS,
+				BUTTONINSETS, BUTTONINSETS);
 		c.weightx = 1;
 		c.anchor = GridBagConstraints.LINE_START;
 		section1.add(projectButton, c);
@@ -151,19 +163,18 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		c.gridy = 0;
 		section2.add(fileLabel, setGrids(0, 0));
 		
-		txt = new JTextField(TXTFIELDWIDTH);
+		txt = new JTextArea();
+		txt.setMinimumSize(new Dimension(TXTFIELDWIDTH, TXTFIELDHEIGHT));
 		c.gridx = 1;
 		c.gridy = 0;
 		section2.add(txt, c);
 		
 		selectButton = makeButton("SELECT", 2, 0);
-		c.insets = new Insets(PROJECTBUTTONINSETS, PROJECTBUTTONINSETS,
-				PROJECTBUTTONINSETS, PROJECTBUTTONINSETS);
+		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS, BUTTONINSETS);
 		section2.add(selectButton, c);
 		
 		fileButton = makeButton("ADD new File", THREE, 0);
-		c.insets = new Insets(PROJECTBUTTONINSETS, PROJECTBUTTONINSETS,
-				PROJECTBUTTONINSETS, PROJECTBUTTONINSETS);
+		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS, BUTTONINSETS);
 		c.weightx = 1;
 		c.anchor = GridBagConstraints.LINE_START;
 		section2.add(fileButton, c);
@@ -175,45 +186,89 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 */
 	public JPanel makeSection3() {
 		JPanel section3 = MainFrame.createPanel(Color.decode("#81DAF5"),
-				mf.getScreenWidth(), 400);
+				mf.getScreenWidth(), SECTION3HEIGHT);
 		c = new GridBagConstraints();
 		section3.setLayout(l);
-		
-        DefaultMutableTreeNode root = new DefaultMutableTreeNode("PROJECT NAME");
-        addTreeNodes(root);
 
-        tree = new JTree(root);
-        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
-        tree.setVisible(true);
-        tree.setLayout(l);
-        tree.addTreeSelectionListener(this);
+		initTree();
 
-        JScrollPane treePane = new JScrollPane(tree);
-        dim.width = 200;
-        dim.height = 200;
+        treePane = new JScrollPane(tree);
+        dim.width = TREEPANEWIDTH;
+        dim.height = TREEPANEHEIGHT;
         treePane.setPreferredSize(dim);
 		
         c = setGrids(0, 0);
         c.weightx = 1;
-        c.insets = new Insets(PROJECTBUTTONINSETS, PROJECTBUTTONINSETS,
-				PROJECTBUTTONINSETS, PROJECTBUTTONINSETS);
+        c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS, BUTTONINSETS);
 		c.anchor = GridBagConstraints.LINE_START;
 		section3.add(treePane, c);
 		return section3;
 	}
 	
-	private void addTreeNodes(DefaultMutableTreeNode root) {
+	/**
+	 * @return section4 Panel.
+	 */
+	public JPanel makeSection4() {
+		JPanel section4 = MainFrame.createPanel(Color.decode("#81DAF5"),
+				mf.getScreenWidth(), SECTION3HEIGHT);
+		c = new GridBagConstraints();
+		section4.setLayout(l);
+		
+		helpButton = createButton("HELP", 100, 200);
+		c = setGrids(0, 0);
+		c.weightx = 1;
+		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS, BUTTONINSETS);
+		c.anchor = GridBagConstraints.WEST;
+		section4.add(helpButton, c);
+		
+		analyseButton = createButton("ANALYSE", 100, 200);
+		c = setGrids(0, 1);
+		c.weightx = 1;
+		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS, BUTTONINSETS);
+		c.anchor = GridBagConstraints.EAST;
+		section4.add(analyseButton, c);
+
+		return section4;
+	}
+	
+	/**
+	 * Method which creates the tree and fills it with all the nodes currently in the folder.
+	 */
+	public void fillTree() {
 		DefaultMutableTreeNode project = null;
 		DefaultMutableTreeNode file = null;
 		for (int i = 0; i < folder.size(); i++) {
 			project = new DefaultMutableTreeNode(folder.get(i).get(0));
-			for (int j = 1; j < folder.size() - 1; j++) {
+			for (int j = 1; j < folder.get(i).size(); j++) {
 				file = new DefaultMutableTreeNode(folder.get(i).get(j));
 				project.add(file);
 			}
 			root.add(project);
 		}
-		
+	}
+	
+	/**
+	 * Method which initialises the tree.
+	 */
+	public void initTree() {
+		root = new DefaultMutableTreeNode("PROJECT NAME");		
+        fillTree();
+        model = new DefaultTreeModel(root);
+        tree = new JTree(model);
+        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
+        tree.setVisible(true);
+        tree.setLayout(l);
+        tree.addTreeSelectionListener(this);
+	}
+	
+	/**
+	 * Method which reloades the tree.
+	 */
+	public void reloadTree() {
+		root.removeAllChildren();
+		fillTree();
+		model.reload();
+		tree.revalidate();
 	}
 
 	/**
@@ -227,6 +282,13 @@ public class InputPage extends InterfaceHelper implements PanelState,
 			res[i] = f.get(i).get(0);
 		}
 		return res;
+	}
+	
+	/**
+	 * @return Arraylist of slected files.
+	 */
+	public ArrayList<String> getSelectedFiles() {
+		return selectedFiles;
 	}
 	
 	/**
@@ -253,6 +315,23 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		list.add(newProject);
 		folder.add(list);
 		box.addItem(newProject);
+		DefaultMutableTreeNode node = new DefaultMutableTreeNode(newProject);
+		model.insertNodeInto(node, root, root.getChildCount());
+	}
+	
+	/**
+	 * Method which finds the project in the folder.
+	 * @return index of project.
+	 * @param s is string of project.
+	 */
+	public int findFolderProject(String s) {
+		for (int i = 0; i < folder.size(); i++) {
+			if (folder.get(i).get(0).equals(s)) {
+				return i;
+			}
+		}
+		System.out.println("no project selected.");
+		return -1;
 	}
 	
 	/**
@@ -287,7 +366,8 @@ public class InputPage extends InterfaceHelper implements PanelState,
 				addComboItem();
 			}
 			if (e.getSource() == fileButton) {
-				System.out.println(txt.getText());
+				folder.get(findFolderProject((String) box.getSelectedItem())).add(txt.getText());
+				reloadTree();
 			}
 			if (e.getSource() == selectButton) {
 				JFileChooser selecter = new JFileChooser();
@@ -299,12 +379,41 @@ public class InputPage extends InterfaceHelper implements PanelState,
 				}
 				selecter.setVisible(false);
 			}
+			if (e.getSource() == helpButton) {
+				//TODO
+			}
+			if (e.getSource() == analyseButton) {
+				mf.setState(mf.getCodePage());
+				mf.reloadStatePanel();
+			}
 		}
 	}
 
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
-		// TODO Auto-generated method stub
-		
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+
+		if (node == null) {
+			return;
+		}
+
+		if (node.isLeaf()) {
+			String selected = node.getUserObject().toString();
+			String flag = selected.substring(selected.length() - FLAGLENGTH);
+			if (flag != null && flag.equals("   [SELECTED]")) {
+				selectedFiles.remove(selected);
+				String s = node.getUserObject().toString();				
+				node.setUserObject(s.substring(0, s.length() - FLAGLENGTH));
+				model.nodeStructureChanged(node.getParent());
+			}
+			else {
+				selectedFiles.add(selected);
+				node.setUserObject(node.getUserObject().toString() + "   [SELECTED]");
+				model.nodeStructureChanged(node.getParent());
+			}
+		}
+		else {
+			//TODO
+		}
 	}
 }
