@@ -42,7 +42,7 @@ public class WriterTest {
 		xmlp.parse();
 
 		ResultSet rs = data.selectResultSet("stat", "*");
-		WriteToTXT wtxt = new WriteToTXT("test.txt", "C:/Users/wim/Desktop/",
+		WriteToTXT wtxt = new WriteToTXT("test.txt", "C:/",
 				rs);
 		wtxt.writeToFile();
 	}
