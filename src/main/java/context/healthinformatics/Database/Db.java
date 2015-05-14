@@ -3,13 +3,13 @@ package context.healthinformatics.Database;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import context.healthinformatics.Parser.Column;
 
@@ -39,7 +39,7 @@ public class Db {
 	 *             the sql exception
 	 */
 	protected Db(String databaseName, String p) throws NullPointerException,
-			SQLException {
+	SQLException {
 		if (p == null || databaseName == null) {
 			throw new NullPointerException();
 		}
@@ -184,21 +184,26 @@ public class Db {
 			ArrayList<Column> columns) throws SQLException {
 		boolean res = false;
 		try {
-			stmt = conn.createStatement();
 			StringBuffer sql = new StringBuffer();
 			sql.append("INSERT INTO " + tableName + "(");
 			for (int i = 0; i < columns.size(); i++) {
 				if (i == values.length - 1) {
-					sql.append(columns.get(i).getColumnName());
-					sql.append(")");
+					sql.append(columns.get(i).getColumnName()); sql.append(")");
 				} else {
-					sql.append(columns.get(i).getColumnName());
-					sql.append(",");
+					sql.append(columns.get(i).getColumnName()); sql.append(",");
 				}
 			}
 			sql.append(" VALUES (");
-			sql = appendValues(sql, values, columns);
-			stmt.executeUpdate(sql.toString());
+			for (int i = 0; i < values.length; i++) {
+				if (i == values.length - 1) {
+					sql.append("?)");
+				}
+				else {
+					sql.append("?,");
+				}
+			}
+			PreparedStatement stm = appendValuesInsert(sql.toString(), values, columns);
+			stm.execute();
 			res = true;
 		} catch (SQLException | NullPointerException e) {
 			throw new SQLException(e);
@@ -207,54 +212,31 @@ public class Db {
 	}
 
 	/**
-	 * Append values to sqlbuffer.
 	 * 
-	 * @param s
-	 *            stringbuffer sql query.
-	 * @param values
-	 *            values to be inserted.
-	 * @param columns
-	 *            columns where values will be inserted.
-	 * @return sql appended query.
+	 * @param s sql query to be turned into preparedStatement.
+	 * @param values to be inserted into table.
+	 * @param columns ArrayList of columns, types and dateTypes are used.
+	 * @return preparedstatement to be executed.
+	 * @throws SQLException 
 	 */
-	public StringBuffer appendValues(StringBuffer s, String[] values,
-			ArrayList<Column> columns) {
+	public PreparedStatement appendValuesInsert(String s, String[] values,
+			ArrayList<Column> columns) throws SQLException {
+		PreparedStatement preparedStmt = conn.prepareStatement(s);
 		for (int i = 0; i < values.length; i++) {
-			if (i == values.length - 1) {
-				if (columns.get(i).getColumnType().toLowerCase()
-						.startsWith("varchar")) {
-					s.append("'");
-					s.append(values[i]);
-					s.append("')");
-				} else if (columns.get(i).getColumnType().toLowerCase()
-						.startsWith("date")) {
-					String dateT = columns.get(i).getDateType();
-					s.append("'");
-					s.append(convertDate(values[i], dateT));
-					s.append("')");
-				} else {
-					s.append(values[i]);
-					s.append(")");
-				}
-			} else {
-				if (columns.get(i).getColumnType().toLowerCase()
-						.startsWith("varchar")) {
-					s.append("'");
-					s.append(values[i]);
-					s.append("',");
-				} else if (columns.get(i).getColumnType().toLowerCase()
-						.startsWith("date")) {
-					String dateT = columns.get(i).getDateType();
-					s.append("'");
-					s.append(convertDate(values[i], dateT));
-					s.append("',");
-				} else {
-					s.append(values[i]);
-					s.append(",");
-				}
+			String type = columns.get(i).getColumnType().toLowerCase();
+			if (type.startsWith("varchar")) {
+				preparedStmt.setString(i + 1, values[i]);
+			}
+			else if (type.equals("date")) {
+				String dateType = columns.get(i).getDateType();
+				java.sql.Date date = convertDate(values[i], dateType);
+				preparedStmt.setDate(i + 1, date);
+			}
+			else if (type.equals("int")) {
+				preparedStmt.setInt(i + 1, Integer.parseInt(values[i]));
 			}
 		}
-		return s;
+		return preparedStmt;
 	}
 
 	/**
@@ -410,18 +392,19 @@ public class Db {
 	 *            type of date input.
 	 * @return date value in sql format.
 	 */
-	public String convertDate(String s, String dateT) {
+	public java.sql.Date convertDate(String s, String dateT) {
 		SimpleDateFormat input = new SimpleDateFormat(dateT);
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+		java.sql.Date sqlDate = null;
 		String res = " ";
 		try {
-			Date date = input.parse(s);
-			res = formatter.format(date);
+			java.util.Date date = input.parse(s);
+			sqlDate = new java.sql.Date(date.getTime());
 
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		return res;
+		return sqlDate;
 	}
 
 }

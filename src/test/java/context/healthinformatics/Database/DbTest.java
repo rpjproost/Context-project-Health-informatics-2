@@ -269,7 +269,7 @@ public class DbTest {
 	 */
 	@Test
 	public void testDateConversion() {
-		assertEquals(data.convertDate("28-10-1992", "dd-MM-yyyy"), "1992-10-28");
+		assertEquals((data.convertDate("28-10-1992", "dd-MM-yyyy")).toString(), "1992-10-28");
 	}
-
+	
 }
