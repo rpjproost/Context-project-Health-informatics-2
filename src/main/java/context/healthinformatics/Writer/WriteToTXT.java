@@ -49,7 +49,7 @@ public class WriteToTXT {
 			writer = new PrintWriter(path + fileName, "UTF-8");
 		} catch (FileNotFoundException e) {
 			throw new FileNotFoundException(
-					"The file to write to is not found!");
+					"The path to write to is not found!");
 		} catch (UnsupportedEncodingException e) {
 			throw new UnsupportedEncodingException(
 					"The encoding for the write to file is not supported!");
