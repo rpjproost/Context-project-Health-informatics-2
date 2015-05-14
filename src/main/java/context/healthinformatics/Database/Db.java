@@ -237,7 +237,7 @@ public class Db {
 				try {
 					value = Double.parseDouble(values[i]);
 				} catch (Exception e) {
-					System.out.println(e);
+					throw new SQLException(e);
 				}
 				preparedStmt.setDouble(i + 1, value);
 			}
@@ -400,9 +400,7 @@ public class Db {
 	 */
 	public java.sql.Date convertDate(String s, String dateT) {
 		SimpleDateFormat input = new SimpleDateFormat(dateT);
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 		java.sql.Date sqlDate = null;
-		String res = " ";
 		try {
 			java.util.Date date = input.parse(s);
 			sqlDate = new java.sql.Date(date.getTime());
