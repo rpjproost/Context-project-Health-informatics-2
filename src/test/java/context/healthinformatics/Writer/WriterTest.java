@@ -45,5 +45,6 @@ public class WriterTest {
 		WriteToTXT wtxt = new WriteToTXT("test.txt", "src/test/data/writerfiles/",
 				rs);
 		wtxt.writeToFile();
+		data.dropTable("stat");
 	}
 }

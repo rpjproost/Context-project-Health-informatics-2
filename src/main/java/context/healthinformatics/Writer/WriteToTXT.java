@@ -102,6 +102,7 @@ public class WriteToTXT {
 				res.append(rsmd.getColumnName(i + 1) + " ");
 			}
 		}
+		
 		return res;
 	}
 
@@ -127,6 +128,7 @@ public class WriteToTXT {
 			str.append(System.lineSeparator());
 		}
 		str.setLength(str.length() - 2);
+		rs.close();
 		return str;
 	}
 }
