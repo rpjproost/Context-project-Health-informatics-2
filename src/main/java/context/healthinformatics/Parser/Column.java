@@ -1,17 +1,11 @@
 package context.healthinformatics.Parser;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 /**
- * class for giving information about the columns
- * to the parsers.
+ * class for giving information about the columns to the parsers.
  */
 public class Column {
 	/**
-	 * The number of the column this column object is for.
-	 * Starts @ number 1.
+	 * The number of the column this column object is for. Starts @ number 1.
 	 */
 	private int columnNumber;
 	/**
@@ -19,11 +13,10 @@ public class Column {
 	 */
 	private String columnName;
 	/**
-	 * The type of this column.
-	 * String/Integer.
+	 * The type of this column. String/Integer.
 	 */
 	private String columnType;
-	
+
 	/**
 	 * The type of the date specified.
 	 */
@@ -31,9 +24,13 @@ public class Column {
 
 	/**
 	 * Constructor for column.
-	 * @param id the columnNumber.
-	 * @param cName the columnName.
-	 * @param cType the columnType.
+	 * 
+	 * @param id
+	 *            the columnNumber.
+	 * @param cName
+	 *            the columnName.
+	 * @param cType
+	 *            the columnType.
 	 */
 	public Column(int id, String cName, String cType) {
 		setColumnNumber(id);
@@ -43,6 +40,7 @@ public class Column {
 
 	/**
 	 * getter for the column number.
+	 * 
 	 * @return columnNumber.
 	 */
 	public int getColumnNumber() {
@@ -51,7 +49,9 @@ public class Column {
 
 	/**
 	 * sets the columnNuber.
-	 * @param columnNumber the number to set.
+	 * 
+	 * @param columnNumber
+	 *            the number to set.
 	 */
 	public void setColumnNumber(int columnNumber) {
 		this.columnNumber = columnNumber;
@@ -59,6 +59,7 @@ public class Column {
 
 	/**
 	 * getter for the column name.
+	 * 
 	 * @return columnName.
 	 */
 	public String getColumnName() {
@@ -67,7 +68,9 @@ public class Column {
 
 	/**
 	 * setter for the column name.
-	 * @param columnName the name to set.
+	 * 
+	 * @param columnName
+	 *            the name to set.
 	 */
 	public void setColumnName(String columnName) {
 		this.columnName = columnName;
@@ -75,21 +78,25 @@ public class Column {
 
 	/**
 	 * getter for the column type.
+	 * 
 	 * @return columnType.
 	 */
 	public String getColumnType() {
 		return columnType;
 	}
-	
-	/** Sets date type.
+
+	/**
+	 * Sets date type.
 	 * 
-	 * @param s specified date.
+	 * @param s
+	 *            specified date.
 	 */
 	public void setDateType(String s) {
 		this.dateType = s;
 	}
-	
-	/** Returns date type.
+
+	/**
+	 * Returns date type.
 	 * 
 	 * @return date type as string.
 	 */
@@ -99,29 +106,49 @@ public class Column {
 
 	/**
 	 * setter for the column type.
-	 * @param columnType the type to set.
+	 * 
+	 * @param columnType
+	 *            the type to set.
 	 */
 	public void setColumnType(String columnType) {
 		if (columnType != null) {
 			if (columnType.toLowerCase().equals("string")) {
 				this.columnType = "varchar(150)";
-			}
-			else if (columnType.toLowerCase().equals("integer")) {
+			} else if (columnType.toLowerCase().equals("integer")) {
 				this.columnType = "INT";
-			}
-			else if (columnType.toLowerCase().equals("date")) {
+			} else if (columnType.toLowerCase().equals("date")) {
 				this.columnType = "DATE";
-			}
-			else {
+			} else {
 				this.columnType = columnType;
 			}
 		}
 	}
 
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result;
+		if (columnName != null) {
+			result += columnName.hashCode();
+		}
+		result = prime * result + columnNumber;
+		result = prime * result;
+		if (columnName != null) {
+			result += columnType.hashCode();
+		}
+		result = prime * result;
+		if (columnName != null) {
+			result += dateType.hashCode();
+		}
+		return result;
+	}
+
+	@Override
 	public boolean equals(Object o) {
 		if (o == null) {
-			return false; }
+			return false;
+		}
 		if (o instanceof Column) {
 			Column c = (Column) o;
 			if (getColumnName().equals(c.getColumnName())
@@ -135,10 +162,12 @@ public class Column {
 
 	/**
 	 * Creates a String representation of the column object.
+	 * 
 	 * @return returns a String representing a column.
 	 */
 	@Override
 	public String toString() {
-		return "Column<" + columnNumber + " " + columnName + " " + columnType + ">";
+		return "Column<" + columnNumber + " " + columnName + " " + columnType
+				+ ">";
 	}
 }
