@@ -1,17 +1,27 @@
 package context.healthinformatics.GUI;
 
 import java.awt.Color;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.Serializable;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 /**
  * Class which represents one of the states for the variabel panel in the mainFrame.
  */
-public class CodePage implements PanelState, Serializable {
+public class CodePage extends InterfaceHelper implements PanelState, Serializable {
 	
 	private static final long serialVersionUID = 1L;
+	private static final int FIELDCORRECTION = 200;
+	private static final int ANALYZEBUTTONWIDTH = 200;
+	private static final int ANALYZEBUTTONHEIGHT = 75;
 	private MainFrame mf;
+	private JTextArea code;
+	private JButton button;
 	
 	/**
 	 * Constructor.
@@ -25,7 +35,26 @@ public class CodePage implements PanelState, Serializable {
 	public JPanel loadPanel() {
 		JPanel panel = MainFrame.createPanel(Color.decode("#01A9DB"),
 				mf.getScreenWidth(), mf.getStatePanelSize());
+		panel.setLayout(new GridBagLayout());
+		code = createTextField(mf.getScreenWidth() / 2, mf.getStatePanelSize() - FIELDCORRECTION);
+		panel.add(code, setGrids(0, 0));
+		button = createButton("Analyze", ANALYZEBUTTONWIDTH, ANALYZEBUTTONHEIGHT);
+		button.addActionListener(new ActionHandler());
+		panel.add(button, setGrids(1, 1));
 		return panel;
 	}
+	
+	/**
+	 * Class which handles the actions when buttons are clicked.
+	 */
+	private static class ActionHandler implements ActionListener {
 
+		/**
+		 * Action when the button is pressed the save pop up will be shown.
+		 */
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			
+		}
+	}
 }
