@@ -241,6 +241,9 @@ public class Db {
 				}
 				preparedStmt.setDouble(i + 1, value);
 			}
+			else {
+				throw new SQLException("type of insert not recognized.");
+			}
 		}
 		return preparedStmt;
 	}
@@ -282,20 +285,21 @@ public class Db {
 	 */
 	public String select(String tableName, String variable) throws SQLException {
 		String res = "";
+		ResultSet rs = null;
 		try {
 			stmt = conn.createStatement();
 			String sql = "SELECT " + variable + " FROM " + tableName;
-			ResultSet rs = stmt.executeQuery(sql);
+			rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				res = rs.getString(variable);
 				// hier moet nog iets beters gereturned worden.
-				// System.out.println(res);
+				// This method is only for testing purposes now.
 			}
-			rs.close();
 		} catch (SQLException e) {
 			res = "Data not found";
 			throw new SQLException(e);
 		}
+		rs.close();
 		return res;
 	}
 
