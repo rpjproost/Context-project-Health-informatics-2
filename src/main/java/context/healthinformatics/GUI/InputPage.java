@@ -379,7 +379,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	
 	/**
 	 * Method which asks the user.
-	 * @param node.
+	 * @param node is the node that is selected.
 	 */
 	public void askUser(DefaultMutableTreeNode node) {
 
