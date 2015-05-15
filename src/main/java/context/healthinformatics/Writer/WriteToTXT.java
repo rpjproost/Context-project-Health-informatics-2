@@ -97,7 +97,7 @@ public class WriteToTXT {
 		StringBuffer res = new StringBuffer();
 		for (int i = 1; i < numColumns; i++) {
 			if (i == numColumns - 1) {
-				res.append(rsmd.getColumnName(i + 1) + " ");
+				res.append(rsmd.getColumnName(i + 1));
 			} else {
 				res.append(rsmd.getColumnName(i + 1) + " ");
 			}
