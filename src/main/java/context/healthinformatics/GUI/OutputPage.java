@@ -33,6 +33,9 @@ public class OutputPage implements PanelState, Serializable {
 		mf = m;
 	}
 
+	/**
+	 * Load the panel which contains all components.
+	 */
 	@Override
 	public JPanel loadPanel() {
 		JPanel panel = MainFrame.createPanel(Color.decode("#086A87"),
@@ -44,6 +47,11 @@ public class OutputPage implements PanelState, Serializable {
 		return panel;
 	}
 	
+	/**
+	 * Creates a button with default buttonwidth and buttonheight.
+	 * @param name of the button.
+	 * @return a button with the name.
+	 */
 	private JButton createButton(String name) {
 		JButton button = new JButton(name);
 		button.setPreferredSize(new Dimension(BUTTONWIDTH, BUTTONHEIGHT));
