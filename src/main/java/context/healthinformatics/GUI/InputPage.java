@@ -68,6 +68,9 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	public static final int TREEPANEWIDTH = 700;
 	public static final int TREEPANEHEIGHT = 300;
 	public static final int SECTION3HEIGHT = 400;
+	public static final int HELPBUTTONHEIGHT = 100;
+	public static final int HELPBUTTONWIDTH = 200;
+	
 	
 	/**
 	 * Constructor.
@@ -217,7 +220,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		c = new GridBagConstraints();
 		section4.setLayout(l);
 		
-		helpButton = createButton("HELP", 100, 200);
+		helpButton = createButton("HELP", HELPBUTTONHEIGHT, HELPBUTTONWIDTH);
 		helpButton.addActionListener(new ActionHandler());
 		c = setGrids(0, 0);
 		c.weightx = 1;
@@ -225,7 +228,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		c.anchor = GridBagConstraints.WEST;
 		section4.add(helpButton, c);
 		
-		analyseButton = createButton("ANALYSE", 100, 200);
+		analyseButton = createButton("ANALYSE", HELPBUTTONHEIGHT, HELPBUTTONWIDTH);
 		analyseButton.addActionListener(new ActionHandler());
 		c = setGrids(0, 1);
 		c.weightx = 1;
@@ -321,6 +324,13 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	}
 	
 	/**
+	 * @return the xmlList.
+	 */
+	public ArrayList<String> getXmlList() {
+		return xmlList;
+	}
+	
+	/**
 	 * Method which asks the user to enter a new Project name, and inserts it in the combobox.
 	 */
 	public void addComboItem() {
@@ -368,6 +378,30 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	}
 	
 	/**
+	 * Method which asks the user.
+	 * @param node.
+	 */
+	public void askUser(DefaultMutableTreeNode node) {
+
+		JFileChooser selecter = new JFileChooser();
+		selecter.setDialogType(JFileChooser.SAVE_DIALOG);
+		int result = selecter.showSaveDialog(panel);
+		if (result == JFileChooser.APPROVE_OPTION) {
+		    String path = selecter.getSelectedFile().toString();
+		    DefaultMutableTreeNode projectNode = (DefaultMutableTreeNode) node
+		    		.getParent();
+		    String project = (String) projectNode.getUserObject().toString();
+		    int c = findFolderProject(project);
+		    xmlList.set(c, path);
+			if (xmlList.get(c).equals("")) {
+				node.setUserObject(projectNode.getUserObject()
+						.toString() + "   [SET]");
+			}
+		}
+		selecter.setVisible(false);
+	}
+	
+	/**
 	 * Class which handles the actions when buttons are clicked.
 	 */
 	class ActionHandler implements ActionListener {
@@ -396,7 +430,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 				selecter.setVisible(false);
 			}
 			if (e.getSource() == helpButton) {
-				//TODO
+				return; //TODO
 			}
 			if (e.getSource() == analyseButton) {
 				mf.setState(mf.getCodePage());
@@ -405,6 +439,9 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		}
 	}
 
+	/**
+	 * Method which is fired after a node selection.
+	 */
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
@@ -412,16 +449,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 			if (node.isLeaf()) {
 				String selected = node.getUserObject().toString();
 				if (selected.equals("SET XML FILE")) {
-					JFileChooser selecter = new JFileChooser();
-					selecter.setDialogType(JFileChooser.SAVE_DIALOG);
-					int result = selecter.showSaveDialog(panel);
-					if (result == JFileChooser.APPROVE_OPTION) {
-					    String path = selecter.getSelectedFile().toString();
-					    String project = (String) ((DefaultMutableTreeNode) node.getParent())
-					    		.getUserObject().toString();
-					    xmlList.set(findFolderProject(project), path);
-					}
-					selecter.setVisible(false);
+					askUser(node);
 				} else {
 					String flag;
 					if (selected.length() > FLAGLENGTH) {
@@ -440,8 +468,6 @@ public class InputPage extends InterfaceHelper implements PanelState,
 						model.nodeStructureChanged(node.getParent());
 					}
 				}
-			} else {
-				// TODO
 			}
 		}
 	}

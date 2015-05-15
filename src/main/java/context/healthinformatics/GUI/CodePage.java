@@ -47,7 +47,7 @@ public class CodePage extends InterfaceHelper implements PanelState, Serializabl
 	/**
 	 * Class which handles the actions when buttons are clicked.
 	 */
-	private class ActionHandler implements ActionListener {
+	private static class ActionHandler implements ActionListener {
 
 		/**
 		 * Action when the button is pressed the save pop up will be shown.
