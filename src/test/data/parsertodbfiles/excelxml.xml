@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<xml>
+	<document docname="exceltest">
+		<doctype>excel</doctype>
+		<path>src/test/data/parsertodbfiles/afspraken.xlsx</path>
+		<start>2</start>
+		<delimiter>,</delimiter>
+		<column id="1">
+			<name>admnr</name>
+			<type>Integer</type>
+		</column>
+		<column id="2">
+			<name>groep</name>
+			<type>Integer</type>
+		</column>
+		<column id="3">
+			<name>date</name>
+			<type>String</type>
+		</column>
+		<column id="4">
+			<name>agendaomschrijving</name>
+			<type>String</type>
+		</column>
+	</document>
+</xml>

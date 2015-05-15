@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<xml>
+	<document docname="exceltest">
+		<doctype>excel</doctype>
+		<path>src/test/data/parsertodbfiles/overzicht.xls</path>
+		<start>2</start>
+		<delimiter></delimiter>
+		<column id="1">
+			<name>admnr</name>
+			<type>String</type>
+		</column>
+		<column id="2">
+			<name>monitoring</name>
+			<type>Integer</type>
+		</column>
+		<column id="3">
+			<name>date</name>
+			<type>String</type>
+		</column>
+		<column id="4">
+			<name>datelogin</name>
+			<type>String</type>
+		</column>
+		<column id="5">
+			<name>remarks</name>
+			<type>String</type>
+		</column>
+	</document>
+</xml>

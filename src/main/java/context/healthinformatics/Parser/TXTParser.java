@@ -155,9 +155,9 @@ public class TXTParser extends Parser {
 	public void parse() throws FileNotFoundException {
 		try {
 			this.file = openFile(this.getFileName());
-			this.sc = new Scanner(file);
+			this.sc = new Scanner(file, "UTF-8");
 		} catch (FileNotFoundException e) {
-			throw new FileNotFoundException();
+			throw new FileNotFoundException("The TXT file was not found!");
 		}
 		skipFirxtXLines();
 		while (sc.hasNextLine()) {
