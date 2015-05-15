@@ -36,6 +36,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 
 	private MainFrame mf;
 	private ArrayList<ArrayList<String>> folder;
+	private ArrayList<String> xmlList;
 	
 	private JTextArea txt;
 	private JButton projectButton;
@@ -76,6 +77,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		mf = m;
 		selectedFiles = new ArrayList<String>();
 		folder = new ArrayList<ArrayList<String>>();
+		xmlList = new ArrayList<String>();
 		
 		//////////test
 		folder.add(new ArrayList<String>());
@@ -191,6 +193,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		section3.setLayout(l);
 
 		initTree();
+		initXmlList();
 
         treePane = new JScrollPane(tree);
         dim.width = TREEPANEWIDTH;
@@ -215,6 +218,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		section4.setLayout(l);
 		
 		helpButton = createButton("HELP", 100, 200);
+		helpButton.addActionListener(new ActionHandler());
 		c = setGrids(0, 0);
 		c.weightx = 1;
 		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS, BUTTONINSETS);
@@ -222,6 +226,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		section4.add(helpButton, c);
 		
 		analyseButton = createButton("ANALYSE", 100, 200);
+		analyseButton.addActionListener(new ActionHandler());
 		c = setGrids(0, 1);
 		c.weightx = 1;
 		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS, BUTTONINSETS);
@@ -243,6 +248,8 @@ public class InputPage extends InterfaceHelper implements PanelState,
 				file = new DefaultMutableTreeNode(folder.get(i).get(j));
 				project.add(file);
 			}
+			DefaultMutableTreeNode xml = new DefaultMutableTreeNode("SET XML FILE");
+			project.add(xml);
 			root.add(project);
 		}
 	}
@@ -262,13 +269,21 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	}
 	
 	/**
+	 * Method which initialises the XML list.
+	 */
+	public void initXmlList() {
+		for (int i = 0; i < folder.size(); i++) {
+			xmlList.add("");
+		}
+	}
+	
+	/**
 	 * Method which reloades the tree.
 	 */
 	public void reloadTree() {
 		root.removeAllChildren();
 		fillTree();
 		model.reload();
-		tree.revalidate();
 	}
 
 	/**
@@ -364,6 +379,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == projectButton) {
 				addComboItem();
+				xmlList.add("");
 			}
 			if (e.getSource() == fileButton) {
 				folder.get(findFolderProject((String) box.getSelectedItem())).add(txt.getText());
@@ -392,28 +408,41 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-
-		if (node == null) {
-			return;
-		}
-
-		if (node.isLeaf()) {
-			String selected = node.getUserObject().toString();
-			String flag = selected.substring(selected.length() - FLAGLENGTH);
-			if (flag != null && flag.equals("   [SELECTED]")) {
-				selectedFiles.remove(selected);
-				String s = node.getUserObject().toString();				
-				node.setUserObject(s.substring(0, s.length() - FLAGLENGTH));
-				model.nodeStructureChanged(node.getParent());
+		if (node != null) {
+			if (node.isLeaf()) {
+				String selected = node.getUserObject().toString();
+				if (selected.equals("SET XML FILE")) {
+					JFileChooser selecter = new JFileChooser();
+					selecter.setDialogType(JFileChooser.SAVE_DIALOG);
+					int result = selecter.showSaveDialog(panel);
+					if (result == JFileChooser.APPROVE_OPTION) {
+					    String path = selecter.getSelectedFile().toString();
+					    String project = (String) ((DefaultMutableTreeNode) node.getParent())
+					    		.getUserObject().toString();
+					    xmlList.set(findFolderProject(project), path);
+					}
+					selecter.setVisible(false);
+				} else {
+					String flag;
+					if (selected.length() > FLAGLENGTH) {
+						flag = selected.substring(selected.length() - FLAGLENGTH);
+					} else {
+						flag = null;
+					}
+					if (flag != null && flag.equals("   [SELECTED]")) {
+						selectedFiles.remove(selected);
+						String s = node.getUserObject().toString();
+						node.setUserObject(s.substring(0, s.length() - FLAGLENGTH));
+						model.nodeStructureChanged(node.getParent());
+					} else {
+						selectedFiles.add(selected);
+						node.setUserObject(node.getUserObject().toString() + "   [SELECTED]");
+						model.nodeStructureChanged(node.getParent());
+					}
+				}
+			} else {
+				// TODO
 			}
-			else {
-				selectedFiles.add(selected);
-				node.setUserObject(node.getUserObject().toString() + "   [SELECTED]");
-				model.nodeStructureChanged(node.getParent());
-			}
-		}
-		else {
-			//TODO
 		}
 	}
 }
