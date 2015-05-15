@@ -1,7 +1,11 @@
 language: java
 jdk:
   - oraclejdk8
-script: "mvn clean test"
+script: "mvn clean site"
 before_install:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
+after_script:
+  - "echo \"== CHECKSTYLE_RESULT ==\" && cat \"target/checkstyle-result.xml\" && echo \"== END_CHECKSTYLE_RESULT ==\""
+  - "echo \"== PMD_RESULT ==\" && cat \"target/pmd.xml\" && echo \"== END_PMD_RESULT ==\""
+  - "echo \"== FINDBUGS_RESULT ==\" && cat \"target/findbugsXml.xml\" && echo \"== END_FINDBUGS_RESULT ==\""
