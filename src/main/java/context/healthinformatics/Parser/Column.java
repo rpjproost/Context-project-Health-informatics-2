@@ -124,9 +124,6 @@ public class Column {
 		}
 	}
 
-	/**
-	 * Generates hashcode for object column.
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
