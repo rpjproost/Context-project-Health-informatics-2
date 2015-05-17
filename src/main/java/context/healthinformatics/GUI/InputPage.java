@@ -70,7 +70,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	public static final int SECTION3HEIGHT = 400;
 	public static final int HELPBUTTONHEIGHT = 100;
 	public static final int HELPBUTTONWIDTH = 200;
-	
+	public static final String COLOR = "#81DAF5";
 	
 	/**
 	 * Constructor.
@@ -97,12 +97,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 * @return Panel of this state.
 	 */
 	public JPanel loadPanel() {
-		panel = MainFrame.createPanel(Color.decode("#81DAF5"),
-				mf.getScreenWidth(), mf.getStatePanelSize());
-		c = new GridBagConstraints();
-		l = new GridBagLayout();
-		panel.setLayout(l);
-		dim = new Dimension(DIMESIONHEIGHT, DIMESIONWIDTH);
+		panel = createSection(mf.getStatePanelSize());
 		
 		JPanel section1 = makeSection1();
 		panel.add(section1, setGrids(0, 0));
@@ -123,13 +118,24 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	}
 	
 	/**
+	 * @return section of the inputpage.
+	 * @param height of the section
+	 */
+	public JPanel createSection(int height) {
+		JPanel section = MainFrame.createPanel(Color.decode(COLOR),
+				mf.getScreenWidth(), height);
+		c = new GridBagConstraints();
+		l = new GridBagLayout();
+		section.setLayout(l);
+		dim = new Dimension(DIMESIONHEIGHT, DIMESIONWIDTH);		
+		return section;
+	}
+	
+	/**
 	 * @return section1 Panel.
 	 */
 	public JPanel makeSection1() {
-		JPanel section1 = MainFrame.createPanel(Color.decode("#81DAF5"),
-				mf.getScreenWidth(), SECTION1HEIGHT);
-		c = new GridBagConstraints();
-		section1.setLayout(l);
+		JPanel section1 = createSection(SECTION1HEIGHT);
 		
 		JLabel projectLabel = new JLabel("      Project :   ");
 		projectLabel.setFont(new Font("Arial", Font.PLAIN, PROJECTLABELFONTSIZE));
@@ -138,7 +144,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		c.gridy = 0;
 		section1.add(projectLabel, c);
 		
-		box = new JComboBox<String>(getProjects(folder));
+		box = new JComboBox<String>(getProjects());
 		c.gridx = 1;
 		c.gridy = 0;
 		section1.add(box, c);
@@ -157,22 +163,16 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 * @return section2 Panel.
 	 */
 	public JPanel makeSection2() {
-		JPanel section2 = MainFrame.createPanel(Color.decode("#81DAF5"),
-				mf.getScreenWidth(), SECTION1HEIGHT);
-		c = new GridBagConstraints(); section2.setLayout(l);
+		JPanel section2 = createSection(SECTION1HEIGHT);
 		
 		JLabel fileLabel = new JLabel("      File :   ");
 		fileLabel.setFont(new Font("Arial", Font.PLAIN, PROJECTLABELFONTSIZE));
 		fileLabel.setSize(dim);
-		c.gridx = 0;
-		c.gridy = 0;
 		section2.add(fileLabel, setGrids(0, 0));
 		
 		txt = new JTextArea();
 		txt.setMinimumSize(new Dimension(TXTFIELDWIDTH, TXTFIELDHEIGHT));
-		c.gridx = 1;
-		c.gridy = 0;
-		section2.add(txt, c);
+		section2.add(txt, setGrids(1, 0));
 		
 		selectButton = makeButton("SELECT", 2, 0);
 		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS, BUTTONINSETS);
@@ -190,7 +190,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 * @return section3 Panel.
 	 */
 	public JPanel makeSection3() {
-		JPanel section3 = MainFrame.createPanel(Color.decode("#81DAF5"),
+		JPanel section3 = MainFrame.createPanel(Color.decode(COLOR),
 				mf.getScreenWidth(), SECTION3HEIGHT);
 		c = new GridBagConstraints();
 		section3.setLayout(l);
@@ -215,10 +215,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 * @return section4 Panel.
 	 */
 	public JPanel makeSection4() {
-		JPanel section4 = MainFrame.createPanel(Color.decode("#81DAF5"),
-				mf.getScreenWidth(), SECTION3HEIGHT);
-		c = new GridBagConstraints();
-		section4.setLayout(l);
+		JPanel section4 = createSection(SECTION3HEIGHT);
 		
 		helpButton = createButton("HELP", HELPBUTTONHEIGHT, HELPBUTTONWIDTH);
 		helpButton.addActionListener(new ActionHandler());
@@ -291,13 +288,12 @@ public class InputPage extends InterfaceHelper implements PanelState,
 
 	/**
 	 * Method which creates the list of projects.
-	 * @param f the folder object.
 	 * @return list of projects.
 	 */
-	public String[] getProjects(ArrayList<ArrayList<String>> f) {
-		String[] res = new String[f.size()];
-		for (int i = 0; i < f.size(); i++) {
-			res[i] = f.get(i).get(0);
+	public String[] getProjects() {
+		String[] res = new String[folder.size()];
+		for (int i = 0; i < folder.size(); i++) {
+			res[i] = folder.get(i).get(0);
 		}
 		return res;
 	}
@@ -321,6 +317,41 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 */
 	public void getFolder(ArrayList<ArrayList<String>> f) {
 		folder = f;
+	}
+	
+	/**
+	 * @return the project button.
+	 */
+	public JButton getProjectButton() {
+		return projectButton;
+	}
+	
+	/**
+	 * @return the file button.
+	 */
+	public JButton getFileButton() {
+		return fileButton;
+	}
+	
+	/**
+	 * @return the select button.
+	 */
+	public JButton getselectButton() {
+		return selectButton;
+	}
+	
+	/**
+	 * @return the help button.
+	 */
+	public JButton gethelpButton() {
+		return helpButton;
+	}
+	
+	/**
+	 * @return the analyse button.
+	 */
+	public JButton getanalyseButton() {
+		return analyseButton;
 	}
 	
 	/**
