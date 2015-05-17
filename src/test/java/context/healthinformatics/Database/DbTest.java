@@ -263,7 +263,7 @@ public class DbTest {
 	public void removeNull() {
 		assertFalse(data.removeDirectory(null));
 	}
-
+	
 	/**
 	 * Tests date conversion.
 	 */
@@ -271,16 +271,5 @@ public class DbTest {
 	public void testDateConversion() {
 		assertEquals((data.convertDate("28-10-1992", "dd-MM-yyyy")).toString(), "1992-10-28");
 	}
-
-	/**
-	 * Tests setters and getters singletonDb.
-	 */
-	@Test
-	public void testSingletonDb() {
-		SingletonDb.setPath("C:/db/");
-		SingletonDb.setDbName("analyze");
-		assertEquals(SingletonDb.getPath(), "C:/db/");
-		assertEquals(SingletonDb.getDbName(), "analyze");
-	}
-
+	
 }

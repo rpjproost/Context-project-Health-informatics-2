@@ -102,55 +102,5 @@ public class ColumnTest {
 	public void testToString() {
 		assertEquals(col.toString(), "Column<12 Column List>");
 	}
-	
-	/**
-	 * Sets and gets dateType.
-	 */
-	@Test
-	public void testSetDateType() {
-		col.setDateType("dd-MM-yyyy");
-		assertEquals(col.getDateType(), "dd-MM-yyyy");
-	}
-	
-	/**
-	 * tests the if statement = date.
-	 */
-	@Test
-	public void setColumnTypeDate() {
-		col.setColumnType("date");
-		assertEquals(col.getColumnType(), "DATE");
-	}
-	
-	/**
-	 * Tests hashcode if columnName is null.
-	 */
-	@Test
-	public void testHashCodeNull() {
-		Column col = new Column(1, null, null);
-		final int hash = 924482;
-		assertEquals(col.hashCode(), hash);
-	}
-	
-	/**
-	 * Tests every if statement in hashcode.
-	 */
-	@Test
-	public void testHashCodeName() {
-		Column col = new Column(1, "test", "date");
-		col.setDateType("dd-MM-yyyy");
-		final int prime = 31;
-		int name = "test".hashCode();
-		int type = "DATE".hashCode();
-		int date = "dd-MM-yyyy".hashCode();
-		int res = 1;
-		res = prime * res;
-		res += name;
-		res = prime * res + 1;
-		res = prime * res;
-		res += type;
-		res = prime * res;
-		res += date;
-		assertEquals(col.hashCode(), res);
-	}
 
 }
