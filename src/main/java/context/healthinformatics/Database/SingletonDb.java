@@ -10,6 +10,8 @@ import java.sql.SQLException;
 public final class SingletonDb {
 	
 	private static Db data = setDb();
+	private static String path = "C:/db/";
+	private static String dbName = "analyze";
 	
 	/**
 	 * 
@@ -26,6 +28,10 @@ public final class SingletonDb {
 		return data;
 	}
 	
+	/** Sets up a database at default path for now.
+	 * 
+	 * @return database
+	 */
 	private static Db setDb() {
 		try {
 			return new Db("analyze", "C:/db/");
@@ -33,6 +39,38 @@ public final class SingletonDb {
 			e.printStackTrace();
 		}
 		return data;
+	}
+	
+	/**Sets path where database will be stored.
+	 * 
+	 * @param p path directory.
+	 */
+	public static void setPath(String p) {
+		path = p;
+	}
+	
+	/** Sets name of database.
+	 * 
+	 * @param d name of database.
+	 */
+	public static void setDbName(String d) {
+		dbName = d;
+	}
+	
+	/** Returns directory where database is stored.
+	 * 
+	 * @return directory where database is stored.
+	 */
+	public static String getPath() {
+		return path;
+	}
+	
+	/** Returns database name.
+	 * 
+	 * @return database name.
+	 */
+	public static String getDbName() {
+		return dbName;
 	}
 
 }
