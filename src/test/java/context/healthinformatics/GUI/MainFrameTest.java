@@ -38,8 +38,6 @@ public class MainFrameTest {
 	 */
 	@Test
 	public void testState() {
-//		PanelState outputState = new OutputPage(mf);
-//		mf.setState(outputState);
 		PanelState outputState = new OutputPage(mf);
 		mf.setState(outputState);
 		
