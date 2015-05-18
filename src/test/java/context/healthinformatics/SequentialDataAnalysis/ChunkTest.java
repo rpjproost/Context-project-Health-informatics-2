@@ -22,6 +22,7 @@ public class ChunkTest {
 	private String[] types;
 	private String[] values;
 	private ArrayList<Column> colArr;
+	private Chunk chunk;
 
 	/**
 	 * Sets up new database for test usage.
@@ -33,6 +34,7 @@ public class ChunkTest {
 	 */
 	@Before
 	public void before() throws NullPointerException, SQLException {
+		chunk = new Chunk(1);
 		path = "C:/db/";
 		dbName = "testDB";
 		data = SingletonDb.getDb();
@@ -58,11 +60,11 @@ public class ChunkTest {
 	}
 
 	/**
-	 * Tests creating of chunks and adding Code.
+	 * Tests creating of chunks with database max rows.
 	 * @throws SQLException database creation.
 	 */
 	@Test
-	public void testCodeEquals() throws SQLException {
+	public void testCreatingChunksWithDbMaxRows() throws SQLException {
 		data.createTable(tableName, col, types);
 		data.insert(tableName, values, colArr);
 		data.insert(tableName, values, colArr);
@@ -76,6 +78,24 @@ public class ChunkTest {
 		c.setCode("C");
 		assertEquals(chunks.get(2).getCode(), "C");
 		data.dropTable(tableName);
+	}
+	
+	/**
+	 * Test creation of chunk.
+	 */
+	@Test
+	public void testChunkCreation() {
+		Chunk c = new Chunk(1);
+		assertEquals(c.getId(), 1);
+	}
+	/**
+	 * Tests chunk code get/setters.
+	 */
+	@Test
+	public void testChunkCode() {
+		assertEquals(chunk.getCode(), "");
+		chunk.setCode("C");
+		assertEquals(chunk.getCode(), "C");
 	}
 
 }

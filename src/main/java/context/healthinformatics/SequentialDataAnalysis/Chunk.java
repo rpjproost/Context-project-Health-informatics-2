@@ -25,7 +25,6 @@ public class Chunk {
 		comment = "";
 		code = "";
 		id = i;
-
 	}
 
 	/**
