@@ -41,7 +41,7 @@ public class OutputPageTest {
 	 *             the sql exception of resultset
 	 */
 	@Test
-	public void trytoWrieTest() throws SQLException, IOException {
+	public void trytoWriteTest() throws SQLException, IOException {
 		JButton button = op.getFileButton();
 		al = (ActionHandler) button.getActionListeners()[0];
 		al.fileChooser(0);
