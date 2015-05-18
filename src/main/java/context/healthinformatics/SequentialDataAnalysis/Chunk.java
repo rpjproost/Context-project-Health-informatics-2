@@ -37,7 +37,8 @@ public class Chunk {
 
 	/**
 	 * 
-	 * @param code set code of this chunk.
+	 * @param code
+	 *            set code of this chunk.
 	 */
 	public void setCode(String code) {
 		this.code = code;
@@ -51,9 +52,11 @@ public class Chunk {
 		return pointer;
 	}
 
-	/** set pointer.
+	/**
+	 * set pointer.
 	 * 
-	 * @param pointer pointer where this chunk has connection to.
+	 * @param pointer
+	 *            pointer where this chunk has connection to.
 	 */
 	public void setPointer(HashMap<Chunk, String> pointer) {
 		this.pointer = pointer;
@@ -67,30 +70,40 @@ public class Chunk {
 		return comment;
 	}
 
-	/** Set comment.
+	/**
+	 * Set comment.
 	 * 
-	 * @param comment comment to be set for this chunk.
+	 * @param comment
+	 *            comment to be set for this chunk.
 	 */
 	public void setComment(String comment) {
 		this.comment = comment;
 	}
-	/** List of chunks this chunk consists out of.
+
+	/**
+	 * List of chunks this chunk consists out of.
 	 * 
 	 * @return childs of this chunk.
 	 */
 	public ArrayList<Chunk> getChunks() {
 		return chunks;
 	}
+	
+	public void setChunks(ArrayList<Chunk> chunks){
+		this.chunks = chunks;
+	}
 
-	/** Set childs of this chunk.
+	/**
+	 * Set childs of this chunk.
 	 * 
-	 * @param c chunk to be added to arraylist.
+	 * @param c
+	 *            chunk to be added to arraylist.
 	 */
-	public void setChunks(Chunk c) {
+	public void setChunk(Chunk c) {
 		chunks.add(c);
 	}
 
-	/** 
+	/**
 	 * 
 	 * @return content of this chunk.
 	 */
@@ -98,12 +111,28 @@ public class Chunk {
 		return res;
 	}
 
-	/** Set content of this chunk.
+	/**
+	 * Set content of this chunk.
 	 * 
-	 * @param res resultset to be added to this chunk.
+	 * @param res
+	 *            resultset to be added to this chunk.
 	 */
 	public void setRes(ResultSet res) {
 		this.res = res;
+	}
+
+	public boolean hasChild() {
+		if (chunks != null) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public String toString() {
+		return "Chunk [code=" + code + ", pointer=" + pointer + ", comment="
+				+ comment + ", chunks=" + chunks + ", res=" + res + "]";
 	}
 
 }

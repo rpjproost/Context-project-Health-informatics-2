@@ -33,6 +33,8 @@ public class Constraints {
 		this.columnName = columnName;
 	}
 
+	private ArrayList<Chunk> res = new ArrayList<Chunk>();
+
 	/**
 	 * Put constraint on code.
 	 * 
@@ -40,12 +42,30 @@ public class Constraints {
 	 *            the code to constraint
 	 * @return return the ArrayList with remaining chuncks
 	 */
-	public ArrayList<Chunk> constraintCode(String code) {
-		// iterate through chunks
+	public ArrayList<Chunk> containsCode(String code, ArrayList<Chunk> chunk) {
+		System.out.println(chunks.toString());
+		for (int i = 0; i < chunk.size(); i++) {
+			Chunk curChunk = chunk.get(i);
+			System.out.println(curChunk.toString());
+			if (curChunk.getCode().equals(code)) {
+				res.add(curChunk);
+			} else {
+				if (curChunk != null) {
+					res.addAll(containsCode(code, curChunk.getChunks()));
+				}
+			}
 
-		// return remaining chunks
+		}
 		// TODO
-		return null;
+		return res;
+	}
+
+	public ArrayList<Chunk> getChunks() {
+		return chunks;
+	}
+
+	public String getColumnName() {
+		return columnName;
 	}
 
 	/**

@@ -17,13 +17,21 @@ public class ConstraintsTest {
 	@Test
 	public void testCodeConstraints() {
 		ArrayList<Chunk> cList = new ArrayList<Chunk>();
-		cList.add(new Chunk("c", null));
-		cList.add(new Chunk("c", null));
-		cList.add(new Chunk("c", null));
-		cList.add(new Chunk("d", null));
-		ArrayList<Chunk> Clist2 = new ArrayList<Chunk>();
+		Chunk c = new Chunk();
+		c.setCode("c");
+		cList.add(c);
+		cList.add(c);
+		cList.add(c);
+		c.setCode("d");
+		cList.add(c);
+		ArrayList<Chunk> clist2 = new ArrayList<Chunk>();
+		clist2.add(c);
+		c.setChunks(cList);
+		clist2.add(c);
 		
-		Constraints cs = new Constraints(cList);
+		Constraints cs = new Constraints(clist2);
+		ArrayList<Chunk> res = cs.containsCode("c", cs.getChunks());
+		System.out.println(res);
 	}
 
 }
