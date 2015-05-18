@@ -122,10 +122,10 @@ public class Chunk {
 	}
 
 	public boolean hasChild() {
-		if (chunks != null) {
-			return true;
-		} else {
+		if (chunks == null) {
 			return false;
+		} else {
+			return true;
 		}
 	}
 

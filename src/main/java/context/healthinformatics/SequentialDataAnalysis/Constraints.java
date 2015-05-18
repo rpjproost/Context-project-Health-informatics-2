@@ -46,11 +46,11 @@ public class Constraints {
 		System.out.println(chunks.toString());
 		for (int i = 0; i < chunk.size(); i++) {
 			Chunk curChunk = chunk.get(i);
-			System.out.println(curChunk.toString());
+			System.out.println(curChunk.getCode());
 			if (curChunk.getCode().equals(code)) {
 				res.add(curChunk);
 			} else {
-				if (curChunk != null) {
+				if (curChunk.hasChild()) {
 					res.addAll(containsCode(code, curChunk.getChunks()));
 				}
 			}
