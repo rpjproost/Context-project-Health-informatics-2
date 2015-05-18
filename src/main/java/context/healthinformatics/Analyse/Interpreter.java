@@ -20,11 +20,27 @@ public class Interpreter {
 	protected Interpreter() {
 		tables = new HashMap<String, ArrayList<Column>>();
 	}
+	
+	/**
+	 * method for interpreting the things to do.
+	 * @param code code to interpret.
+	 */
+	public void interpret(String code) {
+		//TODO auto-generated method stub.
+	}
 
+	/**
+	 * getter for the hashmap containing all the tables.
+	 * @return al the hahsmap with tables.
+	 */
 	public HashMap<String, ArrayList<Column>> getTables() {
 		return tables;
 	}
 
+	/**
+	 * setter for the hashmap with tables.
+	 * @param tables hashmap to set.
+	 */
 	public void setTables(HashMap<String, ArrayList<Column>> tables) {
 		this.tables = tables;
 	}
