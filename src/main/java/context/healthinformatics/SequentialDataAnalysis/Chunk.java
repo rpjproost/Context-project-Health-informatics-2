@@ -112,7 +112,10 @@ public class Chunk {
 	 * @return true iff this chunk contains other chunks.
 	 */
 	public boolean hasChild() {
-		return (chunks.size() == 0); 
+		if (chunks.size() == 0) {
+			return false;
+		}
+		return true;
 	}
 	
 	/** Set id for chunk.
