@@ -315,8 +315,15 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	/**
 	 * @param  f a 2D array of projects and files.
 	 */
-	public void getFolder(ArrayList<ArrayList<String>> f) {
+	public void setFolder(ArrayList<ArrayList<String>> f) {
 		folder = f;
+	}
+	
+	/**
+	 * @return root of the project tree.
+	 */
+	public DefaultMutableTreeNode getRoot() {
+		return root;
 	}
 	
 	/**
