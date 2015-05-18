@@ -115,6 +115,7 @@ public class OutputPage implements PanelState, Serializable {
 				//TODO
 				ResultSet rs = SingletonDb.getDb().selectResultSet("stat", "*");
 				write.writeToFile(rs);
+				SingletonDb.getDb().dropTable("stat");
 			} 
 		}
 	}
