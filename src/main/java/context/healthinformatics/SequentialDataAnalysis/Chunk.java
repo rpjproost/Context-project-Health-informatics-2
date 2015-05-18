@@ -1,6 +1,5 @@
 package context.healthinformatics.SequentialDataAnalysis;
 
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -14,16 +13,18 @@ public class Chunk {
 	private HashMap<Chunk, String> pointer;
 	private String comment;
 	private ArrayList<Chunk> chunks;
-	private ResultSet res;
+	private int id;
 
 	/**
-	 * Class chunk.
+	 * 
+	 * @param i id for chunk, also represent line in database.
 	 */
-	public Chunk() {
+	public Chunk(int i) {
 		chunks = new ArrayList<Chunk>();
 		pointer = new HashMap<Chunk, String>();
-		comment = null;
-		code = null;
+		comment = "";
+		code = "";
+		id = i;
 
 	}
 
@@ -89,7 +90,11 @@ public class Chunk {
 		return chunks;
 	}
 	
-	public void setChunks(ArrayList<Chunk> chunks){
+	/**
+	 * Set completely new arraylist.
+	 * @param chunks arraylist of chunks.
+	 */
+	public void setChunks(ArrayList<Chunk> chunks) {
 		this.chunks = chunks;
 	}
 
@@ -105,34 +110,32 @@ public class Chunk {
 
 	/**
 	 * 
-	 * @return content of this chunk.
+	 * @return true iff this chunk contains other chunks.
 	 */
-	public ResultSet getRes() {
-		return res;
-	}
-
-	/**
-	 * Set content of this chunk.
-	 * 
-	 * @param res
-	 *            resultset to be added to this chunk.
-	 */
-	public void setRes(ResultSet res) {
-		this.res = res;
-	}
-
 	public boolean hasChild() {
-		if (chunks == null) {
-			return false;
-		} else {
-			return true;
-		}
+		return (chunks.size() == 0); 
+	}
+	
+	/** Set id for chunk.
+	 * 
+	 * @param i id for chunk.
+	 */
+	public void setId(int i) {
+		id = i;
+	}
+	
+	/**
+	 * get Id of this chunk.
+	 * @return id.
+	 */
+	public int getId() {
+		return id;
 	}
 
 	@Override
 	public String toString() {
 		return "Chunk [code=" + code + ", pointer=" + pointer + ", comment="
-				+ comment + ", chunks=" + chunks + ", res=" + res + "]";
+				+ comment + ", chunks=" + chunks + ", id=" + id + "]";
 	}
 
 }
