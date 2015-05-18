@@ -17,6 +17,11 @@ public class ConstraintsTest {
 	@Test
 	public void testCodeConstraints() {
 		ArrayList<Chunk> cList = new ArrayList<Chunk>();
+		cList.add(new Chunk("c", null));
+		cList.add(new Chunk("c", null));
+		cList.add(new Chunk("c", null));
+		cList.add(new Chunk("d", null));
+		ArrayList<Chunk> Clist2 = new ArrayList<Chunk>();
 		
 		Constraints cs = new Constraints(cList);
 	}

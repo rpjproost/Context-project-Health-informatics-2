@@ -11,8 +11,8 @@ public class Chunk {
 	public ArrayList<Chunk> chunks;
 	public ResultSet res;
 	
-	public Chunk(String code) {
-		chunks = new ArrayList<Chunk>();
+	public Chunk(String code, ArrayList<Chunk> chunks) {
+		this.chunks = chunks;
 		pointer = new HashMap<Chunk, String>();
 		comment = null;
 		this.code = code;
