@@ -85,14 +85,14 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		xmlList = new ArrayList<String>();
 		
 		//////////test
-		folder.add(new ArrayList<String>());
-		folder.get(0).add("1");
-		folder.get(0).add("2");
-		folder.get(0).add("3");
-		folder.add(new ArrayList<String>());
-		folder.get(1).add("4");
-		folder.get(1).add("5");
-		folder.get(1).add("6");
+//		folder.add(new ArrayList<String>());
+//		folder.get(0).add("1");
+//		folder.get(0).add("2");
+//		folder.get(0).add("3");
+//		folder.add(new ArrayList<String>());
+//		folder.get(1).add("4");
+//		folder.get(1).add("5");
+//		folder.get(1).add("6");
 		////////////////////
 		
 		initXmlList();
@@ -150,7 +150,9 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		box = new JComboBox<String>(getProjects());
 		section1.add(box, setGrids(1, 0));
 		
-		projectButton = makeButton("ADD new Project", 2, 0);
+		c = setGrids(2, 0);
+		projectButton = createButton("ADD new Project", DIMESIONWIDTH, DIMESIONHEIGHT);
+		projectButton.addActionListener(new ActionHandler());
 		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS,
 				BUTTONINSETS, BUTTONINSETS);
 		c.weightx = 1;
@@ -175,11 +177,15 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		txt.setMinimumSize(new Dimension(TXTFIELDWIDTH, TXTFIELDHEIGHT));
 		section2.add(txt, setGrids(1, 0));
 		
-		selectButton = makeButton("SELECT", 2, 0);
+		c = setGrids(2, 0);
+		selectButton = createButton("SELECT", DIMESIONWIDTH, DIMESIONHEIGHT);
+		selectButton.addActionListener(new ActionHandler());
 		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS, BUTTONINSETS);
 		section2.add(selectButton, c);
 		
-		fileButton = makeButton("ADD new File", THREE, 0);
+		c = setGrids(THREE, 0);
+		fileButton = createButton("ADD new File", DIMESIONWIDTH, DIMESIONHEIGHT);
+		fileButton.addActionListener(new ActionHandler());
 		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS, BUTTONINSETS);
 		c.weightx = 1;
 		c.anchor = GridBagConstraints.LINE_START;
@@ -327,6 +333,13 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	}
 	
 	/**
+	 * @return model of the project tree.
+	 */
+	public DefaultTreeModel getModel() {
+		return model;
+	}
+	
+	/**
 	 * @return the project button.
 	 */
 	public JButton getProjectButton() {
@@ -404,24 +417,6 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		}
 		System.out.println("no project selected.");
 		return -1;
-	}
-	
-	/**
-	 * Method which creates a button.
-	 * @param txt text on the button
-	 * @param c1 gridx coordinate.
-	 * @param c2 gridy coordinate.
-	 * @return button.
-	 */
-	public JButton makeButton(String txt, int c1, int c2) {
-		JButton button = new JButton(txt);
-		
-		c.gridx = c1;
-		c.gridy = c2;
-		button.setPreferredSize(dim);
-		button.addActionListener(new ActionHandler());
-		button.setFont(new Font("Arial", Font.PLAIN, BUTTONFONTSIZE));
-		return button;
 	}
 	
 	/**
