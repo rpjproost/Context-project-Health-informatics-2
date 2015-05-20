@@ -60,8 +60,6 @@ public class XMLParser extends Parser {
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			doc = dBuilder.parse(xml);
 
-			// read this -
-			// http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
 			doc.getDocumentElement().normalize();
 			NodeList nList = doc.getChildNodes().item(0).getChildNodes();
 			for (int i = 0; i < nList.getLength(); i++) {
@@ -161,7 +159,7 @@ public class XMLParser extends Parser {
 	}
 
 	private void createTableDb() throws SQLException {
-		int length = columns.size();
+//		int length = columns.size();
 		Db data = SingletonDb.getDb();
 //		String[] col = new String[length];
 //		String[] t = new String[length];

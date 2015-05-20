@@ -321,6 +321,7 @@ public class Db {
 			stmt = conn.createStatement();
 			String sql = "DROP TABLE " + tableName;
 			stmt.executeUpdate(sql);
+			tables.remove(tableName);
 			res = true;
 		} catch (SQLException e) {
 			throw new SQLException(e);

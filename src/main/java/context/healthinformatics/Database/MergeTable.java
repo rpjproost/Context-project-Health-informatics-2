@@ -24,13 +24,15 @@ public class MergeTable {
 	}
 	
 	/**
-	 * 
-	 * @param clause merge where clause.
+	 * creates the view ordered by date of the workspace.
+	 * @param clause date column. 
 	 */
 	public void mergeTablesView(String clause) {
+		//TODO make sure this works with 1 date column.
+		
 		//HashMap<String, ArrayList<Column>> tables = data.getTables();
 		StringBuilder sql = new StringBuilder();
-		sql.append("CREATE VIEW orderedResult AS SELECT * FROM result ORDER BY ");
+		sql.append("CREATE VIEW workspace AS SELECT * FROM result ORDER BY ");
 		sql.append("date");
 		System.out.println(sql.toString());
 		data.executeUpdate(sql.toString());
@@ -54,7 +56,6 @@ public class MergeTable {
 		data.createTable("result", columns);
 		
 		insertTables(allTables, clause);
-		
 	}
 	
 	/**
@@ -62,7 +63,7 @@ public class MergeTable {
 	 * @param tableNames set containing all tables to add.
 	 * @param clause all clauses for these tables.
 	 */
-	private void insertTables(Set<String> tableNames, String[] clause) {
+	public void insertTables(Set<String> tableNames, String[] clause) {
 		for (String key : tableNames) {
 			String tableClause = "";
 			for (int i = 0; i < clause.length; i++) {
@@ -81,7 +82,7 @@ public class MergeTable {
 	 * @param clause filter for the records in sql. If an empty string or
 	 * 				<code>null</code> is inserted no clause is used.
 	 */
-	private void insertTable(String key, ArrayList<Column> cols, String clause) {
+	public void insertTable(String key, ArrayList<Column> cols, String clause) {
 		StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO result (");
 		appendColumns(cols, sql);
