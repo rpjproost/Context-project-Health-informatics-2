@@ -33,55 +33,91 @@ public class Constraints {
 		this.columnName = columnName;
 	}
 
-	private ArrayList<Chunk> res = new ArrayList<Chunk>();
-
 	/**
-	 * Put constraint on code.
+	 * Recursive method which find all chunks with code code.
 	 * 
 	 * @param code
-	 *            the code to constraint
-	 * @return return the ArrayList with remaining chuncks
+	 *            the code we're looking for
+	 * @param chunk
+	 *            the list of chunks
+	 * @param res
+	 *            the result list of chunks
+	 * @return the result of chunks.
 	 */
-	public ArrayList<Chunk> containsCode(String code, ArrayList<Chunk> chunk) {
-		System.out.println(chunks.toString());
+	public ArrayList<Chunk> hasCode(String code, ArrayList<Chunk> chunk,
+			ArrayList<Chunk> res) {
 		for (int i = 0; i < chunk.size(); i++) {
 			Chunk curChunk = chunk.get(i);
-			System.out.println(curChunk.getCode());
 			if (curChunk.getCode().equals(code)) {
 				res.add(curChunk);
-			} else {
-				if (curChunk.hasChild()) {
-					res.addAll(containsCode(code, curChunk.getChunks()));
-				}
 			}
-
+			if (curChunk.hasChild()) {
+				hasCode(code, curChunk.getChunks(), res);
+			}
 		}
-		// TODO
+		return res;
+	}
+	
+	/**
+	 * Check if a chunk has a substring of the specified comment.
+	 * @param comment the comment 
+	 * @param chunk the list of chunks
+	 * @param res the resulting chunks 
+	 * @return the chunks which containt the comment
+	 */
+	public ArrayList<Chunk> containsComment(String comment, ArrayList<Chunk> chunk,
+			ArrayList<Chunk> res) {
+		for (int i = 0; i < chunk.size(); i++) {
+			Chunk curChunk = chunk.get(i);
+			if (curChunk.getComment().contains(comment)) {
+				res.add(curChunk);
+			}
+			if (curChunk.hasChild()) {
+				containsComment(comment, curChunk.getChunks(), res);
+			}
+		}
+		return res;
+	}
+	
+	/**
+	 * Check if a chunk has a comment which equals the specified comment.
+	 * @param comment the comment
+	 * @param chunk the chunks
+	 * @param res the result
+	 * @return the resulting Chunks which have the comment
+	 */
+	public ArrayList<Chunk> equalsComment(String comment, ArrayList<Chunk> chunk,
+			ArrayList<Chunk> res) {
+		for (int i = 0; i < chunk.size(); i++) {
+			Chunk curChunk = chunk.get(i);
+			if (curChunk.getComment().equals(comment)) {
+				res.add(curChunk);
+			}
+			if (curChunk.hasChild()) {
+				equalsComment(comment, curChunk.getChunks(), res);
+			}
+		}
 		return res;
 	}
 
+	/**
+	 * Return the chunks the constraint must apply to.
+	 * @return the chunks
+	 */
 	public ArrayList<Chunk> getChunks() {
 		return chunks;
 	}
 
+	/**
+	 * Get the column name.
+	 * @return the name of the column
+	 */
 	public String getColumnName() {
+		//TODO 
 		return columnName;
 	}
 
-	/**
-	 * Put constraint on comment.
-	 * 
-	 * @param comment
-	 *            the comment to constraint
-	 * @return return the ArrayList with remaining chuncks
-	 */
-	public ArrayList<Chunk> constraintComment(String comment) {
-		// iterate through chunks
 
-		// return remaining chunks
-		// TODO
-		return null;
-	}
 
 	/**
 	 * Constraint on a data value string.
