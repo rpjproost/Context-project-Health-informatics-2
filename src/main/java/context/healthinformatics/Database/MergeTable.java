@@ -28,21 +28,19 @@ public class MergeTable {
 	 * @param clause merge where clause.
 	 */
 	public void mergeTablesView(String clause) {
-		HashMap<String, ArrayList<Column>> tables = data.getTables();
+		//HashMap<String, ArrayList<Column>> tables = data.getTables();
 		StringBuilder sql = new StringBuilder();
-		String prefix = "";
-		sql.append("CREATE VIEW result AS SELECT * FROM ");
-		for (String key : tables.keySet()) {
-			sql.append(prefix);
-			prefix = ", ";
-			sql.append(key);
-		}
-		sql.append(" WHERE ");
-		sql.append(clause);
+		sql.append("CREATE VIEW orderedResult AS SELECT * FROM result ORDER BY ");
+		sql.append("date");
 		System.out.println(sql.toString());
 		data.executeUpdate(sql.toString());
 	}
 	
+	/**
+	 * Method for merging the different files into 1 workspace.
+	 * @param clause String array of clauses per table.
+	 * @throws SQLException Throws an SQLException if inserting goes wrong.
+	 */
 	public void mergeTables(String[] clause) throws SQLException {
 		HashMap<String, ArrayList<Column>> tables = data.getTables();
 		ArrayList<Column> columns = new ArrayList<Column>();
@@ -67,6 +65,13 @@ public class MergeTable {
 		
 	}
 	
+	/**
+	 * Method that inserts a table into the workspace.
+	 * @param key Table name to insert.
+	 * @param cols	Array of columns belonging to the table to insert.
+	 * @param clause filter for the records in sql. If an empty string or
+	 * 				<code>null</code> is inserted no clause is used.
+	 */
 	private void insertTable(String key, ArrayList<Column> cols, String clause) {
 		StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO result (");
@@ -74,13 +79,18 @@ public class MergeTable {
 		sql.append(") SELECT ");
 		appendColumns(cols, sql);
 		sql.append("FROM ").append(key);
-		if (clause.length() > 0) {
+		if (clause != null && clause.length() > 0) {
 			sql.append(" WHERE ").append(clause);
 		}
 		System.out.println(sql.toString());
 		data.executeUpdate(sql.toString());
 	}
 	
+	/**
+	 * method for appending Column names to an sql query.
+	 * @param columns ArrayList of columns to append.
+	 * @param sql StringBuilder with the preceding sql query.
+	 */
 	public void appendColumns(ArrayList<Column> columns, StringBuilder sql) {
 		String prefix = "";
 		for (int i = 0; i < columns.size(); i++) {
@@ -92,6 +102,11 @@ public class MergeTable {
 		sql.append(" ");
 	}
 	
+	/**
+	 * method for appending table names to an sql query.
+	 * @param tables tables to insert.
+	 * @param sql StringBuilder with the preceding sql query.
+	 */
 	public void appendTables(Set<String> tables, StringBuilder sql) {
 		String prefix = "";
 		for (String key : tables) {
@@ -101,6 +116,10 @@ public class MergeTable {
 		}
 	}
 	
+	/**
+	 * method for dropping a view from the database.
+	 * @param viewName The name of the view to drop.
+	 */
 	public void dropView(String viewName) {
 		String sql = "DROP VIEW " + viewName;
 		data.executeUpdate(sql);
