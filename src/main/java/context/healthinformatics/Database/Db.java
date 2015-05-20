@@ -294,6 +294,7 @@ public class Db {
 			rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				res = rs.getString(variable);
+				System.out.println(res);
 				// hier moet nog iets beters gereturned worden.
 				// This method is only for testing purposes now.
 			}
@@ -323,6 +324,24 @@ public class Db {
 			res = true;
 		} catch (SQLException e) {
 			throw new SQLException(e);
+		}
+		return res;
+	}
+	
+	/**
+	 * 
+	 * @param sql query.
+	 * @return true iff sql query is executed.
+	 */
+	public boolean executeUpdate(String sql) {
+		boolean res = false;
+		try {
+			stmt = conn.createStatement();
+			stmt.executeUpdate(sql);
+			res = true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return res;
 	}
