@@ -81,20 +81,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	public InputPage(MainFrame m) {
 		mf = m;
 		selectedFiles = new ArrayList<String>();
-		folder = new ArrayList<ArrayList<String>>();
-		xmlList = new ArrayList<String>();
-		
-		//////////test
-//		folder.add(new ArrayList<String>());
-//		folder.get(0).add("1");
-//		folder.get(0).add("2");
-//		folder.get(0).add("3");
-//		folder.add(new ArrayList<String>());
-//		folder.get(1).add("4");
-//		folder.get(1).add("5");
-//		folder.get(1).add("6");
-		////////////////////
-		
+		folder = new ArrayList<ArrayList<String>>();		
 		initXmlList();
 	}
 
@@ -118,7 +105,6 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		c.weighty = 1;
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
 		panel.add(section4, c);
-		
 		return panel;
 	}
 	
@@ -158,7 +144,6 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		c.weightx = 1;
 		c.anchor = GridBagConstraints.LINE_START;
 		section1.add(projectButton, c);
-		
 		return section1;
 	}
 	
@@ -238,7 +223,6 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS, BUTTONINSETS);
 		c.anchor = GridBagConstraints.EAST;
 		section4.add(analyseButton, c);
-
 		return section4;
 	}
 	
@@ -340,45 +324,17 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	}
 	
 	/**
-	 * @return the project button.
-	 */
-	public JButton getProjectButton() {
-		return projectButton;
-	}
-	
-	/**
-	 * @return the file button.
-	 */
-	public JButton getFileButton() {
-		return fileButton;
-	}
-	
-	/**
-	 * @return the select button.
-	 */
-	public JButton getselectButton() {
-		return selectButton;
-	}
-	
-	/**
-	 * @return the help button.
-	 */
-	public JButton gethelpButton() {
-		return helpButton;
-	}
-	
-	/**
-	 * @return the analyse button.
-	 */
-	public JButton getanalyseButton() {
-		return analyseButton;
-	}
-	
-	/**
 	 * @return the xmlList.
 	 */
 	public ArrayList<String> getXmlList() {
 		return xmlList;
+	}
+	
+	/**
+	 * @return the analyseButton.
+	 */
+	public JButton getAnalyseButton() {
+		return analyseButton;
 	}
 	
 	/**
@@ -387,12 +343,18 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	public void addComboItem() {
 		String newProject =  (String) JOptionPane.showInputDialog(panel,
 				"New Project Name : ");
-		ArrayList<String> list = new ArrayList<String>();
-		list.add(newProject);
-		folder.add(list);
-		box.addItem(newProject);
-		DefaultMutableTreeNode node = new DefaultMutableTreeNode(newProject);
-		model.insertNodeInto(node, root, root.getChildCount());
+		if (!newProject.equals("")) {
+			ArrayList<String> list = new ArrayList<String>();
+			list.add(newProject);
+			folder.add(list);
+			box.addItem(newProject);
+			DefaultMutableTreeNode node = new DefaultMutableTreeNode(newProject);
+			model.insertNodeInto(node, root, root.getChildCount());
+			xmlList.add(null);
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "No project name specified");
+		}
 	}
 	
 	/**
@@ -415,7 +377,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 				return i;
 			}
 		}
-		System.out.println("no project selected.");
+		JOptionPane.showMessageDialog(null, "No project selected");
 		return -1;
 	}
 	
@@ -460,11 +422,16 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == projectButton) {
 				addComboItem();
-				xmlList.add(null);
 			}
 			if (e.getSource() == fileButton) {
-				folder.get(findFolderProject((String) box.getSelectedItem())).add(txt.getText());
-				reloadTree();
+				if (folder.size() != 0 && !txt.getText().equals("")) {
+					folder.get(findFolderProject((String) box.getSelectedItem()))
+					.add(txt.getText());
+					reloadTree();
+				} else {
+					JOptionPane.showMessageDialog(null,
+							"No project created yet, or no file specified!");
+				}
 			}
 			if (e.getSource() == selectButton) {
 				if (openFileChooser() == JFileChooser.APPROVE_OPTION) {

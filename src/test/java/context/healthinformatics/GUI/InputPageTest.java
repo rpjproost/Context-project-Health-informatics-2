@@ -30,7 +30,7 @@ public class InputPageTest {
 	public void createFrame() {
 		mf = new MainFrame();
 		ip = (InputPage) mf.getInputPage();
-		handler = (ActionHandler) ip.getanalyseButton().getActionListeners()[0];
+		handler = (ActionHandler) ip.getAnalyseButton().getActionListeners()[0];
 		
 		folder = new ArrayList<ArrayList<String>>();
 		folder.add(new ArrayList<String>());
@@ -52,7 +52,7 @@ public class InputPageTest {
 	 */
 	@Test
 	public void testAnalyseButton() throws AWTException {
-		ActionEvent e = new ActionEvent(ip.getanalyseButton(), 0, "");
+		ActionEvent e = new ActionEvent(ip.getAnalyseButton(), 0, "");
 		handler.actionPerformed(e);		
 		assertEquals(mf.getPanelState(), mf.getCodePage());
 	}
