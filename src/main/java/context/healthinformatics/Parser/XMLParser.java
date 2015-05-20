@@ -114,11 +114,11 @@ public class XMLParser extends Parser {
 		Element e = (Element) n;
 		setDocName(e.getAttribute("docname"));
 		setPath(getString(e, "path"));
-		setStartLine(getInt("start"));
+		setStartLine(getInt(e, "start"));
 		NodeList columnList = e.getElementsByTagName("column");
 		parseColumns(columnList);
 		setDelimiter(getString(e, "delimiter"));
-		setSheet(getInt(getString(e, "sheet")));
+		setSheet(getInt(e, getString(e, "sheet")));
 		createTableDb();
 		getParser(getString(e, "doctype")).parse();
 	}
@@ -183,10 +183,10 @@ public class XMLParser extends Parser {
 	 *            the tag in the xml
 	 * @return parsed int or default 1
 	 */
-	private int getInt(String s) {
+	private int getInt(Element e, String s) {
 		try {
-			return Integer.parseInt(getString(null, s));
-		} catch (Exception e) {
+			return Integer.parseInt(getString(e, s));
+		} catch (Exception exp) {
 			return 1;
 		}
 	}
