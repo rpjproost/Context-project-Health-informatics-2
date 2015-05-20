@@ -39,6 +39,7 @@ public class WriterTest {
 	@Test
 	public void testFirst() throws SQLException, IOException {
 		xmlp = new XMLParser(path + "textxml.xml");
+		
 		xmlp.parse();
 
 		ResultSet rs = data.selectResultSet("stat", "*");
