@@ -86,7 +86,6 @@ public class XMLParser extends Parser {
 	 *            list with Nodes.
 	 */
 	protected void parseColumns(NodeList nList) {
-		columns = new ArrayList<Column>();
 		for (int i = 0; i < nList.getLength(); i++) {
 			Node nColumn = nList.item(i);
 			if (nColumn.getNodeType() == Node.ELEMENT_NODE) {
@@ -95,6 +94,7 @@ public class XMLParser extends Parser {
 				String cName = getString(e, "name");
 				String cType = getString(e, "type");
 				Column c = new Column(id, cName, cType);
+				c.setDateType(getString(e, "dateFormat"));
 				columns.add(c);
 			}
 		}
@@ -134,6 +134,7 @@ public class XMLParser extends Parser {
 		setDelimiter(null);
 		setPath(null);
 		setSheet(1);
+		columns = new ArrayList<Column>();
 	}
 
 	/**
