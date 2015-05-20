@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -25,6 +26,9 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
+
+import context.healthinformatics.Database.SingletonDb;
+import context.healthinformatics.Parser.XMLParser;
 
 /**
  * Class which represents one of the states for the variabel panel in the mainFrame.
@@ -444,8 +448,23 @@ public class InputPage extends InterfaceHelper implements PanelState,
 				return; //TODO
 			}
 			if (e.getSource() == analyseButton) {
+				loadDatabase();
 				mf.setState(mf.getCodePage());
 				mf.reloadStatePanel();
+			}
+		}
+	}
+	
+	/**
+	 * Load the database from a xml file when there isn't already one.
+	 */
+	protected void loadDatabase() {
+		if (SingletonDb.getDb() == null) {
+			XMLParser xmlp = new XMLParser("src/main/data/demo/demo.xml");
+			try {
+				xmlp.parse();
+			} catch (IOException e1) {
+				e1.printStackTrace(); //TODO exception handling
 			}
 		}
 	}
