@@ -1,5 +1,8 @@
 package context.healthinformatics.SequentialDataAnalysis;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -100,7 +103,8 @@ public class ConstraintsTest {
 	/**
 	 * @throws IOException
 	 *             the io exception of the xml parser
-	 * @throws SQLException the sql exception of db
+	 * @throws SQLException
+	 *             the sql exception of db
 	 */
 	@Test
 	public void testValueIntConstraint() throws IOException, SQLException {
@@ -111,4 +115,27 @@ public class ConstraintsTest {
 		System.out.println(data.select("stat", "value"));
 	}
 
+	/**
+	 * Test if null is an integer.
+	 */
+	@Test
+	public void testIsIntegerNULL() {
+		assertFalse(cs.isInteger(null));
+	}
+
+	/**
+	 * Test is a string is an integer.
+	 */
+	@Test
+	public void testIsIntegerString() {
+		assertFalse(cs.isInteger("string"));
+	}
+
+	/**
+	 * Test getColumnName.
+	 */
+	@Test
+	public void testGetColumnName() {
+		assertEquals(new Constraints(cList2, "value").getColumnName(), "value");
+	}
 }

@@ -180,7 +180,7 @@ public class Constraints {
 	 *            the string to check
 	 * @return return true if is interger and false if not
 	 */
-	public static boolean isInteger(String s) {
+	public boolean isInteger(String s) {
 		try {
 			Integer.parseInt(s);
 		} catch (NumberFormatException e) {
