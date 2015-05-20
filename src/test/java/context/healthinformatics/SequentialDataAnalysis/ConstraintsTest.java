@@ -103,9 +103,11 @@ public class ConstraintsTest {
 	 * @throws SQLException the sql exception of db
 	 */
 	@Test
-	public void testValueConstraint() throws IOException, SQLException {
+	public void testValueIntConstraint() throws IOException, SQLException {
 		xmlp = new XMLParser(path + "constraintsxml.xml");
 		xmlp.parse();
+		cs = new Constraints(cList2, "value");
+		cs.constraint("1000", "<");
 		System.out.println(data.select("stat", "value"));
 	}
 
