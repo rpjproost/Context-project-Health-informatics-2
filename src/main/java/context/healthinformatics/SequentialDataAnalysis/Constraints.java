@@ -100,28 +100,24 @@ public class Constraints {
 		return res;
 	}
 
+	/**
+	 * Return the chunks the constraint must apply to.
+	 * @return the chunks
+	 */
 	public ArrayList<Chunk> getChunks() {
 		return chunks;
 	}
 
+	/**
+	 * Get the column name.
+	 * @return the name of the column
+	 */
 	public String getColumnName() {
+		//TODO 
 		return columnName;
 	}
 
-	/**
-	 * Put constraint on comment.
-	 * 
-	 * @param comment
-	 *            the comment to constraint
-	 * @return return the ArrayList with remaining chuncks
-	 */
-	public ArrayList<Chunk> constraintComment(String comment) {
-		// iterate through chunks
 
-		// return remaining chunks
-		// TODO
-		return null;
-	}
 
 	/**
 	 * Constraint on a data value string.

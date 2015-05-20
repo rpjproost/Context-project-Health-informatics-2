@@ -10,16 +10,14 @@ import org.junit.Test;
  */
 public class ConstraintsTest {
 
-	@Before
-	public void before() {
-
-	}
+	private ArrayList<Chunk> cList2;
+	private Constraints cs;
 
 	/**
-	 * Test for code constraint.
+	 * Init list of chunks.
 	 */
-	@Test
-	public void testCodeConstraints() {
+	@Before
+	public void before() {
 		ArrayList<Chunk> cList = new ArrayList<Chunk>();
 		Chunk c1 = new Chunk();
 		c1.setCode("c");
@@ -36,20 +34,47 @@ public class ConstraintsTest {
 		Chunk c4 = new Chunk();
 		c4.setCode("d");
 		c4.setComment("testcomment2");
-		ArrayList<Chunk> cList2 = new ArrayList<Chunk>();
+		cList2 = new ArrayList<Chunk>();
 		cList2.add(c3);
 		cList2.add(c4);
+		cs = new Constraints(cList2);
+	}
 
-		Constraints cs = new Constraints(cList2);
+	/**
+	 * Test for code constraint.
+	 */
+	@Test
+	public void testhasCodeConstraints() {
 		ArrayList<Chunk> res = cs.hasCode("d", cs.getChunks(),
 				new ArrayList<Chunk>());
 		System.out.println("ReS: " + res);
+	}
+
+	/**
+	 * Test for comment equals.
+	 */
+	@Test
+	public void testEqualsCommentConstraints() {
 		ArrayList<Chunk> resC = cs.equalsComment("testcomment", cs.getChunks(),
 				new ArrayList<Chunk>());
 		System.out.println("ReS: " + resC);
-		ArrayList<Chunk> resCcontain = cs.containsComment("com", cs.getChunks(),
-				new ArrayList<Chunk>());
+	}
+
+	/**
+	 * Test for contains comment.
+	 */
+	@Test
+	public void testContainsCommentConstraints() {
+		ArrayList<Chunk> resCcontain = cs.containsComment("com",
+				cs.getChunks(), new ArrayList<Chunk>());
 		System.out.println("ReS: " + resCcontain);
+	}
+
+	/**
+	 * 
+	 */
+	@Test
+	public void testValueConstraint() {
 
 	}
 
