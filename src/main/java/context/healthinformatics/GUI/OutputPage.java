@@ -1,8 +1,6 @@
 package context.healthinformatics.GUI;
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -23,10 +21,9 @@ import context.healthinformatics.Writer.WriteToTXT;
 /**
  * Class which represents one of the states for the variabel panel in the mainFrame.
  */
-public class OutputPage implements PanelState, Serializable {
+public class OutputPage extends InterfaceHelper implements PanelState, Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private static final int FONTSIZE = 18;
 	private static final int BUTTONWIDTH = 300;
 	private static final int BUTTONHEIGHT = 50;
 	private MainFrame mf;
@@ -49,22 +46,10 @@ public class OutputPage implements PanelState, Serializable {
 				mf.getScreenWidth(), mf.getStatePanelSize());
 		panel.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
-		exportFile = createButton("Export File...");
+		exportFile = createButton("Export File...", BUTTONWIDTH, BUTTONHEIGHT);
+		exportFile.addActionListener(new ActionHandler());
 		panel.add(exportFile, c);
 		return panel;
-	}
-	
-	/**
-	 * Creates a button with default buttonwidth and buttonheight.
-	 * @param name of the button.
-	 * @return a button with the name.
-	 */
-	private JButton createButton(String name) {
-		JButton button = new JButton(name);
-		button.setPreferredSize(new Dimension(BUTTONWIDTH, BUTTONHEIGHT));
-		button.setFont(new Font("Arial", Font.ITALIC, FONTSIZE));
-		button.addActionListener(new ActionHandler());
-		return button;
 	}
 	
 	/**
