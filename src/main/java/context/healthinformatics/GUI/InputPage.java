@@ -488,30 +488,30 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 */
 	@Override
 	public void valueChanged(TreeSelectionEvent e) {
-		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-		if (node != null) {
-			if (node.isLeaf()) {
-				String selected = node.getUserObject().toString();
-				if (selected.equals("SET XML FILE")) {
-					askUser(node);
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
+				.getLastSelectedPathComponent();
+		if (node != null && node.isLeaf()) {
+			String selected = node.getUserObject().toString();
+			if (selected.equals("SET XML FILE")) {
+				askUser(node);
+				model.nodeStructureChanged(node.getParent());
+			} else {
+				String flag;
+				if (selected.length() > FLAGLENGTH) {
+					flag = selected.substring(selected.length() - FLAGLENGTH);
+				} else {
+					flag = null;
+				}
+				if (flag != null && flag.equals("   [SELECTED]")) {
+					selectedFiles.remove(selected);
+					String s = node.getUserObject().toString();
+					node.setUserObject(s.substring(0, s.length() - FLAGLENGTH));
 					model.nodeStructureChanged(node.getParent());
 				} else {
-					String flag;
-					if (selected.length() > FLAGLENGTH) {
-						flag = selected.substring(selected.length() - FLAGLENGTH);
-					} else {
-						flag = null;
-					}
-					if (flag != null && flag.equals("   [SELECTED]")) {
-						selectedFiles.remove(selected);
-						String s = node.getUserObject().toString();
-						node.setUserObject(s.substring(0, s.length() - FLAGLENGTH));
-						model.nodeStructureChanged(node.getParent());
-					} else {
-						selectedFiles.add(selected);
-						node.setUserObject(node.getUserObject().toString() + "   [SELECTED]");
-						model.nodeStructureChanged(node.getParent());
-					}
+					selectedFiles.add(selected);
+					node.setUserObject(node.getUserObject().toString()
+							+ "   [SELECTED]");
+					model.nodeStructureChanged(node.getParent());
 				}
 			}
 		}
