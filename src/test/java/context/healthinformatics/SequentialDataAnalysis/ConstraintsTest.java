@@ -23,23 +23,33 @@ public class ConstraintsTest {
 		ArrayList<Chunk> cList = new ArrayList<Chunk>();
 		Chunk c1 = new Chunk(1);
 		c1.setCode("c");
+		c1.setComment("testcomment");
 		cList.add(c1);
 		Chunk c2 = new Chunk(2);
 		c2.setCode("c");
+		c2.setComment("testcomment");
 		cList.add(c2);
 		Chunk c3 = new Chunk(3);
-		c3.setCode("c");
+		c3.setCode("d");
+		c3.setComment("testcomment2");
 		c3.setChunks(cList);
 		Chunk c4 = new Chunk(4);
 		c4.setCode("d");
+		c4.setComment("testcomment2");
 		ArrayList<Chunk> cList2 = new ArrayList<Chunk>();
 		cList2.add(c3);
 		cList2.add(c4);
-		
 
 		Constraints cs = new Constraints(cList2);
-		System.out.println(cs.getChunks());
-		ArrayList<Chunk> res = cs.containsCode("c", cs.getChunks());
+		ArrayList<Chunk> res = cs.hasCode("d", cs.getChunks(),
+				new ArrayList<Chunk>());
+		System.out.println("ReS: " + res);
+		ArrayList<Chunk> resC = cs.equalsComment("testcomment", cs.getChunks(),
+				new ArrayList<Chunk>());
+		System.out.println("ReS: " + resC);
+		ArrayList<Chunk> resCcontain = cs.containsComment("com", cs.getChunks(),
+				new ArrayList<Chunk>());
+		System.out.println("ReS: " + resCcontain);
 
 	}
 
