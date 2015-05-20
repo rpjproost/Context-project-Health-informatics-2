@@ -1,17 +1,47 @@
 package context.healthinformatics.SequentialDataAnalysis;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import context.healthinformatics.Database.Db;
+import context.healthinformatics.Database.SingletonDb;
+import context.healthinformatics.Parser.XMLParser;
 
 /**
  * Test for class Constraints.
  */
 public class ConstraintsTest {
 
-	private ArrayList<Chunk> cList2;
+	/**
+	 * The constrains class.
+	 */
 	private Constraints cs;
+
+	/**
+	 * The list of chunks.
+	 */
+	private ArrayList<Chunk> cList2;
+
+	/**
+	 * variable used to save the newly created parser.
+	 */
+	private XMLParser xmlp;
+
+	/**
+	 * path leading to the place of all test files.
+	 */
+	private String path = "src/test/data/constraintsfiles/";
+
+	/**
+	 * object calling the database.
+	 */
+	private Db data = SingletonDb.getDb();
+
+	private static final int THREE = 3;
 
 	/**
 	 * Init list of chunks.
@@ -22,10 +52,12 @@ public class ConstraintsTest {
 		Chunk c1 = new Chunk();
 		c1.setCode("c");
 		c1.setComment("testcomment");
+		c1.setLine(1);
 		cList.add(c1);
 		Chunk c2 = new Chunk();
 		c2.setCode("c");
 		c2.setComment("testcomment");
+		c2.setLine(2);
 		cList.add(c2);
 		Chunk c3 = new Chunk();
 		c3.setCode("d");
@@ -34,6 +66,7 @@ public class ConstraintsTest {
 		Chunk c4 = new Chunk();
 		c4.setCode("d");
 		c4.setComment("testcomment2");
+		c4.setLine(THREE);
 		cList2 = new ArrayList<Chunk>();
 		cList2.add(c3);
 		cList2.add(c4);
@@ -45,9 +78,7 @@ public class ConstraintsTest {
 	 */
 	@Test
 	public void testhasCodeConstraints() {
-		ArrayList<Chunk> res = cs.hasCode("d", cs.getChunks(),
-				new ArrayList<Chunk>());
-		System.out.println("ReS: " + res);
+		cs.hasCode("d", cs.getChunks(), new ArrayList<Chunk>());
 	}
 
 	/**
@@ -55,9 +86,7 @@ public class ConstraintsTest {
 	 */
 	@Test
 	public void testEqualsCommentConstraints() {
-		ArrayList<Chunk> resC = cs.equalsComment("testcomment", cs.getChunks(),
-				new ArrayList<Chunk>());
-		System.out.println("ReS: " + resC);
+		cs.equalsComment("testcomment", cs.getChunks(), new ArrayList<Chunk>());
 	}
 
 	/**
@@ -65,17 +94,19 @@ public class ConstraintsTest {
 	 */
 	@Test
 	public void testContainsCommentConstraints() {
-		ArrayList<Chunk> resCcontain = cs.containsComment("com",
-				cs.getChunks(), new ArrayList<Chunk>());
-		System.out.println("ReS: " + resCcontain);
+		cs.containsComment("com", cs.getChunks(), new ArrayList<Chunk>());
 	}
 
 	/**
-	 * 
+	 * @throws IOException
+	 *             the io exception of the xml parser
+	 * @throws SQLException the sql exception of db
 	 */
 	@Test
-	public void testValueConstraint() {
-
+	public void testValueConstraint() throws IOException, SQLException {
+		xmlp = new XMLParser(path + "constraintsxml.xml");
+		xmlp.parse();
+		System.out.println(data.select("stat", "value"));
 	}
 
 }
