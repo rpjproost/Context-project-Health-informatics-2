@@ -51,7 +51,7 @@ public class DbTest {
 		colArr = new ArrayList<Column>();
 		colArr.add(new Column(0, "Name", "String"));
 		colArr.add(new Column(0, "Age", "Integer"));
-
+		//TODO CLEAN THIS UP, RICK!
 		col[0] = "Name";
 		col[1] = "Age";
 
