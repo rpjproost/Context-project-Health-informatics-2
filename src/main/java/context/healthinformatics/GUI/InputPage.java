@@ -81,7 +81,8 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	public InputPage(MainFrame m) {
 		mf = m;
 		selectedFiles = new ArrayList<String>();
-		folder = new ArrayList<ArrayList<String>>();		
+		folder = new ArrayList<ArrayList<String>>();
+		xmlList = new ArrayList<String>();
 		initXmlList();
 	}
 
@@ -377,7 +378,6 @@ public class InputPage extends InterfaceHelper implements PanelState,
 				return i;
 			}
 		}
-		JOptionPane.showMessageDialog(null, "No project selected");
 		return -1;
 	}
 	
