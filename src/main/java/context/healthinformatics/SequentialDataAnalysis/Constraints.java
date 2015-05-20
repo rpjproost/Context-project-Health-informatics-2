@@ -1,7 +1,6 @@
 package context.healthinformatics.SequentialDataAnalysis;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Class Constraints.
