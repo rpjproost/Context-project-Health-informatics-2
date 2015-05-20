@@ -113,6 +113,7 @@ public class ConstraintsTest {
 		cs = new Constraints(cList2, "value");
 		cs.constraint("1000", "<");
 		System.out.println(data.select("stat", "value"));
+		data.dropTable("stat");
 	}
 
 	/**
