@@ -34,7 +34,7 @@ public class ChunkTest {
 	 */
 	@Before
 	public void before() throws NullPointerException, SQLException {
-		chunk = new Chunk(1);
+		chunk = new Chunk();
 		path = "C:/db/";
 		dbName = "testDB";
 		data = SingletonDb.getDb();
@@ -71,7 +71,7 @@ public class ChunkTest {
 		int amountOfChunks = data.getMaxId(tableName);
 		ArrayList<Chunk> chunks = new ArrayList<Chunk>();
 		for (int i = 0; i <= amountOfChunks; i++) {
-			Chunk c = new Chunk(i);
+			Chunk c = new Chunk();
 			chunks.add(c);
 		}
 		Chunk c = chunks.get(2);
@@ -85,8 +85,8 @@ public class ChunkTest {
 	 */
 	@Test
 	public void testChunkCreation() {
-		Chunk c = new Chunk(1);
-		assertEquals(c.getId(), 1);
+		Chunk c = new Chunk();
+		assertEquals(c.getLine(), 0);
 	}
 	/**
 	 * Tests chunk code get/setters.
@@ -113,9 +113,9 @@ public class ChunkTest {
 	 */
 	@Test
 	public void testChunkId() {
-		assertEquals(chunk.getId(), 1);
-		chunk.setId(2);
-		assertEquals(chunk.getId(), 2);
+		assertEquals(chunk.getLine(), 0);
+		chunk.setLine(2);
+		assertEquals(chunk.getLine(), 2);
 	}
 	
 	/**
@@ -124,7 +124,7 @@ public class ChunkTest {
 	@Test
 	public void testChunkChilds() {
 		assertEquals(chunk.hasChild(), false);
-		Chunk test = new Chunk(2);
+		Chunk test = new Chunk();
 		chunk.setChunk(test);
 		assertEquals(chunk.hasChild(), true);
 	}

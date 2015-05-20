@@ -13,18 +13,16 @@ public class Chunk {
 	private HashMap<Chunk, String> pointer;
 	private String comment;
 	private ArrayList<Chunk> chunks;
-	private int id;
+	private int line;
 
 	/**
 	 * 
-	 * @param i id for chunk, also represent line in database.
 	 */
-	public Chunk(int i) {
+	public Chunk() {
 		chunks = new ArrayList<Chunk>();
 		pointer = new HashMap<Chunk, String>();
 		comment = "";
 		code = "";
-		id = i;
 	}
 
 	/**
@@ -122,22 +120,22 @@ public class Chunk {
 	 * 
 	 * @param i id for chunk.
 	 */
-	public void setId(int i) {
-		id = i;
+	public void setLine(int i) {
+		line = i;
 	}
 	
 	/**
 	 * get Id of this chunk.
 	 * @return id.
 	 */
-	public int getId() {
-		return id;
+	public int getLine() {
+		return line;
 	}
 
 	@Override
 	public String toString() {
 		return "Chunk [code=" + code + ", pointer=" + pointer + ", comment="
-				+ comment + ", chunks=" + chunks + ", id=" + id + "]";
+				+ comment + ", chunks=" + chunks + ", line=" + line + "]";
 	}
 
 }
