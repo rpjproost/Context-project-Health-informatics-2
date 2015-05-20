@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import context.healthinformatics.Parser.Column;
+import context.healthinformatics.SequentialDataAnalysis.Chunk;
 
 /**
  * 
@@ -133,5 +134,19 @@ public class MergeTable {
 	public void dropView(String viewName) {
 		String sql = "DROP VIEW " + viewName;
 		data.executeUpdate(sql);
+	}
+	
+	/**
+	 * returns the workspace in chunks.
+	 * @return an arrayList of chunks.
+	 */
+	public ArrayList<Chunk> getChunks() {
+		ArrayList<Chunk> chunks = new ArrayList<Chunk>();
+		int amountOfChunks = 0; //TODO data.getNumRowsView(workspace);
+		for (int i = 0; i <= amountOfChunks; i++) {
+			Chunk c = new Chunk();
+			chunks.add(c);
+		}
+		return chunks;
 	}
 }
