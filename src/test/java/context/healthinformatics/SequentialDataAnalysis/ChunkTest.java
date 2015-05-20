@@ -65,7 +65,7 @@ public class ChunkTest {
 	 */
 	@Test
 	public void testCreatingChunksWithDbMaxRows() throws SQLException {
-		data.createTable(tableName, col, types);
+		assertTrue(data.createTable(tableName, colArr));
 		data.insert(tableName, values, colArr);
 		data.insert(tableName, values, colArr);
 		int amountOfChunks = data.getMaxId(tableName);
