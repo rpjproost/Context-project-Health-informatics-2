@@ -21,19 +21,19 @@ public class ConstraintsTest {
 	@Test
 	public void testCodeConstraints() {
 		ArrayList<Chunk> cList = new ArrayList<Chunk>();
-		Chunk c1 = new Chunk(1);
+		Chunk c1 = new Chunk();
 		c1.setCode("c");
 		c1.setComment("testcomment");
 		cList.add(c1);
-		Chunk c2 = new Chunk(2);
+		Chunk c2 = new Chunk();
 		c2.setCode("c");
 		c2.setComment("testcomment");
 		cList.add(c2);
-		Chunk c3 = new Chunk(3);
+		Chunk c3 = new Chunk();
 		c3.setCode("d");
 		c3.setComment("testcomment2");
 		c3.setChunks(cList);
-		Chunk c4 = new Chunk(4);
+		Chunk c4 = new Chunk();
 		c4.setCode("d");
 		c4.setComment("testcomment2");
 		ArrayList<Chunk> cList2 = new ArrayList<Chunk>();
