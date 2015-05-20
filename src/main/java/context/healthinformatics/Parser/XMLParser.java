@@ -114,11 +114,11 @@ public class XMLParser extends Parser {
 		Element e = (Element) n;
 		setDocName(e.getAttribute("docname"));
 		setPath(getString(e, "path"));
-		setStartLine(getInt("start"));
+		setStartLine(getInt(e, "start"));
 		NodeList columnList = e.getElementsByTagName("column");
 		parseColumns(columnList);
 		setDelimiter(getString(e, "delimiter"));
-		setSheet(getInt(getString(e, "sheet")));
+		setSheet(getInt(e, getString(e, "sheet")));
 		createTableDb();
 		getParser(getString(e, "doctype")).parse();
 	}
@@ -163,14 +163,14 @@ public class XMLParser extends Parser {
 	private void createTableDb() throws SQLException {
 		int length = columns.size();
 		Db data = SingletonDb.getDb();
-		String[] col = new String[length];
-		String[] t = new String[length];
-		for (int i = 0; i < length; i++) {
-			col[i] = columns.get(i).getColumnName();
-			t[i] = columns.get(i).getColumnType();
-		}
+//		String[] col = new String[length];
+//		String[] t = new String[length];
+//		for (int i = 0; i < length; i++) {
+//			col[i] = columns.get(i).getColumnName();
+//			t[i] = columns.get(i).getColumnType();
+//		}
 		try {
-			data.createTable(docName, col, t);
+			data.createTable(docName, columns);
 		} catch (SQLException e) {
 			throw new SQLException("The Table could not be created.");
 		}
@@ -184,10 +184,10 @@ public class XMLParser extends Parser {
 	 *            the tag in the xml
 	 * @return parsed int or default 1
 	 */
-	private int getInt(String s) {
+	private int getInt(Element e, String s) {
 		try {
-			return Integer.parseInt(getString(null, s));
-		} catch (Exception e) {
+			return Integer.parseInt(getString(e, s));
+		} catch (Exception exp) {
 			return 1;
 		}
 	}

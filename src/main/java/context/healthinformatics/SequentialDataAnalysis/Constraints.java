@@ -1,7 +1,6 @@
 package context.healthinformatics.SequentialDataAnalysis;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Class Constraints.
@@ -33,54 +32,121 @@ public class Constraints {
 		this.columnName = columnName;
 	}
 
-	private ArrayList<Chunk> res = new ArrayList<Chunk>();
-
 	/**
-	 * Put constraint on code.
+	 * Recursive method which find all chunks with code code.
 	 * 
 	 * @param code
-	 *            the code to constraint
-	 * @return return the ArrayList with remaining chuncks
+	 *            the code we're looking for
+	 * @param chunk
+	 *            the list of chunks
+	 * @param res
+	 *            the result list of chunks
+	 * @return the result of chunks.
 	 */
-	public ArrayList<Chunk> containsCode(String code, ArrayList<Chunk> chunk) {
-		System.out.println(chunks.toString());
+	public ArrayList<Chunk> hasCode(String code, ArrayList<Chunk> chunk,
+			ArrayList<Chunk> res) {
 		for (int i = 0; i < chunk.size(); i++) {
 			Chunk curChunk = chunk.get(i);
-			System.out.println(curChunk.getCode());
 			if (curChunk.getCode().equals(code)) {
 				res.add(curChunk);
-			} else {
-				if (curChunk.hasChild()) {
-					res.addAll(containsCode(code, curChunk.getChunks()));
-				}
 			}
-
+			if (curChunk.hasChild()) {
+				hasCode(code, curChunk.getChunks(), res);
+			}
 		}
-		// TODO
 		return res;
 	}
 
+	/**
+	 * Check if a chunk has a substring of the specified comment.
+	 * 
+	 * @param comment
+	 *            the comment
+	 * @param chunk
+	 *            the list of chunks
+	 * @param res
+	 *            the resulting chunks
+	 * @return the chunks which containt the comment
+	 */
+	public ArrayList<Chunk> containsComment(String comment,
+			ArrayList<Chunk> chunk, ArrayList<Chunk> res) {
+		for (int i = 0; i < chunk.size(); i++) {
+			Chunk curChunk = chunk.get(i);
+			if (curChunk.getComment().contains(comment)) {
+				res.add(curChunk);
+			}
+			if (curChunk.hasChild()) {
+				containsComment(comment, curChunk.getChunks(), res);
+			}
+		}
+		return res;
+	}
+
+	/**
+	 * Check if a chunk has a comment which equals the specified comment.
+	 * 
+	 * @param comment
+	 *            the comment
+	 * @param chunk
+	 *            the chunks
+	 * @param res
+	 *            the result
+	 * @return the resulting Chunks which have the comment
+	 */
+	public ArrayList<Chunk> equalsComment(String comment,
+			ArrayList<Chunk> chunk, ArrayList<Chunk> res) {
+		for (int i = 0; i < chunk.size(); i++) {
+			Chunk curChunk = chunk.get(i);
+			if (curChunk.getComment().equals(comment)) {
+				res.add(curChunk);
+			}
+			if (curChunk.hasChild()) {
+				equalsComment(comment, curChunk.getChunks(), res);
+			}
+		}
+		return res;
+	}
+
+	/**
+	 * Return the chunks the constraint must apply to.
+	 * 
+	 * @return the chunks
+	 */
 	public ArrayList<Chunk> getChunks() {
 		return chunks;
 	}
 
+	/**
+	 * Get the column name.
+	 * 
+	 * @return the name of the column
+	 */
 	public String getColumnName() {
+		// TODO
 		return columnName;
 	}
 
 	/**
-	 * Put constraint on comment.
+	 * Get all lines from the chunks and format it for sql.
 	 * 
-	 * @param comment
-	 *            the comment to constraint
-	 * @return return the ArrayList with remaining chuncks
+	 * @param chunk
+	 *            the chunks
+	 * @param res
+	 *            the resulting sql string for where clause
+	 * @return the sql string for the where clause
 	 */
-	public ArrayList<Chunk> constraintComment(String comment) {
-		// iterate through chunks
-
-		// return remaining chunks
-		// TODO
-		return null;
+	public String getAllChunkLines(ArrayList<Chunk> chunk, String res) {
+		for (int i = 0; i < chunk.size(); i++) {
+			Chunk curChunk = chunk.get(i);
+			System.out.println(curChunk.getLine());
+			if (curChunk.getLine() != 0) {
+				res += "AND row = " + curChunk.getLine() + " ";
+			}
+			if (curChunk.hasChild()) {
+				res += getAllChunkLines(curChunk.getChunks(), res);
+			}
+		}
+		return res;
 	}
 
 	/**
@@ -88,44 +154,40 @@ public class Constraints {
 	 * 
 	 * @param value
 	 *            the string value
+	 * @param operator
+	 *            the operator to specify the constraint
 	 * @return return the ArrayList with remaining chuncks
 	 */
-	public ArrayList<Chunk> constraint(String value) {
-		// iterate through chunks
-
+	public ArrayList<Chunk> constraint(String value, String operator) {
+		String rowClause = getAllChunkLines(chunks, "");
+		String constraint = columnName + " " + operator + " ";
+		if (isInteger(value)) {
+			constraint += value + " ";
+		} else {
+			constraint += "'" + value + "' ";
+		}
+		System.out.println(constraint + rowClause);
 		// return remaining chunks
-		// TODO
+
+		// SELECT rowNums FROM stat WHERE columnName (statement) AND row = i AND
 		return null;
 	}
 
 	/**
-	 * Constraint on a data value int.
+	 * Check if a string is an interger.
 	 * 
-	 * @param value
-	 *            the int value
-	 * @return return the ArrayList with remaining chuncks
+	 * @param s
+	 *            the string to check
+	 * @return return true if is interger and false if not
 	 */
-	public ArrayList<Chunk> constraint(int value) {
-		// iterate through chunks
-
-		// return remaining chunks
-		// TODO
-		return null;
+	public boolean isInteger(String s) {
+		try {
+			Integer.parseInt(s);
+		} catch (NumberFormatException e) {
+			return false;
+		} catch (NullPointerException e) {
+			return false;
+		}
+		return true;
 	}
-
-	/**
-	 * Constraint on a data value Date.
-	 * 
-	 * @param value
-	 *            the Date value
-	 * @return return the ArrayList with remaining chuncks
-	 */
-	public ArrayList<Chunk> constraint(Date value) {
-		// iterate through chunks
-
-		// return remaining chunks
-		// TODO
-		return null;
-	}
-
 }
