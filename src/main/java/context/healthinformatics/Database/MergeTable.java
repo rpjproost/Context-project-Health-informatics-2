@@ -54,29 +54,36 @@ public class MergeTable {
 		}
 		
 		data.createTable("result", columns);
-		StringBuilder sql = new StringBuilder();
 		
 		for (String key : allTables) {
-			sql.append("INSERT INTO result (");
-			appendColumns(tables.get(key), sql);
-			sql.append(") SELECT ");
-			appendColumns(tables.get(key), sql);
-			sql.append("FROM ").append(key);
+			String tableClause = "";
 			for (int i = 0; i < clause.length; i++) {
 				if (clause[i].contains(key)) {
-					sql.append(" WHERE ").append(clause[i]);
+					tableClause = clause[i];
 				}
 			}
-			System.out.println(sql.toString());
-			data.executeUpdate(sql.toString());
-			sql = new StringBuilder();
+			insertTable(key, tables.get(key), tableClause);
 		}
 		
 	}
 	
+	private void insertTable(String key, ArrayList<Column> cols, String clause) {
+		StringBuilder sql = new StringBuilder();
+		sql.append("INSERT INTO result (");
+		appendColumns(cols, sql);
+		sql.append(") SELECT ");
+		appendColumns(cols, sql);
+		sql.append("FROM ").append(key);
+		if (clause.length() > 0) {
+			sql.append(" WHERE ").append(clause);
+		}
+		System.out.println(sql.toString());
+		data.executeUpdate(sql.toString());
+	}
+	
 	public void appendColumns(ArrayList<Column> columns, StringBuilder sql) {
 		String prefix = "";
-		for(int i = 0; i < columns.size(); i++) {
+		for (int i = 0; i < columns.size(); i++) {
 			sql.append(prefix);
 			prefix = ", ";
 			String name = columns.get(i).getColumnName();
@@ -95,7 +102,7 @@ public class MergeTable {
 	}
 	
 	public void dropView(String viewName) {
-		String sql = "DROP VIEW " +viewName;
+		String sql = "DROP VIEW " + viewName;
 		data.executeUpdate(sql);
 	}
 }
