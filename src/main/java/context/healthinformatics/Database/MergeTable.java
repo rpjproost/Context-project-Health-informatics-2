@@ -53,16 +53,25 @@ public class MergeTable {
 		
 		data.createTable("result", columns);
 		
-		for (String key : allTables) {
+		insertTables(allTables, clause);
+		
+	}
+	
+	/**
+	 * method for inserting all tables into the workspace.
+	 * @param tableNames set containing all tables to add.
+	 * @param clause all clauses for these tables.
+	 */
+	private void insertTables(Set<String> tableNames, String[] clause) {
+		for (String key : tableNames) {
 			String tableClause = "";
 			for (int i = 0; i < clause.length; i++) {
 				if (clause[i].contains(key)) {
 					tableClause = clause[i];
 				}
 			}
-			insertTable(key, tables.get(key), tableClause);
+			insertTable(key, data.getTables().get(key), tableClause);
 		}
-		
 	}
 	
 	/**
