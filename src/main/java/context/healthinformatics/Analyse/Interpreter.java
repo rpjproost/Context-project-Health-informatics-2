@@ -12,7 +12,8 @@ import context.healthinformatics.SequentialDataAnalysis.Constraints;
  */
 //TODO needs to be cleaned!
 public class Interpreter {
-	ArrayList<Chunk> chunks;
+	
+	private ArrayList<Chunk> chunks;
 	
 	/**
 	 * constructor for the Interpreter.
