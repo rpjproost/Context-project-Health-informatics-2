@@ -51,7 +51,7 @@ public class DbTest {
 		colArr = new ArrayList<Column>();
 		colArr.add(new Column(0, "Name", "String"));
 		colArr.add(new Column(0, "Age", "Integer"));
-		//TODO CLEAN THIS UP, RICK!
+		
 		col[0] = "Name";
 		col[1] = "Age";
 
@@ -60,6 +60,20 @@ public class DbTest {
 
 		values[0] = "Rick";
 		values[1] = "22";
+		beforeTests();
+	}
+	
+	/**
+	 * remove all tables from db.
+	 */
+	public void beforeTests() {
+		try {
+			for (String key : data.getTables().keySet()) {
+				data.dropTable(key);
+			}
+		} catch (SQLException e) {
+			System.out.println("Something went wrong preparing db for tests.");
+		}
 	}
 
 	/**
