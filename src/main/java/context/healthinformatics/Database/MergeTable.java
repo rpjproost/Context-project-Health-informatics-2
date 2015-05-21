@@ -16,13 +16,13 @@ import context.healthinformatics.SequentialDataAnalysis.Chunk;
  */
 public class MergeTable {
 	
-	private Db data = SingletonDb.getDb();
+	private Db data;
 	
 	/**
 	 * 
 	 */
 	public MergeTable() {
-		
+		data = SingletonDb.getDb();
 	}
 	
 	/**

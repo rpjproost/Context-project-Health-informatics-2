@@ -10,6 +10,8 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
+import context.healthinformatics.Analyse.Interpreter;
+
 /**
  * Class which represents one of the states for the variabel panel in the mainFrame.
  */
@@ -47,14 +49,16 @@ public class CodePage extends InterfaceHelper implements PanelState, Serializabl
 	/**
 	 * Class which handles the actions when buttons are clicked.
 	 */
-	private static class ActionHandler implements ActionListener {
+	private class ActionHandler implements ActionListener {
 
 		/**
 		 * Action when the button is pressed the save pop up will be shown.
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			
+			String text = code.getText();
+			Interpreter interp = new Interpreter();
+			interp.interpret(text);
 		}
 	}
 }

@@ -459,7 +459,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 * Load the database from a xml file when there isn't already one.
 	 */
 	protected void loadDatabase() {
-		if (SingletonDb.getDb() == null) {
+		if (SingletonDb.getDb().getTables().isEmpty()) {
 			XMLParser xmlp = new XMLParser("src/main/data/demo/demo.xml");
 			try {
 				xmlp.parse();

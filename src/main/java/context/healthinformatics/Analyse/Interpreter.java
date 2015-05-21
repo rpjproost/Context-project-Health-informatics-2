@@ -18,10 +18,12 @@ public class Interpreter {
 	/**
 	 * constructor for the Interpreter.
 	 */
-	protected Interpreter() {
+	public Interpreter() {
 		MergeTable mt = new MergeTable();
 		try {
-			mt.merge(" , ".split(","));
+			String[] clause = new String[1];
+			clause[0] = "Hospital.admire = 2";
+			mt.merge(clause);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} //TODO add clause
