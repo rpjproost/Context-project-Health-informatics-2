@@ -1,6 +1,7 @@
 package context.healthinformatics.Database;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -70,6 +71,49 @@ public class MergeTableTest {
 			}
 		}
 		rs.close();
+		data.dropTable("result");
+		data.dropTable("HospitalRecords");
+		data.dropTable("StatSensor");
+	}
+	
+	/**
+	 * Test for merging two tables with one date column.
+	 * @throws IOException if files could not be read.
+	 * @throws SQLException if tables could not be created.
+	 */
+	@Test
+	public void checkDateTest() throws IOException, SQLException {
+		xmlp = new XMLParser(path + "twoDocs.xml");
+		xmlp.parse();
+		String[] clause = new String[1];
+		clause[0] = "StatSensor.value = 209";
+		MergeTable test = new MergeTable();
+		test.mergeTables(clause);
+		ResultSet rs = data.selectResultSet("result", "date");
+		while (rs.next()) {
+			assertNotNull(rs.getDate("date"));
+		}
+		rs.close();
+		data.dropTable("result");
+		data.dropTable("HospitalRecords");
+		data.dropTable("StatSensor");
+	}
+	
+	@Test
+	public void mergeViewTest() throws IOException, SQLException {
+		xmlp = new XMLParser(path + "twoDocs.xml");
+		xmlp.parse();
+		String[] clause = new String[1];
+		clause[0] = "StatSensor.value = 209";
+		MergeTable test = new MergeTable();
+		test.mergeTables(clause);
+		test.mergeTablesView();
+		ResultSet rs = data.selectResultSet("workspace", "date");
+		while (rs.next()) {
+			assertNotNull(rs.getDate("date"));
+		}
+		rs.close();
+		test.dropView("workspace");
 		data.dropTable("result");
 		data.dropTable("HospitalRecords");
 		data.dropTable("StatSensor");

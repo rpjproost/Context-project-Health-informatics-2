@@ -30,7 +30,7 @@
 		<column id="3">
 			<name>date</name>
 			<type>date</type>
-			<dateFormat>dd-mm-yyyy</dateFormat>
+			<dateFormat>dd-MM-yyyy</dateFormat>
 		</column>
 	</document>
 </xml>

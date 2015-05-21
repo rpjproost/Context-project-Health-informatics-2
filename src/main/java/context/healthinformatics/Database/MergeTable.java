@@ -27,9 +27,8 @@ public class MergeTable {
 	
 	/**
 	 * creates the view ordered by date of the workspace.
-	 * @param clause date column. 
 	 */
-	public void mergeTablesView(String clause) {
+	public void mergeTablesView() {
 		//TODO make sure this works with 1 date column.
 		
 		//HashMap<String, ArrayList<Column>> tables = data.getTables();
