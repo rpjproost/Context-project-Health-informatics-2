@@ -157,6 +157,24 @@ public class ExcelParser extends Parser {
 	}
 
 	/**
+	 * Process one sheet from the excel file.
+	 * 
+	 * @param ws
+	 *            the sheet processed.
+	 * @throws IOException
+	 *             the exception for sql
+	 */
+	public void processXLSXSheet(XSSFSheet ws) throws IOException {
+		int rowNum = ws.getLastRowNum() + 1;
+		for (int i = startLine; i < rowNum; i++) {
+			if (!isRowEmpty(ws.getRow(i))) {
+				processXLSXRow(ws.getRow(i));
+			}
+
+		}
+	}
+
+	/**
 	 * Process one row from the sheet.
 	 * 
 	 * @param row
@@ -174,36 +192,6 @@ public class ExcelParser extends Parser {
 			}
 			insertToDb(cells);
 		}
-	}
-
-	/**
-	 * Process one sheet from the excel file.
-	 * 
-	 * @param ws
-	 *            the sheet processed.
-	 * @throws IOException
-	 *             the exception for sql
-	 */
-	public void processXLSXSheet(XSSFSheet ws) throws IOException {
-		int rowNum = ws.getLastRowNum() + 1;
-		System.out.println("Numrows: " +rowNum);
-		
-		for (int i = startLine; i < rowNum; i++) {
-			System.out.println(isRowEmpty(ws.getRow(i)));
-			if(!isRowEmpty(ws.getRow(i))){
-			processXLSXRow(ws.getRow(i));
-			}
-
-		}
-	}
-	
-	public static boolean isRowEmpty(Row row) {
-	    for (int c = row.getFirstCellNum(); c < row.getLastCellNum(); c++) {
-	        Cell cell = row.getCell(c);
-	        if (cell != null && cell.getCellType() != Cell.CELL_TYPE_BLANK)
-	            return false;
-	    }
-	    return true;
 	}
 
 	/**
@@ -236,41 +224,16 @@ public class ExcelParser extends Parser {
 	 * @return the right formatted cell
 	 */
 	public String processCellXLS(Cell curCell, int c) {
-		System.out.println(columns.get(c).getColumnType());
 		if (columns.get(c).getColumnType().equals("INT")) {
-			System.out.println(curCell.toString());
-			if (isDouble(curCell.toString())) {
-				return curCell.toString();
-			} else {
-				System.out.println("not int: " +curCell.toString());
-				return "-1";
-			}
+			return formatInt(curCell);
 		} else if (columns.get(c).getColumnType().equals("DATE")
 				&& !curCell.toString().equals("")) {
-			Date date = new Date();
-			try {
-				date = new SimpleDateFormat(columns.get(c).getDateType())
-						.parse(curCell.toString());
-			} catch (ParseException e) {
-				return "";
-			}
-			System.out.println("DATE: " + date);
-			return new SimpleDateFormat(columns.get(c).getDateType())
-					.format(date);
+			return formatXLSDate(curCell, c);
 		} else {
 			return curCell.toString();
 		}
 	}
 
-	public boolean isDouble(String str) {
-        try {
-            Double.parseDouble(str);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
-    }
-	
 	/**
 	 * Process a single cell.
 	 * 
@@ -281,19 +244,65 @@ public class ExcelParser extends Parser {
 	 * @return the right formatted cell
 	 */
 	public String processCellXLSX(Cell curCell, int c) {
-		System.out.println(columns.get(c).getColumnType());
 		if (columns.get(c).getColumnType().equals("Int")) {
-			if (isDouble(curCell.toString())) {
-				return curCell.toString();
-			} else {
-				return "-1";
-			}
+			return formatInt(curCell);
 		} else if (columns.get(c).getColumnType().equals("DATE")
 				&& !curCell.toString().equals("")) {
 			return new SimpleDateFormat(columns.get(c).getDateType())
 					.format(curCell.getDateCellValue());
 		} else {
 			return curCell.toString();
+		}
+	}
+
+	/**
+	 * Format int for database.
+	 * 
+	 * @param curCell
+	 *            current cell
+	 * @return if not a double then -1 else the cell
+	 */
+	public String formatInt(Cell curCell) {
+		if (isDouble(curCell.toString())) {
+			return curCell.toString();
+		} else {
+			return "-1";
+		}
+	}
+
+	/**
+	 * Format a date cell for the database.
+	 * 
+	 * @param curCell
+	 *            the current cell
+	 * @param c
+	 *            the current column
+	 * @return the right formatted string
+	 */
+	public String formatXLSDate(Cell curCell, int c) {
+		Date date = new Date();
+		try {
+			date = new SimpleDateFormat(columns.get(c).getDateType())
+					.parse(curCell.toString());
+		} catch (ParseException e) {
+			return "";
+		}
+		return new SimpleDateFormat(columns.get(c).getDateType()).format(date);
+	}
+
+	/**
+	 * Check if a string is a double.
+	 * 
+	 * @param str
+	 *            the string to be checked
+	 * @return true if is double else false
+	 */
+	public boolean isDouble(String str) {
+		try {
+			Double.parseDouble(str);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
 		}
 	}
 
@@ -309,6 +318,23 @@ public class ExcelParser extends Parser {
 	}
 
 	/**
+	 * Check if a row is empty.
+	 * 
+	 * @param row
+	 *            the row
+	 * @return true if all columns are type blanc
+	 */
+	public static boolean isRowEmpty(Row row) {
+		for (int c = row.getFirstCellNum(); c < row.getLastCellNum(); c++) {
+			Cell cell = row.getCell(c);
+			if (cell != null && cell.getCellType() != Cell.CELL_TYPE_BLANK) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	/**
 	 * Insert a row to the db.
 	 * 
 	 * @param cells
@@ -318,16 +344,20 @@ public class ExcelParser extends Parser {
 	 */
 	public void insertToDb(String[] cells) throws IOException {
 		Db data = SingletonDb.getDb();
-		printCells(cells);
 		try {
 			data.insert(docName, cells, columns);
 		} catch (SQLException e) {
-			System.out.println("ERROR");
 			throw new IOException(
 					"Excel data could not be inserted into the database");
 		}
 	}
 
+	/**
+	 * Test function to print the parsed line.
+	 * 
+	 * @param cells
+	 *            the splitted line
+	 */
 	public void printCells(String[] cells) {
 		String res = "";
 		for (int i = 0; i < cells.length; i++) {
