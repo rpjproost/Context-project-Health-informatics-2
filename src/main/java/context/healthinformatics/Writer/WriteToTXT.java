@@ -23,13 +23,10 @@ public class WriteToTXT {
 	 *            the filename of the txtfile
 	 * @param path
 	 *            the path where the txt file is put
-	 * @param rs
-	 *            the resultset of the data
 	 */
-	public WriteToTXT(String fileName, String path, ResultSet rs) {
+	public WriteToTXT(String fileName, String path) {
 		this.fileName = fileName;
 		this.path = path;
-		this.rs = rs;
 	}
 
 	/**
@@ -60,6 +57,7 @@ public class WriteToTXT {
 
 	/**
 	 * Write to file.
+	 * @param rs 
 	 * 
 	 * @throws SQLException
 	 *             the sql exception of resultset
@@ -68,12 +66,12 @@ public class WriteToTXT {
 	 * @throws UnsupportedEncodingException
 	 *             unsupportedencodingexception
 	 */
-	public void writeToFile() throws SQLException, FileNotFoundException,
+	public void writeToFile(ResultSet rs) throws SQLException, FileNotFoundException,
 			UnsupportedEncodingException {
 		PrintWriter writer = getPrintWriter();
-
+		this.rs = rs;
 		writer.println("DATA LIST LIST");
-		ResultSetMetaData rsmd = rs.getMetaData();
+		ResultSetMetaData rsmd = this.rs.getMetaData();
 		writer.println("/ " + processColumnNames(rsmd, rsmd.getColumnCount()).toString());
 
 		writer.println("BEGIN DATA.");
