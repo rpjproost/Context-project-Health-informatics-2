@@ -186,10 +186,24 @@ public class ExcelParser extends Parser {
 	 */
 	public void processXLSXSheet(XSSFSheet ws) throws IOException {
 		int rowNum = ws.getLastRowNum() + 1;
+		System.out.println("Numrows: " +rowNum);
+		
 		for (int i = startLine; i < rowNum; i++) {
+			System.out.println(isRowEmpty(ws.getRow(i)));
+			if(!isRowEmpty(ws.getRow(i))){
 			processXLSXRow(ws.getRow(i));
+			}
 
 		}
+	}
+	
+	public static boolean isRowEmpty(Row row) {
+	    for (int c = row.getFirstCellNum(); c < row.getLastCellNum(); c++) {
+	        Cell cell = row.getCell(c);
+	        if (cell != null && cell.getCellType() != Cell.CELL_TYPE_BLANK)
+	            return false;
+	    }
+	    return true;
 	}
 
 	/**
