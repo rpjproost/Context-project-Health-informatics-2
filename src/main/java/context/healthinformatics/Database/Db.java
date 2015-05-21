@@ -294,7 +294,6 @@ public class Db {
 			rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				res = rs.getString(variable);
-				System.out.println(res);
 				// hier moet nog iets beters gereturned worden.
 				// This method is only for testing purposes now.
 			}
