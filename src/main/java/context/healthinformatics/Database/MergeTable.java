@@ -45,7 +45,6 @@ public class MergeTable {
 		StringBuilder sql = new StringBuilder();
 		sql.append("CREATE VIEW workspace AS SELECT * FROM result ORDER BY ");
 		sql.append("date");
-		System.out.println(sql.toString());
 		data.executeUpdate(sql.toString());
 	}
 	
@@ -108,7 +107,6 @@ public class MergeTable {
 		if (clause != null && clause.length() > 0) {
 			sql.append(" WHERE ").append(clause);
 		}
-		System.out.println(sql.toString());
 		data.executeUpdate(sql.toString());
 	}
 	
