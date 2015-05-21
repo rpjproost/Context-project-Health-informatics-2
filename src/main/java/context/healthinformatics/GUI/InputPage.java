@@ -75,7 +75,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	public static final int TREEPANEHEIGHT = 300;
 	public static final int SECTION3HEIGHT = 400;
 	public static final int HELPBUTTONHEIGHT = 100;
-	public static final int HELPBUTTONWIDTH = 200;
+	public static final int HELPBUTTONWIDTH = 300;
 	public static final String COLOR = "#81DAF5";
 	
 	/**
@@ -213,7 +213,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	public JPanel makeSection4() {
 		JPanel section4 = createSection(SECTION3HEIGHT);
 		
-		helpButton = createButton("HELP", HELPBUTTONHEIGHT, HELPBUTTONWIDTH);
+		helpButton = createButton("HELP", HELPBUTTONWIDTH, HELPBUTTONHEIGHT);
 		helpButton.addActionListener(new ActionHandler());
 		c = setGrids(0, 0);
 		c.weightx = 1;
@@ -221,9 +221,9 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		c.anchor = GridBagConstraints.WEST;
 		section4.add(helpButton, c);
 		
-		analyseButton = createButton("ANALYSE", HELPBUTTONHEIGHT, HELPBUTTONWIDTH);
+		analyseButton = createButton("ANALYSE", HELPBUTTONWIDTH, HELPBUTTONHEIGHT);
 		analyseButton.addActionListener(new ActionHandler());
-		c = setGrids(0, 1);
+		c = setGrids(0, 0);
 		c.weightx = 1;
 		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS, BUTTONINSETS);
 		c.anchor = GridBagConstraints.EAST;
