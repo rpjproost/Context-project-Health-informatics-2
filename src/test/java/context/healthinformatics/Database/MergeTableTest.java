@@ -220,6 +220,10 @@ public class MergeTableTest {
 		for (Chunk c : chunks) {
 			assertTrue(c.getLine() > 0);
 		}
+		test.dropView("workspace");
+		data.dropTable("result");
+		data.dropTable("HospitalRecords");
+		data.dropTable("StatSensor");
 	}
 
 
