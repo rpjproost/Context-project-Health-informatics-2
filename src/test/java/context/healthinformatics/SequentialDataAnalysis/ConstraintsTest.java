@@ -106,7 +106,8 @@ public class ConstraintsTest {
 		xmlp = new XMLParser(path + "constraintsxml.xml");
 		xmlp.parse();
 		cs = new Constraints(cList2, "value");
-		cs.constraint("141", "<", "stat");		
+		ArrayList<Chunk> list = cs.constraint("140", "=", "stat");	
+		System.out.println(list);
 		data.dropTable("stat");
 	}
 
