@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -27,6 +28,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
+import context.healthinformatics.Database.MergeTable;
 import context.healthinformatics.Database.SingletonDb;
 import context.healthinformatics.Parser.XMLParser;
 
@@ -467,6 +469,14 @@ public class InputPage extends InterfaceHelper implements PanelState,
 				e1.printStackTrace(); //TODO exception handling
 			}
 		}
+		MergeTable mt = new MergeTable();
+		try {
+			String[] clause = new String[1];
+			clause[0] = "Hospital.admire = 2";
+			mt.merge(clause);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} //TODO add clause
 	}
 
 	/**
