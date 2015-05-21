@@ -1,24 +1,30 @@
 package context.healthinformatics.Analyse;
 
-import java.util.HashMap;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
-import context.healthinformatics.Parser.Column;
+import context.healthinformatics.Database.MergeTable;
+import context.healthinformatics.SequentialDataAnalysis.Chunk;
+import context.healthinformatics.SequentialDataAnalysis.Constraints;
 
 /**
  * class handeling the interpreting of the user input.
  */
+//TODO needs to be cleaned!
 public class Interpreter {
-	/**
-	 * map with table names linked to collumnArrays.
-	 */
-	private HashMap<String, ArrayList<Column>> tables;
+	
+	private ArrayList<Chunk> chunks;
 	
 	/**
 	 * constructor for the Interpreter.
 	 */
 	protected Interpreter() {
-		tables = new HashMap<String, ArrayList<Column>>();
+		MergeTable mt = new MergeTable();
+		try {
+			mt.merge(" , ".split(","));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} //TODO add clause
 	}
 	
 	/**
@@ -26,22 +32,12 @@ public class Interpreter {
 	 * @param code code to interpret.
 	 */
 	public void interpret(String code) {
-		//TODO auto-generated method stub.
+		String[] methods = code.split(";");
+		for (int i = 0; i < methods.length; i++) {
+			if (methods[i].contains("filter")) {
+				Constraints c = new Constraints(chunks);
+			}
+		}
 	}
 
-	/**
-	 * getter for the hashmap containing all the tables.
-	 * @return al the hahsmap with tables.
-	 */
-	public HashMap<String, ArrayList<Column>> getTables() {
-		return tables;
-	}
-
-	/**
-	 * setter for the hashmap with tables.
-	 * @param tables hashmap to set.
-	 */
-	public void setTables(HashMap<String, ArrayList<Column>> tables) {
-		this.tables = tables;
-	}
 }
