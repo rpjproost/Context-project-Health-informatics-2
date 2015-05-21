@@ -166,15 +166,12 @@ public class TXTParser extends Parser {
 		skipFirxtXLines();
 		while (sc.hasNextLine()) {
 			String line = sc.nextLine();
-			System.out.println("Line: " + line);
 			if (canSplit(line)) {
 				String[] splittedLine = splitLine(line);
-				printCells(splittedLine);
 				Db data = SingletonDb.getDb();
 				try {
 					data.insert(docName, splittedLine, columns);
 				} catch (SQLException e) {
-					System.out.println("ERROR");
 					throw new FileNotFoundException(
 							"The data of the text file could not be insterted into the database!");
 
@@ -206,18 +203,29 @@ public class TXTParser extends Parser {
 	public String[] splitLine(String line) {
 		String[] res = new String[columns.size()];
 		String[] strings = line.split(delimiter);
-
 		for (int i = 0; i < columns.size(); i++) {
-			res[i] = strings[columns.get(i).getColumnNumber() - 1].replaceAll("\\s","");
+			// if an int is surrounded by whitespace remove it.
+			if (columns.get(i).getColumnType().equals("INT")) {
+				res[i] = strings[columns.get(i).getColumnNumber() - 1]
+						.replaceAll("\\s", "");
+			} else {
+				res[i] = strings[columns.get(i).getColumnNumber() - 1];
+			}
 		}
 		return res;
 
 	}
-	
-	public void printCells(String[] cells) {
+
+	/**
+	 * Test function for txt parser to print splitted line.
+	 * 
+	 * @param lines
+	 *            the splitted line
+	 */
+	public void printCells(String[] lines) {
 		String res = "";
-		for (int i = 0; i < cells.length; i++) {
-			res += "|" + cells[i] + "|";
+		for (int i = 0; i < lines.length; i++) {
+			res += "|" + lines[i] + "|";
 		}
 		System.out.println(res);
 	}
