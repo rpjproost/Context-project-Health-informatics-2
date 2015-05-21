@@ -27,9 +27,7 @@ public class ExcelParserTest {
 	public void before() {
 		path = "src/test/data/excelparsertestfiles/";
 		cols = new ArrayList<Column>();
-		cols.add(new Column(1, "value", "Integer"));
-		cols.add(new Column(2, "date", "String"));
-		cols.add(new Column(THREE, "time", "String"));
+		
 	}
 
 	/**
@@ -40,6 +38,11 @@ public class ExcelParserTest {
 	 */
 	@Test
 	public void testCorrectXLSX() throws IOException {
+		Column date = new Column(THREE, "date", "Date");
+		date.setDateType("dd/MM/yyyy");
+		cols.add(date);
+		cols.add(new Column(1, "value", "Integer"));
+		cols.add(new Column(FOUR, "time", "String"));
 		ExcelParser excelp = new ExcelParser(path + "test.xlsx", 1, cols, 1,
 				"docname");
 		excelp.parse();
@@ -53,6 +56,11 @@ public class ExcelParserTest {
 	 */
 	@Test
 	public void testCorrectXLS() throws IOException {
+		Column date = new Column(1, "date", "Date");
+		date.setDateType("dd/MM/yyyy");
+		cols.add(date);
+		cols.add(new Column(2, "value", "Integer"));
+		cols.add(new Column(THREE, "time", "String"));
 		ExcelParser excelp = new ExcelParser(path + "test.xls", FOUR, cols, 1,
 				"docname");
 		excelp.parse();

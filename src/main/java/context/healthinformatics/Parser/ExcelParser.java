@@ -4,8 +4,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -164,7 +166,7 @@ public class ExcelParser extends Parser {
 		String[] cells = new String[columns.size()];
 		if (canSplit(numcells)) {
 			for (int c = 0; c < columns.size(); c++) {
-				cells[c] = processCell(
+				cells[c] = processCellXLS(
 						row.getCell(columns.get(c).getColumnNumber() - 1), c);
 			}
 			insertToDb(cells);
@@ -196,10 +198,37 @@ public class ExcelParser extends Parser {
 		String[] cells = new String[columns.size()];
 		if (canSplit(numcells)) {
 			for (int c = 0; c < columns.size(); c++) {
-				cells[c] = processCell(
+				cells[c] = processCellXLSX(
 						row.getCell(columns.get(c).getColumnNumber() - 1), c);
 			}
+
 			insertToDb(cells);
+		}
+	}
+
+	/**
+	 * Process a single xls cell.
+	 * 
+	 * @param curCell
+	 *            the current cell to be processed
+	 * @param c
+	 *            the integer of the current column
+	 * @return the right formatted cell
+	 */
+	public String processCellXLS(Cell curCell, int c) {
+		if (columns.get(c).getColumnType().equals("DATE")
+				&& !curCell.toString().equals("")) {
+			Date date = new Date();
+			try {
+				date = new SimpleDateFormat(columns.get(c).getDateType())
+						.parse(curCell.toString());
+			} catch (ParseException e) {
+				return "";
+			}
+			return new SimpleDateFormat(columns.get(c).getDateType())
+					.format(date);
+		} else {
+			return curCell.toString();
 		}
 	}
 
@@ -212,11 +241,11 @@ public class ExcelParser extends Parser {
 	 *            the integer of the current column
 	 * @return the right formatted cell
 	 */
-	public String processCell(Cell curCell, int c) {
-		if (columns.get(c).getColumnType().equals("date")
+	public String processCellXLSX(Cell curCell, int c) {
+		if (columns.get(c).getColumnType().equals("DATE")
 				&& !curCell.toString().equals("")) {
-			return new SimpleDateFormat(columns.get(c).getDateType()).format(curCell
-					.getDateCellValue());
+			return new SimpleDateFormat(columns.get(c).getDateType())
+					.format(curCell.getDateCellValue());
 		} else {
 			return curCell.toString();
 		}
