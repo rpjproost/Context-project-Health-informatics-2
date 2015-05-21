@@ -2,4 +2,4 @@
 .classpath
 /derby.log
 
-.classpath/src/test/data/writerfiles/test.txt
+.classpath/src/test/data/writerfiles/
