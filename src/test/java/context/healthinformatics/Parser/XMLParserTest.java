@@ -170,6 +170,8 @@ public class XMLParserTest {
 		assertEquals(2, parsers.size());
 		assertEquals("src/test/data/xml/inputTXT.txt", parsers.get(0).getFileName());
 		assertEquals("src/test/data/xml/inputExcel.xlsx", parsers.get(1).getFileName());
+		ExcelParser exlp = (ExcelParser) parsers.get(1);
+		assertEquals(1, exlp.getStartLine());
 		try {
 		data.dropTable("StatSensor");
 		data.dropTable("HospitalRecords"); }

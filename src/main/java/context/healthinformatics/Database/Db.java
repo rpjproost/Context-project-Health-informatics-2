@@ -294,7 +294,6 @@ public class Db {
 			rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				res = rs.getString(variable);
-				System.out.println(res);
 				// hier moet nog iets beters gereturned worden.
 				// This method is only for testing purposes now.
 			}
@@ -321,6 +320,7 @@ public class Db {
 			stmt = conn.createStatement();
 			String sql = "DROP TABLE " + tableName;
 			stmt.executeUpdate(sql);
+			tables.remove(tableName);
 			res = true;
 		} catch (SQLException e) {
 			throw new SQLException(e);

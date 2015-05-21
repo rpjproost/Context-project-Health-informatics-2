@@ -29,6 +29,20 @@ public class ParserToDBTest {
 	 * object calling the database.
 	 */
 	private Db data = SingletonDb.getDb();
+	
+	/**
+	 * method preparing for environment for tests.
+	 */
+	@org.junit.Before
+	public void before() {
+		try {
+			for (String key : data.getTables().keySet()) {
+				data.dropTable(key);
+			}
+		} catch (SQLException e) {
+			System.out.println("Something went wrong preparing db for tests.");
+		}
+	}
 
 	/**
 	 * Test if the xml parser correctly insert the text file with text parser
