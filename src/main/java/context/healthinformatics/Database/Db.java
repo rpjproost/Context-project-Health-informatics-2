@@ -187,25 +187,9 @@ public class Db {
 			ArrayList<Column> columns) throws SQLException {
 		boolean res = false;
 		try {
-			StringBuffer sql = new StringBuffer();
+			StringBuilder sql = new StringBuilder();
 			sql.append("INSERT INTO " + tableName + "(");
-			for (int i = 0; i < columns.size(); i++) {
-				if (i == values.length - 1) {
-					sql.append(columns.get(i).getColumnName());
-					sql.append(")");
-				} else {
-					sql.append(columns.get(i).getColumnName());
-					sql.append(",");
-				}
-			}
-			sql.append(" VALUES (");
-			for (int i = 0; i < values.length; i++) {
-				if (i == values.length - 1) {
-					sql.append("?)");
-				} else {
-					sql.append("?,");
-				}
-			}
+			appendQueryInsert(sql, columns, values);
 			PreparedStatement stm = appendValuesInsert(sql.toString(), values,
 					columns);
 			stm.execute();
@@ -214,6 +198,34 @@ public class Db {
 			throw new SQLException(e);
 		}
 		return res;
+	}
+	
+	/**
+	 * Appends query for insert.
+	 * @param sql query to append.
+	 * @param values
+	 *            values to be inserted.
+	 * @param columns
+	 *            columns where values be inserted.
+	 */
+	public void appendQueryInsert(StringBuilder sql, ArrayList<Column> columns, String[] values) {
+		for (int i = 0; i < columns.size(); i++) {
+			if (i == values.length - 1) {
+				sql.append(columns.get(i).getColumnName());
+				sql.append(")");
+			} else {
+				sql.append(columns.get(i).getColumnName());
+				sql.append(",");
+			}
+		}
+		sql.append(" VALUES (");
+		for (int i = 0; i < values.length; i++) {
+			if (i == values.length - 1) {
+				sql.append("?)");
+			} else {
+				sql.append("?,");
+			}
+		}
 	}
 
 	/**

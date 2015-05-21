@@ -38,7 +38,7 @@ public class CodePage extends InterfaceHelper implements PanelState, Serializabl
 		panel.setLayout(new GridBagLayout());
 		code = createTextField(mf.getScreenWidth() / 2, mf.getStatePanelSize() - FIELDCORRECTION);
 		panel.add(code, setGrids(0, 0));
-		button = createButton("Analyze", ANALYZEBUTTONWIDTH, ANALYZEBUTTONHEIGHT);
+		button = createButton("Analyse", ANALYZEBUTTONWIDTH, ANALYZEBUTTONHEIGHT);
 		button.addActionListener(new ActionHandler());
 		panel.add(button, setGrids(1, 1));
 		return panel;
