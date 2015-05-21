@@ -12,7 +12,7 @@ import org.junit.Test;
  */
 public class ChunkTest {
 	
-	private Chunk chunk;
+	private Chunk chunk = new Chunk();
 	
 	/**
 	 * Test creation of chunk.
