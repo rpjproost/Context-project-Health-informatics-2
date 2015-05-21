@@ -166,6 +166,7 @@ public class TXTParser extends Parser {
 		skipFirxtXLines();
 		while (sc.hasNextLine()) {
 			String line = sc.nextLine();
+			System.out.println("Line: " + line);
 			if (canSplit(line)) {
 				String[] splittedLine = splitLine(line);
 				printCells(splittedLine);
@@ -173,6 +174,7 @@ public class TXTParser extends Parser {
 				try {
 					data.insert(docName, splittedLine, columns);
 				} catch (SQLException e) {
+					System.out.println("ERROR");
 					throw new FileNotFoundException(
 							"The data of the text file could not be insterted into the database!");
 

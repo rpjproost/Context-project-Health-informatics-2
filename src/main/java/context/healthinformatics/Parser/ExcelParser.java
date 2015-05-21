@@ -240,6 +240,7 @@ public class ExcelParser extends Parser {
 			} catch (ParseException e) {
 				return "";
 			}
+			System.out.println("DATE: " + date);
 			return new SimpleDateFormat(columns.get(c).getDateType())
 					.format(date);
 		} else {
