@@ -1,5 +1,6 @@
 package context.healthinformatics.Database;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -148,12 +149,15 @@ public class MergeTable {
 	/**
 	 * returns the workspace in chunks.
 	 * @return an arrayList of chunks.
+	 * @throws SQLException iff workspace does not exist.
 	 */
-	public ArrayList<Chunk> getChunks() {
+	public ArrayList<Chunk> getChunks() throws SQLException {
 		ArrayList<Chunk> chunks = new ArrayList<Chunk>();
-		int amountOfChunks = 0; //TODO data.getNumRowsView(workspace);
-		for (int i = 0; i <= amountOfChunks; i++) {
+		ResultSet rs = data.selectResultSet("workspace", "resultid");
+		while (rs.next()) {
 			Chunk c = new Chunk();
+			int line = rs.getInt("resultid");
+			c.setLine(line);
 			chunks.add(c);
 		}
 		return chunks;

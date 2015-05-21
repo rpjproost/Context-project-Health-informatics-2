@@ -8,12 +8,14 @@ import java.io.IOException;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
 
 import org.junit.Test;
 
 import context.healthinformatics.Parser.XMLParser;
+import context.healthinformatics.SequentialDataAnalysis.Chunk;
 
 /**
  * 
@@ -146,10 +148,7 @@ public class MergeTableTest {
 			}
 			else {
 				assertNotNull(rs.getDate("date"));
-				System.out.println("this works " + counter);
-				System.out.println(date);
 				Date temp = rs.getDate("date");
-				System.out.println("after " + temp);
 				if (date.equals(temp)) {
 					assertEquals(date, temp);
 				}
@@ -160,7 +159,8 @@ public class MergeTableTest {
 				counter++;
 			}
 		}
-		System.out.println(counter);
+		final int res = 10;
+		assertEquals(counter, res);
 		rs.close();
 	}
 	
@@ -201,6 +201,25 @@ public class MergeTableTest {
 		tables.add("test2");
 		test.appendTables(tables, sql);
 		assertEquals(sql.toString(), "tables = test1, test2");
+	}
+	
+	/**
+	 * Test for creating chunks from ordered view.
+	 * @throws IOException if files could not be read.
+	 * @throws SQLException if tables could not be created.
+	 */
+	@Test
+	public void testChunkArray() throws IOException, SQLException {
+		xmlp = new XMLParser(path + "twoDocs.xml");
+		xmlp.parse();
+		String[] clause = new String[1];
+		clause[0] = "StatSensor.value = 209";
+		MergeTable test = new MergeTable();
+		test.merge(clause);
+		ArrayList<Chunk> chunks = test.getChunks();
+		for (Chunk c : chunks) {
+			assertTrue(c.getLine() > 0);
+		}
 	}
 
 
