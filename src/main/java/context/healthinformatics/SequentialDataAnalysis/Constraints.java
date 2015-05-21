@@ -121,14 +121,11 @@ public class Constraints {
 	 *            the current chunk
 	 */
 	public void removeChunks(ArrayList<Integer> arrList, ArrayList<Chunk> chunk) {
-		System.out.println("size : " + chunk.size());
 		Chunk curChunk;
 		for (int i = 0; i < chunk.size(); i++) {
 			curChunk = chunk.get(i);
-			System.out.println(curChunk.getLine() + " int: " + i);
 			if (!arrList.contains(curChunk.getLine())
 					&& !curChunk.hasChild()) {
-				System.out.println("REMOVE");
 				chunk.remove(i);
 				removeChunks(arrList, chunk);
 			} else if (curChunk.hasChild()) {
