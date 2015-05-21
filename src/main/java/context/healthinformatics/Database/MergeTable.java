@@ -3,6 +3,7 @@ package context.healthinformatics.Database;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -51,11 +52,16 @@ public class MergeTable {
 		allTables.addAll(tables.keySet());
 		
 		for (String key : tables.keySet()) {
-			columns.addAll(tables.get(key));
+			ArrayList<Column> c = new ArrayList<Column>();
+			c = tables.get(key);
+			for (int i = 0; i < c.size(); i++) {
+				if (!(columns.contains(c.get(i)))) {
+					columns.add(c.get(i));
+				}
+			}
 		}
 		
 		data.createTable("result", columns);
-		
 		insertTables(allTables, clause);
 	}
 	

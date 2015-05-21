@@ -1,16 +1,20 @@
 package context.healthinformatics.Database;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.junit.After;
 import org.junit.Test;
 
 import context.healthinformatics.Parser.XMLParser;
 
+/**
+ * 
+ * Tests for mergeTable class.
+ *
+ */
 public class MergeTableTest {
 
 	/**
@@ -21,7 +25,7 @@ public class MergeTableTest {
 	/**
 	 * path leading to the place of all test files.
 	 */
-	private String path = "src/test/data/xml/";
+	private String path = "src/test/data/mergeTableFiles/";
 
 	/**
 	 * object calling the database.
