@@ -126,7 +126,6 @@ public class ExcelParser extends Parser {
 			try {
 				wb = WorkbookFactory.create(fis);
 			} catch (InvalidFormatException e) {
-				// TODO Auto-generated catch block
 				throw new IOException("xls file could not be read");
 			}
 			// Process sheet sheet
@@ -147,8 +146,10 @@ public class ExcelParser extends Parser {
 	 * 
 	 * @param sheet2
 	 *            the sheet processed.
+	 * @throws IOException
+	 *             the exception for sql
 	 */
-	public void processXLSSheet(Sheet sheet2) {
+	public void processXLSSheet(Sheet sheet2) throws IOException {
 		int rowNum = sheet2.getLastRowNum() + 1;
 		for (int i = startLine; i < rowNum; i++) {
 			processXLSRow(sheet2.getRow(i));
@@ -160,8 +161,10 @@ public class ExcelParser extends Parser {
 	 * 
 	 * @param row
 	 *            the row processed.
+	 * @throws IOException
+	 *             the exception for sql
 	 */
-	public void processXLSRow(Row row) {
+	public void processXLSRow(Row row) throws IOException {
 		int numcells = row.getLastCellNum();
 		String[] cells = new String[columns.size()];
 		if (canSplit(numcells)) {
@@ -178,8 +181,10 @@ public class ExcelParser extends Parser {
 	 * 
 	 * @param ws
 	 *            the sheet processed.
+	 * @throws IOException
+	 *             the exception for sql
 	 */
-	public void processXLSXSheet(XSSFSheet ws) {
+	public void processXLSXSheet(XSSFSheet ws) throws IOException {
 		int rowNum = ws.getLastRowNum() + 1;
 		for (int i = startLine; i < rowNum; i++) {
 			processXLSXRow(ws.getRow(i));
@@ -192,8 +197,10 @@ public class ExcelParser extends Parser {
 	 * 
 	 * @param row
 	 *            the row processed.
+	 * @throws IOException
+	 *             the exception for sql
 	 */
-	public void processXLSXRow(XSSFRow row) {
+	public void processXLSXRow(XSSFRow row) throws IOException {
 		int numcells = row.getLastCellNum();
 		String[] cells = new String[columns.size()];
 		if (canSplit(numcells)) {
@@ -201,7 +208,6 @@ public class ExcelParser extends Parser {
 				cells[c] = processCellXLSX(
 						row.getCell(columns.get(c).getColumnNumber() - 1), c);
 			}
-
 			insertToDb(cells);
 		}
 	}
@@ -267,13 +273,16 @@ public class ExcelParser extends Parser {
 	 * 
 	 * @param cells
 	 *            the string array with the cell values
+	 * @throws IOException
+	 *             the exception if data can not be inserted in database
 	 */
-	public void insertToDb(String[] cells) {
+	public void insertToDb(String[] cells) throws IOException {
 		Db data = SingletonDb.getDb();
 		try {
 			data.insert(docName, cells, columns);
 		} catch (SQLException e) {
-
+			throw new IOException(
+					"Excel data could not be inserted into the database");
 		}
 	}
 }
