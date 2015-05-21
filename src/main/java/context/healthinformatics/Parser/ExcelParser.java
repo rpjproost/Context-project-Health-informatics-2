@@ -126,7 +126,6 @@ public class ExcelParser extends Parser {
 			try {
 				wb = WorkbookFactory.create(fis);
 			} catch (InvalidFormatException e) {
-				// TODO Auto-generated catch block
 				throw new IOException("xls file could not be read");
 			}
 			// Process sheet sheet
@@ -147,7 +146,8 @@ public class ExcelParser extends Parser {
 	 * 
 	 * @param sheet2
 	 *            the sheet processed.
-	 * @throws IOException the exception for sql
+	 * @throws IOException
+	 *             the exception for sql
 	 */
 	public void processXLSSheet(Sheet sheet2) throws IOException {
 		int rowNum = sheet2.getLastRowNum() + 1;
@@ -161,7 +161,8 @@ public class ExcelParser extends Parser {
 	 * 
 	 * @param row
 	 *            the row processed.
-	 * @throws IOException the exception for sql
+	 * @throws IOException
+	 *             the exception for sql
 	 */
 	public void processXLSRow(Row row) throws IOException {
 		int numcells = row.getLastCellNum();
@@ -181,6 +182,7 @@ public class ExcelParser extends Parser {
 	 * @param ws
 	 *            the sheet processed.
 	 * @throws IOException
+	 *             the exception for sql
 	 */
 	public void processXLSXSheet(XSSFSheet ws) throws IOException {
 		int rowNum = ws.getLastRowNum() + 1;
@@ -195,7 +197,8 @@ public class ExcelParser extends Parser {
 	 * 
 	 * @param row
 	 *            the row processed.
-	 * @throws IOException the exception for sql
+	 * @throws IOException
+	 *             the exception for sql
 	 */
 	public void processXLSXRow(XSSFRow row) throws IOException {
 		int numcells = row.getLastCellNum();
