@@ -2,6 +2,7 @@ package context.healthinformatics.SequentialDataAnalysis;
 
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.junit.Before;
@@ -53,9 +54,30 @@ public class CommentsTest {
 	 */
 	@Test
 	public void testSetComment() {
-		c.setComment(THREE, "testComment1");
+		try {
+			c.setComment(THREE, "testComment1");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		assertEquals(c3.getComment(), "testComment1");
-		c.setComment(2, "testComment2");
+		try {
+			c.setComment(2, "testComment2");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		assertEquals(c2.getComment(), "testComment2");
+	}
+
+	/**
+	 * Try to add a comment to a non existent line.
+	 * 
+	 * @throws Exception
+	 *             throws exception that line is not found
+	 */
+	@Test(expected = Exception.class)
+	public void testNonExistentLine() throws Exception {
+		c.setComment(0, "comment");
 	}
 }

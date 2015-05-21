@@ -122,7 +122,6 @@ public class Constraints {
 	 * @return the name of the column
 	 */
 	public String getColumnName() {
-		// TODO
 		return columnName;
 	}
 
@@ -168,7 +167,7 @@ public class Constraints {
 		}
 		System.out.println(constraint + rowClause);
 		// return remaining chunks
-
+		//TODO
 		// SELECT rowNums FROM stat WHERE columnName (statement) AND row = i AND
 		return null;
 	}
