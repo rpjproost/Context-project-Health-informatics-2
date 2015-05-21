@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Set;
+import java.util.TreeSet;
+
 import org.junit.Test;
 
 import context.healthinformatics.Parser.XMLParser;
@@ -159,6 +162,45 @@ public class MergeTableTest {
 		}
 		System.out.println(counter);
 		rs.close();
+	}
+	
+	/**
+	 * Tests the full merge method.
+	 * @throws IOException if files could not be read.
+	 * @throws SQLException if tables could not be created.
+	 */
+	@Test
+	public void mergeTest() throws IOException, SQLException {
+		xmlp = new XMLParser(path + "twoDocs.xml");
+		xmlp.parse();
+		String[] clause = new String[1];
+		clause[0] = "StatSensor.value = 209";
+		MergeTable test = new MergeTable();
+		test.merge(clause);
+		
+		ResultSet rs = data.selectResultSet("workspace", "date");
+		
+		orderedByDate(rs);
+		
+		test.dropView("workspace");
+		data.dropTable("result");
+		data.dropTable("HospitalRecords");
+		data.dropTable("StatSensor");
+	}
+	
+	/**
+	 * Tests for appendTables.
+	 */
+	@Test 
+	public void appendTest() {
+		MergeTable test = new MergeTable();
+		Set<String> tables = new TreeSet<String>();
+		StringBuilder sql = new StringBuilder();
+		sql.append("tables = ");
+		tables.add("test1");
+		tables.add("test2");
+		test.appendTables(tables, sql);
+		assertEquals(sql.toString(), "tables = test1, test2");
 	}
 
 
