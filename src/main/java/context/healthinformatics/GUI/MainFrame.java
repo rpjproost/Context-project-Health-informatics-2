@@ -91,13 +91,6 @@ public class MainFrame extends InterfaceHelper {
 	public JPanel getOutputTab() {
 		return outputTab;
 	}
-	
-	/**
-	 * @return Variable panel as JPanel.
-	 */
-	public JPanel getVarPanel() {
-		return varPanel;
-	}
 
 	/**
 	 * Method which creates the frame of the GUI and creates the tabs.
