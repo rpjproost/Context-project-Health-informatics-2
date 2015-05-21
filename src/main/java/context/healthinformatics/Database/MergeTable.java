@@ -26,6 +26,16 @@ public class MergeTable {
 	}
 	
 	/**
+	 * 
+	 * @param clause clause the tables merge.
+	 * @throws SQLException if tables are not able to merge.
+	 */
+	public void merge(String[] clause) throws SQLException {
+		mergeTables(clause);
+		mergeTablesView();
+	}
+	
+	/**
 	 * creates the view ordered by date of the workspace.
 	 */
 	public void mergeTablesView() {
