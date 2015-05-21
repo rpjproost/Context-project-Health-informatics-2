@@ -40,19 +40,6 @@ public class MergeTableTest {
 	 */
 	private Db data = SingletonDb.getDb();
 
-	/**
-	 * method preparing for environment for tests.
-	 */
-	@org.junit.Before
-	public void before() {
-		try {
-			for (String key : data.getTables().keySet()) {
-				data.dropTable(key);
-			}
-		} catch (SQLException e) {
-			System.out.println("Something went wrong preparing db for tests.");
-		}
-	}
 
 	/**
 	 * Test for merging two tables with condition.
