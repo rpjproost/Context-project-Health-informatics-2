@@ -1,6 +1,11 @@
 package context.healthinformatics.SequentialDataAnalysis;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+
+import context.healthinformatics.Database.Db;
+import context.healthinformatics.Database.SingletonDb;
 
 /**
  * Class Constraints.
@@ -108,6 +113,28 @@ public class Constraints {
 	}
 
 	/**
+	 * Remove chunks which do not pass the constraint.
+	 * 
+	 * @param arrList
+	 *            the list of lines remaining
+	 * @param chunk
+	 *            the current chunk
+	 */
+	public void removeChunks(ArrayList<Integer> arrList, ArrayList<Chunk> chunk) {
+		Chunk curChunk;
+		for (int i = 0; i < chunk.size(); i++) {
+			curChunk = chunk.get(i);
+			if (!arrList.contains(curChunk.getLine())
+					&& curChunk.getLine() != 0) {
+				System.out.println("TO REMOVE: " + curChunk);
+				chunk.remove(i);
+			} else if (curChunk.hasChild()) {
+				removeChunks(arrList, curChunk.getChunks());
+			}
+		}
+	}
+
+	/**
 	 * Return the chunks the constraint must apply to.
 	 * 
 	 * @return the chunks
@@ -132,17 +159,19 @@ public class Constraints {
 	 *            the chunks
 	 * @param res
 	 *            the resulting sql string for where clause
+	 * @param tableName
+	 *            the name of the table
 	 * @return the sql string for the where clause
 	 */
-	public String getAllChunkLines(ArrayList<Chunk> chunk, String res) {
+	public String getAllChunkLines(ArrayList<Chunk> chunk, String res,
+			String tableName) {
 		for (int i = 0; i < chunk.size(); i++) {
 			Chunk curChunk = chunk.get(i);
-			System.out.println(curChunk.getLine());
 			if (curChunk.getLine() != 0) {
-				res += "AND row = " + curChunk.getLine() + " ";
+				res += "OR " + tableName + "id = " + curChunk.getLine() + " ";
 			}
 			if (curChunk.hasChild()) {
-				res += getAllChunkLines(curChunk.getChunks(), res);
+				res += getAllChunkLines(curChunk.getChunks(), res, tableName);
 			}
 		}
 		return res;
@@ -155,21 +184,48 @@ public class Constraints {
 	 *            the string value
 	 * @param operator
 	 *            the operator to specify the constraint
+	 * @param tableName
+	 *            the name of the table
 	 * @return return the ArrayList with remaining chuncks
+	 * @throws SQLException
+	 *             the sql exception
 	 */
-	public ArrayList<Chunk> constraint(String value, String operator) {
-		String rowClause = getAllChunkLines(chunks, "");
+	public ArrayList<Chunk> constraint(String value, String operator,
+			String tableName) throws SQLException {
+		String rowClause = getAllChunkLines(chunks, "", tableName);
+		rowClause = "(" + rowClause.substring(2, rowClause.length()) + ")";
 		String constraint = columnName + " " + operator + " ";
 		if (isInteger(value)) {
 			constraint += value + " ";
 		} else {
 			constraint += "'" + value + "' ";
 		}
-		System.out.println(constraint + rowClause);
-		// return remaining chunks
-		//TODO
-		// SELECT rowNums FROM stat WHERE columnName (statement) AND row = i AND
-		return null;
+		String whereClause = constraint + " AND " + rowClause;
+		removeChunks(getRemainingIDs(tableName, whereClause), this.chunks);
+		return this.chunks;
+	}
+
+	/**
+	 * Get the id's which pass the constraint from the database.
+	 * 
+	 * @param tableName
+	 *            the name of the table
+	 * @param whereClause
+	 *            the where clause
+	 * @return the id's which pass
+	 * @throws SQLException
+	 *             sql exception
+	 */
+	public ArrayList<Integer> getRemainingIDs(String tableName,
+			String whereClause) throws SQLException {
+		Db data = SingletonDb.getDb();
+		ResultSet rs = data.execQuery(tableName, whereClause);
+		ArrayList<Integer> intArr = new ArrayList<Integer>();
+		while (rs.next()) {
+			intArr.add(rs.getInt("statid"));
+		}
+		rs.close();
+		return intArr;
 	}
 
 	/**

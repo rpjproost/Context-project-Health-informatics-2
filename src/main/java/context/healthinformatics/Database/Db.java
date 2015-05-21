@@ -41,7 +41,7 @@ public class Db {
 	 *             the sql exception
 	 */
 	protected Db(String databaseName, String p) throws NullPointerException,
-	SQLException {
+			SQLException {
 		if (p == null || databaseName == null) {
 			throw new NullPointerException();
 		}
@@ -95,7 +95,8 @@ public class Db {
 	 * @throws SQLException
 	 *             if table could not be created.
 	 */
-	public boolean createTable(String tableName, ArrayList<Column> columns) throws SQLException {
+	public boolean createTable(String tableName, ArrayList<Column> columns)
+			throws SQLException {
 		boolean res = false;
 		try {
 			stmt = conn.createStatement();
@@ -142,8 +143,8 @@ public class Db {
 	/**
 	 * Part of the method CreateTable, creates columns with specified types.
 	 * 
-	 * @param tableName 
-	 * 				tablename.
+	 * @param tableName
+	 *            tablename.
 	 * @param columns
 	 *            column names and types.
 	 * @return string for sql building.
@@ -190,21 +191,23 @@ public class Db {
 			sql.append("INSERT INTO " + tableName + "(");
 			for (int i = 0; i < columns.size(); i++) {
 				if (i == values.length - 1) {
-					sql.append(columns.get(i).getColumnName()); sql.append(")");
+					sql.append(columns.get(i).getColumnName());
+					sql.append(")");
 				} else {
-					sql.append(columns.get(i).getColumnName()); sql.append(",");
+					sql.append(columns.get(i).getColumnName());
+					sql.append(",");
 				}
 			}
 			sql.append(" VALUES (");
 			for (int i = 0; i < values.length; i++) {
 				if (i == values.length - 1) {
 					sql.append("?)");
-				}
-				else {
+				} else {
 					sql.append("?,");
 				}
 			}
-			PreparedStatement stm = appendValuesInsert(sql.toString(), values, columns);
+			PreparedStatement stm = appendValuesInsert(sql.toString(), values,
+					columns);
 			stm.execute();
 			res = true;
 		} catch (SQLException | NullPointerException e) {
@@ -215,11 +218,15 @@ public class Db {
 
 	/**
 	 * 
-	 * @param s sql query to be turned into preparedStatement.
-	 * @param values to be inserted into table.
-	 * @param columns ArrayList of columns, types and dateTypes are used.
+	 * @param s
+	 *            sql query to be turned into preparedStatement.
+	 * @param values
+	 *            to be inserted into table.
+	 * @param columns
+	 *            ArrayList of columns, types and dateTypes are used.
 	 * @return preparedstatement to be executed.
-	 * @throws SQLException 
+	 * @throws SQLException
+	 *             the sql exception
 	 */
 	public PreparedStatement appendValuesInsert(String s, String[] values,
 			ArrayList<Column> columns) throws SQLException {
@@ -228,13 +235,11 @@ public class Db {
 			String type = columns.get(i).getColumnType().toLowerCase();
 			if (type.startsWith("varchar")) {
 				preparedStmt.setString(i + 1, values[i]);
-			}
-			else if (type.equals("date")) {
+			} else if (type.equals("date")) {
 				String dateType = columns.get(i).getDateType();
 				java.sql.Date date = convertDate(values[i], dateType);
 				preparedStmt.setDate(i + 1, date);
-			}
-			else if (type.equals("int")) {
+			} else if (type.equals("int")) {
 				double value = 0;
 				try {
 					value = Double.parseDouble(values[i]);
@@ -242,12 +247,35 @@ public class Db {
 					throw new SQLException(e);
 				}
 				preparedStmt.setDouble(i + 1, value);
-			}
-			else {
+			} else {
 				throw new SQLException("type of insert not recognized.");
 			}
 		}
 		return preparedStmt;
+	}
+
+	/**
+	 * Execture a query on table tablename with whereclause whereclause.
+	 * 
+	 * @param tableName
+	 *            the name of the table
+	 * @param whereClause
+	 *            the where clause
+	 * @return the resultset
+	 * @throws SQLException
+	 *             if something goes wrong
+	 */
+	public ResultSet execQuery(String tableName, String whereClause)
+			throws SQLException {
+		ResultSet rs = null;
+		try {
+			stmt = conn.createStatement();
+			String sql = "SELECT * FROM " + tableName + " WHERE " + whereClause;
+			rs = stmt.executeQuery(sql);
+		} catch (SQLException e) {
+			throw new SQLException("ResultSet not created: Data not found");
+		}
+		return rs;
 	}
 
 	/**
@@ -327,10 +355,11 @@ public class Db {
 		}
 		return res;
 	}
-	
+
 	/**
 	 * 
-	 * @param sql query.
+	 * @param sql
+	 *            query.
 	 * @return true iff sql query is executed.
 	 */
 	public boolean executeUpdate(String sql) {
@@ -380,7 +409,7 @@ public class Db {
 		this.db = temp;
 		return db;
 	}
-	
+
 	/**
 	 * 
 	 * @return tablenames with columns.

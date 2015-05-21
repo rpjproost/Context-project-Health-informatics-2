@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import java.io.IOException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -101,18 +102,14 @@ public class ConstraintsTest {
 	}
 
 	/**
-	 * @throws IOException
-	 *             the io exception of the xml parser
-	 * @throws SQLException
-	 *             the sql exception of db
+	 * @throws Exception 
 	 */
 	@Test
-	public void testValueIntConstraint() throws IOException, SQLException {
+	public void testValueIntConstraint() throws Exception {
 		xmlp = new XMLParser(path + "constraintsxml.xml");
 		xmlp.parse();
 		cs = new Constraints(cList2, "value");
-		cs.constraint("1000", "<");
-		System.out.println(data.select("stat", "value"));
+		cs.constraint("141", "<", "stat");		
 		data.dropTable("stat");
 	}
 
