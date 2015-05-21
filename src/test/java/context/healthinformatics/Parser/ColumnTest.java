@@ -80,14 +80,12 @@ public class ColumnTest {
 	 */
 	@Test
 	public void testEqualsObject() {
-		Column wrongNumber = new Column(-1, "Column", "List");
 		Column noName = new Column(TWELVE, null, "List");
 		Column noType = new Column(TWELVE, "Column", null);
 		Column good = new Column(TWELVE, "Column", "List");
 		String wrongObject = "";
 		
 		assertFalse(col.equals(null));
-		assertFalse(col.equals(wrongNumber));
 		assertFalse(col.equals(noType));
 		assertFalse(col.equals(noName));
 		assertFalse(col.equals(wrongObject));
