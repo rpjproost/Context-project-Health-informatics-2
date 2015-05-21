@@ -35,7 +35,17 @@ public class Interpreter {
 		String[] methods = code.split(";");
 		for (int i = 0; i < methods.length; i++) {
 			if (methods[i].contains("filter")) {
+				String[] split = methods[i].split(" ");
 				Constraints c = new Constraints(chunks);
+				try {
+					ArrayList<Chunk> list = c.constraint(split[5], split[4], split[3]);
+					for (Chunk chunk : list) {
+						System.out.println(chunk);
+					}
+				}
+				catch(Exception e) {
+					System.out.println("TODO catch this"); //TODO catch this exception.
+				}
 			}
 		}
 	}
