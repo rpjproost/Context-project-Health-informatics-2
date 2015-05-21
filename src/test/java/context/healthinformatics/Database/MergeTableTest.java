@@ -213,7 +213,7 @@ public class MergeTableTest {
 		xmlp = new XMLParser(path + "twoDocs.xml");
 		xmlp.parse();
 		String[] clause = new String[1];
-		clause[0] = "StatSensor.value = 209";
+		clause[0] = "HospitalRecords.Groep = 2";
 		MergeTable test = new MergeTable();
 		test.merge(clause);
 		ArrayList<Chunk> chunks = test.getChunks();

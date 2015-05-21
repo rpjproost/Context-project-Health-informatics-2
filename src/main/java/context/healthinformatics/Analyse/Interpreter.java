@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import context.healthinformatics.Database.MergeTable;
+import context.healthinformatics.Database.SingletonDb;
 import context.healthinformatics.SequentialDataAnalysis.Chunk;
 import context.healthinformatics.SequentialDataAnalysis.Constraints;
 
@@ -18,13 +19,15 @@ public class Interpreter {
 	/**
 	 * constructor for the Interpreter.
 	 */
-	protected Interpreter() {
-		MergeTable mt = new MergeTable();
-		try {
-			mt.merge(" , ".split(","));
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} //TODO add clause
+	public Interpreter() {
+//		MergeTable mt = new MergeTable();
+//		try {
+//			String[] clause = new String[1];
+//			clause[0] = "Hospital.admire = 2";
+//			mt.merge(clause);
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		} //TODO add clause
 	}
 	
 	/**
@@ -36,9 +39,13 @@ public class Interpreter {
 		for (int i = 0; i < methods.length; i++) {
 			if (methods[i].contains("filter")) {
 				String[] split = methods[i].split(" ");
-				Constraints c = new Constraints(chunks);
+				Constraints c = new Constraints(chunks, "date");
+				System.out.println("value: " + split[3]);
+				System.out.println("operator: " + split[4]);
+				System.out.println("table: " + split[5]);
+				System.out.println(SingletonDb.getDb().getTables());
 				try {
-					ArrayList<Chunk> list = c.constraint(split[5], split[4], split[3]);
+					ArrayList<Chunk> list = c.constraint(split[3], split[4], split[5]);
 					for (Chunk chunk : list) {
 						System.out.println(chunk);
 					}
