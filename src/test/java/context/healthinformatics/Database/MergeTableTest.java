@@ -16,6 +16,7 @@ import org.junit.Test;
 
 import context.healthinformatics.Parser.XMLParser;
 import context.healthinformatics.SequentialDataAnalysis.Chunk;
+import context.healthinformatics.SequentialDataAnalysis.Constraints;
 
 /**
  * 
@@ -220,6 +221,7 @@ public class MergeTableTest {
 		for (Chunk c : chunks) {
 			assertTrue(c.getLine() > 0);
 		}
+
 		test.dropView("workspace");
 		data.dropTable("result");
 		data.dropTable("HospitalRecords");

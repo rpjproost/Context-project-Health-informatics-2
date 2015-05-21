@@ -20,14 +20,15 @@ public class Interpreter {
 	 * constructor for the Interpreter.
 	 */
 	public Interpreter() {
-//		MergeTable mt = new MergeTable();
-//		try {
-//			String[] clause = new String[1];
-//			clause[0] = "Hospital.admire = 2";
-//			mt.merge(clause);
-//		} catch (SQLException e) {
-//			e.printStackTrace();
-//		} //TODO add clause
+		MergeTable mt = new MergeTable();
+		try {
+			String[] clause = new String[1];
+			clause[0] = "Hospital.admire = 2";
+			mt.merge(clause);
+			chunks = mt.getChunks();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} //TODO add clause
 	}
 	
 	/**
@@ -39,6 +40,7 @@ public class Interpreter {
 		for (int i = 0; i < methods.length; i++) {
 			if (methods[i].contains("filter")) {
 				String[] split = methods[i].split(" ");
+				
 				Constraints c = new Constraints(chunks, "date");
 				System.out.println("value: " + split[3]);
 				System.out.println("operator: " + split[4]);
@@ -51,7 +53,7 @@ public class Interpreter {
 					}
 				}
 				catch(Exception e) {
-					System.out.println("TODO catch this"); //TODO catch this exception.
+					System.out.println(e); //TODO catch this exception.
 				}
 			}
 		}
