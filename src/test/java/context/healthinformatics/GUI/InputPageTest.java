@@ -93,6 +93,9 @@ public class InputPageTest {
 		assertEquals(ip.findFolderProject("5"), 2);
 	}
 	
+	/**
+	 * Testing if the database will be made.
+	 */
 	@Test
 	public void testLoadDatabase() {
 		ip.loadDatabase();
