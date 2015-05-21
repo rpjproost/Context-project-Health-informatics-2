@@ -126,7 +126,6 @@ public class Constraints {
 			curChunk = chunk.get(i);
 			if (!arrList.contains(curChunk.getLine())
 					&& curChunk.getLine() != 0) {
-				System.out.println("TO REMOVE: " + curChunk);
 				chunk.remove(i);
 			} else if (curChunk.hasChild()) {
 				removeChunks(arrList, curChunk.getChunks());

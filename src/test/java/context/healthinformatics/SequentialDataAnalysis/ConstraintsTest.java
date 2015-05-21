@@ -3,9 +3,6 @@ package context.healthinformatics.SequentialDataAnalysis;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import org.junit.Before;
