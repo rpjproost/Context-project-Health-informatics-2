@@ -43,7 +43,7 @@ public class CodePage extends InterfaceHelper implements PanelState, Serializabl
 		button = createButton("Analyse", ANALYZEBUTTONWIDTH, ANALYZEBUTTONHEIGHT);
 		button.addActionListener(new ActionHandler());
 		panel.add(button, setGrids(1, 1));
-		code.setText("filter date on= 2014-01-01 < workspace");
+		code.setText("filter date on= 2012-07-01 < result");
 		return panel;
 	}
 	
