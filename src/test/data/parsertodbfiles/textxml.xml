@@ -11,11 +11,12 @@
 		</column>
 		<column id="5">
 			<name>date</name>
-			<type>Date</type>
+			<type>DATE</type>
+			<dateFormat>yymmdd</dateFormat>
 		</column>
 		<column id="6">
 			<name>time</name>
-			<type>String</type>
+			<type>Integer</type>
 		</column>
 	</document>
 </xml>

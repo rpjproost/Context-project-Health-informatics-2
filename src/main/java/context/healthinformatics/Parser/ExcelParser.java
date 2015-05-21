@@ -222,7 +222,16 @@ public class ExcelParser extends Parser {
 	 * @return the right formatted cell
 	 */
 	public String processCellXLS(Cell curCell, int c) {
-		if (columns.get(c).getColumnType().equals("DATE")
+		System.out.println(columns.get(c).getColumnType());
+		if (columns.get(c).getColumnType().equals("INT")) {
+			System.out.println(curCell.toString());
+			if (isDouble(curCell.toString())) {
+				return curCell.toString();
+			} else {
+				System.out.println("not int: " +curCell.toString());
+				return "-1";
+			}
+		} else if (columns.get(c).getColumnType().equals("DATE")
 				&& !curCell.toString().equals("")) {
 			Date date = new Date();
 			try {
@@ -238,6 +247,15 @@ public class ExcelParser extends Parser {
 		}
 	}
 
+	public boolean isDouble(String str) {
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+	
 	/**
 	 * Process a single cell.
 	 * 
@@ -248,7 +266,14 @@ public class ExcelParser extends Parser {
 	 * @return the right formatted cell
 	 */
 	public String processCellXLSX(Cell curCell, int c) {
-		if (columns.get(c).getColumnType().equals("DATE")
+		System.out.println(columns.get(c).getColumnType());
+		if (columns.get(c).getColumnType().equals("Int")) {
+			if (isDouble(curCell.toString())) {
+				return curCell.toString();
+			} else {
+				return "-1";
+			}
+		} else if (columns.get(c).getColumnType().equals("DATE")
 				&& !curCell.toString().equals("")) {
 			return new SimpleDateFormat(columns.get(c).getDateType())
 					.format(curCell.getDateCellValue());
@@ -278,11 +303,21 @@ public class ExcelParser extends Parser {
 	 */
 	public void insertToDb(String[] cells) throws IOException {
 		Db data = SingletonDb.getDb();
+		printCells(cells);
 		try {
 			data.insert(docName, cells, columns);
 		} catch (SQLException e) {
+			System.out.println("ERROR");
 			throw new IOException(
 					"Excel data could not be inserted into the database");
 		}
+	}
+
+	public void printCells(String[] cells) {
+		String res = "";
+		for (int i = 0; i < cells.length; i++) {
+			res += "|" + cells[i] + "|";
+		}
+		System.out.println(res);
 	}
 }

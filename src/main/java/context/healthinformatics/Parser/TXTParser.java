@@ -168,6 +168,7 @@ public class TXTParser extends Parser {
 			String line = sc.nextLine();
 			if (canSplit(line)) {
 				String[] splittedLine = splitLine(line);
+				printCells(splittedLine);
 				Db data = SingletonDb.getDb();
 				try {
 					data.insert(docName, splittedLine, columns);
@@ -205,10 +206,18 @@ public class TXTParser extends Parser {
 		String[] strings = line.split(delimiter);
 
 		for (int i = 0; i < columns.size(); i++) {
-			res[i] = strings[columns.get(i).getColumnNumber() - 1];
+			res[i] = strings[columns.get(i).getColumnNumber() - 1].replaceAll("\\s","");
 		}
 		return res;
 
+	}
+	
+	public void printCells(String[] cells) {
+		String res = "";
+		for (int i = 0; i < cells.length; i++) {
+			res += "|" + cells[i] + "|";
+		}
+		System.out.println(res);
 	}
 
 }
