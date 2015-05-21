@@ -124,8 +124,7 @@ public class Constraints {
 		Chunk curChunk;
 		for (int i = 0; i < chunk.size(); i++) {
 			curChunk = chunk.get(i);
-			if (!arrList.contains(curChunk.getLine())
-					&& !curChunk.hasChild()) {
+			if (!arrList.contains(curChunk.getLine()) && !curChunk.hasChild()) {
 				chunk.remove(i);
 				removeChunks(arrList, chunk);
 			} else if (curChunk.hasChild()) {
@@ -222,7 +221,7 @@ public class Constraints {
 		ResultSet rs = data.execQuery(tableName, whereClause);
 		ArrayList<Integer> intArr = new ArrayList<Integer>();
 		while (rs.next()) {
-			intArr.add(rs.getInt("statid"));
+			intArr.add(rs.getInt(tableName + "id"));
 		}
 		rs.close();
 		return intArr;

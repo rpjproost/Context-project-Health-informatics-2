@@ -106,7 +106,8 @@ public class ConstraintsTest {
 		xmlp = new XMLParser(path + "constraintsxml.xml");
 		xmlp.parse();
 		cs = new Constraints(cList2, "date");
-		cs.constraint("2013-01-03", ">", "stat");	
+		cs.constraint("2014-01-03", "<", "stat");
+		
 		data.dropTable("stat");
 	}
 
