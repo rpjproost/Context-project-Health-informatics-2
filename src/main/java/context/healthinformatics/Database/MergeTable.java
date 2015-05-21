@@ -25,7 +25,6 @@ public class MergeTable {
 	}
 	
 	/**
-	 * 
 	 * @param clause clause the tables merge.
 	 * @throws SQLException if tables are not able to merge.
 	 */
@@ -39,8 +38,6 @@ public class MergeTable {
 	 */
 	public void mergeTablesView() {
 		//TODO make sure this works with 1 date column.
-		
-		//HashMap<String, ArrayList<Column>> tables = data.getTables();
 		StringBuilder sql = new StringBuilder();
 		sql.append("CREATE VIEW workspace AS SELECT * FROM result ORDER BY ");
 		sql.append("date");
