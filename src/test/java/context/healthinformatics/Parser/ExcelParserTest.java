@@ -44,7 +44,6 @@ public class ExcelParserTest {
 	@Test
 	public void testCorrectXLSX() throws IOException, SQLException {
 		Db data = SingletonDb.getDb();
-		
 		Column date = new Column(THREE, "date", "Date");
 		date.setDateType("dd/MM/yyyy");
 		cols.add(date);
@@ -77,7 +76,6 @@ public class ExcelParserTest {
 				"docname");
 		excelp.parse();
 		data.dropTable("docname");
-
 	}
 
 	/**

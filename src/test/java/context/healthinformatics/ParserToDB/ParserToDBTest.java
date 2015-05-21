@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNotNull;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import org.junit.After;
 import org.junit.Test;
 
 import context.healthinformatics.Database.Db;
