@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import java.io.IOException;
 import java.sql.SQLException;
 
+import org.junit.After;
 import org.junit.Test;
 
 import context.healthinformatics.Database.Db;
@@ -29,6 +30,20 @@ public class ParserToDBTest {
 	 * object calling the database.
 	 */
 	private Db data = SingletonDb.getDb();
+	
+	/**
+	 * method preparing for environment for tests.
+	 */
+	@org.junit.Before
+	public void before() {
+		try {
+			for (String key : data.getTables().keySet()) {
+				data.dropTable(key);
+			}
+		} catch (SQLException e) {
+			System.out.println("Something went wrong preparing db for tests.");
+		}
+	}
 
 	/**
 	 * Test if the xml parser correctly insert the text file with text parser

@@ -7,6 +7,7 @@ import static org.junit.Assert.fail;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import org.junit.Before;
@@ -19,22 +20,22 @@ import context.healthinformatics.Database.SingletonDb;
  * class that is used to test the xml parser.
  */
 public class XMLParserTest {
-	
+
 	/**
 	 * variable used to save the newly created parser.
 	 */
 	private XMLTestParser xmlp;
-	
+
 	/**
 	 * path leading to the place of all test files.
 	 */
 	private String path = "src/test/data/xml/";
-	
+
 	/**
 	 * object calling the database.
 	 */
 	private Db data = SingletonDb.getDb();
-	
+
 	/**
 	 * this method is called before each test and
 	 * creates a new XMLParser.
@@ -43,7 +44,7 @@ public class XMLParserTest {
 	public void before() {
 		xmlp = new XMLTestParser("");
 	}
-	
+
 	/**
 	 * Test the xmlparser with a correct file.
 	 */
@@ -54,21 +55,21 @@ public class XMLParserTest {
 		final int col2 = 5;
 		final int col3 = 6;
 		try {
-		xmlp.setFileName(path + "goodXML.xml");
-		xmlp.parse();
-		TXTParser txtp = (TXTParser) xmlp.getParsers().get(0);
-		assertEquals("," , txtp.getDelimiter());
-		assertEquals("stat", txtp.getDocName());
-		assertEquals("src/test/data/xml/inputTXT.txt", txtp.getFileName());
-		assertEquals(startLine, txtp.getStartLine());
-		
-		ArrayList<Column> cols = new ArrayList<Column>();
-		cols.add(new Column(col1, "value", "Integer"));
-		cols.add(new Column(col2, "date", "String"));
-		cols.add(new Column(col3, "time", "String"));
-		assertTrue(compare(txtp.getColumns(), cols));
-		
-		data.dropTable("stat");
+			xmlp.setFileName(path + "goodXML.xml");
+			xmlp.parse();
+			TXTParser txtp = (TXTParser) xmlp.getParsers().get(0);
+			assertEquals("," , txtp.getDelimiter());
+			assertEquals("stat", txtp.getDocName());
+			assertEquals("src/test/data/xml/inputTXT.txt", txtp.getFileName());
+			assertEquals(startLine, txtp.getStartLine());
+
+			ArrayList<Column> cols = new ArrayList<Column>();
+			cols.add(new Column(col1, "value", "Integer"));
+			cols.add(new Column(col2, "date", "String"));
+			cols.add(new Column(col3, "time", "String"));
+			assertTrue(compare(txtp.getColumns(), cols));
+
+			data.dropTable("stat");
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -76,7 +77,7 @@ public class XMLParserTest {
 			System.out.println(e.toString());
 		}
 	}
-	
+
 	/**
 	 * Test with an xmlfile with empty fields. This test should
 	 * throw a nullpointer.
@@ -107,7 +108,7 @@ public class XMLParserTest {
 			fail("something went wrong, the table was not created: "  + e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * Test with an xmlfile without an ID. This test should
 	 * throw a numberFormatException.
@@ -118,7 +119,7 @@ public class XMLParserTest {
 		xmlp.setFileName(path + "noIDs.xml");
 		xmlp.parse();
 	}
-	
+
 	/**
 	 *Test with an xmlfile without a path. This test should
 	 * throw a nullPointer.
@@ -146,7 +147,7 @@ public class XMLParserTest {
 		xmlp.setFileName(path + "wrongStart.xml");
 		xmlp.parse();
 	}
-	
+
 	/**
 	 * Test if the FileNotFoundException is thrown when
 	 * the file does not exist.
@@ -170,14 +171,16 @@ public class XMLParserTest {
 		assertEquals(2, parsers.size());
 		assertEquals("src/test/data/xml/inputTXT.txt", parsers.get(0).getFileName());
 		assertEquals("src/test/data/xml/inputExcel.xlsx", parsers.get(1).getFileName());
+		ExcelParser exlp = (ExcelParser) parsers.get(1);
+		assertEquals(1, exlp.getStartLine());
 		try {
-		data.dropTable("StatSensor");
-		data.dropTable("HospitalRecords"); }
+			data.dropTable("StatSensor");
+			data.dropTable("HospitalRecords"); }
 		catch (Exception e) {
 			fail("something went wrong, the tables where not created: "  + e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * tests parsing for a csv document.
 	 * @throws IOException throws if the document is wrong.
@@ -197,7 +200,7 @@ public class XMLParserTest {
 			fail("something went wrong, the table was not created: "  + e.getMessage());
 		}
 	}
-	
+
 	/**
 	 * tests the parsing of a badly formatted xml file.
 	 * @throws IOException shouldn't throw this.

@@ -10,6 +10,7 @@ import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import context.healthinformatics.Parser.Column;
 
@@ -25,6 +26,7 @@ public class Db {
 	private String pad = "C:/db/"; // default path for testing.
 	private Connection conn;
 	private Statement stmt = null;
+	private HashMap<String, ArrayList<Column>> tables;
 
 	/**
 	 * Constructor, sets variables and calls setupConn.
@@ -54,6 +56,7 @@ public class Db {
 		if (!isWhitespace2) {
 			pad = p;
 		}
+		tables = new HashMap<String, ArrayList<Column>>();
 		File delDb = new File(pad + dName);
 		removeDirectory(delDb);
 		setupConn();
@@ -87,22 +90,20 @@ public class Db {
 	 * @param tableName
 	 *            name for new table.
 	 * @param columns
-	 *            column names.
-	 * @param types
-	 *            type specifications.
+	 *            column names and types.
 	 * @return true iff new table is created.
 	 * @throws SQLException
 	 *             if table could not be created.
 	 */
-	public boolean createTable(String tableName, String[] columns,
-			String[] types) throws SQLException {
+	public boolean createTable(String tableName, ArrayList<Column> columns) throws SQLException {
 		boolean res = false;
 		try {
 			stmt = conn.createStatement();
 			String sql = "CREATE TABLE " + tableName
-					+ createTableColumns(columns, types);
+					+ createTableColumns(tableName, columns);
 			stmt.executeUpdate(sql);
 			res = true;
+			tables.put(tableName, columns);
 		} catch (SQLException e) {
 			throw new SQLException(e);
 		}
@@ -122,7 +123,7 @@ public class Db {
 		int res = 1;
 		try {
 			stmt = conn.createStatement();
-			String sql = "SELECT MAX(ID) FROM " + tableName;
+			String sql = "SELECT MAX(" + tableName + "ID) FROM " + tableName;
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				int max = rs.getInt(1);
@@ -141,26 +142,27 @@ public class Db {
 	/**
 	 * Part of the method CreateTable, creates columns with specified types.
 	 * 
+	 * @param tableName 
+	 * 				tablename.
 	 * @param columns
-	 *            column names.
-	 * @param types
-	 *            type specifications.
+	 *            column names and types.
 	 * @return string for sql building.
 	 */
-	public String createTableColumns(String[] columns, String[] types) {
+	public String createTableColumns(String tableName, ArrayList<Column> columns) {
 		StringBuffer res = new StringBuffer();
-		res.append("(ID int not null "
+		res.append("(").append(tableName);
+		res.append("ID int not null "
 				+ "primary key GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), ");
-		for (int i = 0; i < columns.length; i++) {
-			if (i == columns.length - 1) {
-				res.append(columns[i]);
+		for (int i = 0; i < columns.size(); i++) {
+			if (i == columns.size() - 1) {
+				res.append(columns.get(i).getColumnName());
 				res.append(" ");
-				res.append(types[i]);
+				res.append(columns.get(i).getColumnType());
 				res.append(")");
 			} else {
-				res.append(columns[i]);
+				res.append(columns.get(i).getColumnName());
 				res.append(" ");
-				res.append(types[i]);
+				res.append(columns.get(i).getColumnType());
 				res.append(",");
 			}
 		}
@@ -318,9 +320,28 @@ public class Db {
 			stmt = conn.createStatement();
 			String sql = "DROP TABLE " + tableName;
 			stmt.executeUpdate(sql);
+			tables.remove(tableName);
 			res = true;
 		} catch (SQLException e) {
 			throw new SQLException(e);
+		}
+		return res;
+	}
+	
+	/**
+	 * 
+	 * @param sql query.
+	 * @return true iff sql query is executed.
+	 */
+	public boolean executeUpdate(String sql) {
+		boolean res = false;
+		try {
+			stmt = conn.createStatement();
+			stmt.executeUpdate(sql);
+			res = true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return res;
 	}
@@ -358,6 +379,14 @@ public class Db {
 		String temp = prefix + path + dbName + suffix;
 		this.db = temp;
 		return db;
+	}
+	
+	/**
+	 * 
+	 * @return tablenames with columns.
+	 */
+	public HashMap<String, ArrayList<Column>> getTables() {
+		return tables;
 	}
 
 	/**

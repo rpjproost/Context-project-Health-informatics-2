@@ -125,7 +125,9 @@ public class WriteToTXT {
 			}
 			str.append(System.lineSeparator());
 		}
-		str.setLength(str.length() - 2);
+		if (str.length() > 2) {
+			str.setLength(str.length() - 2);
+		}
 		rs.close();
 		return str;
 	}
