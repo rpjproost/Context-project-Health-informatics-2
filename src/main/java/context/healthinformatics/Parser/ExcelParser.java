@@ -215,7 +215,7 @@ public class ExcelParser extends Parser {
 	public String processCell(Cell curCell, int c) {
 		if (columns.get(c).getColumnType().equals("date")
 				&& !curCell.toString().equals("")) {
-			return new SimpleDateFormat("yyyy-MM-dd").format(curCell
+			return new SimpleDateFormat(columns.get(c).getDateType()).format(curCell
 					.getDateCellValue());
 		} else {
 			return curCell.toString();
