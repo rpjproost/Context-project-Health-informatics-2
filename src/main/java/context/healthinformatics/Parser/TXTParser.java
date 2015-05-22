@@ -223,11 +223,13 @@ public class TXTParser extends Parser {
 	 *            the splitted line
 	 */
 	public void printCells(String[] lines) {
-		String res = "";
+		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < lines.length; i++) {
-			res += "|" + lines[i] + "|";
+			sb.append("|");
+			sb.append(lines[i]);
+			sb.append("|");
 		}
-		System.out.println(res);
+		System.out.println(sb);
 	}
 
 }

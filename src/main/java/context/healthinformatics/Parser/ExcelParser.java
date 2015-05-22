@@ -280,12 +280,11 @@ public class ExcelParser extends Parser {
 	 * @return the right formatted string
 	 */
 	public String formatXLSDate(Cell curCell, int c) {
-		Date date = new Date();
+		Date date = null;
 		try {
 			date = new SimpleDateFormat(columns.get(c).getDateType())
 					.parse(curCell.toString());
 		} catch (ParseException e) {
-			//TODO fix unparseable dates, empty or a word.
 			return curCell.toString();
 		}
 		return new SimpleDateFormat(columns.get(c).getDateType()).format(date);
@@ -360,10 +359,12 @@ public class ExcelParser extends Parser {
 	 *            the splitted line
 	 */
 	public void printCells(String[] cells) {
-		String res = "";
+		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < cells.length; i++) {
-			res += "|" + cells[i] + "|";
+			sb.append("|");
+			sb.append(cells[i]);
+			sb.append("|");
 		}
-		System.out.println(res);
+		System.out.println(sb);
 	}
 }

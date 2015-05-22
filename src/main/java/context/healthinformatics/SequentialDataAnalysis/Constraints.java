@@ -152,6 +152,25 @@ public class Constraints {
 	}
 
 	/**
+	 * Append string for the sql where clause.
+	 * 
+	 * @param tableName
+	 *            the name of the table
+	 * @param line
+	 *            the line of the chunk
+	 * @return the resulting where string
+	 */
+	public String appendOrClauseForQuert(String tableName, int line) {
+		StringBuilder res = new StringBuilder();
+		res.append("OR ");
+		res.append(tableName);
+		res.append("id = ");
+		res.append(line);
+		res.append(" ");
+		return res.toString();
+	}
+
+	/**
 	 * Get all lines from the chunks and format it for sql.
 	 * 
 	 * @param chunk
@@ -162,18 +181,19 @@ public class Constraints {
 	 *            the name of the table
 	 * @return the sql string for the where clause
 	 */
-	public String getAllChunkLines(ArrayList<Chunk> chunk, String res,
+	public String getAllChunkLines(ArrayList<Chunk> chunk, StringBuilder res,
 			String tableName) {
 		for (int i = 0; i < chunk.size(); i++) {
 			Chunk curChunk = chunk.get(i);
 			if (curChunk.getLine() != 0) {
-				res += "OR " + tableName + "id = " + curChunk.getLine() + " ";
+				res.append(appendOrClauseForQuert(tableName, curChunk.getLine()));
 			}
 			if (curChunk.hasChild()) {
-				res += getAllChunkLines(curChunk.getChunks(), res, tableName);
+				res.append(getAllChunkLines(curChunk.getChunks(), res,
+						tableName));
 			}
 		}
-		return res;
+		return res.toString();
 	}
 
 	/**
@@ -191,7 +211,8 @@ public class Constraints {
 	 */
 	public ArrayList<Chunk> constraint(String value, String operator,
 			String tableName) throws SQLException {
-		String rowClause = getAllChunkLines(chunks, "", tableName);
+		String rowClause = getAllChunkLines(chunks, new StringBuilder(),
+				tableName);
 		rowClause = "(" + rowClause.substring(2, rowClause.length()) + ")";
 		String constraint = columnName + " " + operator + " ";
 		if (isInteger(value)) {
