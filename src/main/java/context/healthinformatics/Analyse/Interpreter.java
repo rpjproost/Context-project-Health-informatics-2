@@ -11,11 +11,14 @@ import context.healthinformatics.SequentialDataAnalysis.Constraints;
 /**
  * class handeling the interpreting of the user input.
  */
-//TODO needs to be cleaned!
+// TODO needs to be cleaned!
 public class Interpreter {
-	
+
 	private ArrayList<Chunk> chunks;
-	
+	private static final int THREE = 3;
+	private static final int FOUR = 4;
+	private static final int FIVE = 5;
+
 	/**
 	 * constructor for the Interpreter.
 	 */
@@ -28,32 +31,34 @@ public class Interpreter {
 			chunks = mt.getChunks();
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} //TODO add clause
+		} // TODO add clause
 	}
-	
+
 	/**
 	 * method for interpreting the things to do.
-	 * @param code code to interpret.
+	 * 
+	 * @param code
+	 *            code to interpret.
 	 */
 	public void interpret(String code) {
 		String[] methods = code.split(";");
 		for (int i = 0; i < methods.length; i++) {
 			if (methods[i].contains("filter")) {
 				String[] split = methods[i].split(" ");
-				
+
 				Constraints c = new Constraints(chunks, "date");
-				System.out.println("value: " + split[3]);
-				System.out.println("operator: " + split[4]);
-				System.out.println("table: " + split[5]);
+				System.out.println("value: " + split[THREE]);
+				System.out.println("operator: " + split[FOUR]);
+				System.out.println("table: " + split[FIVE]);
 				System.out.println(SingletonDb.getDb().getTables());
 				try {
-					ArrayList<Chunk> list = c.constraint(split[3], split[4], split[5]);
+					ArrayList<Chunk> list = c.constraint(split[THREE],
+							split[FOUR], split[FIVE]);
 					for (Chunk chunk : list) {
 						System.out.println(chunk);
 					}
-				}
-				catch(Exception e) {
-					System.out.println(e); //TODO catch this exception.
+				} catch (Exception e) {
+					System.out.println(e); // TODO catch this exception.
 				}
 			}
 		}

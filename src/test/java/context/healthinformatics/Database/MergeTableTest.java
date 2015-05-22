@@ -140,7 +140,7 @@ public class MergeTableTest {
 	 * @throws SQLException if resultset is empty.
 	 */
 	public void orderedByDate(ResultSet rs) throws SQLException {
-		Date date = new Date(1, 1, 1);
+		Date date = null;
 		int counter = 0;
 		while (rs.next()) {
 			if (counter == 0) {
