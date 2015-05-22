@@ -10,7 +10,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -28,7 +27,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeSelectionModel;
 
-import context.healthinformatics.Database.MergeTable;
 import context.healthinformatics.Database.SingletonDb;
 import context.healthinformatics.Parser.XMLParser;
 
@@ -98,16 +96,16 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	public JPanel loadPanel() {
 		panel = createSection(mf.getStatePanelSize());
 		
-		JPanel section1 = makeSection1();
+		JPanel section1 = loadProjectSelection();
 		panel.add(section1, setGrids(0, 0));
 		
-		JPanel section2 = makeSection2();
+		JPanel section2 = loadFileSelection();
 		panel.add(section2, setGrids(0, 1));
 		
-		JPanel section3 = makeSection3();
+		JPanel section3 = loadFolder();
 		panel.add(section3, setGrids(0, 2));
 		
-		JPanel section4 = makeSection4();
+		JPanel section4 = loadButtonSection();
 		c = setGrids(0, THREE);
 		c.weighty = 1;
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
@@ -132,7 +130,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	/**
 	 * @return section1 Panel.
 	 */
-	public JPanel makeSection1() {
+	public JPanel loadProjectSelection() {
 		JPanel section1 = createSection(SECTION1HEIGHT);
 		
 		JLabel projectLabel = new JLabel("      Project :   ");
@@ -155,9 +153,41 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	}
 	
 	/**
+	 * Method which creates the list of projects.
+	 * @return list of projects.
+	 */
+	public String[] getProjects() {
+		String[] res = new String[folder.size()];
+		for (int i = 0; i < folder.size(); i++) {
+			res[i] = folder.get(i).get(0);
+		}
+		return res;
+	}
+	
+	/**
+	 * Method which asks the user to enter a new Project name, and inserts it in the combobox.
+	 */
+	public void addComboItem() {
+		String newProject =  (String) JOptionPane.showInputDialog(panel,
+				"New Project Name : ");
+		if (!newProject.equals("")) {
+			ArrayList<String> list = new ArrayList<String>();
+			list.add(newProject);
+			folder.add(list);
+			box.addItem(newProject);
+			DefaultMutableTreeNode node = new DefaultMutableTreeNode(newProject);
+			model.insertNodeInto(node, root, root.getChildCount());
+			xmlList.add(null);
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "No project name specified");
+		}
+	}
+	
+	/**
 	 * @return section2 Panel.
 	 */
-	public JPanel makeSection2() {
+	public JPanel loadFileSelection() {
 		JPanel section2 = createSection(SECTION1HEIGHT);
 		
 		JLabel fileLabel = new JLabel("      File :   ");
@@ -188,7 +218,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	/**
 	 * @return section3 Panel.
 	 */
-	public JPanel makeSection3() {
+	public JPanel loadFolder() {
 		JPanel section3 = MainFrame.createPanel(Color.decode(COLOR),
 				mf.getScreenWidth(), SECTION3HEIGHT);
 		c = new GridBagConstraints();
@@ -207,30 +237,6 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		c.anchor = GridBagConstraints.LINE_START;
 		section3.add(treePane, c);
 		return section3;
-	}
-	
-	/**
-	 * @return section4 Panel.
-	 */
-	public JPanel makeSection4() {
-		JPanel section4 = createSection(SECTION3HEIGHT);
-		
-		helpButton = createButton("HELP", HELPBUTTONWIDTH, HELPBUTTONHEIGHT);
-		helpButton.addActionListener(new ActionHandler());
-		c = setGrids(0, 0);
-		c.weightx = 1;
-		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS, BUTTONINSETS);
-		c.anchor = GridBagConstraints.WEST;
-		section4.add(helpButton, c);
-		
-		analyseButton = createButton("ANALYSE", HELPBUTTONWIDTH, HELPBUTTONHEIGHT);
-		analyseButton.addActionListener(new ActionHandler());
-		c = setGrids(0, 0);
-		c.weightx = 1;
-		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS, BUTTONINSETS);
-		c.anchor = GridBagConstraints.EAST;
-		section4.add(analyseButton, c);
-		return section4;
 	}
 	
 	/**
@@ -282,17 +288,29 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		fillTree();
 		model.reload();
 	}
-
+	
 	/**
-	 * Method which creates the list of projects.
-	 * @return list of projects.
+	 * @return section4 Panel.
 	 */
-	public String[] getProjects() {
-		String[] res = new String[folder.size()];
-		for (int i = 0; i < folder.size(); i++) {
-			res[i] = folder.get(i).get(0);
-		}
-		return res;
+	public JPanel loadButtonSection() {
+		JPanel section4 = createSection(SECTION3HEIGHT);
+		
+		helpButton = createButton("HELP", HELPBUTTONWIDTH, HELPBUTTONHEIGHT);
+		helpButton.addActionListener(new ActionHandler());
+		c = setGrids(0, 0);
+		c.weightx = 1;
+		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS, BUTTONINSETS);
+		c.anchor = GridBagConstraints.WEST;
+		section4.add(helpButton, c);
+		
+		analyseButton = createButton("ANALYSE", HELPBUTTONWIDTH, HELPBUTTONHEIGHT);
+		analyseButton.addActionListener(new ActionHandler());
+		c = setGrids(0, 0);
+		c.weightx = 1;
+		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS, BUTTONINSETS);
+		c.anchor = GridBagConstraints.EAST;
+		section4.add(analyseButton, c);
+		return section4;
 	}
 	
 	/**
@@ -342,26 +360,6 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 */
 	public JButton getAnalyseButton() {
 		return analyseButton;
-	}
-	
-	/**
-	 * Method which asks the user to enter a new Project name, and inserts it in the combobox.
-	 */
-	public void addComboItem() {
-		String newProject =  (String) JOptionPane.showInputDialog(panel,
-				"New Project Name : ");
-		if (!newProject.equals("")) {
-			ArrayList<String> list = new ArrayList<String>();
-			list.add(newProject);
-			folder.add(list);
-			box.addItem(newProject);
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(newProject);
-			model.insertNodeInto(node, root, root.getChildCount());
-			xmlList.add(null);
-		}
-		else {
-			JOptionPane.showMessageDialog(null, "No project name specified");
-		}
 	}
 	
 	/**
