@@ -104,7 +104,7 @@ public class ExcelParser extends Parser {
 	 * @throws FileNotFoundException
 	 *             throw filenotfoundexception if file not found
 	 */
-	public FileInputStream openFile(String fileName)
+	private FileInputStream openFile(String fileName)
 			throws FileNotFoundException {
 		FileInputStream fis = null;
 		try {
@@ -117,42 +117,36 @@ public class ExcelParser extends Parser {
 
 	@Override
 	public void parse() throws IOException {
-
-		// Try to open input file
 		FileInputStream fis = openFile(this.getFileName());
 		if (this.getFileName().endsWith(".xls")) {
-			// Open xls file
+			// Open .xls file
 			Workbook wb = null;
 			try {
 				wb = WorkbookFactory.create(fis);
 			} catch (InvalidFormatException e) {
 				throw new IOException("xls file could not be read");
 			}
-			// Process sheet sheet
 			processXLSSheet(wb.getSheetAt(sheet - 1));
 			wb.close();
 		} else {
-			// Open Excel file
+			// Open .xlsx file
 			XSSFWorkbook wb = new XSSFWorkbook(fis);
-			// Process sheet sheet
 			processXLSXSheet(wb.getSheetAt(sheet - 1));
 			wb.close();
 		}
-
 	}
 
 	/**
 	 * Process one sheet from the excel file.
 	 * 
-	 * @param sheet2
+	 * @param sheet
 	 *            the sheet processed.
 	 * @throws IOException
 	 *             the exception for sql
 	 */
-	public void processXLSSheet(Sheet sheet2) throws IOException {
-		int rowNum = sheet2.getLastRowNum() + 1;
-		for (int i = startLine; i < rowNum; i++) {
-			processXLSRow(sheet2.getRow(i));
+	private void processXLSSheet(Sheet sheet) throws IOException {
+		for (int i = startLine; i < sheet.getLastRowNum() + 1; i++) {
+			processXLSRow(sheet.getRow(i));
 		}
 	}
 
@@ -164,11 +158,10 @@ public class ExcelParser extends Parser {
 	 * @throws IOException
 	 *             the exception for sql
 	 */
-	public void processXLSXSheet(XSSFSheet ws) throws IOException {
-		int rowNum = ws.getLastRowNum() + 1;
-		for (int i = startLine; i < rowNum; i++) {
-			if (!isRowEmpty(ws.getRow(i))) {
-				processXLSXRow(ws.getRow(i));
+	private void processXLSXSheet(XSSFSheet sheet) throws IOException {
+		for (int i = startLine; i < sheet.getLastRowNum() + 1; i++) {
+			if (!isRowEmpty(sheet.getRow(i))) {
+				processXLSXRow(sheet.getRow(i));
 			}
 
 		}
@@ -182,10 +175,9 @@ public class ExcelParser extends Parser {
 	 * @throws IOException
 	 *             the exception for sql
 	 */
-	public void processXLSRow(Row row) throws IOException {
-		int numcells = row.getLastCellNum();
+	private void processXLSRow(Row row) throws IOException {
 		String[] cells = new String[columns.size()];
-		if (canSplit(numcells)) {
+		if (canSplit(row.getLastCellNum())) {
 			for (int c = 0; c < columns.size(); c++) {
 				cells[c] = processCellXLS(
 						row.getCell(columns.get(c).getColumnNumber() - 1), c);
@@ -202,10 +194,9 @@ public class ExcelParser extends Parser {
 	 * @throws IOException
 	 *             the exception for sql
 	 */
-	public void processXLSXRow(XSSFRow row) throws IOException {
-		int numcells = row.getLastCellNum();
+	private void processXLSXRow(XSSFRow row) throws IOException {
 		String[] cells = new String[columns.size()];
-		if (canSplit(numcells)) {
+		if (canSplit(row.getLastCellNum())) {
 			for (int c = 0; c < columns.size(); c++) {
 				cells[c] = processCellXLSX(
 						row.getCell(columns.get(c).getColumnNumber() - 1), c);
@@ -223,7 +214,7 @@ public class ExcelParser extends Parser {
 	 *            the integer of the current column
 	 * @return the right formatted cell
 	 */
-	public String processCellXLS(Cell curCell, int c) {
+	private String processCellXLS(Cell curCell, int c) {
 		if (columns.get(c).getColumnType().equals("INT")) {
 			return formatInt(curCell);
 		} else if (columns.get(c).getColumnType().equals("DATE")
@@ -243,7 +234,7 @@ public class ExcelParser extends Parser {
 	 *            the integer of the current column
 	 * @return the right formatted cell
 	 */
-	public String processCellXLSX(Cell curCell, int c) {
+	private String processCellXLSX(Cell curCell, int c) {
 		if (columns.get(c).getColumnType().equals("Int")) {
 			return formatInt(curCell);
 		} else if (columns.get(c).getColumnType().equals("DATE")
@@ -262,7 +253,7 @@ public class ExcelParser extends Parser {
 	 *            current cell
 	 * @return if not a double then -1 else the cell
 	 */
-	public String formatInt(Cell curCell) {
+	private String formatInt(Cell curCell) {
 		if (isDouble(curCell.toString())) {
 			return curCell.toString();
 		} else {
@@ -279,7 +270,7 @@ public class ExcelParser extends Parser {
 	 *            the current column
 	 * @return the right formatted string
 	 */
-	public String formatXLSDate(Cell curCell, int c) {
+	private String formatXLSDate(Cell curCell, int c) {
 		Date date = null;
 		try {
 			date = new SimpleDateFormat(columns.get(c).getDateType())
@@ -297,7 +288,7 @@ public class ExcelParser extends Parser {
 	 *            the string to be checked
 	 * @return true if is double else false
 	 */
-	public boolean isDouble(String str) {
+	private boolean isDouble(String str) {
 		try {
 			Double.parseDouble(str);
 			return true;
@@ -313,7 +304,7 @@ public class ExcelParser extends Parser {
 	 *            the number of cells on a row
 	 * @return true if there are enough cells
 	 */
-	public boolean canSplit(int cellnums) {
+	private boolean canSplit(int cellnums) {
 		return cellnums >= columns.size();
 	}
 
@@ -322,9 +313,9 @@ public class ExcelParser extends Parser {
 	 * 
 	 * @param row
 	 *            the row
-	 * @return true if all columns are type blanc
+	 * @return true if all columns are type blank
 	 */
-	public static boolean isRowEmpty(Row row) {
+	private static boolean isRowEmpty(Row row) {
 		for (int c = row.getFirstCellNum(); c < row.getLastCellNum(); c++) {
 			Cell cell = row.getCell(c);
 			if (cell != null && cell.getCellType() != Cell.CELL_TYPE_BLANK) {
@@ -342,7 +333,7 @@ public class ExcelParser extends Parser {
 	 * @throws IOException
 	 *             the exception if data can not be inserted in database
 	 */
-	public void insertToDb(String[] cells) throws IOException {
+	private void insertToDb(String[] cells) throws IOException {
 		Db data = SingletonDb.getDb();
 		try {
 			data.insert(docName, cells, columns);
