@@ -106,7 +106,7 @@ public class MainFrameTest {
 	@Test
 	public void checkMouseClickEventVariablePage() {
 		PanelState ps = mf.getPanelState();
-		MouseEvent me = new MouseEvent(mf.getVarPanel(), 0, 0, 0, 0, 0, 0, false);
+		MouseEvent me = new MouseEvent(mf, 0, 0, 0, 0, 0, 0, false);
 		ml.mouseClicked(me);
 		assertEquals(mf.getPanelState(), ps);
 	}

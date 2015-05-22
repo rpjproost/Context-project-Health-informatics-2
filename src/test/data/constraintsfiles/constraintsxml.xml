@@ -2,7 +2,7 @@
 <xml>
 	<document docname="stat">
 		<doctype>text</doctype>
-		<path>src/test/data/parsertodbfiles/ADMIRE2.txt</path>
+		<path>src/test/data/constraintsfiles/constraints.txt</path>
 		<start>7</start>
 		<delimiter>,</delimiter>
 		<column id="2">
@@ -11,12 +11,12 @@
 		</column>
 		<column id="5">
 			<name>date</name>
-			<type>DATE</type>
-			<dateFormat>yymmdd</dateFormat>
+			<type>Date</type>
+			<dateFormat>yyMMdd</dateFormat>
 		</column>
 		<column id="6">
 			<name>time</name>
-			<type>Integer</type>
+			<type>String</type>
 		</column>
 	</document>
 </xml>

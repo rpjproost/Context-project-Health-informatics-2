@@ -5,10 +5,14 @@ import static org.junit.Assert.fail;
 import static org.junit.Assert.assertArrayEquals;
 
 import java.io.FileNotFoundException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import context.healthinformatics.Database.Db;
+import context.healthinformatics.Database.SingletonDb;
 
 /**
  * Class to test the TXTParser.
@@ -38,15 +42,19 @@ public class TXTParserTest {
 
 	/**
 	 * Test correct parse. Should give no errors.
+	 * @throws SQLException 
 	 */
 	@Test
-	public void testCorrect() {
+	public void testCorrect() throws SQLException {
+		Db data = SingletonDb.getDb();
+		data.createTable("test", cols);
 		try {
 			txtp.parse();
 		} catch (FileNotFoundException e) {
 
 			fail("Correct parse failed");
 		}
+		data.dropTable("test");
 	}
 
 	/**

@@ -91,13 +91,6 @@ public class MainFrame extends InterfaceHelper {
 	public JPanel getOutputTab() {
 		return outputTab;
 	}
-	
-	/**
-	 * @return Variable panel as JPanel.
-	 */
-	public JPanel getVarPanel() {
-		return varPanel;
-	}
 
 	/**
 	 * Method which creates the frame of the GUI and creates the tabs.
@@ -126,17 +119,17 @@ public class MainFrame extends InterfaceHelper {
 	}
 	
 	private void createTabs(JPanel tabs) {
-		inputTab = createTab("stap 1", Color.decode("#81DAF5"));
+		inputTab = createTab("Input", Color.decode("#81DAF5"));
 		inputTab.addMouseListener(new MouseHandler());
 		c = setGrids(0, 0);
 		tabs.add(inputTab, c);
 		
-		codeTab = createTab("stap 2", Color.decode("#01A9DB"));
+		codeTab = createTab("Analyse", Color.decode("#01A9DB"));
 		codeTab.addMouseListener(new MouseHandler());
 		c = setGrids(1, 0);
 		tabs.add(codeTab, c);
 		
-		outputTab = createTab("stap 3", Color.decode("#086A87"));
+		outputTab = createTab("Output", Color.decode("#086A87"));
 		outputTab.addMouseListener(new MouseHandler());
 		c = setGrids(2, 0);
 		tabs.add(outputTab, c);	

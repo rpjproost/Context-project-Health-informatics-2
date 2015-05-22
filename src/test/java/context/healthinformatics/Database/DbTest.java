@@ -51,7 +51,7 @@ public class DbTest {
 		colArr = new ArrayList<Column>();
 		colArr.add(new Column(0, "Name", "String"));
 		colArr.add(new Column(0, "Age", "Integer"));
-
+		
 		col[0] = "Name";
 		col[1] = "Age";
 
@@ -60,6 +60,20 @@ public class DbTest {
 
 		values[0] = "Rick";
 		values[1] = "22";
+		beforeTests();
+	}
+	
+	/**
+	 * remove all tables from db.
+	 */
+	public void beforeTests() {
+		try {
+			for (String key : data.getTables().keySet()) {
+				data.dropTable(key);
+			}
+		} catch (SQLException e) {
+			System.out.println("Something went wrong preparing db for tests.");
+		}
 	}
 
 	/**
@@ -81,7 +95,7 @@ public class DbTest {
 	 */
 	@Test
 	public void testCreateTable() throws SQLException {
-		assertTrue(data.createTable(tableName, col, types));
+		assertTrue(data.createTable(tableName, colArr));
 		assertTrue(data.dropTable(tableName));
 	}
 
@@ -93,7 +107,7 @@ public class DbTest {
 	 */
 	@Test
 	public void testGetMaxIDDefault() throws SQLException {
-		assertTrue(data.createTable(tableName, col, types));
+		assertTrue(data.createTable(tableName, colArr));
 		assertEquals(data.getMaxId("test"), 1);
 		assertTrue(data.dropTable(tableName));
 	}
@@ -107,7 +121,7 @@ public class DbTest {
 	 */
 	@Test
 	public void testInsert() throws SQLException {
-		assertTrue(data.createTable(tableName, col, types));
+		assertTrue(data.createTable(tableName, colArr));
 		assertTrue(data.insert(tableName, values, colArr));
 		assertTrue(data.dropTable(tableName));
 	}
@@ -121,7 +135,7 @@ public class DbTest {
 	 */
 	@Test
 	public void testInsertMaxId() throws SQLException {
-		assertTrue(data.createTable(tableName, col, types));
+		assertTrue(data.createTable(tableName, colArr));
 		assertTrue(data.insert(tableName, values, colArr));
 		assertTrue(data.insert(tableName, values, colArr));
 		assertEquals(data.getMaxId("test"), 2);
@@ -136,7 +150,7 @@ public class DbTest {
 	 */
 	@Test
 	public void testSelectName() throws SQLException {
-		assertTrue(data.createTable(tableName, col, types));
+		assertTrue(data.createTable(tableName, colArr));
 		assertTrue(data.insert(tableName, values, colArr));
 		assertEquals(data.select(tableName, "Name"), "Rick");
 		assertTrue(data.dropTable(tableName));
@@ -150,7 +164,7 @@ public class DbTest {
 	 */
 	@Test
 	public void testSelectAge() throws SQLException {
-		assertTrue(data.createTable(tableName, col, types));
+		assertTrue(data.createTable(tableName, colArr));
 		assertTrue(data.insert(tableName, values, colArr));
 		assertEquals(data.select(tableName, "Age"), "22");
 		assertTrue(data.dropTable("test"));
@@ -226,7 +240,7 @@ public class DbTest {
 	 */
 	@Test
 	public void selectNonExistentCol() throws SQLException {
-		assertTrue(data.createTable(tableName, col, types));
+		assertTrue(data.createTable(tableName, colArr));
 		ExpectedException thrown = ExpectedException.none();
 		try {
 			data.select(tableName, "nonexistentcol");
@@ -245,7 +259,7 @@ public class DbTest {
 	 */
 	@Test
 	public void insertNull() throws SQLException {
-		assertTrue(data.createTable(tableName, col, types));
+		assertTrue(data.createTable(tableName, colArr));
 		ExpectedException thrown = ExpectedException.none();
 		try {
 			assertTrue(data.insert(tableName, null, null));

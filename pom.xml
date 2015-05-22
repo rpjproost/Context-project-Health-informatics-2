@@ -10,7 +10,7 @@
 
 	<groupId>context.healthinformatics</groupId>
 	<artifactId>health-informatics</artifactId>
-	<version>0.3</version>
+	<version>0.4</version>
 	<url>https://github.com/rpjproost/Context-project-Health-informatics-2</url>
 	<description>
         Context project.
@@ -166,6 +166,9 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>findbugs-maven-plugin</artifactId>
 				<version>3.0.0</version>
+				<configuration>
+					<skipEmptyReport>false</skipEmptyReport>
+				</configuration>
 			</plugin>
 
 			<plugin> <!-- JUnit report -->
@@ -183,6 +186,9 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-pmd-plugin</artifactId>
 				<version>3.4</version>
+				<configuration>
+					<skipEmptyReport>false</skipEmptyReport>
+				</configuration>
 			</plugin>
 		</plugins>
 	</reporting>

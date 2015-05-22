@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<xml>
+	<document docname="ADMIRE2">
+		<doctype>text</doctype>
+		<path>src/main/data/demo/ADMIRE2.txt</path>
+		<start>7</start>
+		<delimiter>,</delimiter>
+		<column id="2">
+			<name>value</name>
+			<type>Integer</type>
+		</column>
+		<column id="5">
+			<name>date</name>
+			<type>date</type>
+			<dateFormat>ddmmyy</dateFormat>
+		</column>
+		<column id="6">
+			<name>time</name>
+			<type>String</type>
+		</column>
+	</document>
+	<document docname="Hospital">
+		<doctype>EXCEL</doctype>
+		<sheet>1</sheet>
+		<path>src/main/data/demo/afspraken.xlsx</path>
+		<column id="1">
+			<name>admire</name>
+			<type>Integer</type>
+		</column>
+		<column id="2">
+			<name>groep</name>
+			<type>Integer</type>
+		</column>
+		<column id="3">
+			<name>date</name>
+			<type>date</type>
+			<dateFormat>dd-MM-yyyy</dateFormat>
+		</column>
+		<column id="4">
+			<name>omschrijving</name>
+			<type>String</type>
+		</column>
+	</document>
+</xml>

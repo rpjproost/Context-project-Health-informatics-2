@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<xml>
+	<document docname="StatSensor">
+		<doctype>text</doctype>
+		<path>src/test/data/mergeTableFiles/inputTXT.txt</path>
+		<start>7</start>
+		<delimiter>,</delimiter>
+		<column id="2">
+			<name>value</name>
+			<type>Integer</type>
+		</column>
+		<column id="5">
+			<name>date</name>
+			<type>date</type>
+			<dateFormat>ddmmyy</dateFormat>
+		</column>
+		<column id="6">
+			<name>time</name>
+			<type>String</type>
+		</column>
+	</document>
+	<document docname="HospitalRecords">
+		<doctype>EXCEL</doctype>
+		<sheet>1</sheet>
+		<path>src/test/data/mergeTableFiles/inputExcel.xlsx</path>
+		<column id="2">
+			<name>Groep</name>
+			<type>Integer</type>
+		</column>
+		<column id="3">
+			<name>date</name>
+			<type>date</type>
+			<dateFormat>dd-MM-yyyy</dateFormat>
+		</column>
+	</document>
+</xml>

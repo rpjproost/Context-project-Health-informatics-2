@@ -13,7 +13,7 @@ import context.healthinformatics.Database.SingletonDb;
  * Class TxtParser.
  */
 public class TXTParser extends Parser {
-	
+
 	private String delimiter;
 	private int startLine;
 	private File file;
@@ -32,8 +32,9 @@ public class TXTParser extends Parser {
 	 *            the delimiter of the data
 	 * @param columns
 	 *            the arraylist with columns
-	 * @param docName name of doc.
-	 * 			
+	 * @param docName
+	 *            name of doc.
+	 * 
 	 */
 	public TXTParser(String fileName, int startLine, String delimiter,
 			ArrayList<Column> columns, String docName) {
@@ -104,9 +105,10 @@ public class TXTParser extends Parser {
 	public void setColumns(ArrayList<Column> columns) {
 		this.columns = columns;
 	}
-	
+
 	/**
 	 * getter for the document name.
+	 * 
 	 * @return String containing the document name.
 	 */
 	public String getDocName() {
@@ -115,7 +117,9 @@ public class TXTParser extends Parser {
 
 	/**
 	 * setter for the document name.
-	 * @param docName document name to set.
+	 * 
+	 * @param docName
+	 *            document name to set.
 	 */
 	public void setDocName(String docName) {
 		this.docName = docName;
@@ -162,17 +166,15 @@ public class TXTParser extends Parser {
 		skipFirxtXLines();
 		while (sc.hasNextLine()) {
 			String line = sc.nextLine();
-			// System.out.println(line);
-
 			if (canSplit(line)) {
-				// TODO insert splitted string into db.
 				String[] splittedLine = splitLine(line);
 				Db data = SingletonDb.getDb();
 				try {
 					data.insert(docName, splittedLine, columns);
 				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					
+					throw new FileNotFoundException(
+							"The data of the text file could not be insterted into the database!");
+
 				}
 			}
 		}
@@ -201,12 +203,33 @@ public class TXTParser extends Parser {
 	public String[] splitLine(String line) {
 		String[] res = new String[columns.size()];
 		String[] strings = line.split(delimiter);
-
 		for (int i = 0; i < columns.size(); i++) {
-			res[i] = strings[columns.get(i).getColumnNumber() - 1];
+			// if an int is surrounded by whitespace remove it.
+			if (columns.get(i).getColumnType().equals("INT")) {
+				res[i] = strings[columns.get(i).getColumnNumber() - 1]
+						.replaceAll("\\s", "");
+			} else {
+				res[i] = strings[columns.get(i).getColumnNumber() - 1];
+			}
 		}
 		return res;
 
+	}
+
+	/**
+	 * Test function for txt parser to print splitted line.
+	 * 
+	 * @param lines
+	 *            the splitted line
+	 */
+	public void printCells(String[] lines) {
+		StringBuilder sb = new StringBuilder();
+		for (int i = 0; i < lines.length; i++) {
+			sb.append("|");
+			sb.append(lines[i]);
+			sb.append("|");
+		}
+		System.out.println(sb);
 	}
 
 }

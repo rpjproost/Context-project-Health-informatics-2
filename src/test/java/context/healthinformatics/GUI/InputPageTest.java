@@ -1,14 +1,17 @@
 package context.healthinformatics.GUI;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.awt.AWTException;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import context.healthinformatics.Database.SingletonDb;
 import context.healthinformatics.GUI.InputPage.ActionHandler;
 
 /**
@@ -88,6 +91,15 @@ public class InputPageTest {
 	@Test
 	public void testfindFolderProject() {
 		assertEquals(ip.findFolderProject("5"), 2);
+	}
+	
+	/**
+	 * Testing if the database will be made.
+	 */
+	@Test
+	public void testLoadDatabase() {
+		ip.loadDatabase();
+		assertNotNull(SingletonDb.getDb());
 	}
 	
 	/**

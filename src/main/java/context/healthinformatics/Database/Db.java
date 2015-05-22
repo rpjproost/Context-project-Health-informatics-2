@@ -10,6 +10,7 @@ import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import context.healthinformatics.Parser.Column;
 
@@ -25,6 +26,7 @@ public class Db {
 	private String pad = "C:/db/"; // default path for testing.
 	private Connection conn;
 	private Statement stmt = null;
+	private HashMap<String, ArrayList<Column>> tables;
 
 	/**
 	 * Constructor, sets variables and calls setupConn.
@@ -39,7 +41,7 @@ public class Db {
 	 *             the sql exception
 	 */
 	protected Db(String databaseName, String p) throws NullPointerException,
-	SQLException {
+			SQLException {
 		if (p == null || databaseName == null) {
 			throw new NullPointerException();
 		}
@@ -54,6 +56,7 @@ public class Db {
 		if (!isWhitespace2) {
 			pad = p;
 		}
+		tables = new HashMap<String, ArrayList<Column>>();
 		File delDb = new File(pad + dName);
 		removeDirectory(delDb);
 		setupConn();
@@ -87,22 +90,21 @@ public class Db {
 	 * @param tableName
 	 *            name for new table.
 	 * @param columns
-	 *            column names.
-	 * @param types
-	 *            type specifications.
+	 *            column names and types.
 	 * @return true iff new table is created.
 	 * @throws SQLException
 	 *             if table could not be created.
 	 */
-	public boolean createTable(String tableName, String[] columns,
-			String[] types) throws SQLException {
+	public boolean createTable(String tableName, ArrayList<Column> columns)
+			throws SQLException {
 		boolean res = false;
 		try {
 			stmt = conn.createStatement();
 			String sql = "CREATE TABLE " + tableName
-					+ createTableColumns(columns, types);
+					+ createTableColumns(tableName, columns);
 			stmt.executeUpdate(sql);
 			res = true;
+			tables.put(tableName, columns);
 		} catch (SQLException e) {
 			throw new SQLException(e);
 		}
@@ -122,7 +124,7 @@ public class Db {
 		int res = 1;
 		try {
 			stmt = conn.createStatement();
-			String sql = "SELECT MAX(ID) FROM " + tableName;
+			String sql = "SELECT MAX(" + tableName + "ID) FROM " + tableName;
 			ResultSet rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				int max = rs.getInt(1);
@@ -141,26 +143,27 @@ public class Db {
 	/**
 	 * Part of the method CreateTable, creates columns with specified types.
 	 * 
+	 * @param tableName
+	 *            tablename.
 	 * @param columns
-	 *            column names.
-	 * @param types
-	 *            type specifications.
+	 *            column names and types.
 	 * @return string for sql building.
 	 */
-	public String createTableColumns(String[] columns, String[] types) {
+	public String createTableColumns(String tableName, ArrayList<Column> columns) {
 		StringBuffer res = new StringBuffer();
-		res.append("(ID int not null "
+		res.append("(").append(tableName);
+		res.append("ID int not null "
 				+ "primary key GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), ");
-		for (int i = 0; i < columns.length; i++) {
-			if (i == columns.length - 1) {
-				res.append(columns[i]);
+		for (int i = 0; i < columns.size(); i++) {
+			if (i == columns.size() - 1) {
+				res.append(columns.get(i).getColumnName());
 				res.append(" ");
-				res.append(types[i]);
+				res.append(columns.get(i).getColumnType());
 				res.append(")");
 			} else {
-				res.append(columns[i]);
+				res.append(columns.get(i).getColumnName());
 				res.append(" ");
-				res.append(types[i]);
+				res.append(columns.get(i).getColumnType());
 				res.append(",");
 			}
 		}
@@ -184,25 +187,11 @@ public class Db {
 			ArrayList<Column> columns) throws SQLException {
 		boolean res = false;
 		try {
-			StringBuffer sql = new StringBuffer();
+			StringBuilder sql = new StringBuilder();
 			sql.append("INSERT INTO " + tableName + "(");
-			for (int i = 0; i < columns.size(); i++) {
-				if (i == values.length - 1) {
-					sql.append(columns.get(i).getColumnName()); sql.append(")");
-				} else {
-					sql.append(columns.get(i).getColumnName()); sql.append(",");
-				}
-			}
-			sql.append(" VALUES (");
-			for (int i = 0; i < values.length; i++) {
-				if (i == values.length - 1) {
-					sql.append("?)");
-				}
-				else {
-					sql.append("?,");
-				}
-			}
-			PreparedStatement stm = appendValuesInsert(sql.toString(), values, columns);
+			appendQueryInsert(sql, columns, values);
+			PreparedStatement stm = appendValuesInsert(sql.toString(), values,
+					columns);
 			stm.execute();
 			res = true;
 		} catch (SQLException | NullPointerException e) {
@@ -210,14 +199,46 @@ public class Db {
 		}
 		return res;
 	}
+	
+	/**
+	 * Appends query for insert.
+	 * @param sql query to append.
+	 * @param values
+	 *            values to be inserted.
+	 * @param columns
+	 *            columns where values be inserted.
+	 */
+	public void appendQueryInsert(StringBuilder sql, ArrayList<Column> columns, String[] values) {
+		for (int i = 0; i < columns.size(); i++) {
+			if (i == values.length - 1) {
+				sql.append(columns.get(i).getColumnName());
+				sql.append(")");
+			} else {
+				sql.append(columns.get(i).getColumnName());
+				sql.append(",");
+			}
+		}
+		sql.append(" VALUES (");
+		for (int i = 0; i < values.length; i++) {
+			if (i == values.length - 1) {
+				sql.append("?)");
+			} else {
+				sql.append("?,");
+			}
+		}
+	}
 
 	/**
 	 * 
-	 * @param s sql query to be turned into preparedStatement.
-	 * @param values to be inserted into table.
-	 * @param columns ArrayList of columns, types and dateTypes are used.
+	 * @param s
+	 *            sql query to be turned into preparedStatement.
+	 * @param values
+	 *            to be inserted into table.
+	 * @param columns
+	 *            ArrayList of columns, types and dateTypes are used.
 	 * @return preparedstatement to be executed.
-	 * @throws SQLException 
+	 * @throws SQLException
+	 *             the sql exception
 	 */
 	public PreparedStatement appendValuesInsert(String s, String[] values,
 			ArrayList<Column> columns) throws SQLException {
@@ -226,13 +247,11 @@ public class Db {
 			String type = columns.get(i).getColumnType().toLowerCase();
 			if (type.startsWith("varchar")) {
 				preparedStmt.setString(i + 1, values[i]);
-			}
-			else if (type.equals("date")) {
+			} else if (type.equals("date")) {
 				String dateType = columns.get(i).getDateType();
 				java.sql.Date date = convertDate(values[i], dateType);
 				preparedStmt.setDate(i + 1, date);
-			}
-			else if (type.equals("int")) {
+			} else if (type.equals("int")) {
 				double value = 0;
 				try {
 					value = Double.parseDouble(values[i]);
@@ -240,12 +259,35 @@ public class Db {
 					throw new SQLException(e);
 				}
 				preparedStmt.setDouble(i + 1, value);
-			}
-			else {
+			} else {
 				throw new SQLException("type of insert not recognized.");
 			}
 		}
 		return preparedStmt;
+	}
+
+	/**
+	 * Execture a query on table tablename with whereclause whereclause.
+	 * 
+	 * @param tableName
+	 *            the name of the table
+	 * @param whereClause
+	 *            the where clause
+	 * @return the resultset
+	 * @throws SQLException
+	 *             if something goes wrong
+	 */
+	public ResultSet execQuery(String tableName, String whereClause)
+			throws SQLException {
+		ResultSet rs = null;
+		try {
+			stmt = conn.createStatement();
+			String sql = "SELECT * FROM " + tableName + " WHERE " + whereClause;
+			rs = stmt.executeQuery(sql);
+		} catch (SQLException e) {
+			throw new SQLException("ResultSet not created: Data not found");
+		}
+		return rs;
 	}
 
 	/**
@@ -318,9 +360,29 @@ public class Db {
 			stmt = conn.createStatement();
 			String sql = "DROP TABLE " + tableName;
 			stmt.executeUpdate(sql);
+			tables.remove(tableName);
 			res = true;
 		} catch (SQLException e) {
 			throw new SQLException(e);
+		}
+		return res;
+	}
+
+	/**
+	 * 
+	 * @param sql
+	 *            query.
+	 * @return true iff sql query is executed.
+	 */
+	public boolean executeUpdate(String sql) {
+		boolean res = false;
+		try {
+			stmt = conn.createStatement();
+			stmt.executeUpdate(sql);
+			res = true;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return res;
 	}
@@ -358,6 +420,14 @@ public class Db {
 		String temp = prefix + path + dbName + suffix;
 		this.db = temp;
 		return db;
+	}
+
+	/**
+	 * 
+	 * @return tablenames with columns.
+	 */
+	public HashMap<String, ArrayList<Column>> getTables() {
+		return tables;
 	}
 
 	/**

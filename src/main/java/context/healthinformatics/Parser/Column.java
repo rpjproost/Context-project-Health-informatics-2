@@ -3,7 +3,7 @@ package context.healthinformatics.Parser;
 /**
  * class for giving information about the columns to the parsers.
  */
-public class Column {
+public class Column  implements Comparable<Column> {
 	/**
 	 * The number of the column this column object is for. Starts @ number 1.
 	 */
@@ -141,7 +141,7 @@ public class Column {
 			result += columnType.hashCode();
 		}
 		result = prime * result;
-		if (columnName != null) {
+		if (columnName != null && dateType != null) {
 			result += dateType.hashCode();
 		}
 		return result;
@@ -155,12 +155,20 @@ public class Column {
 		if (o instanceof Column) {
 			Column c = (Column) o;
 			if (getColumnName().equals(c.getColumnName())
-					&& getColumnNumber() == c.getColumnNumber()
 					&& getColumnType().equals(c.getColumnType())) {
 				return true;
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * 
+	 * @param o column object.
+	 * @return true or false.
+	 */
+	public int compareTo(Column o) {
+		return columnName.hashCode() - columnName.hashCode();
 	}
 
 	/**
