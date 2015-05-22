@@ -283,7 +283,6 @@ public class Db {
 		try {
 			stmt = conn.createStatement();
 			String sql = "SELECT * FROM " + tableName + " WHERE " + whereClause;
-			System.out.println(sql);
 			rs = stmt.executeQuery(sql);
 		} catch (SQLException e) {
 			throw new SQLException("ResultSet not created: Data not found");
