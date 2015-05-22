@@ -4,6 +4,8 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.junit.Test;
 
@@ -35,8 +37,10 @@ public class ParserToDBTest {
 	 */
 	@org.junit.Before
 	public void before() {
+		Set<String> tables = new TreeSet<String>();
+		tables.addAll(data.getTables().keySet());
 		try {
-			for (String key : data.getTables().keySet()) {
+			for (String key : tables) {
 				data.dropTable(key);
 			}
 		} catch (SQLException e) {
