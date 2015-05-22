@@ -16,7 +16,6 @@ import org.junit.Test;
 
 import context.healthinformatics.Parser.XMLParser;
 import context.healthinformatics.SequentialDataAnalysis.Chunk;
-import context.healthinformatics.SequentialDataAnalysis.Constraints;
 
 /**
  * 
