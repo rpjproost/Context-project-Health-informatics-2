@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -56,16 +57,13 @@ public class MergeTable {
 		Set<String> allTables = new TreeSet<String>();
 		allTables.addAll(tables.keySet());
 		
-		for (String key : tables.keySet()) {
-			ArrayList<Column> c = new ArrayList<Column>();
-			c = tables.get(key);
-			for (int i = 0; i < c.size(); i++) {
-				if (!(columns.contains(c.get(i)))) {
-					columns.add(c.get(i));
+		for (Entry<String, ArrayList<Column>> entries : tables.entrySet()) {
+			for (int i = 0; i < entries.getValue().size(); i++) {
+				if (!(columns.contains(entries.getValue().get(i)))) {
+					columns.add(entries.getValue().get(i));
 				}
 			}
 		}
-		
 		data.createTable("result", columns);
 		insertTables(allTables, clause);
 	}
