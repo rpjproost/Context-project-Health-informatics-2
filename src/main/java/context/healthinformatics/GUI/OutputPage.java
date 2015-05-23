@@ -98,7 +98,7 @@ public class OutputPage extends InterfaceHelper implements PanelState, Serializa
 				XMLParser xmlp = new XMLParser("src/test/data/parsertodbfiles/textxml.xml");
 				xmlp.parse();
 				//TODO
-				ResultSet rs = SingletonDb.getDb().selectResultSet("stat", "*");
+				ResultSet rs = SingletonDb.getDb().selectResultSet("stat", "*", "");
 				write.writeToFile(rs);
 				SingletonDb.getDb().dropTable("stat");
 			} 

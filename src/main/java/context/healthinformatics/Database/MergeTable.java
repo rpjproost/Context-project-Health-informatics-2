@@ -43,7 +43,12 @@ public class MergeTable {
 		StringBuilder sql = new StringBuilder();
 		sql.append("CREATE VIEW workspace AS SELECT * FROM result ORDER BY ");
 		sql.append("date");
-		data.executeUpdate(sql.toString());
+		try {
+			data.executeUpdate(sql.toString());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -102,7 +107,12 @@ public class MergeTable {
 		if (clause != null && clause.length() > 0) {
 			sql.append(" WHERE ").append(clause);
 		}
-		data.executeUpdate(sql.toString());
+		try {
+			data.executeUpdate(sql.toString());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -141,7 +151,12 @@ public class MergeTable {
 	 */
 	public void dropView(String viewName) {
 		String sql = "DROP VIEW " + viewName;
-		data.executeUpdate(sql);
+		try {
+			data.executeUpdate(sql);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -151,7 +166,7 @@ public class MergeTable {
 	 */
 	public ArrayList<Chunk> getChunks() throws SQLException {
 		ArrayList<Chunk> chunks = new ArrayList<Chunk>();
-		ResultSet rs = data.selectResultSet("workspace", "resultid");
+		ResultSet rs = data.selectResultSet("workspace", "resultid", "");
 		while (rs.next()) {
 			Chunk c = new Chunk();
 			int line = rs.getInt("resultid");
