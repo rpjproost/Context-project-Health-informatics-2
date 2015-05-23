@@ -44,7 +44,6 @@ public final class SqlBuilder {
 			StringBuffer res) {
 		createTableWithIndexedColumn(tableName, res);
 		createTableWithColumnsFromArrayList(columns, res);
-
 		//return res.toString();
 	}
 
@@ -87,8 +86,7 @@ public final class SqlBuilder {
 	 * @return query for executing.
 	 */
 	public static String queryForMaxId(String tableName) {
-		String sql = "SELECT MAX(" + tableName + "ID) FROM " + tableName;
-		return sql;
+		return "SELECT MAX(" + tableName + "ID) FROM " + tableName;
 	}
 
 	/**
@@ -251,8 +249,7 @@ public final class SqlBuilder {
 	 * @return String of query to be executed.
 	 */
 	public static String createSelectSqlWithWhereClause(String tableName, String whereClause) {
-		String sql = "SELECT * FROM " + tableName + " WHERE " + whereClause;
-		return sql;	
+		return "SELECT * FROM " + tableName + " WHERE " + whereClause;
 	}
 
 	/**
@@ -278,8 +275,7 @@ public final class SqlBuilder {
 	 * @return SQL query String.
 	 */
 	public static String createSqlDropTable(String tableName) {
-		String sql = "DROP TABLE " + tableName;
-		return sql;
+		return "DROP TABLE " + tableName;
 	}
 
 }

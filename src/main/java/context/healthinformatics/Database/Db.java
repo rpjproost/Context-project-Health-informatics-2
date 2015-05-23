@@ -39,7 +39,7 @@ public class Db {
 	 *             the sql exception
 	 */
 	protected Db(String databaseName, String p) throws NullPointerException,
-	SQLException {
+			SQLException {
 		if (p == null || databaseName == null) {
 			throw new NullPointerException();
 		}
@@ -123,17 +123,24 @@ public class Db {
 
 	/**
 	 * Inserts data into table.
-	 * @param tableName Name of table values to be inserted.
-	 * @param values String array of values.
-	 * @param columns ArrayList of column names and types.
+	 * 
+	 * @param tableName
+	 *            Name of table values to be inserted.
+	 * @param values
+	 *            String array of values.
+	 * @param columns
+	 *            ArrayList of column names and types.
 	 * @return true iff data is inserted.
-	 * @throws SQLException Exception occurs when data is not delivered as type to be inserted.
+	 * @throws SQLException
+	 *             Exception occurs when data is not delivered as type to be
+	 *             inserted.
 	 */
 	public boolean insert(String tableName, String[] values,
 			ArrayList<Column> columns) throws SQLException {
 		boolean res = false;
 		try {
-			PreparedStatement stm = SqlBuilder.createSqlInsert(tableName, columns, values, conn);
+			PreparedStatement stm = SqlBuilder.createSqlInsert(tableName,
+					columns, values, conn);
 			stm.execute();
 			stm.close();
 			res = true;
@@ -145,17 +152,23 @@ public class Db {
 
 	/**
 	 * Selects all columns from tableName with Where clause.
-	 * @param tableName Name of table data to be selected from.
-	 * @param whereClause The constraint.
+	 * 
+	 * @param tableName
+	 *            Name of table data to be selected from.
+	 * @param whereClause
+	 *            The constraint.
 	 * @return Resultset with data.
-	 * @throws SQLException iff data is not found in table or clause was not formatted correctly.
+	 * @throws SQLException
+	 *             iff data is not found in table or clause was not formatted
+	 *             correctly.
 	 */
-	public ResultSet selectAllWithWhereClause(String tableName, String whereClause)
-			throws SQLException {
+	public ResultSet selectAllWithWhereClause(String tableName,
+			String whereClause) throws SQLException {
 		ResultSet rs = null;
 		try {
 			stmt = conn.createStatement();
-			String sql = SqlBuilder.createSelectSqlWithWhereClause(tableName, whereClause);
+			String sql = SqlBuilder.createSelectSqlWithWhereClause(tableName,
+					whereClause);
 			rs = stmt.executeQuery(sql);
 		} catch (SQLException e) {
 			throw new SQLException("ResultSet not created: Data not found");
@@ -170,18 +183,19 @@ public class Db {
 	 *            the table name
 	 * @param variable
 	 *            the variable
-	 * @param whereClause 
-	 * 				the constraint.
+	 * @param whereClause
+	 *            the constraint.
 	 * @return the ResultSet(data from one column)
 	 * @throws SQLException
 	 *             the SQL exception
 	 */
-	public ResultSet selectResultSet(String tableName, String variable, String whereClause)
-			throws SQLException {
+	public ResultSet selectResultSet(String tableName, String variable,
+			String whereClause) throws SQLException {
 		ResultSet rs = null;
 		try {
 			stmt = conn.createStatement();
-			String sql = SqlBuilder.createSelectWithOneColumn(tableName, variable, whereClause);
+			String sql = SqlBuilder.createSelectWithOneColumn(tableName,
+					variable, whereClause);
 			rs = stmt.executeQuery(sql);
 		} catch (SQLException e) {
 			throw new SQLException("ResultSet not created: Data not found");
@@ -217,7 +231,8 @@ public class Db {
 	 * @param sql
 	 *            query.
 	 * @return true iff sql query is executed.
-	 * @throws SQLException iff update could not be executed on database.
+	 * @throws SQLException
+	 *             iff update could not be executed on database.
 	 */
 	public boolean executeUpdate(String sql) throws SQLException {
 		boolean res = false;
@@ -284,27 +299,37 @@ public class Db {
 	public boolean removeDirectory(File dir) {
 		boolean res = false;
 		if (dir != null) {
-
-			String[] list = dir.list();
-
-			if (list != null) {
-				for (int i = 0; i < list.length; i++) {
-					File file = new File(dir, list[i]);
-
-					if (file.isDirectory()) {
-						if (!removeDirectory(file)) {
-							return false;
-						}
-					} else {
-						if (!file.delete()) {
-							return false;
-						}
-					}
-				}
-			}
-			res = dir.delete();
+			res = removeDirList(dir.list(), dir);
 		}
 		return res;
 	}
+
+	/**
+	 * Remove a list of files in a directory.
+	 * 
+	 * @param list
+	 *            the list of files
+	 * @param dir
+	 *            the directory
+	 * @return true if deleted directory
+	 */
+	public boolean removeDirList(String[] list, File dir) {
+		if (list != null) {
+			for (int i = 0; i < list.length; i++) {
+				File file = new File(dir, list[i]);
+				if (file.isDirectory()) {
+					if (!removeDirectory(file)) {
+						return false;
+					}
+				} else {
+					if (!file.delete()) {
+						return false;
+					}
+				}
+			}
+		}
+		return dir.delete();
+	}
+
 
 }
