@@ -69,7 +69,7 @@ public class MergeTableTest {
 		clause[0] = "StatSensor.value = 209";
 		MergeTable test = new MergeTable();
 		test.mergeTables(clause);
-		ResultSet rs = data.selectResultSet("result", "value");
+		ResultSet rs = data.selectResultSet("result", "value", "");
 		while (rs.next()) {
 			if (rs.getInt("value") == 0) {
 				assertEquals((rs.getInt("value")), 0);
@@ -97,7 +97,7 @@ public class MergeTableTest {
 		clause[0] = "StatSensor.value = 209";
 		MergeTable test = new MergeTable();
 		test.mergeTables(clause);
-		ResultSet rs = data.selectResultSet("result", "date");
+		ResultSet rs = data.selectResultSet("result", "date", "");
 		while (rs.next()) {
 			assertNotNull(rs.getDate("date"));
 		}
@@ -124,7 +124,7 @@ public class MergeTableTest {
 		test.mergeTables(clause);
 		test.mergeTablesView();
 		
-		ResultSet rs = data.selectResultSet("workspace", "date");
+		ResultSet rs = data.selectResultSet("workspace", "date", "");
 		
 		orderedByDate(rs);
 
@@ -180,7 +180,7 @@ public class MergeTableTest {
 		MergeTable test = new MergeTable();
 		test.merge(clause);
 		
-		ResultSet rs = data.selectResultSet("workspace", "date");
+		ResultSet rs = data.selectResultSet("workspace", "date", "");
 		
 		orderedByDate(rs);
 		

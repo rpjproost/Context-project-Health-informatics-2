@@ -42,7 +42,7 @@ public class WriterTest {
 		
 		xmlp.parse();
 
-		ResultSet rs = data.selectResultSet("stat", "*");
+		ResultSet rs = data.selectResultSet("stat", "*", "");
 		WriteToTXT wtxt = new WriteToTXT("test.txt", "src/test/data/writerfiles/");
 		wtxt.writeToFile(rs);
 		data.dropTable("stat");
