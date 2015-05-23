@@ -7,8 +7,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -45,19 +43,10 @@ public class Db {
 		if (p == null || databaseName == null) {
 			throw new NullPointerException();
 		}
-		boolean isWhitespace = databaseName.matches("^\\s*$");
-		boolean isWhitespace2 = p.matches("^\\s*$");
-
-		if (!isWhitespace) {
-			dName = databaseName;
-		} else {
-			dName = "default";
-		}
-		if (!isWhitespace2) {
-			pad = p;
-		}
-		tables = new HashMap<String, ArrayList<Column>>();
+		dName = databaseName;
+		pad = p;
 		File delDb = new File(pad + dName);
+		tables = new HashMap<String, ArrayList<Column>>();
 		removeDirectory(delDb);
 		setupConn();
 	}
@@ -74,7 +63,6 @@ public class Db {
 		setDb(pad, dName);
 		try {
 			conn = DriverManager.getConnection(db);
-			// Check connection
 			if (conn != null) {
 				res = true;
 			}
@@ -100,8 +88,7 @@ public class Db {
 		boolean res = false;
 		try {
 			stmt = conn.createStatement();
-			String sql = "CREATE TABLE " + tableName
-					+ createTableColumns(tableName, columns);
+			String sql = SqlBuilder.createSqlTable(tableName, columns);
 			stmt.executeUpdate(sql);
 			res = true;
 			tables.put(tableName, columns);
@@ -112,177 +99,76 @@ public class Db {
 	}
 
 	/**
-	 * returns highest Identifier from table, otherwise 1.
+	 * returns highest Identifier from table, otherwise 0.
 	 * 
 	 * @param tableName
 	 *            table to return max identifier from.
-	 * @return 1 or max id.
+	 * @return 0 or max id.
 	 * @throws SQLException
 	 *             if table name is incorrect.
 	 */
 	public int getMaxId(String tableName) throws SQLException {
-		int res = 1;
+		int res = 0;
 		try {
 			stmt = conn.createStatement();
-			String sql = "SELECT MAX(" + tableName + "ID) FROM " + tableName;
+			String sql = SqlBuilder.queryForMaxId(tableName);
 			ResultSet rs = stmt.executeQuery(sql);
-			while (rs.next()) {
-				int max = rs.getInt(1);
-				if (max > res) {
-					res = max;
-				}
-			}
+			res = SqlBuilder.calculateMaxId(rs);
 			rs.close();
 		} catch (SQLException e) {
-			res = 1;
 			throw new SQLException(e);
 		}
 		return res;
 	}
 
 	/**
-	 * Part of the method CreateTable, creates columns with specified types.
+	 * Inserts data into table.
 	 * 
 	 * @param tableName
-	 *            tablename.
-	 * @param columns
-	 *            column names and types.
-	 * @return string for sql building.
-	 */
-	public String createTableColumns(String tableName, ArrayList<Column> columns) {
-		StringBuffer res = new StringBuffer();
-		res.append("(").append(tableName);
-		res.append("ID int not null "
-				+ "primary key GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), ");
-		for (int i = 0; i < columns.size(); i++) {
-			if (i == columns.size() - 1) {
-				res.append(columns.get(i).getColumnName());
-				res.append(" ");
-				res.append(columns.get(i).getColumnType());
-				res.append(")");
-			} else {
-				res.append(columns.get(i).getColumnName());
-				res.append(" ");
-				res.append(columns.get(i).getColumnType());
-				res.append(",");
-			}
-		}
-		return res.toString();
-	}
-
-	/**
-	 * Insert values in to table.
-	 * 
-	 * @param tableName
-	 *            name of table.
+	 *            Name of table values to be inserted.
 	 * @param values
-	 *            values to be inserted.
+	 *            String array of values.
 	 * @param columns
-	 *            columns where values be inserted.
-	 * @return true iff values are inserted.
+	 *            ArrayList of column names and types.
+	 * @return true iff data is inserted.
 	 * @throws SQLException
-	 *             if values could not be inserted.
+	 *             Exception occurs when data is not delivered as type to be
+	 *             inserted.
 	 */
 	public boolean insert(String tableName, String[] values,
 			ArrayList<Column> columns) throws SQLException {
 		boolean res = false;
 		try {
-			StringBuilder sql = new StringBuilder();
-			sql.append("INSERT INTO " + tableName + "(");
-			appendQueryInsert(sql, columns, values);
-			PreparedStatement stm = appendValuesInsert(sql.toString(), values,
-					columns);
+			PreparedStatement stm = SqlBuilder.createSqlInsert(tableName,
+					columns, values, conn);
 			stm.execute();
+			stm.close();
 			res = true;
 		} catch (SQLException | NullPointerException e) {
 			throw new SQLException(e);
 		}
 		return res;
 	}
-	
-	/**
-	 * Appends query for insert.
-	 * @param sql query to append.
-	 * @param values
-	 *            values to be inserted.
-	 * @param columns
-	 *            columns where values be inserted.
-	 */
-	public void appendQueryInsert(StringBuilder sql, ArrayList<Column> columns, String[] values) {
-		for (int i = 0; i < columns.size(); i++) {
-			if (i == values.length - 1) {
-				sql.append(columns.get(i).getColumnName());
-				sql.append(")");
-			} else {
-				sql.append(columns.get(i).getColumnName());
-				sql.append(",");
-			}
-		}
-		sql.append(" VALUES (");
-		for (int i = 0; i < values.length; i++) {
-			if (i == values.length - 1) {
-				sql.append("?)");
-			} else {
-				sql.append("?,");
-			}
-		}
-	}
 
 	/**
-	 * 
-	 * @param s
-	 *            sql query to be turned into preparedStatement.
-	 * @param values
-	 *            to be inserted into table.
-	 * @param columns
-	 *            ArrayList of columns, types and dateTypes are used.
-	 * @return preparedstatement to be executed.
-	 * @throws SQLException
-	 *             the sql exception
-	 */
-	public PreparedStatement appendValuesInsert(String s, String[] values,
-			ArrayList<Column> columns) throws SQLException {
-		PreparedStatement preparedStmt = conn.prepareStatement(s);
-		for (int i = 0; i < values.length; i++) {
-			String type = columns.get(i).getColumnType().toLowerCase();
-			if (type.startsWith("varchar")) {
-				preparedStmt.setString(i + 1, values[i]);
-			} else if (type.equals("date")) {
-				String dateType = columns.get(i).getDateType();
-				java.sql.Date date = convertDate(values[i], dateType);
-				preparedStmt.setDate(i + 1, date);
-			} else if (type.equals("int")) {
-				double value = 0;
-				try {
-					value = Double.parseDouble(values[i]);
-				} catch (Exception e) {
-					throw new SQLException(e);
-				}
-				preparedStmt.setDouble(i + 1, value);
-			} else {
-				throw new SQLException("type of insert not recognized.");
-			}
-		}
-		return preparedStmt;
-	}
-
-	/**
-	 * Execture a query on table tablename with whereclause whereclause.
+	 * Selects all columns from tableName with Where clause.
 	 * 
 	 * @param tableName
-	 *            the name of the table
+	 *            Name of table data to be selected from.
 	 * @param whereClause
-	 *            the where clause
-	 * @return the resultset
+	 *            The constraint.
+	 * @return Resultset with data.
 	 * @throws SQLException
-	 *             if something goes wrong
+	 *             iff data is not found in table or clause was not formatted
+	 *             correctly.
 	 */
-	public ResultSet execQuery(String tableName, String whereClause)
-			throws SQLException {
+	public ResultSet selectAllWithWhereClause(String tableName,
+			String whereClause) throws SQLException {
 		ResultSet rs = null;
 		try {
 			stmt = conn.createStatement();
-			String sql = "SELECT * FROM " + tableName + " WHERE " + whereClause;
+			String sql = SqlBuilder.createSelectSqlWithWhereClause(tableName,
+					whereClause);
 			rs = stmt.executeQuery(sql);
 		} catch (SQLException e) {
 			throw new SQLException("ResultSet not created: Data not found");
@@ -291,58 +177,30 @@ public class Db {
 	}
 
 	/**
-	 * Select variable from tablename.
+	 * Select one column from tablename.
 	 * 
 	 * @param tableName
 	 *            the table name
 	 * @param variable
 	 *            the variable
-	 * @return the resultset
+	 * @param whereClause
+	 *            the constraint.
+	 * @return the ResultSet(data from one column)
 	 * @throws SQLException
-	 *             the sql exception
+	 *             the SQL exception
 	 */
-	public ResultSet selectResultSet(String tableName, String variable)
-			throws SQLException {
+	public ResultSet selectResultSet(String tableName, String variable,
+			String whereClause) throws SQLException {
 		ResultSet rs = null;
 		try {
 			stmt = conn.createStatement();
-			String sql = "SELECT " + variable + " FROM " + tableName;
+			String sql = SqlBuilder.createSelectWithOneColumn(tableName,
+					variable, whereClause);
 			rs = stmt.executeQuery(sql);
 		} catch (SQLException e) {
 			throw new SQLException("ResultSet not created: Data not found");
 		}
 		return rs;
-	}
-
-	/**
-	 * NEEDS WORK!
-	 * 
-	 * @param tableName
-	 *            name of table to select variables from.
-	 * @param variable
-	 *            variables to select.
-	 * @return String with results.
-	 * @throws SQLException
-	 *             if data is not found.
-	 */
-	public String select(String tableName, String variable) throws SQLException {
-		String res = "";
-		ResultSet rs = null;
-		try {
-			stmt = conn.createStatement();
-			String sql = "SELECT " + variable + " FROM " + tableName;
-			rs = stmt.executeQuery(sql);
-			while (rs.next()) {
-				res = rs.getString(variable);
-				// hier moet nog iets beters gereturned worden.
-				// This method is only for testing purposes now.
-			}
-		} catch (SQLException e) {
-			res = "Data not found";
-			throw new SQLException(e);
-		}
-		rs.close();
-		return res;
 	}
 
 	/**
@@ -358,7 +216,7 @@ public class Db {
 		boolean res = false;
 		try {
 			stmt = conn.createStatement();
-			String sql = "DROP TABLE " + tableName;
+			String sql = SqlBuilder.createSqlDropTable(tableName);
 			stmt.executeUpdate(sql);
 			tables.remove(tableName);
 			res = true;
@@ -373,16 +231,17 @@ public class Db {
 	 * @param sql
 	 *            query.
 	 * @return true iff sql query is executed.
+	 * @throws SQLException
+	 *             iff update could not be executed on database.
 	 */
-	public boolean executeUpdate(String sql) {
+	public boolean executeUpdate(String sql) throws SQLException {
 		boolean res = false;
 		try {
 			stmt = conn.createStatement();
 			stmt.executeUpdate(sql);
 			res = true;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new SQLException(e);
 		}
 		return res;
 	}
@@ -440,49 +299,37 @@ public class Db {
 	public boolean removeDirectory(File dir) {
 		boolean res = false;
 		if (dir != null) {
-
-			String[] list = dir.list();
-
-			if (list != null) {
-				for (int i = 0; i < list.length; i++) {
-					File file = new File(dir, list[i]);
-
-					if (file.isDirectory()) {
-						if (!removeDirectory(file)) {
-							return false;
-						}
-					} else {
-						if (!file.delete()) {
-							return false;
-						}
-					}
-				}
-			}
-			res = dir.delete();
+			res = removeDirList(dir.list(), dir);
 		}
 		return res;
 	}
 
 	/**
-	 * Converts date to sql date format.
+	 * Remove a list of files in a directory.
 	 * 
-	 * @param s
-	 *            date value.
-	 * @param dateT
-	 *            type of date input.
-	 * @return date value in sql format.
+	 * @param list
+	 *            the list of files
+	 * @param dir
+	 *            the directory
+	 * @return true if deleted directory
 	 */
-	public java.sql.Date convertDate(String s, String dateT) {
-		SimpleDateFormat input = new SimpleDateFormat(dateT);
-		java.sql.Date sqlDate = null;
-		try {
-			java.util.Date date = input.parse(s);
-			sqlDate = new java.sql.Date(date.getTime());
-
-		} catch (ParseException e) {
-			e.printStackTrace();
+	public boolean removeDirList(String[] list, File dir) {
+		if (list != null) {
+			for (int i = 0; i < list.length; i++) {
+				File file = new File(dir, list[i]);
+				if (file.isDirectory()) {
+					if (!removeDirectory(file)) {
+						return false;
+					}
+				} else {
+					if (!file.delete()) {
+						return false;
+					}
+				}
+			}
 		}
-		return sqlDate;
+		return dir.delete();
 	}
+
 
 }

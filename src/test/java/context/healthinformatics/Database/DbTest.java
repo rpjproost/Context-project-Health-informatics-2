@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -108,7 +109,7 @@ public class DbTest {
 	@Test
 	public void testGetMaxIDDefault() throws SQLException {
 		assertTrue(data.createTable(tableName, colArr));
-		assertEquals(data.getMaxId("test"), 1);
+		assertEquals(data.getMaxId("test"), 0);
 		assertTrue(data.dropTable(tableName));
 	}
 
@@ -152,7 +153,12 @@ public class DbTest {
 	public void testSelectName() throws SQLException {
 		assertTrue(data.createTable(tableName, colArr));
 		assertTrue(data.insert(tableName, values, colArr));
-		assertEquals(data.select(tableName, "Name"), "Rick");
+		ResultSet rs = data.selectResultSet(tableName, "Name", "");
+		while (rs.next()) {
+			String res = rs.getString(1);
+			assertEquals(res, "Rick");
+		}
+		rs.close();
 		assertTrue(data.dropTable(tableName));
 	}
 
@@ -164,9 +170,15 @@ public class DbTest {
 	 */
 	@Test
 	public void testSelectAge() throws SQLException {
+		final String testResult = "22";
 		assertTrue(data.createTable(tableName, colArr));
 		assertTrue(data.insert(tableName, values, colArr));
-		assertEquals(data.select(tableName, "Age"), "22");
+		ResultSet rs = data.selectResultSet(tableName, "Age", "");
+		while (rs.next()) {
+			String res = rs.getString(1);
+			assertEquals(res, testResult);
+		}
+		rs.close();
 		assertTrue(data.dropTable("test"));
 	}
 
@@ -229,7 +241,7 @@ public class DbTest {
 	 */
 	@Test(expected = SQLException.class)
 	public void selectNonExistent() throws SQLException {
-		data.select("nonexistent", "nonexistent");
+		data.selectResultSet("nonexistent", "nonexistent", "");
 	}
 
 	/**
@@ -243,7 +255,7 @@ public class DbTest {
 		assertTrue(data.createTable(tableName, colArr));
 		ExpectedException thrown = ExpectedException.none();
 		try {
-			data.select(tableName, "nonexistentcol");
+			data.selectResultSet(tableName, "nonexistentcol", "");
 		} catch (SQLException e) {
 			thrown.expect(SQLException.class);
 
@@ -276,14 +288,6 @@ public class DbTest {
 	@Test
 	public void removeNull() {
 		assertFalse(data.removeDirectory(null));
-	}
-
-	/**
-	 * Tests date conversion.
-	 */
-	@Test
-	public void testDateConversion() {
-		assertEquals((data.convertDate("28-10-1992", "dd-MM-yyyy")).toString(), "1992-10-28");
 	}
 
 	/**

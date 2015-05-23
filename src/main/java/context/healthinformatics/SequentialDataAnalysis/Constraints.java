@@ -239,7 +239,7 @@ public class Constraints {
 	public ArrayList<Integer> getRemainingIDs(String tableName,
 			String whereClause) throws SQLException {
 		Db data = SingletonDb.getDb();
-		ResultSet rs = data.execQuery(tableName, whereClause);
+		ResultSet rs = data.selectAllWithWhereClause(tableName, whereClause);
 		ArrayList<Integer> intArr = new ArrayList<Integer>();
 		while (rs.next()) {
 			intArr.add(rs.getInt(tableName + "id"));

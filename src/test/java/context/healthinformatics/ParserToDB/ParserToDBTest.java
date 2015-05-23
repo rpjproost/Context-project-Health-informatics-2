@@ -61,9 +61,9 @@ public class ParserToDBTest {
 	public void textParsertoDBTest() throws IOException, SQLException {
 		xmlp = new XMLParser(path + "textxml.xml");
 		xmlp.parse();
-		assertNotNull(data.select("stat", "date"));
-		assertNotNull(data.select("stat", "value"));
-		assertNotNull(data.select("stat", "time"));
+		assertNotNull(data.selectResultSet("stat", "date", ""));
+		assertNotNull(data.selectResultSet("stat", "value", ""));
+		assertNotNull(data.selectResultSet("stat", "time", ""));
 		data.dropTable("stat");
 	}
 
@@ -80,10 +80,10 @@ public class ParserToDBTest {
 	public void excelParsertoDBXLSXTest() throws IOException, SQLException {
 		xmlp = new XMLParser(path + "excelxml.xml");
 		xmlp.parse();
-		assertNotNull(data.select("exceltest", "date"));
-		assertNotNull(data.select("exceltest", "groep"));
-		assertNotNull(data.select("exceltest", "admnr"));
-		assertNotNull(data.select("exceltest", "agendaomschrijving"));
+		assertNotNull(data.selectResultSet("exceltest", "date", ""));
+		assertNotNull(data.selectResultSet("exceltest", "groep", ""));
+		assertNotNull(data.selectResultSet("exceltest", "admnr", ""));
+		assertNotNull(data.selectResultSet("exceltest", "agendaomschrijving", ""));
 		data.dropTable("exceltest");
 	}
 
@@ -100,11 +100,11 @@ public class ParserToDBTest {
 	public void excelParsertoDBXLSTest() throws IOException, SQLException {
 		xmlp = new XMLParser(path + "excelxlsxml.xml");
 		xmlp.parse();
-		assertNotNull(data.select("exceltest", "admnr"));
-		assertNotNull(data.select("exceltest", "monitoring"));
-		assertNotNull(data.select("exceltest", "date"));
-		assertNotNull(data.select("exceltest", "datelogin"));
-		assertNotNull(data.select("exceltest", "remarks"));
+		assertNotNull(data.selectResultSet("exceltest", "admnr", ""));
+		assertNotNull(data.selectResultSet("exceltest", "monitoring", ""));
+		assertNotNull(data.selectResultSet("exceltest", "date", ""));
+		assertNotNull(data.selectResultSet("exceltest", "datelogin", ""));
+		assertNotNull(data.selectResultSet("exceltest", "remarks", ""));
 		data.dropTable("exceltest");
 	}
 	
@@ -121,9 +121,9 @@ public class ParserToDBTest {
 	public void csvParsertoDBTest() throws IOException, SQLException {
 		xmlp = new XMLParser(path + "csvxml.xml");
 		xmlp.parse();
-		assertNotNull(data.select("csvtest", "num1"));
-		assertNotNull(data.select("csvtest", "num2"));
-		assertNotNull(data.select("csvtest", "num3"));
+		assertNotNull(data.selectResultSet("csvtest", "num1", ""));
+		assertNotNull(data.selectResultSet("csvtest", "num2", ""));
+		assertNotNull(data.selectResultSet("csvtest", "num3", ""));
 		data.dropTable("csvtest");
 	}
 }
