@@ -291,14 +291,6 @@ public class DbTest {
 	}
 
 	/**
-	 * Tests date conversion.
-	 */
-	@Test
-	public void testDateConversion() {
-		assertEquals((SqlBuilder.convertDate("28-10-1992", "dd-MM-yyyy")).toString(), "1992-10-28");
-	}
-
-	/**
 	 * Tests setters and getters singletonDb.
 	 */
 	@Test

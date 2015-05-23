@@ -40,7 +40,7 @@ public final class SqlBuilder {
 	 * @param columns ArrayList<Column> for column names and types.
 	 * @param res Query to be appended.
 	 */
-	public static void createTableColumns(String tableName, ArrayList<Column> columns, 
+	private static void createTableColumns(String tableName, ArrayList<Column> columns, 
 			StringBuffer res) {
 		createTableWithIndexedColumn(tableName, res);
 		createTableWithColumnsFromArrayList(columns, res);
@@ -53,7 +53,7 @@ public final class SqlBuilder {
 	 * @param tableName Name of table to create.
 	 * @param res res Query to be appended.
 	 */
-	public static void createTableWithIndexedColumn(String tableName, StringBuffer res) {
+	private static void createTableWithIndexedColumn(String tableName, StringBuffer res) {
 		res.append("(").append(tableName);
 		res.append("ID int not null "
 				+ "primary key GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), ");
@@ -64,7 +64,7 @@ public final class SqlBuilder {
 	 * @param columns ArrayList<Column> for column names and types.
 	 * @param res res Query to be appended.
 	 */
-	public static void createTableWithColumnsFromArrayList(ArrayList<Column> columns, 
+	private static void createTableWithColumnsFromArrayList(ArrayList<Column> columns, 
 			StringBuffer res) {
 		for (int i = 0; i < columns.size(); i++) {
 			if (i == columns.size() - 1) {
@@ -132,7 +132,7 @@ public final class SqlBuilder {
 	 * @param sql SQL query to be appended.
 	 * @param columns ArrayList of column names.
 	 */
-	public static void appendQueryColumns(StringBuilder sql, ArrayList<Column> columns) {
+	private static void appendQueryColumns(StringBuilder sql, ArrayList<Column> columns) {
 		for (int i = 0; i < columns.size(); i++) {
 			if (i == columns.size() - 1) {
 				sql.append(columns.get(i).getColumnName());
@@ -149,7 +149,7 @@ public final class SqlBuilder {
 	 * @param sql SQL query to be appended.
 	 * @param values String[] of values to be inserted. (for length).
 	 */
-	public static void appendQueryValues(StringBuilder sql, String[] values) {
+	private static void appendQueryValues(StringBuilder sql, String[] values) {
 		sql.append(" VALUES (");
 		for (int i = 0; i < values.length; i++) {
 			if (i == values.length - 1) {
@@ -170,7 +170,7 @@ public final class SqlBuilder {
 	 * @return preparedStatement to be executed.
 	 * @throws SQLException iff values could not be inserted.
 	 */
-	public static PreparedStatement appendValuesInsert(String sql, String[] values,
+	private static PreparedStatement appendValuesInsert(String sql, String[] values,
 			ArrayList<Column> columns, Connection conn) throws SQLException {
 		PreparedStatement preparedStmt = conn.prepareStatement(sql);
 		for (int i = 0; i < values.length; i++) {
@@ -197,7 +197,7 @@ public final class SqlBuilder {
 	 * @param i Index of value String and preparedStatement.
 	 * @throws SQLException Iff date could not be inserted.
 	 */
-	public static void appendDateIntoPreparedStatement(PreparedStatement p, String[] values, 
+	private static void appendDateIntoPreparedStatement(PreparedStatement p, String[] values, 
 			ArrayList<Column> columns, int i) throws SQLException {
 		String dateType = columns.get(i).getDateType();
 		java.sql.Date date = convertDate(values[i], dateType);
@@ -211,7 +211,7 @@ public final class SqlBuilder {
 	 * @param i index of value String[] and preparedStatement.
 	 * @throws SQLException Iff integer could not be inserted.
 	 */
-	public static void appendIntIntoPreparedStatement(PreparedStatement p, 
+	private static void appendIntIntoPreparedStatement(PreparedStatement p, 
 			String[] values, int i) throws SQLException {
 		double value = 0;
 		try {
@@ -231,7 +231,7 @@ public final class SqlBuilder {
 	 *            type of date input.
 	 * @return date value in sql format.
 	 */
-	public static java.sql.Date convertDate(String s, String dateT) {
+	private static java.sql.Date convertDate(String s, String dateT) {
 		SimpleDateFormat input = new SimpleDateFormat(dateT);
 		java.sql.Date sqlDate = null;
 		try {
