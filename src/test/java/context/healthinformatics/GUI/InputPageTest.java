@@ -46,7 +46,7 @@ public class InputPageTest {
 		folder.get(2).add("5");
 		folder.get(2).add("6");
 		ip.setFolder(folder);
-		ip.initXmlList();
+		ip.getFileTree().initXmlList();
 	}
 	
 	/**
@@ -65,8 +65,8 @@ public class InputPageTest {
 	 */
 	@Test
 	public void testFillTree() {
-		ip.fillTree();
-		assertEquals(ip.getRoot().getChildCount(), THREE);
+		ip.getFileTree().fillTree();
+		assertEquals(ip.getFileTree().getRoot().getChildCount(), THREE);
 	}
 	
 	/**
@@ -82,7 +82,7 @@ public class InputPageTest {
 	 */
 	@Test
 	public void testgetSelectedNodesisEmpty() {
-		assertEquals(ip.getSelectedFiles().isEmpty(), true);
+		assertEquals(ip.getFileTree().getSelectedFiles().isEmpty(), true);
 	}
 	
 	/**
@@ -115,7 +115,7 @@ public class InputPageTest {
 	 */
 	@Test
 	public void testinitXml() {
-		assertEquals(ip.getXmlList().size(), ip.getFolder().size());
+		assertEquals(ip.getFileTree().getXmlList().size(), ip.getFolder().size());
 	}
 	
 	/**
