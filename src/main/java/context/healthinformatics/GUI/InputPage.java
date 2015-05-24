@@ -25,6 +25,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
 import context.healthinformatics.Database.SingletonDb;
@@ -92,21 +93,13 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 */
 	public JPanel loadPanel() {
 		panel = createSection(mf.getStatePanelSize());
-		
-		JPanel section1 = loadProjectSelection();
-		panel.add(section1, setGrids(0, 0));
-		
-		JPanel section2 = loadFileSelection();
-		panel.add(section2, setGrids(0, 1));
-		
-		JPanel section3 = loadFolder();
-		panel.add(section3, setGrids(0, 2));
-		
-		JPanel section4 = loadButtonSection();
+		panel.add(loadProjectSelection(), setGrids(0, 0));
+		panel.add(loadFileSelection(), setGrids(0, 1));
+		panel.add(loadFolder(), setGrids(0, 2));
 		GridBagConstraints c = setGrids(0, THREE);
 		c.weighty = 1;
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
-		panel.add(section4, c);
+		panel.add(loadButtonSection(), c);
 		return panel;
 	}
 	
@@ -177,22 +170,30 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	}
 	
 	/**
-	 * Method which asks the user to enter a new Project name, and inserts it in the combobox.
+	 * Method which asks the user to enter a new PROJECTS :, and inserts it in the combobox.
 	 */
 	public void addComboItem() {
 		String newProject =  (String) JOptionPane.showInputDialog(panel,
-				"New Project Name : ");
+				"New Project : ");
+		if (findFolderProject(newProject) != -1) {
+			JOptionPane.showMessageDialog(null, "Project name already exists!");
+			return;
+		}
 		if (newProject != null) {
 			ArrayList<String> list = new ArrayList<String>();
 			list.add(newProject);
 			folder.add(list);
 			box.addItem(newProject);
 			DefaultMutableTreeNode node = new DefaultMutableTreeNode(newProject);
+			DefaultMutableTreeNode xml = new DefaultMutableTreeNode("SET XML FILE");
+			node.add(xml);
 			model.insertNodeInto(node, root, root.getChildCount());
 			xmlList.add(null);
+			tree.expandRow(0);
+			tree.expandRow(root.getChildCount() + root.getLeafCount() - 1);
 		}
 		else {
-			JOptionPane.showMessageDialog(null, "No project name specified");
+			JOptionPane.showMessageDialog(null, "No projects specified");
 		}
 	}
 	
@@ -283,9 +284,10 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		DefaultMutableTreeNode project = null;
 		DefaultMutableTreeNode file = null;
 		for (int i = 0; i < folder.size(); i++) {
-			project = new DefaultMutableTreeNode(folder.get(i).get(0));
+			project = new DefaultMutableTreeNode(folder.get(i).get(0) + isXmlSet(i));
 			for (int j = 1; j < folder.get(i).size(); j++) {
-				file = new DefaultMutableTreeNode(folder.get(i).get(j));
+				String node = folder.get(i).get(j);
+				file = new DefaultMutableTreeNode(node + isSelected(node));
 				project.add(file);
 			}
 			DefaultMutableTreeNode xml = new DefaultMutableTreeNode("SET XML FILE");
@@ -295,10 +297,38 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	}
 	
 	/**
+	 * Method which checks if the SML file for this project is set.
+	 * @param i is the index of the project.
+	 * @return empty String if the XML is not yet set, and return "   [SET]" otherwise.
+	 */
+	public String isXmlSet(int i) {
+		if (getXmlList().get(i) == null) {
+			return "";
+		}
+		else {
+			return "   [SET]";
+		}
+	}
+	
+	/**
+	 * Method which checks if the TreeNode is selected.
+	 * @param node is the current node.
+	 * @return empty String if the Node is not selcted, and return "   [SELECTED]" otherwise.
+	 */
+	public String isSelected(String node) {
+		if (getSelectedFiles().contains(node)) {
+			return "   [SELECTED]";
+		}
+		else {
+			return "";
+		}
+	}
+	
+	/**
 	 * Method which initialises the tree.
 	 */
 	public void initTree() {
-		root = new DefaultMutableTreeNode("PROJECT NAME");		
+		root = new DefaultMutableTreeNode("PROJECTS :");		
         fillTree();
         model = new DefaultTreeModel(root);
         tree = new JTree(model);
@@ -315,15 +345,6 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		for (int i = 0; i < folder.size(); i++) {
 			xmlList.add(null);
 		}
-	}
-	
-	/**
-	 * Method which reloades the tree.
-	 */
-	public void reloadTree() {
-		root.removeAllChildren();
-		fillTree();
-		model.reload();
 	}
 	
 	/**
@@ -435,35 +456,6 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	}
 	
 	/**
-	 * Method which asks the user.
-	 * @param node is the node that is selected.
-	 */
-	public void askUser(DefaultMutableTreeNode node) {
-		if (openFileChooser() == JFileChooser.APPROVE_OPTION) {
-		    String path = selecter.getSelectedFile().toString();
-			if (!path.equals("")) {
-				DefaultMutableTreeNode projectNode = (DefaultMutableTreeNode) node
-			    		.getParent();
-				String temp = projectNode.getUserObject().toString();
-				String project = "";
-				if (temp.length() > EIGHT && temp.substring(
-						temp.length() - EIGHT).equals("   [SET]")) {
-					project = temp.substring(0, temp.length() - EIGHT);
-				} else {
-					project = temp;
-				}
-			    int c = findFolderProject(project);
-				if (xmlList.get(c) == null) {
-					projectNode.setUserObject(projectNode.getUserObject()
-							.toString() + "   [SET]");
-				}
-				xmlList.set(c, path);
-			}
-		}
-		selecter.setVisible(false);
-	}
-	
-	/**
 	 * Class which handles the actions when buttons are clicked.
 	 */
 	class ActionHandler implements ActionListener {
@@ -478,9 +470,12 @@ public class InputPage extends InterfaceHelper implements PanelState,
 			}
 			if (e.getSource() == fileButton) {
 				if (folder.size() != 0 && !txt.getText().equals("")) {
-					folder.get(findFolderProject((String) box.getSelectedItem()))
-					.add(txt.getText());
-					reloadTree();
+					String text = txt.getText();
+					int project = findFolderProject((String) box.getSelectedItem());
+					folder.get(project).add(text);
+					DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(text);
+					model.insertNodeInto(newNode, (MutableTreeNode) root.getChildAt(project)
+							, root.getChildAt(project).getChildCount());
 				} else {
 					JOptionPane.showMessageDialog(null,
 							"No project created yet, or no file specified!");
@@ -503,20 +498,6 @@ public class InputPage extends InterfaceHelper implements PanelState,
 			}
 		}
 	}
-	
-	/**
-	 * Load the database from a xml file when there isn't already one.
-	 */
-	protected void loadDatabase() {
-		if (SingletonDb.getDb().getTables().isEmpty()) {
-			XMLParser xmlp = new XMLParser("src/main/data/demo/demo.xml");
-			try {
-				xmlp.parse();
-			} catch (IOException e1) {
-				e1.printStackTrace(); //TODO exception handling
-			}
-		}
-	}
 
 	/**
 	 * Method which is fired after a node selection.
@@ -525,7 +506,8 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	public void valueChanged(TreeSelectionEvent e) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
 				.getLastSelectedPathComponent();
-		if (node != null && node.isLeaf()) {
+		if (node != null && node.isLeaf()
+				&& !node.getUserObject().toString().equals("PROJECTS :")) {
 			String selected = node.getUserObject().toString();
 			useSelectedTreeNode(selected, node);
 		}
@@ -538,25 +520,128 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 */
 	public void useSelectedTreeNode(String selected, DefaultMutableTreeNode node) {
 		if (selected.equals("SET XML FILE")) {
-			askUser(node);
-			model.nodeStructureChanged(node.getParent());
+			addXmlFile(node);
 		} else {
-			String flag;
-			if (selected.length() > FLAGLENGTH) {
-				flag = selected.substring(selected.length() - FLAGLENGTH);
-			} else {
-				flag = null;
+			selectNode(selected, node);
+		}
+	}
+	
+	/**
+	 * Method which asks the user for an xml file and updates the tree.
+	 * @param node is the selected treeNode.
+	 */
+	public void addXmlFile(DefaultMutableTreeNode node) {
+		askUserForXml(node);
+		model.nodeStructureChanged(node.getParent());
+	}
+	
+	/**
+	 * Method which asks the user.
+	 * @param node is the node that is selected.
+	 */
+	public void askUserForXml(DefaultMutableTreeNode node) {
+		if (openFileChooser() == JFileChooser.APPROVE_OPTION) {
+		    String path = selecter.getSelectedFile().toString();
+			if (!path.equals("")) {
+				setProjectNodeToSelected(path, node);
 			}
-			if (flag != null && flag.equals("   [SELECTED]")) {
-				selectedFiles.remove(selected);
-				String s = node.getUserObject().toString();
-				node.setUserObject(s.substring(0, s.length() - FLAGLENGTH));
-				model.nodeStructureChanged(node.getParent());
-			} else {
-				selectedFiles.add(selected);
-				node.setUserObject(node.getUserObject().toString()
-						+ "   [SELECTED]");
-				model.nodeStructureChanged(node.getParent());
+		}
+		selecter.setVisible(false);
+	}
+	
+	/**
+	 * Set the selected projectNode to Set.
+	 * @param path is the entered XML file path.
+	 * @param node is the selected TreeNode.
+	 */
+	public void setProjectNodeToSelected(String path, DefaultMutableTreeNode node) {
+		DefaultMutableTreeNode projectNode = (DefaultMutableTreeNode) node
+	    		.getParent();
+		String temp = projectNode.getUserObject().toString();
+		String project = checkProjectNodeString(temp);
+	    int c = findFolderProject(project);
+		if (xmlList.get(c) == null) {
+			projectNode.setUserObject(projectNode.getUserObject()
+					.toString() + "   [SET]");
+		}
+		xmlList.set(c, path);
+	}
+	
+	/**
+	 * Check the string of the projectNode.
+	 * @param string is the string of the selected TreeNode.
+	 * @return the string of the projectNode.
+	 */
+	public String checkProjectNodeString(String string) {
+		if (string.length() > EIGHT && string.substring(
+				string.length() - EIGHT).equals("   [SET]")) {
+			return string.substring(0, string.length() - EIGHT);
+		} else {
+			return string;
+		}
+	}
+	
+	/**
+	 * Set the selected TreeNode to selected.
+	 * @param selected is the string of the selected TreeNode.
+	 * @param node is the selected TreeNode.
+	 */
+	public void selectNode(String selected, DefaultMutableTreeNode node) {
+		String flag = checkLengthOfNodeString(selected);
+		if (flag != "" && flag.equals("   [SELECTED]")) {
+			setNodeToNotSelected(selected, node);
+		} else {
+			setNodeToSelected(selected, node);
+		}
+	}
+	
+	/**
+	 * Do something with the selected TreeNode.
+	 * @param selected is the string of the selected TreeNode.
+	 * @return the flag String.
+	 */
+	public String checkLengthOfNodeString(String selected) {
+		if (selected.length() > FLAGLENGTH) {
+			return selected.substring(selected.length() - FLAGLENGTH);
+		} else {
+			return "";
+		}
+	}
+	
+	/**
+	 * Set the selected TreeNode to selected.
+	 * @param selected is the string of the selected TreeNode.
+	 * @param node is the selected TreeNode.
+	 */
+	public void setNodeToSelected(String selected, DefaultMutableTreeNode node) {
+		selectedFiles.add(selected);
+		node.setUserObject(node.getUserObject().toString()
+				+ "   [SELECTED]");
+		model.nodeStructureChanged(node.getParent());
+	}
+	
+	/**
+	 * Set the selected TreeNode to NOT selected.
+	 * @param selected is the string of the selected TreeNode.
+	 * @param node is the selected TreeNode.
+	 */
+	public void setNodeToNotSelected(String selected, DefaultMutableTreeNode node) {
+		selectedFiles.remove(selected);
+		String s = node.getUserObject().toString();
+		node.setUserObject(s.substring(0, s.length() - FLAGLENGTH));
+		model.nodeStructureChanged(node.getParent());
+	}
+	
+	/**
+	 * Load the database from a xml file when there isn't already one.
+	 */
+	protected void loadDatabase() {
+		if (SingletonDb.getDb().getTables().isEmpty()) {
+			XMLParser xmlp = new XMLParser("src/main/data/demo/demo.xml");
+			try {
+				xmlp.parse();
+			} catch (IOException e1) {
+				e1.printStackTrace(); //TODO exception handling
 			}
 		}
 	}

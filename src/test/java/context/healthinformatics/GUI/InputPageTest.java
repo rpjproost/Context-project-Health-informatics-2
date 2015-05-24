@@ -111,20 +111,6 @@ public class InputPageTest {
 	}
 	
 	/**
-	 * Checks if the method reloads the tree model correctly.
-	 */
-	@Test
-	public void testReloadTree() {
-		ArrayList<ArrayList<String>> list = ip.getFolder();
-		ArrayList<String> project = list.get(0);
-		project.add("test");
-		list.set(0, project);
-		ip.setFolder(list);
-		ip.reloadTree();
-		assertEquals(ip.getModel().getChild(ip.getRoot().getFirstChild(), 0).toString(), "test");
-	}
-	
-	/**
 	 * Checks if the xmlList is initialised correctly.
 	 */
 	@Test
