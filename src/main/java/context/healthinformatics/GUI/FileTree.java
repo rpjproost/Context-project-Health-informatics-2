@@ -142,8 +142,8 @@ public class FileTree implements TreeSelectionListener, Serializable {
         treePane.setPreferredSize(new Dimension(TREEPANEWIDTH, TREEPANEHEIGHT));
         GridBagConstraints c = ip.setGrids(0, 0);
         c.weightx = 1;
-        c.insets = new Insets(InputPage.BUTTONINSETS, InputPage.BUTTONINSETS
-        		, InputPage.BUTTONINSETS, InputPage.BUTTONINSETS);
+        c.insets = new Insets(InputPageComponents.BUTTONINSETS, InputPageComponents.BUTTONINSETS
+        		, InputPageComponents.BUTTONINSETS, InputPageComponents.BUTTONINSETS);
 		c.anchor = GridBagConstraints.LINE_START;
 		panel.add(treePane, c);
 	}

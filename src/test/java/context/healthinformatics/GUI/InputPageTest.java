@@ -2,17 +2,14 @@ package context.healthinformatics.GUI;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-
 import java.awt.AWTException;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
 import context.healthinformatics.Database.SingletonDb;
-import context.healthinformatics.GUI.InputPage.ActionHandler;
 
 /**
  * Test for the InputPage of the Interface.
@@ -21,7 +18,7 @@ public class InputPageTest {
 
 	private MainFrame mf;
 	private InputPage ip;
-	private ActionHandler handler;
+	private ActionListener handler;
 	private ArrayList<ArrayList<String>> folder;
 	
 	public static final int THREE = 3;
@@ -33,7 +30,7 @@ public class InputPageTest {
 	public void createFrame() {
 		mf = new MainFrame();
 		ip = (InputPage) mf.getInputPage();
-		handler = (ActionHandler) ip.getAnalyseButton().getActionListeners()[0];
+		handler = (ActionListener) ip;
 		
 		folder = new ArrayList<ArrayList<String>>();
 		folder.add(new ArrayList<String>());
@@ -55,7 +52,7 @@ public class InputPageTest {
 	 */
 	@Test
 	public void testAnalyseButton() throws AWTException {
-		ActionEvent e = new ActionEvent(ip.getAnalyseButton(), 0, "");
+		ActionEvent e = new ActionEvent(ip.getInputPageComponent().getAnalyseButton(), 0, "");
 		handler.actionPerformed(e);		
 		assertEquals(mf.getPanelState(), mf.getCodePage());
 	}
