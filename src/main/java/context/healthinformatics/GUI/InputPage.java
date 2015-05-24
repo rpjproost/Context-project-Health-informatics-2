@@ -83,7 +83,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	}
 	
 	/**
-	 * @return section1 Panel.////////////////////////////////////////////////////////////////////////
+	 * @return section1 Panel.
 	 */
 	public JPanel loadProjectSelection() {
 		JPanel section1 = MainFrame.createPanel(Color.decode(COLOR),
@@ -169,7 +169,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	}
 	
 	/**
-	 * @return section2 Panel.//////////////////////////////////////////////////////////////////////////
+	 * @return section2 Panel.
 	 */
 	public JPanel loadFileSelection() {
 		JPanel section2 = MainFrame.createPanel(Color.decode(COLOR),

@@ -5,8 +5,8 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.io.Serializable;
 import java.util.ArrayList;
-
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -21,7 +21,9 @@ import javax.swing.tree.TreeSelectionModel;
 /**
  * Class which represents the FileTree on the InputPage.
  */
-public class FileTree implements TreeSelectionListener {
+public class FileTree implements TreeSelectionListener, Serializable {
+	
+	private static final long serialVersionUID = 1L;
 	
 	private MainFrame mf;
 	private InputPage ip;
@@ -49,6 +51,15 @@ public class FileTree implements TreeSelectionListener {
 		xmlList = new ArrayList<String>();
 		initXmlList();
 	}
+	
+	/**
+	 * Method which initialises the XML list.
+	 */
+	public void initXmlList() {
+		for (int i = 0; i < ip.getFolder().size(); i++) {
+			xmlList.add(null);
+		}
+	}
 
 	/**
 	 * @return The tree folder structure Panel.
@@ -60,15 +71,6 @@ public class FileTree implements TreeSelectionListener {
 		initTree();
 		addTreePane(section3);
 		return section3;
-	}
-	
-	/**
-	 * Method which initialises the XML list.
-	 */
-	public void initXmlList() {
-		for (int i = 0; i < ip.getFolder().size(); i++) {
-			xmlList.add(null);
-		}
 	}
 	
 	/**
