@@ -41,6 +41,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	private MainFrame mf;
 	private ArrayList<ArrayList<String>> folder;
 	private ArrayList<String> xmlList;
+	private ArrayList<String> selectedFiles;
 	
 	private JTextArea txt;
 	private JButton projectButton;
@@ -48,10 +49,6 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	private JButton selectButton;
 	private JButton helpButton;
 	private JButton analyseButton;
-	private ArrayList<String> selectedFiles;
-	private Dimension dim;
-	private GridBagConstraints c;
-	private GridBagLayout l;
 	private JPanel panel;
 	private JComboBox<String> box;
 	private JTree tree;
@@ -91,7 +88,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	}
 
 	/**
-	 * @return Panel of this state.
+	 * @return Panel of this state.//////////////////////////////////////////////////////////////////
 	 */
 	public JPanel loadPanel() {
 		panel = createSection(mf.getStatePanelSize());
@@ -106,7 +103,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		panel.add(section3, setGrids(0, 2));
 		
 		JPanel section4 = loadButtonSection();
-		c = setGrids(0, THREE);
+		GridBagConstraints c = setGrids(0, THREE);
 		c.weighty = 1;
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
 		panel.add(section4, c);
@@ -120,36 +117,51 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	public JPanel createSection(int height) {
 		JPanel section = MainFrame.createPanel(Color.decode(COLOR),
 				mf.getScreenWidth(), height);
-		c = new GridBagConstraints();
-		l = new GridBagLayout();
-		section.setLayout(l);
-		dim = new Dimension(DIMESIONHEIGHT, DIMESIONWIDTH);		
+		section.setLayout(new GridBagLayout());	
 		return section;
 	}
 	
 	/**
-	 * @return section1 Panel.
+	 * @return section1 Panel.////////////////////////////////////////////////////////////////////////
 	 */
 	public JPanel loadProjectSelection() {
 		JPanel section1 = createSection(SECTION1HEIGHT);
-		
+		addProjectLabel(section1);
+		addCombobox(section1);
+		addProjectButton(section1);
+		return section1;
+	}
+	
+	/**
+	 * @param panel to which the projectlabel will be added.
+	 */
+	public void addProjectLabel(JPanel panel) {
 		JLabel projectLabel = new JLabel("      Project :   ");
 		projectLabel.setFont(new Font("Arial", Font.PLAIN, PROJECTLABELFONTSIZE));
-		projectLabel.setSize(dim);
-		section1.add(projectLabel, setGrids(0, 0));
-		
+		projectLabel.setSize(new Dimension(DIMESIONWIDTH, DIMESIONHEIGHT));
+		panel.add(projectLabel, setGrids(0, 0));
+	}
+	
+	/**
+	 * @param panel to which the combobox will be added.
+	 */
+	public void addCombobox(JPanel panel) {
 		box = new JComboBox<String>(getProjects());
-		section1.add(box, setGrids(1, 0));
-		
-		c = setGrids(2, 0);
+		panel.add(box, setGrids(1, 0));
+	}
+	
+	/**
+	 * @param panel to which the projectButton will be added.
+	 */
+	public void addProjectButton(JPanel panel) {
+		GridBagConstraints c = setGrids(2, 0);
 		projectButton = createButton("ADD new Project", DIMESIONWIDTH, DIMESIONHEIGHT);
 		projectButton.addActionListener(new ActionHandler());
 		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS,
 				BUTTONINSETS, BUTTONINSETS);
 		c.weightx = 1;
 		c.anchor = GridBagConstraints.LINE_START;
-		section1.add(projectButton, c);
-		return section1;
+		panel.add(projectButton, c);
 	}
 	
 	/**
@@ -170,7 +182,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	public void addComboItem() {
 		String newProject =  (String) JOptionPane.showInputDialog(panel,
 				"New Project Name : ");
-		if (!newProject.equals("")) {
+		if (newProject != null) {
 			ArrayList<String> list = new ArrayList<String>();
 			list.add(newProject);
 			folder.add(list);
@@ -185,58 +197,83 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	}
 	
 	/**
-	 * @return section2 Panel.
+	 * @return section2 Panel.//////////////////////////////////////////////////////////////////////////
 	 */
 	public JPanel loadFileSelection() {
 		JPanel section2 = createSection(SECTION1HEIGHT);
-		
+		addFileLabel(section2);
+		addTextArea(section2);
+		addSelectButton(section2);
+		addFileButton(section2);
+		return section2;
+	}
+	
+	/**
+	 * @param panel to which the fileLabel will be added.
+	 */
+	public void addFileLabel(JPanel panel) {
 		JLabel fileLabel = new JLabel("      File :   ");
 		fileLabel.setFont(new Font("Arial", Font.PLAIN, PROJECTLABELFONTSIZE));
-		fileLabel.setSize(dim);
-		section2.add(fileLabel, setGrids(0, 0));
-		
+		fileLabel.setSize(new Dimension(DIMESIONWIDTH, DIMESIONHEIGHT));
+		panel.add(fileLabel, setGrids(0, 0));
+	}
+	
+	/**
+	 * @param panel to which the addTextArea will be added.
+	 */
+	public void addTextArea(JPanel panel) {
 		txt = new JTextArea();
 		txt.setMinimumSize(new Dimension(TXTFIELDWIDTH, TXTFIELDHEIGHT));
-		section2.add(txt, setGrids(1, 0));
-		
-		c = setGrids(2, 0);
+		panel.add(txt, setGrids(1, 0));
+	}
+	
+	/**
+	 * @param panel to which the addSelectButton will be added.
+	 */
+	public void addSelectButton(JPanel panel) {
+		GridBagConstraints c = setGrids(2, 0);
 		selectButton = createButton("SELECT", DIMESIONWIDTH, DIMESIONHEIGHT);
 		selectButton.addActionListener(new ActionHandler());
 		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS, BUTTONINSETS);
-		section2.add(selectButton, c);
-		
-		c = setGrids(THREE, 0);
+		panel.add(selectButton, c);
+	}
+	
+	/**
+	 * @param panel to which the addFileButton will be added.
+	 */
+	public void addFileButton(JPanel panel) {
+		GridBagConstraints c = setGrids(THREE, 0);
 		fileButton = createButton("ADD new File", DIMESIONWIDTH, DIMESIONHEIGHT);
 		fileButton.addActionListener(new ActionHandler());
 		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS, BUTTONINSETS);
 		c.weightx = 1;
 		c.anchor = GridBagConstraints.LINE_START;
-		section2.add(fileButton, c);
-		return section2;
+		panel.add(fileButton, c);
 	}
 	
 	/**
-	 * @return section3 Panel.
+	 * @return The tree folder structure Panel./////////////////////////////////////////////////////////////////////////////
 	 */
 	public JPanel loadFolder() {
 		JPanel section3 = MainFrame.createPanel(Color.decode(COLOR),
 				mf.getScreenWidth(), SECTION3HEIGHT);
-		c = new GridBagConstraints();
-		section3.setLayout(l);
-
+		section3.setLayout(new  GridBagLayout());
 		initTree();
-
-        treePane = new JScrollPane(tree);
-        dim.width = TREEPANEWIDTH;
-        dim.height = TREEPANEHEIGHT;
-        treePane.setPreferredSize(dim);
-		
-        c = setGrids(0, 0);
+		addTreePane(section3);
+		return section3;
+	}
+	
+	/**
+	 * @param panel to which the treePane will be added.
+	 */
+	public void addTreePane(JPanel panel) {
+		treePane = new JScrollPane(tree);
+        treePane.setPreferredSize(new Dimension(TREEPANEWIDTH, TREEPANEHEIGHT));
+        GridBagConstraints c = setGrids(0, 0);
         c.weightx = 1;
         c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS, BUTTONINSETS);
 		c.anchor = GridBagConstraints.LINE_START;
-		section3.add(treePane, c);
-		return section3;
+		panel.add(treePane, c);
 	}
 	
 	/**
@@ -267,7 +304,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
         tree = new JTree(model);
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
         tree.setVisible(true);
-        tree.setLayout(l);
+        tree.setLayout(new GridBagLayout());
         tree.addTreeSelectionListener(this);
 	}
 	
@@ -294,23 +331,35 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 */
 	public JPanel loadButtonSection() {
 		JPanel section4 = createSection(SECTION3HEIGHT);
-		
+		addHelpButton(section4);
+		addAnalyseButton(section4);
+		return section4;
+	}
+	
+	/**
+	 * @param panel to which the addHelpButton will be added.
+	 */
+	public void addHelpButton(JPanel panel) {
 		helpButton = createButton("HELP", HELPBUTTONWIDTH, HELPBUTTONHEIGHT);
 		helpButton.addActionListener(new ActionHandler());
-		c = setGrids(0, 0);
+		GridBagConstraints c = setGrids(0, 0);
 		c.weightx = 1;
 		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS, BUTTONINSETS);
 		c.anchor = GridBagConstraints.WEST;
-		section4.add(helpButton, c);
-		
+		panel.add(helpButton, c);
+	}
+	
+	/**
+	 * @param panel to which the addAnalyseButton will be added.
+	 */
+	public void addAnalyseButton(JPanel panel) {
 		analyseButton = createButton("ANALYSE", HELPBUTTONWIDTH, HELPBUTTONHEIGHT);
 		analyseButton.addActionListener(new ActionHandler());
-		c = setGrids(0, 0);
+		GridBagConstraints c = setGrids(0, 0);
 		c.weightx = 1;
 		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS, BUTTONINSETS);
 		c.anchor = GridBagConstraints.EAST;
-		section4.add(analyseButton, c);
-		return section4;
+		panel.add(analyseButton, c);
 	}
 	
 	/**
@@ -478,27 +527,36 @@ public class InputPage extends InterfaceHelper implements PanelState,
 				.getLastSelectedPathComponent();
 		if (node != null && node.isLeaf()) {
 			String selected = node.getUserObject().toString();
-			if (selected.equals("SET XML FILE")) {
-				askUser(node);
+			useSelectedTreeNode(selected, node);
+		}
+	}
+	
+	/**
+	 * Do something with the selected TreeNode.
+	 * @param selected is the string of the selected TreeNode.
+	 * @param node is the selected TreeNode.
+	 */
+	public void useSelectedTreeNode(String selected, DefaultMutableTreeNode node) {
+		if (selected.equals("SET XML FILE")) {
+			askUser(node);
+			model.nodeStructureChanged(node.getParent());
+		} else {
+			String flag;
+			if (selected.length() > FLAGLENGTH) {
+				flag = selected.substring(selected.length() - FLAGLENGTH);
+			} else {
+				flag = null;
+			}
+			if (flag != null && flag.equals("   [SELECTED]")) {
+				selectedFiles.remove(selected);
+				String s = node.getUserObject().toString();
+				node.setUserObject(s.substring(0, s.length() - FLAGLENGTH));
 				model.nodeStructureChanged(node.getParent());
 			} else {
-				String flag;
-				if (selected.length() > FLAGLENGTH) {
-					flag = selected.substring(selected.length() - FLAGLENGTH);
-				} else {
-					flag = null;
-				}
-				if (flag != null && flag.equals("   [SELECTED]")) {
-					selectedFiles.remove(selected);
-					String s = node.getUserObject().toString();
-					node.setUserObject(s.substring(0, s.length() - FLAGLENGTH));
-					model.nodeStructureChanged(node.getParent());
-				} else {
-					selectedFiles.add(selected);
-					node.setUserObject(node.getUserObject().toString()
-							+ "   [SELECTED]");
-					model.nodeStructureChanged(node.getParent());
-				}
+				selectedFiles.add(selected);
+				node.setUserObject(node.getUserObject().toString()
+						+ "   [SELECTED]");
+				model.nodeStructureChanged(node.getParent());
 			}
 		}
 	}
