@@ -15,6 +15,7 @@ import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
 /**
@@ -276,6 +277,32 @@ public class FileTree implements TreeSelectionListener {
 		String s = node.getUserObject().toString();
 		node.setUserObject(s.substring(0, s.length() - FLAGLENGTH));
 		model.nodeStructureChanged(node.getParent());
+	}
+	
+	/**
+	 * add file to the tree.
+	 * @param project is the index of the project.
+	 * @param text is the name of the file.
+	 */
+	public void addFileToTree(int project, String text) {
+		DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(text);
+		model.insertNodeInto(newNode,
+				(MutableTreeNode) root.getChildAt(project)
+				, root.getChildAt(project).getChildCount());
+	}
+	
+	/**
+	 * add project to the tree.
+	 * @param project is the name of the project.
+	 */
+	public void addProjectToTree(String project) {
+		DefaultMutableTreeNode node = new DefaultMutableTreeNode(project);
+		DefaultMutableTreeNode xml = new DefaultMutableTreeNode("SET XML FILE");
+		node.add(xml);
+		model.insertNodeInto(node, root, root.getChildCount());
+		xmlList.add(null);
+		tree.expandRow(0);
+		tree.expandRow(root.getChildCount() + root.getLeafCount() - 1);
 	}
 	
 	/**

@@ -4,30 +4,19 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
-
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.JTree;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
-import javax.swing.tree.MutableTreeNode;
-import javax.swing.tree.TreeSelectionModel;
-
 import context.healthinformatics.Database.SingletonDb;
 import context.healthinformatics.Parser.XMLParser;
 
@@ -59,7 +48,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	public static final int BUTTONFONTSIZE = 15;
 	public static final int DIMESIONHEIGHT = 150;
 	public static final int DIMESIONWIDTH = 40;
-	public static final int SECTION1HEIGHT = 100;
+	public static final int PROJECTSLECTIONPANELHEIGHT = 100;
 	public static final int PROJECTLABELFONTSIZE = 20;
 	public static final int BUTTONINSETS = 10;
 	public static final int THREE = 3;
@@ -78,10 +67,11 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	}
 
 	/**
-	 * @return Panel of this state.//////////////////////////////////////////////////////////////////
+	 * @return Panel of this state.
 	 */
 	public JPanel loadPanel() {
-		panel = createSection(mf.getStatePanelSize());
+		panel = MainFrame.createPanel(Color.decode(COLOR),
+				mf.getScreenWidth(), mf.getStatePanelSize());
 		panel.add(loadProjectSelection(), setGrids(0, 0));
 		panel.add(loadFileSelection(), setGrids(0, 1));
 		panel.add(ft.loadFolder(), setGrids(0, 2));
@@ -93,21 +83,11 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	}
 	
 	/**
-	 * @return section of the inputpage.
-	 * @param height of the section
-	 */
-	public JPanel createSection(int height) {
-		JPanel section = MainFrame.createPanel(Color.decode(COLOR),
-				mf.getScreenWidth(), height);
-		section.setLayout(new GridBagLayout());	
-		return section;
-	}
-	
-	/**
 	 * @return section1 Panel.////////////////////////////////////////////////////////////////////////
 	 */
 	public JPanel loadProjectSelection() {
-		JPanel section1 = createSection(SECTION1HEIGHT);
+		JPanel section1 = MainFrame.createPanel(Color.decode(COLOR),
+				mf.getScreenWidth(), PROJECTSLECTIONPANELHEIGHT);
 		addProjectLabel(section1);
 		addCombobox(section1);
 		addProjectButton(section1);
@@ -161,7 +141,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	/**
 	 * Method which asks the user to enter a new PROJECTS :, and inserts it in the combobox.
 	 */
-	public void addComboItem() {
+	public void createProject() {
 		String newProject =  (String) JOptionPane.showInputDialog(panel,
 				"New Project : ");
 		if (findFolderProject(newProject) != -1) {
@@ -169,18 +149,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 			return;
 		}
 		if (newProject != null) {
-			ArrayList<String> list = new ArrayList<String>();
-			list.add(newProject);
-			folder.add(list);
-			box.addItem(newProject);
-			DefaultMutableTreeNode node = new DefaultMutableTreeNode(newProject);
-			DefaultMutableTreeNode xml = new DefaultMutableTreeNode("SET XML FILE");
-			node.add(xml);
-			ft.getModel().insertNodeInto(node, ft.getRoot(), ft.getRoot().getChildCount());
-			ft.getXmlList().add(null);
-			ft.getTree().expandRow(0);
-			ft.getTree().expandRow(ft.getRoot().getChildCount() 
-					+ ft.getRoot().getLeafCount() - 1);
+			addComboItem(newProject);
 		}
 		else {
 			JOptionPane.showMessageDialog(null, "No projects specified");
@@ -188,10 +157,23 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	}
 	
 	/**
+	 * Method which asks the user to enter a new PROJECTS :, and inserts it in the ComboBox.
+	 * @param project is the name of the project.
+	 */
+	public void addComboItem(String project) {
+		ArrayList<String> list = new ArrayList<String>();
+		list.add(project);
+		folder.add(list);
+		box.addItem(project);
+		ft.addProjectToTree(project);
+	}
+	
+	/**
 	 * @return section2 Panel.//////////////////////////////////////////////////////////////////////////
 	 */
 	public JPanel loadFileSelection() {
-		JPanel section2 = createSection(SECTION1HEIGHT);
+		JPanel section2 = MainFrame.createPanel(Color.decode(COLOR),
+				mf.getScreenWidth(), PROJECTSLECTIONPANELHEIGHT);
 		addFileLabel(section2);
 		addTextArea(section2);
 		addSelectButton(section2);
@@ -246,7 +228,8 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 * @return section4 Panel.
 	 */
 	public JPanel loadButtonSection() {
-		JPanel section4 = createSection(FOLDERSECTIONHEIGHT);
+		JPanel section4 = MainFrame.createPanel(Color.decode(COLOR),
+				mf.getScreenWidth(), FOLDERSECTIONHEIGHT);
 		addHelpButton(section4);
 		addAnalyseButton(section4);
 		return section4;
@@ -347,21 +330,10 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		 */
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == projectButton) {
-				addComboItem();
+				createProject();
 			}
 			if (e.getSource() == fileButton) {
-				if (folder.size() != 0 && !txt.getText().equals("")) {
-					String text = txt.getText();
-					int project = findFolderProject((String) box.getSelectedItem());
-					folder.get(project).add(text);
-					DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(text);
-					ft.getModel().insertNodeInto(newNode,
-							(MutableTreeNode) ft.getRoot().getChildAt(project)
-							, ft.getRoot().getChildAt(project).getChildCount());
-				} else {
-					JOptionPane.showMessageDialog(null,
-							"No project created yet, or no file specified!");
-				}
+				addFile();
 			}
 			if (e.getSource() == selectButton) {
 				if (openFileChooser() == JFileChooser.APPROVE_OPTION) {
@@ -377,6 +349,22 @@ public class InputPage extends InterfaceHelper implements PanelState,
 				loadDatabase();
 				mf.setState(mf.getCodePage());
 				mf.reloadStatePanel();
+			}
+		}
+		
+		/**
+		 * Method which adds a project to the folder and FileTree.
+		 */
+		public void addFile() {
+			if (folder.size() != 0 && !txt.getText().equals("")) {
+				String text = txt.getText();
+				int project = findFolderProject((String) box.getSelectedItem());
+				folder.get(project).add(text);
+				ft.addFileToTree(project, text);
+			}
+			else {
+				JOptionPane.showMessageDialog(null,
+						"No project created yet, or no file specified!");
 			}
 		}
 	}
