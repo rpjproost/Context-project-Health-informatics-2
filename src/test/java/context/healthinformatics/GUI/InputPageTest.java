@@ -2,6 +2,7 @@ package context.healthinformatics.GUI;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
 import java.awt.AWTException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,6 +10,7 @@ import java.util.ArrayList;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
 import context.healthinformatics.Database.SingletonDb;
 
 /**
@@ -44,6 +46,7 @@ public class InputPageTest {
 		folder.get(2).add("6");
 		ip.setFolder(folder);
 		ip.getFileTree().initXmlList();
+		ip.getFileTree().initTree();
 	}
 	
 	/**
@@ -63,7 +66,7 @@ public class InputPageTest {
 	@Test
 	public void testFillTree() {
 		ip.getFileTree().fillTree();
-		assertEquals(ip.getFileTree().getRoot().getChildCount(), THREE);
+		assertEquals(ip.getFileTree().getRoot().getChildCount() / 2, THREE);
 	}
 	
 	/**
@@ -124,6 +127,20 @@ public class InputPageTest {
 		ArrayList<String> list = ip.getFolder().get(ip.getFolder().size() - 1);
 		assertEquals(list.get(list.size() - 1), "test");
 	}
+	
+	/**
+	 * Checks if the an file can be selected correctly.
+	 */
+//	@Test
+//	public void testFileSelection() {
+//		ip.getFileTree().getTree().expandRow(4);
+//		ip.getFileTree().getTree().setSelectionRow(5);
+//		DefaultMutableTreeNode node1 = ((DefaultMutableTreeNode) ip.getFileTree()
+//				.getRoot().getLastChild());
+//		DefaultMutableTreeNode node2 = node1.getFirstLeaf();
+//		//assertEquals("6   [SELECTED]", node2.getUserObject().toString());
+//		assertEquals(ip.getFileTree().getSelectedFiles().contains("6"), true);
+//	}
 	
 	/**
 	 * Checks if the projects are read from the folder correctly.

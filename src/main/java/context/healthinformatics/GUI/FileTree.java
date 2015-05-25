@@ -76,7 +76,7 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	/**
 	 * Method which initialises the tree.
 	 */
-	private void initTree() {
+	public void initTree() {
 		root = new DefaultMutableTreeNode("PROJECTS :");		
         fillTree();
         model = new DefaultTreeModel(root);
