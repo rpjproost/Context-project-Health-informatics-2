@@ -5,10 +5,13 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.Serializable;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -16,7 +19,7 @@ import javax.swing.JTextArea;
 /**
  * Class which can load components of the InputPage.
  */
-public class InputPageComponents implements Serializable {
+public class InputPageComponents implements Serializable, ActionListener {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -89,7 +92,7 @@ public class InputPageComponents implements Serializable {
 	public void addProjectButton(JPanel panel) {
 		GridBagConstraints c = ip.setGrids(2, 0);
 		projectButton = ip.createButton("ADD new Project", DIMESIONWIDTH, DIMESIONHEIGHT);
-		projectButton.addActionListener(ip);
+		projectButton.addActionListener(this);
 		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS, BUTTONINSETS);
 		c.weightx = 1;
 		c.anchor = GridBagConstraints.LINE_START;
@@ -134,7 +137,7 @@ public class InputPageComponents implements Serializable {
 	public void addSelectButton(JPanel panel) {
 		GridBagConstraints c = ip.setGrids(2, 0);
 		selectButton = ip.createButton("SELECT", DIMESIONWIDTH, DIMESIONHEIGHT);
-		selectButton.addActionListener(ip);
+		selectButton.addActionListener(this);
 		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS, BUTTONINSETS);
 		panel.add(selectButton, c);
 	}
@@ -145,7 +148,7 @@ public class InputPageComponents implements Serializable {
 	public void addFileButton(JPanel panel) {
 		GridBagConstraints c = ip.setGrids(THREE, 0);
 		fileButton = ip.createButton("ADD new File", DIMESIONWIDTH, DIMESIONHEIGHT);
-		fileButton.addActionListener(ip);
+		fileButton.addActionListener(this);
 		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS, BUTTONINSETS);
 		c.weightx = 1;
 		c.anchor = GridBagConstraints.LINE_START;
@@ -168,7 +171,7 @@ public class InputPageComponents implements Serializable {
 	 */
 	public void addHelpButton(JPanel panel) {
 		helpButton = ip.createButton("HELP", HELPBUTTONWIDTH, HELPBUTTONHEIGHT);
-		helpButton.addActionListener(ip);
+		helpButton.addActionListener(this);
 		GridBagConstraints c = ip.setGrids(0, 0);
 		c.weightx = 1;
 		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS, BUTTONINSETS);
@@ -181,7 +184,7 @@ public class InputPageComponents implements Serializable {
 	 */
 	public void addAnalyseButton(JPanel panel) {
 		analyseButton = ip.createButton("ANALYSE", HELPBUTTONWIDTH, HELPBUTTONHEIGHT);
-		analyseButton.addActionListener(ip);
+		analyseButton.addActionListener(this);
 		GridBagConstraints c = ip.setGrids(0, 0);
 		c.weightx = 1;
 		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS, BUTTONINSETS);
@@ -235,6 +238,35 @@ public class InputPageComponents implements Serializable {
 	 */
 	public JComboBox<String> getComboBox() {
 		return box;
+	}
+	
+	/**
+	 * Method which is fired after an ActionEvent.
+	 * @param e event
+	 */
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == getProjectButton()) {
+			ip.createProject();
+		}
+		if (e.getSource() == getFileButton()) {
+			ip.addFile();
+		}
+		if (e.getSource() == getSelectButton()) {
+			if (ip.openFileChooser() == JFileChooser.APPROVE_OPTION) {
+				String path = ip.getSelecter().getSelectedFile().toString();
+				getTextArea().setText(path);
+			}
+			ip.getSelecter().setVisible(false);
+		}
+		if (e.getSource() == getHelpButton()) {
+			return; // TODO
+		}
+		if (e.getSource() == getAnalyseButton()) {
+			ip.loadDatabase();
+			mf.setState(mf.getCodePage());
+			mf.reloadStatePanel();
+		}
 	}
 	
 }

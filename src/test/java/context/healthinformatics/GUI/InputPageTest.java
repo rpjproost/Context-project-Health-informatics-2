@@ -30,7 +30,7 @@ public class InputPageTest {
 	public void createFrame() {
 		mf = new MainFrame();
 		ip = (InputPage) mf.getInputPage();
-		handler = (ActionListener) ip;
+		handler = (ActionListener) ip.getInputPageComponent();
 		
 		folder = new ArrayList<ArrayList<String>>();
 		folder.add(new ArrayList<String>());
@@ -116,6 +116,16 @@ public class InputPageTest {
 	}
 	
 	/**
+	 * Checks if the a comboItem can be added correctly.
+	 */
+	@Test
+	public void testAddComboItem() {
+		ip.addComboItem("test");
+		ArrayList<String> list = ip.getFolder().get(ip.getFolder().size() - 1);
+		assertEquals(list.get(list.size() - 1), "test");
+	}
+	
+	/**
 	 * Checks if the projects are read from the folder correctly.
 	 */
 	@SuppressWarnings("deprecation")
@@ -123,6 +133,18 @@ public class InputPageTest {
 	public void testGetProjects() {
 		String[] test = {"1", "2", "5"};
 		assertEquals(ip.getProjects(), test);
+	}
+	
+	/**
+	 * Checks if the file name in the TextArea is added correctly.
+	 */
+	@Test
+	public void testAddFile() {
+		ip.getInputPageComponent().getTextArea().setText("test");
+		ip.addComboItem("1");
+		ip.addFile();
+		ArrayList<String> list = ip.getFolder().get(0);
+		assertEquals(list.get(list.size() - 1), "test");
 	}
 	
 	/**

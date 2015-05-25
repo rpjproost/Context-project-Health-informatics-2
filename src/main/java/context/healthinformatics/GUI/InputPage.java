@@ -2,8 +2,6 @@ package context.healthinformatics.GUI;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,7 +15,7 @@ import context.healthinformatics.Parser.XMLParser;
  * Class which represents one of the states for the variabel panel in the mainFrame.
  */
 public class InputPage extends InterfaceHelper implements PanelState,
-	Serializable, ActionListener {
+	Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
@@ -152,6 +150,13 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	public ArrayList<ArrayList<String>> getFolder() {
 		return folder;
 	}
+	
+	/**
+	 * @return selecter.
+	 */
+	public JFileChooser getSelecter() {
+		return selecter;
+	}
 
 	/**
 	 * @param f
@@ -159,35 +164,6 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 */
 	public void setFolder(ArrayList<ArrayList<String>> f) {
 		folder = f;
-	}
-
-	/**
-	 * Method which is fired after an ActionEvent.
-	 * @param e event
-	 */
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == ipc.getProjectButton()) {
-			createProject();
-		}
-		if (e.getSource() == ipc.getFileButton()) {
-			addFile();
-		}
-		if (e.getSource() == ipc.getSelectButton()) {
-			if (openFileChooser() == JFileChooser.APPROVE_OPTION) {
-				String path = selecter.getSelectedFile().toString();
-				ipc.getTextArea().setText(path);
-			}
-			selecter.setVisible(false);
-		}
-		if (e.getSource() == ipc.getHelpButton()) {
-			return; // TODO
-		}
-		if (e.getSource() == ipc.getAnalyseButton()) {
-			loadDatabase();
-			mf.setState(mf.getCodePage());
-			mf.reloadStatePanel();
-		}
 	}
 
 	/**
