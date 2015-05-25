@@ -160,7 +160,7 @@ public class Constraints {
 	 *            the line of the chunk
 	 * @return the resulting where string
 	 */
-	public String appendOrClauseForQuert(String tableName, int line) {
+	public String appendOrClauseForQuery(String tableName, int line) {
 		StringBuilder res = new StringBuilder();
 		res.append("OR ");
 		res.append(tableName);
@@ -186,7 +186,7 @@ public class Constraints {
 		for (int i = 0; i < chunk.size(); i++) {
 			Chunk curChunk = chunk.get(i);
 			if (curChunk.getLine() != 0) {
-				res.append(appendOrClauseForQuert(tableName, curChunk.getLine()));
+				res.append(appendOrClauseForQuery(tableName, curChunk.getLine()));
 			}
 			if (curChunk.hasChild()) {
 				res.append(getAllChunkLines(curChunk.getChunks(), res,
