@@ -39,6 +39,7 @@ public class XMLDocument {
 		this.sheet = sheet;
 		this.docType = docType;
 		this.docName = docName;
+		this.path = path;
 		this.delimiter = delimiter;
 		this.columns = columns;
 	}

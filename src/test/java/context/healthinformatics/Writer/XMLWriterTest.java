@@ -40,6 +40,6 @@ public class XMLWriterTest {
 		ArrayList<XMLDocument> docs = new ArrayList<XMLDocument>();
 		docs.add(doc);
 		XMLWriter xmlwriter = new XMLWriter(docs);
-		xmlwriter.writeXML("C:\test.xml");
+		xmlwriter.writeXML(path + "test.xml");
 	}
 }
