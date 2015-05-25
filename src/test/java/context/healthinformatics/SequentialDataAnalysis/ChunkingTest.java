@@ -1,16 +1,24 @@
 package context.healthinformatics.SequentialDataAnalysis;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * 
+ * Tests for chunking on chunks class.
+ *
+ */
 public class ChunkingTest {
 	
-	ArrayList<Chunk> test = new ArrayList<Chunk>();
+	private ArrayList<Chunk> test = new ArrayList<Chunk>();
 	
+	/**
+	 * Sets up a few chunks for testing purposes.
+	 */
 	@Before
 	public void before() {
 		Chunk a = new Chunk();
