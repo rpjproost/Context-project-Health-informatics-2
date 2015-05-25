@@ -76,7 +76,7 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	/**
 	 * Method which initialises the tree.
 	 */
-	public void initTree() {
+	private void initTree() {
 		root = new DefaultMutableTreeNode("PROJECTS :");		
         fillTree();
         model = new DefaultTreeModel(root);
@@ -111,7 +111,7 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	 * @param i is the index of the project.
 	 * @return empty String if the XML is not yet set, and return "   [SET]" otherwise.
 	 */
-	public String isXmlSet(int i) {
+	private String isXmlSet(int i) {
 		if (getXmlList().get(i) == null) {
 			return "";
 		}
@@ -125,7 +125,7 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	 * @param node is the current node.
 	 * @return empty String if the Node is not selcted, and return "   [SELECTED]" otherwise.
 	 */
-	public String isSelected(String node) {
+	private String isSelected(String node) {
 		if (getSelectedFiles().contains(node)) {
 			return "   [SELECTED]";
 		}
@@ -137,7 +137,7 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	/**
 	 * @param panel to which the treePane will be added.
 	 */
-	public void addTreePane(JPanel panel) {
+	private void addTreePane(JPanel panel) {
 		JScrollPane treePane = new JScrollPane(tree);
         treePane.setPreferredSize(new Dimension(TREEPANEWIDTH, TREEPANEHEIGHT));
         GridBagConstraints c = ip.setGrids(0, 0);
@@ -167,7 +167,7 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	 * @param selected is the string of the selected TreeNode.
 	 * @param node is the selected TreeNode.
 	 */
-	public void useSelectedTreeNode(String selected, DefaultMutableTreeNode node) {
+	private void useSelectedTreeNode(String selected, DefaultMutableTreeNode node) {
 		if (selected.equals("SET XML FILE")) {
 			addXmlFile(node);
 		} else {
@@ -188,7 +188,7 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	 * Method which asks the user.
 	 * @param node is the node that is selected.
 	 */
-	public void askUserForXml(DefaultMutableTreeNode node) {
+	private void askUserForXml(DefaultMutableTreeNode node) {
 		if (ip.openFileChooser() == JFileChooser.APPROVE_OPTION) {
 		    String path = ip.getFileSelecter().getSelectedFile().toString();
 			if (!path.equals("")) {
@@ -203,7 +203,7 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	 * @param path is the entered XML file path.
 	 * @param node is the selected TreeNode.
 	 */
-	public void setProjectNodeToSelected(String path, DefaultMutableTreeNode node) {
+	private void setProjectNodeToSelected(String path, DefaultMutableTreeNode node) {
 		DefaultMutableTreeNode projectNode = (DefaultMutableTreeNode) node
 	    		.getParent();
 		String temp = projectNode.getUserObject().toString();
@@ -221,7 +221,7 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	 * @param string is the string of the selected TreeNode.
 	 * @return the string of the projectNode.
 	 */
-	public String checkProjectNodeString(String string) {
+	private String checkProjectNodeString(String string) {
 		if (string.length() > EIGHT && string.substring(
 				string.length() - EIGHT).equals("   [SET]")) {
 			return string.substring(0, string.length() - EIGHT);
@@ -235,7 +235,7 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	 * @param selected is the string of the selected TreeNode.
 	 * @param node is the selected TreeNode.
 	 */
-	public void selectNode(String selected, DefaultMutableTreeNode node) {
+	private void selectNode(String selected, DefaultMutableTreeNode node) {
 		String flag = checkLengthOfNodeString(selected);
 		if (flag != "" && flag.equals("   [SELECTED]")) {
 			setNodeToNotSelected(selected, node);
@@ -249,7 +249,7 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	 * @param selected is the string of the selected TreeNode.
 	 * @return the flag String.
 	 */
-	public String checkLengthOfNodeString(String selected) {
+	private String checkLengthOfNodeString(String selected) {
 		if (selected.length() > FLAGLENGTH) {
 			return selected.substring(selected.length() - FLAGLENGTH);
 		} else {
@@ -262,7 +262,7 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	 * @param selected is the string of the selected TreeNode.
 	 * @param node is the selected TreeNode.
 	 */
-	public void setNodeToSelected(String selected, DefaultMutableTreeNode node) {
+	private void setNodeToSelected(String selected, DefaultMutableTreeNode node) {
 		getSelectedFiles().add(selected);
 		node.setUserObject(node.getUserObject().toString()
 				+ "   [SELECTED]");
@@ -274,7 +274,7 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	 * @param selected is the string of the selected TreeNode.
 	 * @param node is the selected TreeNode.
 	 */
-	public void setNodeToNotSelected(String selected, DefaultMutableTreeNode node) {
+	private void setNodeToNotSelected(String selected, DefaultMutableTreeNode node) {
 		getSelectedFiles().remove(selected);
 		String s = node.getUserObject().toString();
 		node.setUserObject(s.substring(0, s.length() - FLAGLENGTH));
