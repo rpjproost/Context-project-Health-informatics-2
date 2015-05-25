@@ -43,4 +43,27 @@ public class Chunking {
 		return res;
 	}
 
+	/**
+	 * Chunking chunks on a comment constraint.
+	 * @param comment String for comment.
+	 * @return new ArrayList<Chunk> chunked on constraint.
+	 */
+	public ArrayList<Chunk> constraintOnComment(String comment) {
+		ArrayList<Chunk> res = new ArrayList<Chunk>();
+		Chunk temp  = new Chunk();
+		for (int i = 0; i < chunks.size(); i++) {
+			Chunk curChunk = chunks.get(i);
+			if (curChunk.getComment().contains(comment)) {
+				temp.setChunk(curChunk);
+			}
+			else {
+				if (temp.hasChild()) {
+					res.add(temp);
+				}
+				temp  = new Chunk();
+			}
+		}
+		return res;
+	}
+
 }
