@@ -26,20 +26,17 @@ public class XMLDocument {
 	 *            the delimiter
 	 * @param path
 	 *            the path to the document
-	 * @param start
-	 *            the start variable
+	 * @param startLine
+	 *            the start line variable
+	 * @param sheet
+	 *            the current sheet
 	 * @param columns
 	 *            the list of columns
 	 */
 	public XMLDocument(String docType, String docName, String delimiter,
-			String path, int start, ArrayList<Column> columns) {
-		if (docType.equals("excel")) {
-			this.sheet = start;
-			this.startLine = -1;
-		} else {
-			this.startLine = start;
-			this.sheet = -1;
-		}
+			String path, int startLine, int sheet, ArrayList<Column> columns) {
+		this.startLine = startLine;
+		this.sheet = sheet;
 		this.docType = docType;
 		this.docName = docName;
 		this.delimiter = delimiter;
