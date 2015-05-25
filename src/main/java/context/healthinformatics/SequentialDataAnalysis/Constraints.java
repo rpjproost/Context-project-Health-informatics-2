@@ -71,7 +71,7 @@ public class Constraints {
 	 *            the list of chunks
 	 * @param res
 	 *            the resulting chunks
-	 * @return the chunks which containt the comment
+	 * @return the chunks which contains the comment
 	 */
 	public ArrayList<Chunk> containsComment(String comment,
 			ArrayList<Chunk> chunk, ArrayList<Chunk> res) {
@@ -205,7 +205,7 @@ public class Constraints {
 	 *            the operator to specify the constraint
 	 * @param tableName
 	 *            the name of the table
-	 * @return return the ArrayList with remaining chuncks
+	 * @return return the ArrayList with remaining chunks
 	 * @throws SQLException
 	 *             the sql exception
 	 */
@@ -249,11 +249,11 @@ public class Constraints {
 	}
 
 	/**
-	 * Check if a string is an interger.
+	 * Check if a string is an integer.
 	 * 
 	 * @param s
 	 *            the string to check
-	 * @return return true if is interger and false if not
+	 * @return return true if is integer and false if not
 	 */
 	public boolean isInteger(String s) {
 		try {
