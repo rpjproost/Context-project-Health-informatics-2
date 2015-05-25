@@ -5,14 +5,13 @@ import static org.junit.Assert.assertNotNull;
 
 import java.awt.AWTException;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import context.healthinformatics.Database.SingletonDb;
-import context.healthinformatics.GUI.InputPage.ActionHandler;
 
 /**
  * Test for the InputPage of the Interface.
@@ -21,7 +20,7 @@ public class InputPageTest {
 
 	private MainFrame mf;
 	private InputPage ip;
-	private ActionHandler handler;
+	private ActionListener handler;
 	private ArrayList<ArrayList<String>> folder;
 	
 	public static final int THREE = 3;
@@ -33,7 +32,7 @@ public class InputPageTest {
 	public void createFrame() {
 		mf = new MainFrame();
 		ip = (InputPage) mf.getInputPage();
-		handler = (ActionHandler) ip.getAnalyseButton().getActionListeners()[0];
+		handler = (ActionListener) ip.getInputPageComponent();
 		
 		folder = new ArrayList<ArrayList<String>>();
 		folder.add(new ArrayList<String>());
@@ -46,7 +45,8 @@ public class InputPageTest {
 		folder.get(2).add("5");
 		folder.get(2).add("6");
 		ip.setFolder(folder);
-		ip.initXmlList();
+		ip.getFileTree().initXmlList();
+		ip.getFileTree().initTree();
 	}
 	
 	/**
@@ -55,7 +55,7 @@ public class InputPageTest {
 	 */
 	@Test
 	public void testAnalyseButton() throws AWTException {
-		ActionEvent e = new ActionEvent(ip.getAnalyseButton(), 0, "");
+		ActionEvent e = new ActionEvent(ip.getInputPageComponent().getAnalyseButton(), 0, "");
 		handler.actionPerformed(e);		
 		assertEquals(mf.getPanelState(), mf.getCodePage());
 	}
@@ -65,8 +65,8 @@ public class InputPageTest {
 	 */
 	@Test
 	public void testFillTree() {
-		ip.fillTree();
-		assertEquals(ip.getRoot().getChildCount(), THREE);
+		ip.getFileTree().fillTree();
+		assertEquals(ip.getFileTree().getRoot().getChildCount() / 2, THREE);
 	}
 	
 	/**
@@ -82,7 +82,7 @@ public class InputPageTest {
 	 */
 	@Test
 	public void testgetSelectedNodesisEmpty() {
-		assertEquals(ip.getSelectedFiles().isEmpty(), true);
+		assertEquals(ip.getFileTree().getSelectedFiles().isEmpty(), true);
 	}
 	
 	/**
@@ -111,26 +111,36 @@ public class InputPageTest {
 	}
 	
 	/**
-	 * Checks if the method reloads the tree model correctly.
-	 */
-	@Test
-	public void testReloadTree() {
-		ArrayList<ArrayList<String>> list = ip.getFolder();
-		ArrayList<String> project = list.get(0);
-		project.add("test");
-		list.set(0, project);
-		ip.setFolder(list);
-		ip.reloadTree();
-		assertEquals(ip.getModel().getChild(ip.getRoot().getFirstChild(), 0).toString(), "test");
-	}
-	
-	/**
 	 * Checks if the xmlList is initialised correctly.
 	 */
 	@Test
 	public void testinitXml() {
-		assertEquals(ip.getXmlList().size(), ip.getFolder().size());
+		assertEquals(ip.getFileTree().getXmlList().size(), ip.getFolder().size());
 	}
+	
+	/**
+	 * Checks if the a comboItem can be added correctly.
+	 */
+	@Test
+	public void testAddComboItem() {
+		ip.addComboItem("test");
+		ArrayList<String> list = ip.getFolder().get(ip.getFolder().size() - 1);
+		assertEquals(list.get(list.size() - 1), "test");
+	}
+	
+	/**
+	 * Checks if the an file can be selected correctly.
+	 */
+//	@Test
+//	public void testFileSelection() {
+//		ip.getFileTree().getTree().expandRow(4);
+//		ip.getFileTree().getTree().setSelectionRow(5);
+//		DefaultMutableTreeNode node1 = ((DefaultMutableTreeNode) ip.getFileTree()
+//				.getRoot().getLastChild());
+//		DefaultMutableTreeNode node2 = node1.getFirstLeaf();
+//		//assertEquals("6   [SELECTED]", node2.getUserObject().toString());
+//		assertEquals(ip.getFileTree().getSelectedFiles().contains("6"), true);
+//	}
 	
 	/**
 	 * Checks if the projects are read from the folder correctly.
@@ -140,6 +150,18 @@ public class InputPageTest {
 	public void testGetProjects() {
 		String[] test = {"1", "2", "5"};
 		assertEquals(ip.getProjects(), test);
+	}
+	
+	/**
+	 * Checks if the file name in the TextArea is added correctly.
+	 */
+	@Test
+	public void testAddFile() {
+		ip.getInputPageComponent().getTextArea().setText("test");
+		ip.addComboItem("1");
+		ip.addFile();
+		ArrayList<String> list = ip.getFolder().get(0);
+		assertEquals(list.get(list.size() - 1), "test");
 	}
 	
 	/**

@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Toolkit;
 
 import javax.swing.JButton;
@@ -38,6 +39,7 @@ public class InterfaceHelper extends JPanel {
 		tempPanel.setMinimumSize(new Dimension(width, height));
 		tempPanel.setMaximumSize(new Dimension(width, height));
 		tempPanel.setPreferredSize(new Dimension(width, height));
+		tempPanel.setLayout(new GridBagLayout());
 		return tempPanel;
 	}
 	
