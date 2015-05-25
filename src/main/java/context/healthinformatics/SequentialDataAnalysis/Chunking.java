@@ -1,5 +1,6 @@
 package context.healthinformatics.SequentialDataAnalysis;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
@@ -75,7 +76,7 @@ public class Chunking {
 	 * @param c String for comment constraint.
 	 * @param res ArrayList<Chunk> chunked.
 	 */
-	public void addChunkOnContainsComment(Chunk curChunk, Chunk temp, String c, 
+	private void addChunkOnContainsComment(Chunk curChunk, Chunk temp, String c, 
 			ArrayList<Chunk> res) {
 		if (curChunk.getComment().contains(c)) {
 			temp.setChunk(curChunk);
@@ -93,7 +94,7 @@ public class Chunking {
 	 * @param c String for comment constraint.
 	 * @param res ArrayList<Chunk> chunked.
 	 */
-	public void addChunkOnEqualsComment(Chunk curChunk, Chunk temp, String c, 
+	private void addChunkOnEqualsComment(Chunk curChunk, Chunk temp, String c, 
 			ArrayList<Chunk> res) {
 		if (curChunk.getComment().equals(c)) {
 			temp.setChunk(curChunk);
@@ -111,7 +112,7 @@ public class Chunking {
 	 * @param c String for code constraint.
 	 * @param res ArrayList<Chunk> chunked.
 	 */
-	public void addChunkOnEqualsCode(Chunk curChunk, Chunk temp, String c, ArrayList<Chunk> res) {
+	private void addChunkOnEqualsCode(Chunk curChunk, Chunk temp, String c, ArrayList<Chunk> res) {
 		if (curChunk.getCode().equals(c)) {
 			temp.setChunk(curChunk);
 		}
@@ -126,7 +127,7 @@ public class Chunking {
 	 * @param temp The new Chunk.
 	 * @param res The new ArrayList<Chunk> to be returned after chunking.
 	 */
-	public void addChunkToChunk(Chunk temp, ArrayList<Chunk> res) {
+	private void addChunkToChunk(Chunk temp, ArrayList<Chunk> res) {
 		if (temp.hasChild()) {
 			res.add(temp);
 		}
@@ -138,6 +139,24 @@ public class Chunking {
 	 * @return the chunks
 	 */
 	public ArrayList<Chunk> getChunks() {
+		return chunks;
+	}
+	
+	public ArrayList<Chunk> chunkOnlyAffectedOnConstraint(String value, String operator, 
+			String tableName) throws SQLException {
+		//TODO: use constraints class for example a period of time,
+		//but leave the rest of chunks unaffected.
+		//It now uses constraint class, gets back an arraylist of chunks that apply
+		//to the constraint
+		//After that it creates new chunk with that arraylist and adds it to the back of 
+		//the used chunks. THIS IS BAD. We will discuss this tomorrow.
+		Chunk newChunk = new Chunk();
+		Constraints constraint = new Constraints(chunks);
+		ArrayList<Chunk> cons = constraint.constraint(value, operator, tableName);
+		if (cons.size() != 0) {
+			newChunk.setChunks(cons);	
+		}
+		chunks.add(newChunk);
 		return chunks;
 	}
 
