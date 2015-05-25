@@ -134,14 +134,14 @@ public class TXTParser extends Parser {
 	 * @throws FileNotFoundException
 	 *             if file not found throw exception
 	 */
-	public File openFile(String filename) {
+	private File openFile(String filename) {
 		return new File(filename);
 	}
 
 	/**
 	 * Skip the first lines till the relevant data.
 	 */
-	public void skipFirxtXLines() {
+	private void skipFirxtXLines() {
 		for (int i = 1; i < startLine; i++) {
 			if (sc.hasNextLine()) {
 				sc.nextLine();
@@ -160,25 +160,48 @@ public class TXTParser extends Parser {
 		try {
 			this.file = openFile(this.getFileName());
 			this.sc = new Scanner(file, "UTF-8");
+			skipFirxtXLines();
+			readRelevantLines();
 		} catch (FileNotFoundException e) {
 			throw new FileNotFoundException("The TXT file was not found!");
+		} catch (SQLException e) {
+			throw new FileNotFoundException(
+					"TXT data could not be inserted into the database");
 		}
-		skipFirxtXLines();
+		sc.close();
+	}
+
+	/**
+	 * Read the relevant lines from startline.
+	 * 
+	 * @throws SQLException
+	 *             the sql exception
+	 */
+	private void readRelevantLines() throws SQLException {
 		while (sc.hasNextLine()) {
 			String line = sc.nextLine();
 			if (canSplit(line)) {
-				String[] splittedLine = splitLine(line);
-				Db data = SingletonDb.getDb();
-				try {
-					data.insert(docName, splittedLine, columns);
-				} catch (SQLException e) {
-					throw new FileNotFoundException(
-							"The data of the text file could not be insterted into the database!");
-
-				}
+				insertToDb(splitLine(line));
 			}
 		}
-		sc.close();
+	}
+
+	/**
+	 * Insert a row to the db.
+	 * 
+	 * @param cells
+	 *            the string array with the cell values
+	 * @throws SQLException
+	 *             the exception if data can not be inserted in database
+	 */
+	private void insertToDb(String[] lines) throws SQLException {
+		Db data = SingletonDb.getDb();
+		try {
+			data.insert(docName, lines, columns);
+		} catch (SQLException e) {
+			throw new SQLException(
+					"TXT data could not be inserted into the database");
+		}
 	}
 
 	/**
@@ -188,7 +211,7 @@ public class TXTParser extends Parser {
 	 *            the line to be split
 	 * @return true if can split false if not
 	 */
-	public boolean canSplit(String line) {
+	private boolean canSplit(String line) {
 		String[] strings = line.split(delimiter);
 		return strings.length >= columns.size();
 	}
@@ -204,16 +227,28 @@ public class TXTParser extends Parser {
 		String[] res = new String[columns.size()];
 		String[] strings = line.split(delimiter);
 		for (int i = 0; i < columns.size(); i++) {
-			// if an int is surrounded by whitespace remove it.
-			if (columns.get(i).getColumnType().equals("INT")) {
-				res[i] = strings[columns.get(i).getColumnNumber() - 1]
-						.replaceAll("\\s", "");
-			} else {
-				res[i] = strings[columns.get(i).getColumnNumber() - 1];
-			}
+			res[i] = formatString(strings, i);
 		}
 		return res;
+	}
 
+	/**
+	 * If columntype is int it and surrounded by whitespaces, the whitespaces
+	 * have to be removed.
+	 * 
+	 * @param strings
+	 *            the splitted line
+	 * @param currentColumn
+	 *            the current column
+	 * @return the formatted string
+	 */
+	private String formatString(String[] strings, int currentColumn) {
+		if (columns.get(currentColumn).getColumnType().equals("INT")) {
+			return strings[columns.get(currentColumn).getColumnNumber() - 1]
+					.replaceAll("\\s", "");
+		} else {
+			return strings[columns.get(currentColumn).getColumnNumber() - 1];
+		}
 	}
 
 	/**
