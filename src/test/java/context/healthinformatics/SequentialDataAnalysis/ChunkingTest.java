@@ -37,8 +37,6 @@ public class ChunkingTest {
 		e.setCode("E");
 		e.setComment("Deze heeft code E");
 		test.add(a);
-		test.add(b);
-		test.add(c);
 		test.add(d);
 		test.add(e);
 	}
@@ -56,6 +54,35 @@ public class ChunkingTest {
 		assertEquals(res.get(0).getChunks().get(0).getChunks().get(1).getCode(), "C");
 		assertEquals(res.get(1).getChunks().get(0).getCode(), "A");
 		assertEquals(res.get(1).getChunks().get(0).getCode(), "A");
+	}
+	
+	/**
+	 * Tests chunking chunks on comment constraint.
+	 */
+	@Test
+	public void testChunkOnContainsComment() {
+		Chunking testChunking = new Chunking(test);
+		ArrayList<Chunk> res = testChunking.constraintOnContainsComment("E");
+		assertEquals(res.get(0).getChunks().get(0).getCode(), "E");
+	}
+	
+	/**
+	 * Tests chunking chunks on comment constraint.
+	 */
+	@Test
+	public void testChunkOnEqualsComment() {
+		Chunking testChunking = new Chunking(test);
+		ArrayList<Chunk> res = testChunking.constraintOnEqualsComment("Deze heeft code E");
+		assertEquals(res.get(0).getChunks().get(0).getCode(), "E");
+	}
+	
+	/**
+	 * Tests getChunks method.
+	 */
+	@Test
+	public void testGetChunks() {
+		Chunking testChunking = new Chunking(test);
+		assertEquals(testChunking.getChunks(), test);
 	}
 
 }
