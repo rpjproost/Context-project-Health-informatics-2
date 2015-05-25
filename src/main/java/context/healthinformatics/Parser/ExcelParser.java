@@ -115,6 +115,13 @@ public class ExcelParser extends Parser {
 		return fis;
 	}
 
+	/**
+	 * Parse an excel file. Checks if we deal with an .xls or .xlsx file,
+	 * because they are handled differently.
+	 * 
+	 * @throws IOException
+	 *             if the excel file was not found
+	 */
 	@Override
 	public void parse() throws IOException {
 		FileInputStream fis = openFile(this.getFileName());
