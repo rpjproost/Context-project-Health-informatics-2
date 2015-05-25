@@ -32,9 +32,7 @@ public class Chunking {
 			Chunk curChunk = chunks.get(i);
 			addChunkOnEqualsCode(curChunk, temp, code, res);
 		}
-		if (temp.hasChild()) {
-			res.add(temp);
-		}
+		addChunkToChunk(temp, res);
 		return res;
 	}
 
@@ -50,9 +48,7 @@ public class Chunking {
 			Chunk curChunk = chunks.get(i);
 			addChunkOnContainsComment(curChunk, temp, comment, res);
 		}
-		if (temp.hasChild()) {
-			res.add(temp);
-		}
+		addChunkToChunk(temp, res);
 		return res;
 	}
 	
@@ -68,9 +64,7 @@ public class Chunking {
 			Chunk curChunk = chunks.get(i);
 			addChunkOnEqualsComment(curChunk, temp, comment, res);
 		}
-		if (temp.hasChild()) {
-			res.add(temp);
-		}
+		addChunkToChunk(temp, res);
 		return res;
 	}
 	
@@ -87,9 +81,7 @@ public class Chunking {
 			temp.setChunk(curChunk);
 		}
 		else {
-			if (temp.hasChild()) {
-				res.add(temp);
-			}
+			addChunkToChunk(temp, res);
 			temp  = new Chunk();
 		}
 	}
@@ -107,9 +99,7 @@ public class Chunking {
 			temp.setChunk(curChunk);
 		}
 		else {
-			if (temp.hasChild()) {
-				res.add(temp);
-			}
+			addChunkToChunk(temp, res);
 			temp  = new Chunk();
 		}
 	}
@@ -126,10 +116,19 @@ public class Chunking {
 			temp.setChunk(curChunk);
 		}
 		else {
-			if (temp.hasChild()) {
-				res.add(temp);
-			}
+			addChunkToChunk(temp, res);
 			temp  = new Chunk();
+		}
+	}
+	
+	/**
+	 * Adds a Chunk to a new chunk if it is part of the Chunk.
+	 * @param temp The new Chunk.
+	 * @param res The new ArrayList<Chunk> to be returned after chunking.
+	 */
+	public void addChunkToChunk(Chunk temp, ArrayList<Chunk> res) {
+		if (temp.hasChild()) {
+			res.add(temp);
 		}
 	}
 	
