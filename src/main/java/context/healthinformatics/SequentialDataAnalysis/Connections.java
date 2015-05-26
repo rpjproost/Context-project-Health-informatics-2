@@ -29,11 +29,7 @@ public class Connections {
 	 * @throws Exception e
 	 */
 	public void connectToLine(Chunk chunk, int line, String noteForConnection) throws Exception {
-		Chunk c = getChunkByLine(line);
-		HashMap<Chunk, String> pointer1 = c.getPointer();
-		pointer1.put(chunk, noteForConnection);
-		c.setPointer(pointer1);
-		
+		Chunk c = getChunkByLine(line);		
 		HashMap<Chunk, String> pointer2 = chunk.getPointer();
 		pointer2.put(c, noteForConnection);
 		chunk.setPointer(pointer2);
@@ -49,13 +45,10 @@ public class Connections {
 	 */
 	public void connectToChunk(Chunk chunk1, Chunk chunk2
 			, String noteForConnection) throws Exception {
+		
 		HashMap<Chunk, String> pointer1 = chunk1.getPointer();
 		pointer1.put(chunk2, noteForConnection);
 		chunk1.setPointer(pointer1);
-		
-		HashMap<Chunk, String> pointer2 = chunk2.getPointer();
-		pointer2.put(chunk1, noteForConnection);
-		chunk2.setPointer(pointer2);
 	}
 	
 	/**

@@ -41,7 +41,6 @@ public class ConnectionsTest {
 	public void testConnectToLine() throws Exception {
 		Connections c = new Connections(chunks);
 		c.connectToLine(c2, 1, note);
-		assertEquals(c1.getPointer().get(c2), "test");
 		assertEquals(c2.getPointer().get(c1), "test");
 	}
 	
@@ -56,6 +55,15 @@ public class ConnectionsTest {
 		Connections c = new Connections(chunks);
 		c.connectToChunk(c1, c2, note);
 		assertEquals(c1.getPointer().get(c2), "test");
-		assertEquals(c2.getPointer().get(c1), "test");
+	}
+	
+	/**
+	 * Checks if a chunk at a line is fetched correctly.
+	 * @throws Exception e
+	 */
+	@Test
+	public void testGetChunks() throws Exception {
+		Connections c = new Connections(chunks);
+		assertEquals(c.getChunkByLine(1), c1);
 	}
 }
