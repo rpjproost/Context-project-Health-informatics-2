@@ -5,16 +5,11 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 import context.healthinformatics.Parser.Column;
-import context.healthinformatics.Parser.XMLParser;
 
 /**
  * Test class for XMLWriter.
  */
 public class XMLWriterTest {
-	/**
-	 * variable used to save the newly created parser.
-	 */
-	private XMLParser xmlp;
 
 	/**
 	 * path leading to the place of all test files.
