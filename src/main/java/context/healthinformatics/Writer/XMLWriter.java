@@ -128,7 +128,7 @@ public class XMLWriter {
 	 */
 	private void appendIfElement(Element parent, String id, String data,
 			String ifStat, String equalsTo) {
-		if (ifStat.equals(equalsTo)) {
+		if (ifStat.toLowerCase().equals(equalsTo)) {
 			appendElement(parent, id, data);
 		}
 		
