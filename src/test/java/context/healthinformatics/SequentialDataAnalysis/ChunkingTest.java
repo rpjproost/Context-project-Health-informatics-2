@@ -26,34 +26,38 @@ public class ChunkingTest {
 		Chunk c = new Chunk();
 		Chunk d = new Chunk();
 		Chunk e = new Chunk();
+		Chunk f = new Chunk();
 		
 		a.setChunk(b);
 		a.setChunk(c);
-		a.setCode("A");
-		b.setCode("B");
-		c.setCode("C");
-		d.setCode("A");
-		d.setComment("Deze heeft code A");
-		e.setCode("E");
+		a.setCode("A");									//	B	code B 
+		b.setCode("B");									//A		code A
+		c.setCode("C");									//	C	code C
+		d.setCode("A");									//D		code A	comment= Deze heeft code A
+		d.setComment("Deze heeft code A");				//E		code E  comment= Deze heeft code E
+		e.setCode("E");									//F		code A 	comment= Dit is F
 		e.setComment("Deze heeft code E");
+		f.setCode("A");
+		f.setComment("Dit is F");
 		test.add(a);
 		test.add(d);
 		test.add(e);
+		test.add(f);
 	}
 	
 	/**
 	 * Tests chunking chunks on code constraint.
 	 */
 	@Test
-	public void testChunkOnConstraint() {
+	public void testChunkOnConstraintCode() {
 		Chunking testChunking = new Chunking(test);
 		ArrayList<Chunk> res = testChunking.constraintOnCode("A");
-		assertEquals(res.size(), 2);
+		final int three = 3;
+		assertEquals(three, res.size());
 		assertEquals(res.get(0).getChunks().get(0).getCode(), "A");
 		assertEquals(res.get(0).getChunks().get(0).getChunks().get(0).getCode(), "B");
 		assertEquals(res.get(0).getChunks().get(0).getChunks().get(1).getCode(), "C");
-		assertEquals(res.get(1).getChunks().get(0).getCode(), "A");
-		assertEquals(res.get(1).getChunks().get(0).getCode(), "A");
+		assertEquals(res.get(1).getCode(), "E");
 	}
 	
 	/**
@@ -63,7 +67,9 @@ public class ChunkingTest {
 	public void testChunkOnContainsComment() {
 		Chunking testChunking = new Chunking(test);
 		ArrayList<Chunk> res = testChunking.constraintOnContainsComment("E");
-		assertEquals(res.get(0).getChunks().get(0).getCode(), "E");
+		final int size = 4;
+		assertEquals(size, res.size());
+		assertEquals(res.get(2).getChunks().get(0).getCode(), "E");
 	}
 	
 	/**
@@ -73,7 +79,9 @@ public class ChunkingTest {
 	public void testChunkOnEqualsComment() {
 		Chunking testChunking = new Chunking(test);
 		ArrayList<Chunk> res = testChunking.constraintOnEqualsComment("Deze heeft code E");
-		assertEquals(res.get(0).getChunks().get(0).getCode(), "E");
+		final int size = 4;
+		assertEquals(size, res.size());
+		assertEquals(res.get(2).getChunks().get(0).getCode(), "E");
 	}
 	
 	/**

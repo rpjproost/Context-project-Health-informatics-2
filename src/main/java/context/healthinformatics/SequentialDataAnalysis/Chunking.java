@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class Chunking {
 
 	private ArrayList<Chunk> chunks;
+	private Chunk temp;
 
 	/**
 	 * Constructor Chunking.
@@ -28,12 +29,12 @@ public class Chunking {
 	 */
 	public ArrayList<Chunk> constraintOnCode(String code) {
 		ArrayList<Chunk> res = new ArrayList<Chunk>();
-		Chunk temp  = new Chunk();
+		temp  = new Chunk();
 		for (int i = 0; i < chunks.size(); i++) {
 			Chunk curChunk = chunks.get(i);
-			addChunkOnEqualsCode(curChunk, temp, code, res);
+			addChunkOnEqualsCode(curChunk, code, res);
 		}
-		addChunkToChunk(temp, res);
+		addLastElementToChunks(res);
 		return res;
 	}
 
@@ -44,12 +45,12 @@ public class Chunking {
 	 */
 	public ArrayList<Chunk> constraintOnContainsComment(String comment) {
 		ArrayList<Chunk> res = new ArrayList<Chunk>();
-		Chunk temp  = new Chunk();
+		temp  = new Chunk();
 		for (int i = 0; i < chunks.size(); i++) {
 			Chunk curChunk = chunks.get(i);
-			addChunkOnContainsComment(curChunk, temp, comment, res);
+			addChunkOnContainsComment(curChunk, comment, res);
 		}
-		addChunkToChunk(temp, res);
+		addLastElementToChunks(res);
 		return res;
 	}
 	
@@ -60,12 +61,12 @@ public class Chunking {
 	 */
 	public ArrayList<Chunk> constraintOnEqualsComment(String comment) {
 		ArrayList<Chunk> res = new ArrayList<Chunk>();
-		Chunk temp  = new Chunk();
+		temp  = new Chunk();
 		for (int i = 0; i < chunks.size(); i++) {
 			Chunk curChunk = chunks.get(i);
-			addChunkOnEqualsComment(curChunk, temp, comment, res);
+			addChunkOnEqualsComment(curChunk, comment, res);
 		}
-		addChunkToChunk(temp, res);
+		addLastElementToChunks(res);
 		return res;
 	}
 	
@@ -76,13 +77,13 @@ public class Chunking {
 	 * @param c String for comment constraint.
 	 * @param res ArrayList<Chunk> chunked.
 	 */
-	private void addChunkOnContainsComment(Chunk curChunk, Chunk temp, String c, 
+	private void addChunkOnContainsComment(Chunk curChunk, String c, 
 			ArrayList<Chunk> res) {
 		if (curChunk.getComment().contains(c)) {
 			temp.setChunk(curChunk);
 		}
 		else {
-			addChunkToChunk(temp, res);
+			addChunkToChunk(res, curChunk);
 			temp  = new Chunk();
 		}
 	}
@@ -94,13 +95,13 @@ public class Chunking {
 	 * @param c String for comment constraint.
 	 * @param res ArrayList<Chunk> chunked.
 	 */
-	private void addChunkOnEqualsComment(Chunk curChunk, Chunk temp, String c, 
+	private void addChunkOnEqualsComment(Chunk curChunk, String c, 
 			ArrayList<Chunk> res) {
 		if (curChunk.getComment().equals(c)) {
 			temp.setChunk(curChunk);
 		}
 		else {
-			addChunkToChunk(temp, res);
+			addChunkToChunk(res, curChunk);
 			temp  = new Chunk();
 		}
 	}
@@ -112,13 +113,13 @@ public class Chunking {
 	 * @param c String for code constraint.
 	 * @param res ArrayList<Chunk> chunked.
 	 */
-	private void addChunkOnEqualsCode(Chunk curChunk, Chunk temp, String c, ArrayList<Chunk> res) {
+	private void addChunkOnEqualsCode(Chunk curChunk, String c, ArrayList<Chunk> res) {
 		if (curChunk.getCode().equals(c)) {
 			temp.setChunk(curChunk);
 		}
 		else {
-			addChunkToChunk(temp, res);
-			temp  = new Chunk();
+			addChunkToChunk(res, curChunk);
+			this.temp  = new Chunk();
 		}
 	}
 	
@@ -127,7 +128,21 @@ public class Chunking {
 	 * @param temp The new Chunk.
 	 * @param res The new ArrayList<Chunk> to be returned after chunking.
 	 */
-	private void addChunkToChunk(Chunk temp, ArrayList<Chunk> res) {
+	private void addChunkToChunk(ArrayList<Chunk> res, Chunk curChunk) {
+		if (temp.hasChild()) {
+			res.add(temp);
+			res.add(curChunk);
+		}
+		else {
+			res.add(curChunk);
+		}
+	}
+	
+	/**
+	 * Adds last chunked chunk to result ArrayList.
+	 * @param res ArrayList to be returned.
+	 */
+	private void addLastElementToChunks(ArrayList<Chunk> res) {
 		if (temp.hasChild()) {
 			res.add(temp);
 		}
@@ -144,12 +159,7 @@ public class Chunking {
 	
 	public ArrayList<Chunk> chunkOnlyAffectedOnConstraint(String value, String operator, 
 			String tableName) throws SQLException {
-		//TODO: use constraints class for example a period of time,
-		//but leave the rest of chunks unaffected.
-		//It now uses constraint class, gets back an arraylist of chunks that apply
-		//to the constraint
-		//After that it creates new chunk with that arraylist and adds it to the back of 
-		//the used chunks. THIS IS BAD. We will discuss this tomorrow.
+		//TODO: probably going to be a recursive function, will be added in another class.
 		Chunk newChunk = new Chunk();
 		Constraints constraint = new Constraints(chunks);
 		ArrayList<Chunk> cons = constraint.constraint(value, operator, tableName);
