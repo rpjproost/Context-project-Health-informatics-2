@@ -5,61 +5,100 @@ import java.awt.GridBagConstraints;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
 import context.healthinformatics.Database.SingletonDb;
 import context.healthinformatics.Parser.XMLParser;
 
 /**
- * Class which represents one of the states for the variabel panel in the mainFrame.
+ * Class which represents one of the states for the variabel panel in the
+ * mainFrame.
  */
 public class InputPage extends InterfaceHelper implements PanelState,
-	Serializable {
-	
+		Serializable {
+
 	private static final long serialVersionUID = 1L;
 
 	private MainFrame mf;
 	private FileTree ft;
 	private InputPageComponents ipc;
 	private ArrayList<ArrayList<String>> folder;
-	
-	private JPanel panel;
+
+	private JPanel leftPanel;
 	private JFileChooser selecter;
-	
+
 	public static final int BUTTONFONTSIZE = 15;
 	public static final int THREE = 3;
 	public static final String COLOR = "#81DAF5";
-	
+
+	private XMLEditor xmledit;
+
 	/**
 	 * Constructor.
-	 * @param m is the mainframe object
+	 * 
+	 * @param m
+	 *            is the mainframe object
 	 */
 	public InputPage(MainFrame m) {
 		mf = m;
 		folder = new ArrayList<ArrayList<String>>();
 		ft = new FileTree(m, this);
 		ipc = new InputPageComponents(m, this);
+		xmledit = new XMLEditor();
 	}
 
 	/**
 	 * @return Panel of the InputPage state.
 	 */
 	public JPanel loadPanel() {
-		panel = MainFrame.createPanel(Color.decode(COLOR),
+		JPanel containerPanel = createPanel(Color.decode(COLOR),
 				mf.getScreenWidth(), mf.getStatePanelSize());
-		panel.add(ipc.loadProjectSelection(), setGrids(0, 0));
-		panel.add(ipc.loadFileSelection(), setGrids(0, 1));
-		panel.add(ft.loadFolder(), setGrids(0, 2));
-		GridBagConstraints c = setGrids(0, THREE);
+		leftPanel = createLeftPanel();
+		JPanel rightPanel = createRightPanel();
+		containerPanel.add(leftPanel, setGrids(0, 0));
+		containerPanel.add(rightPanel, setGrids(1, 0));
+		return containerPanel;
+	}
+
+	/**
+	 * Create the left panel of the input page.
+	 * 
+	 * @return the left panel
+	 */
+	public JPanel createLeftPanel() {
+		JPanel leftPanel = createPanel(Color.decode(COLOR),
+				mf.getScreenWidth() / 2, mf.getStatePanelSize());
+		leftPanel.add(ipc.loadProjectSelection(), setGrids(0, 0));
+		leftPanel.add(ipc.loadFileSelection(), setGrids(0, 1));
+		leftPanel.add(ft.loadFolder(), setGrids(0, 2));
+		GridBagConstraints c = setGrids(1, 0);
+		c = setGrids(0, THREE);
 		c.weighty = 1;
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
-		panel.add(ipc.loadButtonSection(), c);
-		return panel;
+		leftPanel.add(ipc.loadHelpButtonSection(), c);
+		return leftPanel;
 	}
-	
+
+	/**
+	 * Create the right panel of the input page.
+	 * 
+	 * @return the right panel
+	 */
+	public JPanel createRightPanel() {
+		JPanel rightPanel = createPanel(Color.decode(COLOR),
+				mf.getScreenWidth() / 2, mf.getStatePanelSize());
+		rightPanel.add(xmledit.loadPanel(), setGrids(0, 0));
+
+		rightPanel.add(ipc.loadAnalyzeButtonSection(), setGrids(0, 1));
+		return rightPanel;
+	}
+
 	/**
 	 * Method which creates the list of projects.
+	 * 
 	 * @return list of projects.
 	 */
 	public String[] getProjects() {
@@ -69,12 +108,13 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		}
 		return res;
 	}
-	
+
 	/**
-	 * Method which asks the user to enter a new PROJECTS :, and inserts it in the combobox.
+	 * Method which asks the user to enter a new PROJECTS :, and inserts it in
+	 * the combobox.
 	 */
 	public void createProject() {
-		String newProject =  (String) JOptionPane.showInputDialog(panel,
+		String newProject = (String) JOptionPane.showInputDialog(leftPanel,
 				"New Project : ");
 		if (findFolderProject(newProject) != -1) {
 			JOptionPane.showMessageDialog(null, "Project name already exists!");
@@ -82,15 +122,17 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		}
 		if (newProject != null) {
 			addComboItem(newProject);
-		}
-		else {
+		} else {
 			JOptionPane.showMessageDialog(null, "No projects specified");
 		}
 	}
-	
+
 	/**
-	 * Method which asks the user to enter a new PROJECTS :, and inserts it in the ComboBox.
-	 * @param project is the name of the project.
+	 * Method which asks the user to enter a new PROJECTS :, and inserts it in
+	 * the ComboBox.
+	 * 
+	 * @param project
+	 *            is the name of the project.
 	 */
 	public void addComboItem(String project) {
 		ArrayList<String> list = new ArrayList<String>();
@@ -99,20 +141,22 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		ipc.getComboBox().addItem(project);
 		ft.addProjectToTree(project);
 	}
-	
+
 	/**
 	 * @return the anwser of the filechooser.
 	 */
 	public int openFileChooser() {
 		selecter = new JFileChooser();
 		selecter.setDialogType(JFileChooser.SAVE_DIALOG);
-		return selecter.showSaveDialog(panel);
+		return selecter.showSaveDialog(leftPanel);
 	}
-	
+
 	/**
 	 * Method which finds the project in the folder.
+	 * 
 	 * @return index of project.
-	 * @param s is string of project.
+	 * @param s
+	 *            is string of project.
 	 */
 	public int findFolderProject(String s) {
 		for (int i = 0; i < folder.size(); i++) {
@@ -129,14 +173,14 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	public FileTree getFileTree() {
 		return ft;
 	}
-	
+
 	/**
 	 * @return the InputPageComponents object.
 	 */
 	public InputPageComponents getInputPageComponent() {
 		return ipc;
 	}
-	
+
 	/**
 	 * @return the file selecter object.
 	 */
@@ -150,7 +194,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	public ArrayList<ArrayList<String>> getFolder() {
 		return folder;
 	}
-	
+
 	/**
 	 * @return selecter.
 	 */
