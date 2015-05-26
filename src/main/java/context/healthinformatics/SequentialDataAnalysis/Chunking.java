@@ -156,7 +156,17 @@ public class Chunking {
 	public ArrayList<Chunk> getChunks() {
 		return chunks;
 	}
-	
+
+	/**
+	 * WORK IN PROGRESS.
+	 * @param value .
+	 * @param operator .
+	 * @param tableName .
+	 * @return .
+	 * @throws SQLException .
+	 * @Deprecated .
+	 */
+	@Deprecated
 	public ArrayList<Chunk> chunkOnlyAffectedOnConstraint(String value, String operator, 
 			String tableName) throws SQLException {
 		//TODO: probably going to be a recursive function, will be added in another class.
