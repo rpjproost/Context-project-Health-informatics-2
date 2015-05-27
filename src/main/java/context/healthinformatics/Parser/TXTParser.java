@@ -65,9 +65,8 @@ public class TXTParser extends Parser {
 	}
 
 	/**
-	 * Get the startline.
-	 * 
-	 * @return startline
+	 * Get the start line.
+	 * @return start line
 	 */
 	public int getStartLine() {
 		return startLine;
@@ -199,8 +198,13 @@ public class TXTParser extends Parser {
 		try {
 			data.insert(docName, lines, columns);
 		} catch (SQLException e) {
-			throw new SQLException(
-					"TXT data could not be inserted into the database");
+			//TODO print to log maybe?
+			System.out.print("Error inserting: ");
+			String delim = "";
+			for (int i = 0; i < lines.length; i++) {
+				System.out.print(delim + lines[i]);
+			}
+			System.out.println();
 		}
 	}
 
