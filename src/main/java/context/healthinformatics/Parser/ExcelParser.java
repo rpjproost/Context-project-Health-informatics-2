@@ -283,7 +283,7 @@ public class ExcelParser extends Parser {
 			date = new SimpleDateFormat(columns.get(c).getDateType())
 					.parse(curCell.toString());
 		} catch (ParseException e) {
-			return curCell.toString();
+			return new SimpleDateFormat(columns.get(c).getDateType()).format(new Date());
 		}
 		return new SimpleDateFormat(columns.get(c).getDateType()).format(date);
 	}
