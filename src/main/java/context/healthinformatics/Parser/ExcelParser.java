@@ -340,13 +340,18 @@ public class ExcelParser extends Parser {
 	 * @throws IOException
 	 *             the exception if data can not be inserted in database
 	 */
-	private void insertToDb(String[] cells) throws IOException {
+	private void insertToDb(String[] cells) {
 		Db data = SingletonDb.getDb();
 		try {
 			data.insert(docName, cells, columns);
 		} catch (SQLException e) {
-			throw new IOException(
-					"Excel data could not be inserted into the database");
+			//TODO print to log maybe?
+			System.out.print("Error inserting: ");
+			String delim = "";
+			for (int i = 0; i < cells.length; i++) {
+				System.out.print(delim + cells[i]);
+			}
+			System.out.println();
 		}
 	}
 
