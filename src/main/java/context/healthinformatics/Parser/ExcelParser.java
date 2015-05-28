@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Logger;
 
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -31,6 +32,7 @@ public class ExcelParser extends Parser {
 	private ArrayList<Column> columns;
 	private int sheet;
 	private String docName;
+	private Logger log = Logger.getLogger(ExcelParser.class.getName());
 
 	/**
 	 * Constructor for the ExcelParser.
@@ -248,7 +250,12 @@ public class ExcelParser extends Parser {
 				&& !curCell.toString().equals("")) {
 			return new SimpleDateFormat(columns.get(c).getDateType())
 					.format(curCell.getDateCellValue());
-		} else {
+		} else if (columns.get(c).getColumnType().equals("DATE")) {
+			log.info("this cell could not be parsed to a date: "+" in column: "+c);
+			return new SimpleDateFormat(columns.get(c).getDateType())
+			.format(new Date());
+		}
+		else {
 			return curCell.toString();
 		}
 	}
@@ -345,29 +352,28 @@ public class ExcelParser extends Parser {
 		try {
 			data.insert(docName, cells, columns);
 		} catch (SQLException e) {
-			//TODO print to log maybe?
-			System.out.print("Error inserting: ");
-			String delim = "";
-			for (int i = 0; i < cells.length; i++) {
-				System.out.print(delim + cells[i]);
-			}
-			System.out.println();
+			StringBuilder builder = new StringBuilder();
+			builder.append("Error inserting ");
+			builder.append(printCells(cells));
+			builder.append(" INTO ").append(docName);
+			log.info(builder.toString());
 		}
 	}
 
 	/**
-	 * Test function to print the parsed line.
+	 * Test function to return the parsed line as a string.
 	 * 
 	 * @param cells
 	 *            the splitted line
+	 * @return the string build
 	 */
-	public void printCells(String[] cells) {
+	public String printCells(String[] cells) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < cells.length; i++) {
 			sb.append("|");
 			sb.append(cells[i]);
 			sb.append("|");
 		}
-		System.out.println(sb);
+		return sb.toString();
 	}
 }
