@@ -53,30 +53,16 @@ public class CommentsTest {
 	 */
 	@Test
 	public void testSetComment() {
-		try {
-			c.setComment(THREE, "testComment1");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		c.setComment(THREE, "testComment1");
 		assertEquals(c3.getComment(), "testComment1");
-		try {
-			c.setComment(2, "testComment2");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		c.setComment(2, "testComment2");
 		assertEquals(c2.getComment(), "testComment2");
 	}
 
 	/**
 	 * Try to add a comment to a non existent line.
-	 * 
-	 * @throws Exception
-	 *             throws exception that line is not found
-	 */
-	@Test(expected = Exception.class)
-	public void testNonExistentLine() throws Exception {
+	 **/
+	public void testNonExistentLine() {
 		c.setComment(0, "comment");
 	}
 }
