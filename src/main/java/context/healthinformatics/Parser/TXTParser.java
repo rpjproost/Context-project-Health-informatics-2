@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 import context.healthinformatics.Database.Db;
 import context.healthinformatics.Database.SingletonDb;
@@ -20,6 +21,7 @@ public class TXTParser extends Parser {
 	private Scanner sc;
 	private ArrayList<Column> columns;
 	private String docName;
+	private Logger log = Logger.getLogger(TXTParser.class.getName());
 
 	/**
 	 * Constructor of the TXTParser.
@@ -198,13 +200,11 @@ public class TXTParser extends Parser {
 		try {
 			data.insert(docName, lines, columns);
 		} catch (SQLException e) {
-			//TODO print to log maybe?
-			System.out.print("Error inserting: ");
-			String delim = "";
-			for (int i = 0; i < lines.length; i++) {
-				System.out.print(delim + lines[i]);
-			}
-			System.out.println();
+			StringBuilder builder = new StringBuilder();
+			builder.append("Error inserting: ");
+			builder.append(printCells(lines));
+			builder.append(" into: ").append(docName);
+			log.info(builder.toString());
 		}
 	}
 
@@ -256,19 +256,20 @@ public class TXTParser extends Parser {
 	}
 
 	/**
-	 * Test function for txt parser to print splitted line.
+	 * Test function for txt parser to build a splitted line string.
 	 * 
 	 * @param lines
 	 *            the splitted line
+	 * @return returns the created string
 	 */
-	public void printCells(String[] lines) {
+	public String printCells(String[] lines) {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < lines.length; i++) {
 			sb.append("|");
 			sb.append(lines[i]);
 			sb.append("|");
 		}
-		System.out.println(sb);
+		return sb.toString();
 	}
 
 }
