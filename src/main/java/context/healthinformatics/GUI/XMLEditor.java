@@ -56,46 +56,29 @@ public class XMLEditor extends InterfaceHelper {
 		GridBagConstraints c = setGrids(0, 1);
 		// margin top
 		c.insets = new Insets(MARGINTOP, 0, 0, 0);
-		extraContainer.add(
-				makeFormRowWithTwoButtons("Make new Excel Document",
-						"Create new TXT/CSV Document"), c);
+		extraContainer.add(makeFormRowWithButton("Create new Document", null),
+				c);
 		numberOfXMLDocuments = 0;
 		scrollPane = makeScrollPaneForContainerPanel(extraContainer);
 	}
 
 	/**
-	 * Create a row with the buttons to add new excel or txt document.
+	 * Create a row with a single button to add columns.
 	 * 
 	 * @param nameButton1
-	 *            the name of the button for excel
-	 * @param nameButton2
-	 *            the name of the button for txt
-	 * @return the panel with the buttons
-	 */
-	public JPanel makeFormRowWithTwoButtons(String nameButton1,
-			String nameButton2) {
-		JPanel buttonPanel = createPanel(Color.WHITE, FORMELEMENTWIDTH,
-				BUTTONHEIGHT);
-		buttonPanel.setLayout(new GridLayout(1, THREE));
-		buttonPanel.add(new JButton(nameButton1));
-		buttonPanel.add(new JPanel());
-		buttonPanel.add(new JButton(nameButton2));
-		return buttonPanel;
-	}
-
-	/**
-	 * Create a row with a single button to add columns.
-	 * @param nameButton1 the name of the button
+	 *            the name of the button
+	 * @param color
+	 *            the background color
 	 * @return the panel with white space and the button
 	 */
-	public JPanel makeFormRowWithButton(String nameButton1) {
+	public JPanel makeFormRowWithButton(String nameButton1, Color color) {
 		JPanel buttonPanel = createPanel(Color.WHITE, FORMELEMENTWIDTH,
 				BUTTONHEIGHT);
 		buttonPanel.setLayout(new GridLayout(1, THREE));
 		JPanel dummyPanel = new JPanel();
 		JPanel dummyPanel2 = new JPanel();
-		dummyPanel.setBackground(Color.WHITE);
-		dummyPanel2.setBackground(Color.WHITE);
+		dummyPanel.setBackground(color);
+		dummyPanel2.setBackground(color);
 		buttonPanel.add(dummyPanel);
 		buttonPanel.add(dummyPanel2);
 		buttonPanel.add(new JButton(nameButton1));
@@ -164,7 +147,8 @@ public class XMLEditor extends InterfaceHelper {
 		}
 		// add all column fields
 		ArrayList<Column> columnsOfDocument = xmlDocument.getColumns();
-		documentPanel.add(makeFormRowWithButton("Add extra Column"),
+		documentPanel.add(
+				makeFormRowWithButton("Add extra Column", Color.WHITE),
 				setGrids(0, 1));
 		for (int i = 0; i < columnsOfDocument.size(); i++) {
 			documentPanel.add(createColumnForm(columnsOfDocument.get(i)),
