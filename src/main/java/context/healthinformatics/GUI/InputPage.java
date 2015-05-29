@@ -41,8 +41,15 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 * 
 	 * @param m
 	 *            is the mainframe object
+	 * @throws IOException 
 	 */
 	public InputPage(MainFrame m) {
+		XMLParser parser = new XMLParser("src/main/data/demo/demo.xml");
+		try {
+			parser.parse();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		mf = m;
 		folder = new ArrayList<ArrayList<String>>();
 		ft = new FileTree(m, this);
