@@ -36,7 +36,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	public static final int THREE = 3;
 	public static final String COLOR = "#81DAF5";
 
-	private XMLEditor xmledit;
+	protected XMLEditor xmledit;
 
 	/**
 	 * Constructor.
@@ -51,7 +51,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		ft = new FileTree(m, this);
 		ipc = new InputPageComponents(m, this);
 		xmledit = new XMLEditor();
-		try {
+		try { //TODO remove after demo
 			XMLParser parser = new XMLParser("src/main/data/demo/demo.xml");
 			parser.parse();
 			xmlDocs = parser.getXMLDocs();
