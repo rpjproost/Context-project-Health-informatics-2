@@ -13,8 +13,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import context.healthinformatics.database.Db;
-import context.healthinformatics.database.SingletonDb;
 import context.healthinformatics.parser.Column;
 
 /**

@@ -6,7 +6,6 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
-import context.healthinformatics.sequentialdataanalysis.Chunk;
 
 /**
  * 

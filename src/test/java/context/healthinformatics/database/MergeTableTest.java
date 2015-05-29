@@ -14,9 +14,6 @@ import java.util.TreeSet;
 
 import org.junit.Test;
 
-import context.healthinformatics.database.Db;
-import context.healthinformatics.database.MergeTable;
-import context.healthinformatics.database.SingletonDb;
 import context.healthinformatics.parser.XMLParser;
 import context.healthinformatics.sequentialdataanalysis.Chunk;
 

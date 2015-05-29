@@ -10,9 +10,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import context.healthinformatics.gui.MainFrame;
-import context.healthinformatics.gui.OutputPage;
-import context.healthinformatics.gui.PanelState;
 import context.healthinformatics.gui.MainFrame.MouseHandler;
 
 /**

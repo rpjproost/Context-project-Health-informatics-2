@@ -9,7 +9,6 @@ import org.junit.Test;
 import context.healthinformatics.database.Db;
 import context.healthinformatics.database.SingletonDb;
 import context.healthinformatics.parser.XMLParser;
-import context.healthinformatics.writer.WriteToTXT;
 
 /**
  * Test for WriteToTXT.
@@ -35,16 +34,18 @@ public class WriterTest {
 	 * 
 	 * @throws SQLException
 	 *             the sqlexception
-	 * @throws IOException the ioException of the writetotxt
+	 * @throws IOException
+	 *             the ioException of the writetotxt
 	 */
 	@Test
 	public void testFirst() throws SQLException, IOException {
 		xmlp = new XMLParser(path + "textxml.xml");
-		
+
 		xmlp.parse();
 
 		ResultSet rs = data.selectResultSet("stat", "*", "");
-		WriteToTXT wtxt = new WriteToTXT("test.txt", "src/test/data/writerfiles/");
+		WriteToTXT wtxt = new WriteToTXT("test.txt",
+				"src/test/data/writerfiles/");
 		wtxt.writeToFile(rs);
 		data.dropTable("stat");
 	}

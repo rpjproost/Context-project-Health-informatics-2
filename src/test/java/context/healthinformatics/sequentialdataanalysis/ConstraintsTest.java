@@ -11,8 +11,6 @@ import org.junit.Test;
 import context.healthinformatics.database.Db;
 import context.healthinformatics.database.SingletonDb;
 import context.healthinformatics.parser.XMLParser;
-import context.healthinformatics.sequentialdataanalysis.Chunk;
-import context.healthinformatics.sequentialdataanalysis.Constraints;
 
 /**
  * Test for class Constraints.

@@ -12,8 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import context.healthinformatics.database.SingletonDb;
-import context.healthinformatics.gui.InputPage;
-import context.healthinformatics.gui.MainFrame;
 import context.healthinformatics.gui.InputPage.ActionHandler;
 
 /**
