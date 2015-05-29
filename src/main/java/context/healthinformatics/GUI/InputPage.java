@@ -58,8 +58,8 @@ public class InputPage extends InterfaceHelper implements PanelState,
 				mf.getScreenWidth(), mf.getStatePanelSize());
 		leftPanel = createLeftPanel();
 		JPanel rightPanel = createRightPanel();
-		containerPanel.add(leftPanel, setGrids(0, 0));
-		containerPanel.add(rightPanel, setGrids(1, 0));
+		containerPanel.add(leftPanel);
+		containerPanel.add(rightPanel);
 		return containerPanel;
 	}
 
