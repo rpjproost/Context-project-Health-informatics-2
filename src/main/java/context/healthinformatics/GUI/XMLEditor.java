@@ -29,12 +29,15 @@ public class XMLEditor extends InterfaceHelper {
 	private static final int PARENTWIDTH = 900;
 	private static final int PARENTHEIGHT = 700;
 
-	private static final int FORMELEMENTWITH = 800;
+	private static final int FORMELEMENTWIDTH = 800;
 	private static final int FORMELEMNTHEIGHT = 25;
+
+	private static final int COLUMNPANELHEIGHT = 75;
 
 	private static final int MARGINTOP = 10;
 
-	private ArrayList<XMLDocument> xmlDocumentList;
+	private static final int THREE = 3;
+	private static final int FOUR = 4;
 
 	private JPanel containerScrollPanel;
 	private int numberOfXMLDocuments;
@@ -44,7 +47,6 @@ public class XMLEditor extends InterfaceHelper {
 	 * Empty Constructor of the XMLEditor.
 	 */
 	public XMLEditor() {
-		xmlDocumentList = new ArrayList<XMLDocument>();
 		containerScrollPanel = createContainerPanel();
 		numberOfXMLDocuments = 0;
 		scrollPane = makeScrollPaneForContainerPanel(containerScrollPanel);
@@ -71,8 +73,7 @@ public class XMLEditor extends InterfaceHelper {
 		GridBagConstraints c = setGrids(0, numberOfXMLDocuments);
 		// margin top
 		c.insets = new Insets(MARGINTOP, 0, 0, 0);
-		containerScrollPanel.add(createDocumentPanel(xmlDocument),
-				c);
+		containerScrollPanel.add(createDocumentPanel(xmlDocument), c);
 		numberOfXMLDocuments++;
 		scrollPane.revalidate();
 	}
@@ -122,6 +123,9 @@ public class XMLEditor extends InterfaceHelper {
 	/**
 	 * Create the document setting fields which are required for all documents.
 	 * 
+	 * @param xmlDocument
+	 *            the xmlDocument which is read.
+	 * 
 	 * @return the panel with de components
 	 */
 	public JPanel createStandardTXTDocumentSettingFields(XMLDocument xmlDocument) {
@@ -140,16 +144,19 @@ public class XMLEditor extends InterfaceHelper {
 		documentSettingsPanel.add(
 				makeFormRowWithTextField("Document start line: ",
 						Integer.toString(xmlDocument.getStartLine())),
-				setGrids(0, 3));
+				setGrids(0, THREE));
 		documentSettingsPanel.add(
 				makeFormRowWithTextField("Document delimiter: ",
-						xmlDocument.getDelimiter()), setGrids(0, 4));
+						xmlDocument.getDelimiter()), setGrids(0, FOUR));
 		return documentSettingsPanel;
 	}
 
 	/**
 	 * Create the document setting fields for excel which are required for all
 	 * documents.
+	 * 
+	 * @param xmlDocument
+	 *            the xmldocument which is read
 	 * 
 	 * @return the panel with de components
 	 */
@@ -170,11 +177,11 @@ public class XMLEditor extends InterfaceHelper {
 		documentSettingsPanel.add(
 				makeFormRowWithTextField("Document start line: ",
 						Integer.toString(xmlDocument.getStartLine())),
-				setGrids(0, 3));
+				setGrids(0, THREE));
 		documentSettingsPanel.add(
 				makeFormRowWithTextField("Document sheet: ",
 						Integer.toString(xmlDocument.getSheet())),
-				setGrids(0, 4));
+				setGrids(0, FOUR));
 		return documentSettingsPanel;
 	}
 
@@ -183,6 +190,8 @@ public class XMLEditor extends InterfaceHelper {
 	 * 
 	 * @param comboBoxStrings
 	 *            the array of strings to display in the dropdown.
+	 * @param selectedValue
+	 *            the int which indicates which elemtent is selected
 	 * @return the Java ComboBox
 	 */
 	public JComboBox<String> createTypeDropDown(String[] comboBoxStrings,
@@ -195,16 +204,17 @@ public class XMLEditor extends InterfaceHelper {
 	/**
 	 * Create a panel for a column.
 	 * 
-	 * @param number
-	 *            the number of the current column
+	 * @param currentColumn
+	 *            the column which is read
 	 * @return the panel with all field for a column
 	 */
 	public JPanel createColumnForm(Column currentColumn) {
-		int width = 75;
+		int width = COLUMNPANELHEIGHT;
 		if (currentColumn.getColumnType().equals("DATE")) {
-			width += 25;
+			width += FORMELEMNTHEIGHT;
 		}
-		JPanel containerPanel = createPanel(Color.WHITE, FORMELEMENTWITH, width);
+		JPanel containerPanel = createPanel(Color.WHITE, FORMELEMENTWIDTH,
+				width);
 		String[] typeStrings = { "String", "Int", "Date" };
 		containerPanel.add(
 				makeFormRowWithTextField("Column id: ",
@@ -221,7 +231,7 @@ public class XMLEditor extends InterfaceHelper {
 
 			containerPanel.add(
 					makeFormRowWithTextField("Specified datetype: ",
-							currentColumn.getDateType()), setGrids(0, 3));
+							currentColumn.getDateType()), setGrids(0, THREE));
 		}
 		return containerPanel;
 	}
@@ -251,11 +261,13 @@ public class XMLEditor extends InterfaceHelper {
 	 *            the name of the label.
 	 * @param comboBoxStrings
 	 *            the array of string for the dropdown element
+	 * @param comboIndex
+	 *            the index of the selected dropdown element
 	 * @return panel with the two textfields
 	 */
 	public JPanel makeFormRowWithComboBox(String name,
 			String[] comboBoxStrings, int comboIndex) {
-		JPanel containerPanel = createPanel(Color.WHITE, FORMELEMENTWITH,
+		JPanel containerPanel = createPanel(Color.WHITE, FORMELEMENTWIDTH,
 				FORMELEMNTHEIGHT);
 		containerPanel.setLayout(new GridLayout(1, 2));
 		containerPanel.add(new JLabel(name));
@@ -274,7 +286,7 @@ public class XMLEditor extends InterfaceHelper {
 	 */
 	public JPanel makeFormRowWithTextField(String labelName,
 			String textFieldInput) {
-		JPanel containerPanel = createPanel(Color.WHITE, FORMELEMENTWITH,
+		JPanel containerPanel = createPanel(Color.WHITE, FORMELEMENTWIDTH,
 				FORMELEMNTHEIGHT);
 		containerPanel.setLayout(new GridLayout(1, 2));
 		containerPanel.add(new JLabel(labelName));
