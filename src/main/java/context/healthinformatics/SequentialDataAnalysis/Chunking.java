@@ -157,27 +157,7 @@ public class Chunking {
 		return chunks;
 	}
 
-	/**
-	 * WORK IN PROGRESS.
-	 * @param value .
-	 * @param operator .
-	 * @param tableName .
-	 * @return .
-	 * @throws SQLException .
-	 * @Deprecated .
-	 */
-	@Deprecated
-	public ArrayList<Chunk> chunkOnlyAffectedOnConstraint(String value, String operator, 
-			String tableName) throws SQLException {
-		//TODO: probably going to be a recursive function, will be added in another class.
-		Chunk newChunk = new Chunk();
-		Constraints constraint = new Constraints(chunks);
-		ArrayList<Chunk> cons = constraint.constraint(value, operator, tableName);
-		if (cons.size() != 0) {
-			newChunk.setChunks(cons);	
-		}
-		chunks.add(newChunk);
-		return chunks;
-	}
+	//TODO: Add a recursive function for chunking on data 
+	//(for example by periods of time), will be added in another class.
 
 }
