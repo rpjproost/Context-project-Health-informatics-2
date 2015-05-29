@@ -1,12 +1,14 @@
 package context.healthinformatics.SequentialDataAnalysis;
 
 import java.util.ArrayList;
+import java.util.logging.Logger;
 
 /**
  * The Class Comments.
  */
 public class Comments {
 
+	private Logger log = Logger.getLogger(Comments.class.getName());
 	private ArrayList<Chunk> chunks;
 
 	/**
@@ -28,13 +30,14 @@ public class Comments {
 	 *            the comment to be set
 	 * @throws Exception 
 	 */
-	public void setComment(int line, String comment) throws Exception {
-		try {
-			getChunk(line, this.chunks, comment).setComment(comment);
-		} catch (Exception e) {
-			throw new Exception("Comment could not be set.");
+	public void setComment(int line, String comment) {
+		Chunk c = getChunk(line, this.chunks);
+		if (c != null) {
+			c.setComment(comment);
+		} else {
+			log.info("The line: " + line + "could not be found."
+					+ "The comment '" + comment + "' was not set.");
 		}
-
 	}
 
 	/**
@@ -44,21 +47,19 @@ public class Comments {
 	 *            the line of the chunk
 	 * @param chunk
 	 *            the chunk
-	 * @param comment
-	 *            the comment
 	 * @return the chunk at line line
 	 * @throws Exception 
 	 */
-	public Chunk getChunk(int line, ArrayList<Chunk> chunk, String comment) throws Exception {
+	public Chunk getChunk(int line, ArrayList<Chunk> chunk) {
 		Chunk curChunk = null;
 		for (int i = 0; i < chunk.size(); i++) {
 			curChunk = chunk.get(i);
 			if (curChunk.getLine() == line) {
 				return curChunk;
 			} else if (curChunk.hasChild()) {
-				return getChunk(line, curChunk.getChunks(), comment);
+				return getChunk(line, curChunk.getChunks());
 			}
 		}
-		throw new Exception("The given line was not found in chunks.");
+		return curChunk;
 	}
 }

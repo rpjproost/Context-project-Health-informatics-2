@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.logging.Logger;
 
 import context.healthinformatics.Parser.Column;
 import context.healthinformatics.SequentialDataAnalysis.Chunk;
@@ -18,6 +19,7 @@ import context.healthinformatics.SequentialDataAnalysis.Chunk;
 public class MergeTable {
 	
 	private Db data;
+	private Logger log = Logger.getLogger(MergeTable.class.getName());
 	
 	/**
 	 * 
@@ -46,8 +48,7 @@ public class MergeTable {
 		try {
 			data.executeUpdate(sql.toString());
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warning("creating view with : " + sql.toString() + " went wrong.");
 		}
 	}
 	
@@ -110,8 +111,7 @@ public class MergeTable {
 		try {
 			data.executeUpdate(sql.toString());
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warning("creating view with : " + sql.toString() + " went wrong.");
 		}
 	}
 	
@@ -154,8 +154,7 @@ public class MergeTable {
 		try {
 			data.executeUpdate(sql);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.warning("The view: " + viewName + "could not be dropped.");
 		}
 	}
 	

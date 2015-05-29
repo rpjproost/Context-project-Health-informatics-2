@@ -158,15 +158,13 @@ public class XMLParser extends Parser {
 		}
 	}
 
+	/**
+	 * creates a table in the database for the file to parse.
+	 * @throws SQLException throws this if the table could not be created.
+	 * This probably is due to the fact that the table already exists.
+	 */
 	private void createTableDb() throws SQLException {
-//		int length = columns.size();
 		Db data = SingletonDb.getDb();
-//		String[] col = new String[length];
-//		String[] t = new String[length];
-//		for (int i = 0; i < length; i++) {
-//			col[i] = columns.get(i).getColumnName();
-//			t[i] = columns.get(i).getColumnType();
-//		}
 		try {
 			data.createTable(docName, columns);
 		} catch (SQLException e) {
