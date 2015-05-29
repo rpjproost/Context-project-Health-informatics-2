@@ -35,10 +35,10 @@ public class XMLEditor extends InterfaceHelper {
 	private static final int MARGINTOP = 10;
 
 	private ArrayList<XMLDocument> xmlDocumentList;
-	
+
 	private JPanel containerScrollPanel;
 	private int numberOfXMLDocuments;
-	private JScrollPane scrollPane; 
+	private JScrollPane scrollPane;
 
 	/**
 	 * Empty Constructor of the XMLEditor.
@@ -56,38 +56,23 @@ public class XMLEditor extends InterfaceHelper {
 	 * @return the parent panel
 	 */
 	public JPanel loadPanel() {
-		// HARDCODED LIST OF XMLDOCUMENTS
-		ArrayList<Column> cols = new ArrayList<Column>();
-		Column date = new Column(3, "date", "Date");
-		date.setDateType("dd/MM/yyyy");
-		cols.add(date);
-		cols.add(new Column(1, "value", "Integer"));
-		cols.add(new Column(4, "time", "String"));
-		XMLDocument doc = new XMLDocument("txt", "exceldocname",
-				"excelhasnodelimiter", "samplepath", 2, 1, cols);
-		ArrayList<XMLDocument> docs = new ArrayList<XMLDocument>();
-		docs.add(doc);
-
 		JPanel parentPanel = new JPanel();
-		// a check if documentarrlist is empty create empty panel else load
-		// document objects
-		for (int i = 0; i < docs.size(); i++) {
-			addXMLDocumentToContainerScrollPanel(docs.get(i));
-		}
-		// hardcoded added two documentpanels
-		// containerPanel.add(createDocumentPanel(), setGrids(0, 0));
-		GridBagConstraints c = setGrids(0, 1);
-		// margin top
-		c.insets = new Insets(MARGINTOP, 0, 0, 0);
-		// containerPanel.add(createDocumentPanel(), c);
-
-		
 		parentPanel.add(scrollPane);
 		return parentPanel;
 	}
-	
-	public void addXMLDocumentToContainerScrollPanel(XMLDocument xmlDocument){
-		containerScrollPanel.add(createDocumentPanel(xmlDocument), setGrids(0, numberOfXMLDocuments));
+
+	/**
+	 * Add an XMLDocument object the containerpanel with the scrollbar.
+	 * 
+	 * @param xmlDocument
+	 *            the xmldocument which is read
+	 */
+	public void addXMLDocumentToContainerScrollPanel(XMLDocument xmlDocument) {
+		GridBagConstraints c = setGrids(0, numberOfXMLDocuments);
+		// margin top
+		c.insets = new Insets(MARGINTOP, 0, 0, 0);
+		containerScrollPanel.add(createDocumentPanel(xmlDocument),
+				c);
 		numberOfXMLDocuments++;
 		scrollPane.revalidate();
 	}
