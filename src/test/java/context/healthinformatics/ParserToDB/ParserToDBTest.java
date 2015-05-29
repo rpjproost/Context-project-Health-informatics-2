@@ -4,9 +4,12 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
+import java.sql.ResultSet;
+import org.junit.After;
 import org.junit.Test;
 
 import context.healthinformatics.Database.Db;
@@ -32,20 +35,17 @@ public class ParserToDBTest {
 	 */
 	private Db data = SingletonDb.getDb();
 	
+	//used for cleaning up;
+	private Set<ResultSet> results;
+	private Set<String> tables;
+	
 	/**
 	 * method preparing for environment for tests.
 	 */
 	@org.junit.Before
 	public void before() {
-		Set<String> tables = new TreeSet<String>();
-		tables.addAll(data.getTables().keySet());
-		try {
-			for (String key : tables) {
-				data.dropTable(key);
-			}
-		} catch (SQLException e) {
-			System.out.println("Something went wrong preparing db for tests.");
-		}
+		tables = new TreeSet<String>();
+		results = new HashSet<ResultSet>();
 	}
 
 	/**
@@ -61,10 +61,11 @@ public class ParserToDBTest {
 	public void textParsertoDBTest() throws IOException, SQLException {
 		xmlp = new XMLParser(path + "textxml.xml");
 		xmlp.parse();
-		assertNotNull(data.selectResultSet("stat", "date", ""));
-		assertNotNull(data.selectResultSet("stat", "value", ""));
-		assertNotNull(data.selectResultSet("stat", "time", ""));
-		data.dropTable("stat");
+		String table = "stat";
+		tables.add(table);
+		assertNotNull(getResult(table, "date"));
+		assertNotNull(getResult(table, "value"));
+		assertNotNull(getResult(table, "time"));
 	}
 
 	/**
@@ -80,11 +81,12 @@ public class ParserToDBTest {
 	public void excelParsertoDBXLSXTest() throws IOException, SQLException {
 		xmlp = new XMLParser(path + "excelxml.xml");
 		xmlp.parse();
-		assertNotNull(data.selectResultSet("exceltest", "date", ""));
-		assertNotNull(data.selectResultSet("exceltest", "groep", ""));
-		assertNotNull(data.selectResultSet("exceltest", "admnr", ""));
-		assertNotNull(data.selectResultSet("exceltest", "agendaomschrijving", ""));
-		data.dropTable("exceltest");
+		String table = "exceltest";
+		tables.add(table);
+		assertNotNull(getResult(table, "date"));
+		assertNotNull(getResult(table, "groep"));
+		assertNotNull(getResult(table, "admnr"));
+		assertNotNull(getResult(table, "agendaomschrijving"));
 	}
 
 	/**
@@ -100,12 +102,13 @@ public class ParserToDBTest {
 	public void excelParsertoDBXLSTest() throws IOException, SQLException {
 		xmlp = new XMLParser(path + "excelxlsxml.xml");
 		xmlp.parse();
-		assertNotNull(data.selectResultSet("exceltest", "admnr", ""));
-		assertNotNull(data.selectResultSet("exceltest", "monitoring", ""));
-		assertNotNull(data.selectResultSet("exceltest", "date", ""));
-		assertNotNull(data.selectResultSet("exceltest", "datelogin", ""));
-		assertNotNull(data.selectResultSet("exceltest", "remarks", ""));
-		data.dropTable("exceltest");
+		String table = "exceltest";
+		tables.add(table);
+		assertNotNull(getResult(table, "admnr"));
+		assertNotNull(getResult(table, "monitoring"));
+		assertNotNull(getResult(table, "date"));
+		assertNotNull(getResult(table, "datelogin"));
+		assertNotNull(getResult(table, "remarks"));
 	}
 	
 	/**
@@ -121,9 +124,36 @@ public class ParserToDBTest {
 	public void csvParsertoDBTest() throws IOException, SQLException {
 		xmlp = new XMLParser(path + "csvxml.xml");
 		xmlp.parse();
-		assertNotNull(data.selectResultSet("csvtest", "num1", ""));
-		assertNotNull(data.selectResultSet("csvtest", "num2", ""));
-		assertNotNull(data.selectResultSet("csvtest", "num3", ""));
-		data.dropTable("csvtest");
+		String table = "csvtest";
+		assertNotNull(getResult(table, "num1"));
+		assertNotNull(getResult(table, "num2"));
+		assertNotNull(getResult(table, "num3"));
+	}
+	
+	/**
+	 * method that cleans up after a test.
+	 * @throws SQLException if something goes wrong closing resultsets of dropping tables.
+	 */
+	@After
+	public void after() throws SQLException {
+		for (ResultSet r : results) {
+			r.close();
+		}
+		for (String table : tables) {
+			data.dropTable(table);
+		}
+	}
+	
+	/**
+	 * Retrieves the correct result set from the database.
+	 * @param table table to get the result set from.
+	 * @param column column to get the result set for
+	 * @return the retrieved result set.
+	 * @throws SQLException might throw an SQL exception if table does not exist.
+	 */
+	private ResultSet getResult(String table, String column) throws SQLException {
+		ResultSet res = data.selectResultSet(table, column, "");
+		results.add(res);
+		return res;
 	}
 }
