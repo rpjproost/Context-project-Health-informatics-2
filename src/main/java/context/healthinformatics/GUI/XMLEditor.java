@@ -141,6 +141,9 @@ public class XMLEditor extends InterfaceHelper {
 				makeFormRowWithTextField("Document start line: ",
 						Integer.toString(xmlDocument.getStartLine())),
 				setGrids(0, 3));
+		documentSettingsPanel.add(
+				makeFormRowWithTextField("Document delimiter: ",
+						xmlDocument.getDelimiter()), setGrids(0, 4));
 		return documentSettingsPanel;
 	}
 
@@ -172,9 +175,6 @@ public class XMLEditor extends InterfaceHelper {
 				makeFormRowWithTextField("Document sheet: ",
 						Integer.toString(xmlDocument.getSheet())),
 				setGrids(0, 4));
-		documentSettingsPanel.add(
-				makeFormRowWithTextField("Document delimiter: ",
-						xmlDocument.getDelimiter()), setGrids(0, 5));
 		return documentSettingsPanel;
 	}
 
@@ -200,7 +200,6 @@ public class XMLEditor extends InterfaceHelper {
 	 * @return the panel with all field for a column
 	 */
 	public JPanel createColumnForm(Column currentColumn) {
-		System.out.println(currentColumn.getColumnType());
 		int width = 75;
 		if (currentColumn.getColumnType().equals("DATE")) {
 			width += 25;
