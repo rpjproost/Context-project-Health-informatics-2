@@ -9,6 +9,7 @@ import java.awt.Insets;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -30,9 +31,11 @@ public class XMLEditor extends InterfaceHelper {
 	private static final int PARENTHEIGHT = 700;
 
 	private static final int FORMELEMENTWIDTH = 800;
-	private static final int FORMELEMNTHEIGHT = 25;
+	private static final int FORMELEMENTHEIGHT = 25;
 
 	private static final int COLUMNPANELHEIGHT = 75;
+
+	private static final int BUTTONHEIGHT = 35;
 
 	private static final int MARGINTOP = 10;
 
@@ -47,9 +50,56 @@ public class XMLEditor extends InterfaceHelper {
 	 * Empty Constructor of the XMLEditor.
 	 */
 	public XMLEditor() {
+		JPanel extraContainer = createContainerPanel();
 		containerScrollPanel = createContainerPanel();
+		extraContainer.add(containerScrollPanel, setGrids(0, 0));
+		GridBagConstraints c = setGrids(0, 1);
+		// margin top
+		c.insets = new Insets(MARGINTOP, 0, 0, 0);
+		extraContainer.add(
+				makeFormRowWithTwoButtons("Make new Excel Document",
+						"Create new TXT/CSV Document"), c);
 		numberOfXMLDocuments = 0;
-		scrollPane = makeScrollPaneForContainerPanel(containerScrollPanel);
+		scrollPane = makeScrollPaneForContainerPanel(extraContainer);
+	}
+
+	/**
+	 * Create a row with the buttons to add new excel or txt document.
+	 * 
+	 * @param nameButton1
+	 *            the name of the button for excel
+	 * @param nameButton2
+	 *            the name of the button for txt
+	 * @return the panel with the buttons
+	 */
+	public JPanel makeFormRowWithTwoButtons(String nameButton1,
+			String nameButton2) {
+		JPanel buttonPanel = createPanel(Color.WHITE, FORMELEMENTWIDTH,
+				BUTTONHEIGHT);
+		buttonPanel.setLayout(new GridLayout(1, THREE));
+		buttonPanel.add(new JButton(nameButton1));
+		buttonPanel.add(new JPanel());
+		buttonPanel.add(new JButton(nameButton2));
+		return buttonPanel;
+	}
+
+	/**
+	 * Create a row with a single button to add columns.
+	 * @param nameButton1 the name of the button
+	 * @return the panel with white space and the button
+	 */
+	public JPanel makeFormRowWithButton(String nameButton1) {
+		JPanel buttonPanel = createPanel(Color.WHITE, FORMELEMENTWIDTH,
+				BUTTONHEIGHT);
+		buttonPanel.setLayout(new GridLayout(1, THREE));
+		JPanel dummyPanel = new JPanel();
+		JPanel dummyPanel2 = new JPanel();
+		dummyPanel.setBackground(Color.WHITE);
+		dummyPanel2.setBackground(Color.WHITE);
+		buttonPanel.add(dummyPanel);
+		buttonPanel.add(dummyPanel2);
+		buttonPanel.add(new JButton(nameButton1));
+		return buttonPanel;
 	}
 
 	/**
@@ -101,6 +151,7 @@ public class XMLEditor extends InterfaceHelper {
 		JPanel documentPanel = new JPanel();
 		documentPanel.setLayout(new GridBagLayout());
 		documentPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+
 		// other setting fields
 		if (xmlDocument.getDocType().toLowerCase().equals("excel")) {
 			documentPanel.add(
@@ -113,9 +164,11 @@ public class XMLEditor extends InterfaceHelper {
 		}
 		// add all column fields
 		ArrayList<Column> columnsOfDocument = xmlDocument.getColumns();
+		documentPanel.add(makeFormRowWithButton("Add extra Column"),
+				setGrids(0, 1));
 		for (int i = 0; i < columnsOfDocument.size(); i++) {
 			documentPanel.add(createColumnForm(columnsOfDocument.get(i)),
-					setGrids(0, i + 1));
+					setGrids(0, i + 2));
 		}
 		return documentPanel;
 	}
@@ -186,22 +239,6 @@ public class XMLEditor extends InterfaceHelper {
 	}
 
 	/**
-	 * Create a Java Combo Box with given array of strings.
-	 * 
-	 * @param comboBoxStrings
-	 *            the array of strings to display in the dropdown.
-	 * @param selectedValue
-	 *            the int which indicates which elemtent is selected
-	 * @return the Java ComboBox
-	 */
-	public JComboBox<String> createTypeDropDown(String[] comboBoxStrings,
-			int selectedValue) {
-		JComboBox<String> comboBox = new JComboBox<>(comboBoxStrings);
-		comboBox.setSelectedIndex(selectedValue);
-		return comboBox;
-	}
-
-	/**
 	 * Create a panel for a column.
 	 * 
 	 * @param currentColumn
@@ -211,7 +248,7 @@ public class XMLEditor extends InterfaceHelper {
 	public JPanel createColumnForm(Column currentColumn) {
 		int width = COLUMNPANELHEIGHT;
 		if (currentColumn.getColumnType().equals("DATE")) {
-			width += FORMELEMNTHEIGHT;
+			width += FORMELEMENTHEIGHT;
 		}
 		JPanel containerPanel = createPanel(Color.WHITE, FORMELEMENTWIDTH,
 				width);
@@ -237,24 +274,6 @@ public class XMLEditor extends InterfaceHelper {
 	}
 
 	/**
-	 * Get the index of the combo box for different columntypes.
-	 * 
-	 * @param columnType
-	 *            the column type as a string
-	 * @return the index of the selected combo box
-	 */
-	public int getComboBoxIndex(String columnType) {
-		if (columnType.equals("DATE")) {
-			return 2;
-		} else if (columnType.equals("INT")) {
-			return 1;
-		} else {
-			return 0;
-		}
-
-	}
-
-	/**
 	 * Make a row with display text field and field to fill in value.
 	 * 
 	 * @param name
@@ -268,7 +287,7 @@ public class XMLEditor extends InterfaceHelper {
 	public JPanel makeFormRowWithComboBox(String name,
 			String[] comboBoxStrings, int comboIndex) {
 		JPanel containerPanel = createPanel(Color.WHITE, FORMELEMENTWIDTH,
-				FORMELEMNTHEIGHT);
+				FORMELEMENTHEIGHT);
 		containerPanel.setLayout(new GridLayout(1, 2));
 		containerPanel.add(new JLabel(name));
 		containerPanel.add(createTypeDropDown(comboBoxStrings, comboIndex));
@@ -287,7 +306,7 @@ public class XMLEditor extends InterfaceHelper {
 	public JPanel makeFormRowWithTextField(String labelName,
 			String textFieldInput) {
 		JPanel containerPanel = createPanel(Color.WHITE, FORMELEMENTWIDTH,
-				FORMELEMNTHEIGHT);
+				FORMELEMENTHEIGHT);
 		containerPanel.setLayout(new GridLayout(1, 2));
 		containerPanel.add(new JLabel(labelName));
 		containerPanel.add(new JTextField(textFieldInput));
@@ -307,6 +326,40 @@ public class XMLEditor extends InterfaceHelper {
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setPreferredSize(new Dimension(PARENTWIDTH, PARENTHEIGHT));
 		return scrollPane;
+	}
+
+	/**
+	 * Create a Java Combo Box with given array of strings.
+	 * 
+	 * @param comboBoxStrings
+	 *            the array of strings to display in the dropdown.
+	 * @param selectedValue
+	 *            the int which indicates which elemtent is selected
+	 * @return the Java ComboBox
+	 */
+	public JComboBox<String> createTypeDropDown(String[] comboBoxStrings,
+			int selectedValue) {
+		JComboBox<String> comboBox = new JComboBox<>(comboBoxStrings);
+		comboBox.setSelectedIndex(selectedValue);
+		return comboBox;
+	}
+
+	/**
+	 * Get the index of the combo box for different columntypes.
+	 * 
+	 * @param columnType
+	 *            the column type as a string
+	 * @return the index of the selected combo box
+	 */
+	public int getComboBoxIndex(String columnType) {
+		if (columnType.equals("DATE")) {
+			return 2;
+		} else if (columnType.equals("INT")) {
+			return 1;
+		} else {
+			return 0;
+		}
+
 	}
 
 }
