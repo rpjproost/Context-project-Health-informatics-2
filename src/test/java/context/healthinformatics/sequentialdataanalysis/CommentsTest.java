@@ -1,0 +1,85 @@
+package context.healthinformatics.sequentialdataanalysis;
+
+import static org.junit.Assert.assertEquals;
+
+import java.util.ArrayList;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import context.healthinformatics.sequentialdataanalysis.Chunk;
+import context.healthinformatics.sequentialdataanalysis.Comments;
+
+/**
+ * Tests for class Comments.
+ */
+public class CommentsTest {
+	/**
+	 * The constrains class.
+	 */
+	private Comments c;
+
+	/**
+	 * The list of chunks.
+	 */
+	private ArrayList<Chunk> cList2;
+	private Chunk c3;
+	private Chunk c2;
+	private static final int THREE = 3;
+	private static final int FOUR = 4;
+
+	/**
+	 * Setup a list of chunks.
+	 */
+	@Before
+	public void before() {
+		ArrayList<Chunk> cList = new ArrayList<Chunk>();
+		Chunk c1 = new Chunk();
+		c1.setLine(1);
+		cList.add(c1);
+		c2 = new Chunk();
+		c2.setLine(2);
+		cList.add(c2);
+		c3 = new Chunk();
+		c3.setChunks(cList);
+		c3.setLine(THREE);
+		Chunk c4 = new Chunk();
+		c4.setLine(FOUR);
+		cList2 = new ArrayList<Chunk>();
+		cList2.add(c3);
+		cList2.add(c4);
+		c = new Comments(cList2);
+	}
+
+	/**
+	 * Test is a comment is set.
+	 */
+	@Test
+	public void testSetComment() {
+		try {
+			c.setComment(THREE, "testComment1");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		assertEquals(c3.getComment(), "testComment1");
+		try {
+			c.setComment(2, "testComment2");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		assertEquals(c2.getComment(), "testComment2");
+	}
+
+	/**
+	 * Try to add a comment to a non existent line.
+	 * 
+	 * @throws Exception
+	 *             throws exception that line is not found
+	 */
+	@Test(expected = Exception.class)
+	public void testNonExistentLine() throws Exception {
+		c.setComment(0, "comment");
+	}
+}
