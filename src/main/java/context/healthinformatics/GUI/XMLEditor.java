@@ -101,7 +101,7 @@ public class XMLEditor extends InterfaceHelper {
 		documentPanel.setLayout(new GridBagLayout());
 		documentPanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		// other setting fields
-		if (xmlDocument.getDocType() == "excel") {
+		if (xmlDocument.getDocType().toLowerCase().equals("excel")) {
 			documentPanel.add(
 					createStandardExcelDocumentSettingFields(xmlDocument),
 					setGrids(0, 0));
@@ -141,9 +141,6 @@ public class XMLEditor extends InterfaceHelper {
 				makeFormRowWithTextField("Document start line: ",
 						Integer.toString(xmlDocument.getStartLine())),
 				setGrids(0, 3));
-		documentSettingsPanel.add(
-				makeFormRowWithTextField("Document delimiter: ",
-						xmlDocument.getDelimiter()), setGrids(0, 4));
 		return documentSettingsPanel;
 	}
 
