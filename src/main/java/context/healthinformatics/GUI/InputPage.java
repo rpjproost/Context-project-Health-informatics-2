@@ -27,7 +27,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	private FileTree ft;
 	private InputPageComponents ipc;
 	private ArrayList<ArrayList<String>> folder;
-	private ArrayList<XMLDocument> xmlDocs;
+	protected ArrayList<XMLDocument> xmlDocs;
 
 	private JPanel leftPanel;
 	private JFileChooser selecter;
