@@ -7,7 +7,7 @@ import static org.junit.Assert.assertFalse;
 import org.junit.Before;
 import org.junit.Test;
 
-import context.healthinformatics.parser.Column;
+
 
 /**
  * Test all functions of the Column class.

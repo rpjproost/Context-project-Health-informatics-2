@@ -14,11 +14,6 @@ import org.junit.Test;
 
 import context.healthinformatics.database.Db;
 import context.healthinformatics.database.SingletonDb;
-import context.healthinformatics.parser.Column;
-import context.healthinformatics.parser.ExcelParser;
-import context.healthinformatics.parser.Parser;
-import context.healthinformatics.parser.TXTParser;
-import context.healthinformatics.parser.XMLTestParser;
 
 /**
  * class that is used to test the xml parser.

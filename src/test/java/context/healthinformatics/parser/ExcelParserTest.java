@@ -11,8 +11,6 @@ import org.junit.Test;
 
 import context.healthinformatics.database.Db;
 import context.healthinformatics.database.SingletonDb;
-import context.healthinformatics.parser.Column;
-import context.healthinformatics.parser.ExcelParser;
 
 /**
  * Class to test the TXTParser.

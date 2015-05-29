@@ -8,13 +8,6 @@ import org.junit.experimental.theories.DataPoints;
 import org.junit.experimental.theories.Theories;
 import org.junit.experimental.theories.Theory;
 import org.junit.runner.RunWith;
-
-import context.healthinformatics.parser.Column;
-import context.healthinformatics.parser.ExcelParser;
-import context.healthinformatics.parser.Parser;
-import context.healthinformatics.parser.TXTParser;
-import context.healthinformatics.parser.XMLParser;
-
 /**
  * General test for parsers.
  */
