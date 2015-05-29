@@ -16,6 +16,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 
+import context.healthinformatics.Parser.Column;
 import context.healthinformatics.Writer.XMLDocument;
 
 /**
@@ -30,16 +31,23 @@ public class XMLEditor extends InterfaceHelper {
 
 	private static final int FORMELEMENTWITH = 800;
 	private static final int FORMELEMNTHEIGHT = 25;
-	
+
 	private static final int MARGINTOP = 10;
 
 	private ArrayList<XMLDocument> xmlDocumentList;
+	
+	private JPanel containerScrollPanel;
+	private int numberOfXMLDocuments;
+	private JScrollPane scrollPane; 
 
 	/**
 	 * Empty Constructor of the XMLEditor.
 	 */
 	public XMLEditor() {
 		xmlDocumentList = new ArrayList<XMLDocument>();
+		containerScrollPanel = createContainerPanel();
+		numberOfXMLDocuments = 0;
+		scrollPane = makeScrollPaneForContainerPanel(containerScrollPanel);
 	}
 
 	/**
@@ -48,19 +56,40 @@ public class XMLEditor extends InterfaceHelper {
 	 * @return the parent panel
 	 */
 	public JPanel loadPanel() {
-		JPanel parentPanel = new JPanel();
-		JPanel containerPanel = createContainerPanel();
+		// HARDCODED LIST OF XMLDOCUMENTS
+		ArrayList<Column> cols = new ArrayList<Column>();
+		Column date = new Column(3, "date", "Date");
+		date.setDateType("dd/MM/yyyy");
+		cols.add(date);
+		cols.add(new Column(1, "value", "Integer"));
+		cols.add(new Column(4, "time", "String"));
+		XMLDocument doc = new XMLDocument("txt", "exceldocname",
+				"excelhasnodelimiter", "samplepath", 2, 1, cols);
+		ArrayList<XMLDocument> docs = new ArrayList<XMLDocument>();
+		docs.add(doc);
 
+		JPanel parentPanel = new JPanel();
+		// a check if documentarrlist is empty create empty panel else load
+		// document objects
+		for (int i = 0; i < docs.size(); i++) {
+			addXMLDocumentToContainerScrollPanel(docs.get(i));
+		}
 		// hardcoded added two documentpanels
-		containerPanel.add(createDocumentPanel(), setGrids(0, 0));
+		// containerPanel.add(createDocumentPanel(), setGrids(0, 0));
 		GridBagConstraints c = setGrids(0, 1);
 		// margin top
 		c.insets = new Insets(MARGINTOP, 0, 0, 0);
-		containerPanel.add(createDocumentPanel(), c);
+		// containerPanel.add(createDocumentPanel(), c);
 
-		JScrollPane scrollPane = makeScrollPaneForContainerPanel(containerPanel);
+		
 		parentPanel.add(scrollPane);
 		return parentPanel;
+	}
+	
+	public void addXMLDocumentToContainerScrollPanel(XMLDocument xmlDocument){
+		containerScrollPanel.add(createDocumentPanel(xmlDocument), setGrids(0, numberOfXMLDocuments));
+		numberOfXMLDocuments++;
+		scrollPane.revalidate();
 	}
 
 	/**
@@ -78,20 +107,29 @@ public class XMLEditor extends InterfaceHelper {
 	/**
 	 * Create a panel for a xml document.
 	 * 
+	 * @param xmlDocument
+	 *            the xml document which is loaded in
 	 * @return the panel with the added components
 	 */
-	public JPanel createDocumentPanel() {
+	public JPanel createDocumentPanel(XMLDocument xmlDocument) {
 		JPanel documentPanel = new JPanel();
 		documentPanel.setLayout(new GridBagLayout());
 		documentPanel.setBorder(BorderFactory.createLineBorder(Color.black));
-		documentPanel
-				.add(createStandardDocumentSettingFields(), setGrids(0, 0));
-
-		int counter = 1;
-
-		for (int i = 0; i < 4; i++) {
-			documentPanel.add(createColumnForm(i), setGrids(0, counter));
-			counter++;
+		// other setting fields
+		if (xmlDocument.getDocType() == "excel") {
+			documentPanel.add(
+					createStandardExcelDocumentSettingFields(xmlDocument),
+					setGrids(0, 0));
+		} else {
+			documentPanel.add(
+					createStandardTXTDocumentSettingFields(xmlDocument),
+					setGrids(0, 0));
+		}
+		// add all column fields
+		ArrayList<Column> columnsOfDocument = xmlDocument.getColumns();
+		for (int i = 0; i < columnsOfDocument.size(); i++) {
+			documentPanel.add(createColumnForm(columnsOfDocument.get(i)),
+					setGrids(0, i + 1));
 		}
 		return documentPanel;
 	}
@@ -101,25 +139,60 @@ public class XMLEditor extends InterfaceHelper {
 	 * 
 	 * @return the panel with de components
 	 */
-	public JPanel createStandardDocumentSettingFields() {
+	public JPanel createStandardTXTDocumentSettingFields(XMLDocument xmlDocument) {
 		JPanel documentSettingsPanel = new JPanel();
 		documentSettingsPanel.setLayout(new GridBagLayout());
-		documentSettingsPanel
-				.add(makeFormRowWithTextField("Document name: ", ""),
-						setGrids(0, 0));
+		documentSettingsPanel.add(
+				makeFormRowWithTextField("Document name: ",
+						xmlDocument.getDocName()), setGrids(0, 0));
 		String[] doctypes = { "Excel", "txt/csv" };
 		documentSettingsPanel.add(
-				makeFormRowWithComboBox("Document type: ", doctypes),
+				makeFormRowWithComboBox("Document type: ", doctypes, 1),
 				setGrids(0, 1));
-		documentSettingsPanel
-				.add(makeFormRowWithTextField("Document path: ", ""),
-						setGrids(0, 2));
 		documentSettingsPanel.add(
-				makeFormRowWithTextField("Document start line: ", ""),
+				makeFormRowWithTextField("Document path: ",
+						xmlDocument.getPath()), setGrids(0, 2));
+		documentSettingsPanel.add(
+				makeFormRowWithTextField("Document start line: ",
+						Integer.toString(xmlDocument.getStartLine())),
 				setGrids(0, 3));
 		documentSettingsPanel.add(
-				makeFormRowWithTextField("Document delimiter: ", ""),
+				makeFormRowWithTextField("Document delimiter: ",
+						xmlDocument.getDelimiter()), setGrids(0, 4));
+		return documentSettingsPanel;
+	}
+
+	/**
+	 * Create the document setting fields for excel which are required for all
+	 * documents.
+	 * 
+	 * @return the panel with de components
+	 */
+	public JPanel createStandardExcelDocumentSettingFields(
+			XMLDocument xmlDocument) {
+		JPanel documentSettingsPanel = new JPanel();
+		documentSettingsPanel.setLayout(new GridBagLayout());
+		documentSettingsPanel.add(
+				makeFormRowWithTextField("Document name: ",
+						xmlDocument.getDocName()), setGrids(0, 0));
+		String[] doctypes = { "Excel", "txt/csv" };
+		documentSettingsPanel.add(
+				makeFormRowWithComboBox("Document type: ", doctypes, 0),
+				setGrids(0, 1));
+		documentSettingsPanel.add(
+				makeFormRowWithTextField("Document path: ",
+						xmlDocument.getPath()), setGrids(0, 2));
+		documentSettingsPanel.add(
+				makeFormRowWithTextField("Document start line: ",
+						Integer.toString(xmlDocument.getStartLine())),
+				setGrids(0, 3));
+		documentSettingsPanel.add(
+				makeFormRowWithTextField("Document sheet: ",
+						Integer.toString(xmlDocument.getSheet())),
 				setGrids(0, 4));
+		documentSettingsPanel.add(
+				makeFormRowWithTextField("Document delimiter: ",
+						xmlDocument.getDelimiter()), setGrids(0, 5));
 		return documentSettingsPanel;
 	}
 
@@ -130,9 +203,10 @@ public class XMLEditor extends InterfaceHelper {
 	 *            the array of strings to display in the dropdown.
 	 * @return the Java ComboBox
 	 */
-	public JComboBox<String> createTypeDropDown(String[] comboBoxStrings) {
+	public JComboBox<String> createTypeDropDown(String[] comboBoxStrings,
+			int selectedValue) {
 		JComboBox<String> comboBox = new JComboBox<>(comboBoxStrings);
-		comboBox.setSelectedIndex(0);
+		comboBox.setSelectedIndex(selectedValue);
 		return comboBox;
 	}
 
@@ -143,17 +217,50 @@ public class XMLEditor extends InterfaceHelper {
 	 *            the number of the current column
 	 * @return the panel with all field for a column
 	 */
-	public JPanel createColumnForm(int number) {
-		JPanel containerPanel = createPanel(Color.WHITE, FORMELEMENTWITH, 75);
+	public JPanel createColumnForm(Column currentColumn) {
+		System.out.println(currentColumn.getColumnType());
+		int width = 75;
+		if (currentColumn.getColumnType().equals("DATE")) {
+			width += 25;
+		}
+		JPanel containerPanel = createPanel(Color.WHITE, FORMELEMENTWITH, width);
 		String[] typeStrings = { "String", "Int", "Date" };
-		containerPanel.add(makeFormRowWithTextField("Column id: ", ""),
-				setGrids(0, 0));
-		containerPanel.add(makeFormRowWithTextField("Column name: ", ""),
-				setGrids(0, 1));
 		containerPanel.add(
-				makeFormRowWithComboBox("Select type: ", typeStrings),
+				makeFormRowWithTextField("Column id: ",
+						Integer.toString(currentColumn.getColumnNumber())),
+				setGrids(0, 0));
+		containerPanel.add(
+				makeFormRowWithTextField("Column name: ",
+						currentColumn.getColumnName()), setGrids(0, 1));
+		containerPanel.add(
+				makeFormRowWithComboBox("Select type: ", typeStrings,
+						getComboBoxIndex(currentColumn.getColumnType())),
 				setGrids(0, 2));
+		if (currentColumn.getColumnType().equals("DATE")) {
+
+			containerPanel.add(
+					makeFormRowWithTextField("Specified datetype: ",
+							currentColumn.getDateType()), setGrids(0, 3));
+		}
 		return containerPanel;
+	}
+
+	/**
+	 * Get the index of the combo box for different columntypes.
+	 * 
+	 * @param columnType
+	 *            the column type as a string
+	 * @return the index of the selected combo box
+	 */
+	public int getComboBoxIndex(String columnType) {
+		if (columnType.equals("DATE")) {
+			return 2;
+		} else if (columnType.equals("INT")) {
+			return 1;
+		} else {
+			return 0;
+		}
+
 	}
 
 	/**
@@ -165,12 +272,13 @@ public class XMLEditor extends InterfaceHelper {
 	 *            the array of string for the dropdown element
 	 * @return panel with the two textfields
 	 */
-	public JPanel makeFormRowWithComboBox(String name, String[] comboBoxStrings) {
+	public JPanel makeFormRowWithComboBox(String name,
+			String[] comboBoxStrings, int comboIndex) {
 		JPanel containerPanel = createPanel(Color.WHITE, FORMELEMENTWITH,
 				FORMELEMNTHEIGHT);
 		containerPanel.setLayout(new GridLayout(1, 2));
 		containerPanel.add(new JLabel(name));
-		containerPanel.add(createTypeDropDown(comboBoxStrings));
+		containerPanel.add(createTypeDropDown(comboBoxStrings, comboIndex));
 		return containerPanel;
 	}
 
