@@ -19,8 +19,6 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
-import context.healthinformatics.Writer.XMLDocument;
-
 /**
  * Class which represents the FileTree on the InputPage.
  */
@@ -35,7 +33,6 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	private DefaultTreeModel model;
 	private ArrayList<String> xmlList;
 	private ArrayList<String> selectedFiles;
-	private int index = 0; //TODO remove after demo.
 	
 	public static final int FOLDERSECTIONHEIGHT = 400;
 	public static final int TREEPANEWIDTH = 700;
@@ -54,7 +51,6 @@ public class FileTree implements TreeSelectionListener, Serializable {
 		selectedFiles = new ArrayList<String>();
 		xmlList = new ArrayList<String>();
 		initXmlList();
-		initTree(); //TODO remove after demo.
 	}
 	
 	/**
@@ -73,7 +69,7 @@ public class FileTree implements TreeSelectionListener, Serializable {
 		JPanel section3 = MainFrame.createPanel(Color.decode(InputPage.COLOR),
 				mf.getScreenWidth(), FOLDERSECTIONHEIGHT);
 		section3.setLayout(new  GridBagLayout());
-//		initTree(); //TODO remove after demo
+		initTree();
 		addTreePane(section3);
 		return section3;
 	}
@@ -268,15 +264,6 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	 * @param node is the selected TreeNode.
 	 */
 	private void setNodeToSelected(String selected, DefaultMutableTreeNode node) {
-		if (index < 2) { //TODO remove after demo.
-			ArrayList<XMLDocument> xmlDocs = ip.xmlDocs;
-			for (int i = 0; i < xmlDocs.size(); i++) {
-				if (xmlDocs.get(i).getPath().equals(selected)) {
-					ip.xmledit.addXMLDocumentToContainerScrollPanel(xmlDocs.get(i));
-				}
-			}
-			index++;
-		}
 		getSelectedFiles().add(selected);
 		node.setUserObject(node.getUserObject().toString()
 				+ "   [SELECTED]");

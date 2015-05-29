@@ -12,7 +12,6 @@ import javax.swing.JPanel;
 
 import context.healthinformatics.Database.SingletonDb;
 import context.healthinformatics.Parser.XMLParser;
-import context.healthinformatics.Writer.XMLDocument;
 
 /**
  * Class which represents one of the states for the variabel panel in the
@@ -27,7 +26,6 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	private FileTree ft;
 	private InputPageComponents ipc;
 	private ArrayList<ArrayList<String>> folder;
-	protected ArrayList<XMLDocument> xmlDocs;
 
 	private JPanel leftPanel;
 	private JFileChooser selecter;
@@ -36,7 +34,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	public static final int THREE = 3;
 	public static final String COLOR = "#81DAF5";
 
-	protected XMLEditor xmledit;
+	private XMLEditor xmledit;
 
 	/**
 	 * Constructor.
@@ -51,20 +49,6 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		ft = new FileTree(m, this);
 		ipc = new InputPageComponents(m, this);
 		xmledit = new XMLEditor();
-		try { //TODO remove after demo
-			XMLParser parser = new XMLParser("src/main/data/demo/demo.xml");
-			parser.parse();
-			xmlDocs = parser.getXMLDocs();
-			addComboItem("ADMIRE");
-			for (int i = 0; i < xmlDocs.size(); i++) {
-				int project = findFolderProject((String) ipc.getComboBox()
-						.getSelectedItem());
-				folder.get(project).add(xmlDocs.get(i).getPath());
-				ft.addFileToTree(project, xmlDocs.get(i).getPath());
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -244,16 +228,9 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	}
 
 	/**
-	 * Load the database from a xml file when there isn't already one.
+	 * Load the database.
 	 */
 	protected void loadDatabase() {
-		if (SingletonDb.getDb().getTables().isEmpty()) {
-			XMLParser xmlp = new XMLParser("src/main/data/demo/demo.xml");
-			try {
-				xmlp.parse();
-			} catch (IOException e1) {
-				e1.printStackTrace(); // TODO exception handling
-			}
-		}
+		
 	}
 }

@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import context.healthinformatics.Database.Db;
 import context.healthinformatics.Database.MergeTable;
 import context.healthinformatics.Database.SingletonDb;
-import context.healthinformatics.Database.SqlBuilder;
 import context.healthinformatics.SequentialDataAnalysis.Chunk;
 import context.healthinformatics.SequentialDataAnalysis.Constraints;
 
@@ -56,7 +55,7 @@ public class Interpreter {
 					for (Chunk chunk : list) {
 						ResultSet rs = data.selectAllWithWhereClause(
 								"result", "resultid = " + chunk.getLine());
-						while(rs.next()) {
+						while (rs.next()) {
 							System.out.print("Hospital: ");
 							System.out.print(rs.getString("omschrijving"));
 							System.out.print("; Date: ");

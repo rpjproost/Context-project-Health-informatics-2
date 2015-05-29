@@ -13,7 +13,6 @@ import org.xml.sax.SAXException;
 
 import context.healthinformatics.Database.Db;
 import context.healthinformatics.Database.SingletonDb;
-import context.healthinformatics.Writer.XMLDocument;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -33,8 +32,6 @@ public class XMLParser extends Parser {
 	private int startLine;
 	private int sheet;
 	private ArrayList<Column> columns;
-	private ArrayList<XMLDocument> xmlDocs;
-	private String docType;
 
 	/**
 	 * Creates a parser for the data in the file.
@@ -45,7 +42,6 @@ public class XMLParser extends Parser {
 	public XMLParser(String fileName) {
 		super(fileName);
 		columns = new ArrayList<Column>();
-		xmlDocs = new ArrayList<XMLDocument>();
 		startLine = 1;
 	}
 
@@ -69,7 +65,6 @@ public class XMLParser extends Parser {
 			for (int i = 0; i < nList.getLength(); i++) {
 				if (nList.item(i).getNodeType() == Node.ELEMENT_NODE) {
 					parseDocument(nList.item(i));
-					createXMLdoc(); //TODO change after demo
 					clear();
 				}
 			}
@@ -80,16 +75,6 @@ public class XMLParser extends Parser {
 			throw new FileNotFoundException(
 					"The XML was not formatted correctly");
 		}
-	}
-
-	private void createXMLdoc() { //TODO change after demo
-		XMLDocument current = new XMLDocument(docType, getDocName(), getDelimiter(), getPath(), 
-				getStartLine(), getSheet(), getColumns());
-		xmlDocs.add(current);
-	}
-	
-	public ArrayList<XMLDocument> getXMLDocs() { //TODO change after demo
-		return xmlDocs;
 	}
 
 	/**
@@ -133,8 +118,7 @@ public class XMLParser extends Parser {
 		setDelimiter(getString(e, "delimiter"));
 		setSheet(getInt(e, getString(e, "sheet")));
 		createTableDb();
-		docType = getString(e, "doctype"); //TODO change after demo
-		getParser(docType).parse();
+		getParser(getString(e, "doctype")).parse();
 	}
 
 	/**
@@ -148,7 +132,6 @@ public class XMLParser extends Parser {
 		setDelimiter(null);
 		setPath(null);
 		setSheet(1);
-		docType = null; //TODO change after demo
 		columns = new ArrayList<Column>();
 	}
 
