@@ -12,7 +12,7 @@
 		<column id="5">
 			<name>date</name>
 			<type>date</type>
-			<dateFormat>ddmmyy</dateFormat>
+			<dateFormat>yyMMdd</dateFormat>
 		</column>
 		<column id="6">
 			<name>time</name>

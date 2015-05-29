@@ -1,8 +1,10 @@
 package context.healthinformatics.Analyse;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import context.healthinformatics.Database.Db;
 import context.healthinformatics.Database.MergeTable;
 import context.healthinformatics.Database.SingletonDb;
 import context.healthinformatics.SequentialDataAnalysis.Chunk;
@@ -45,17 +47,23 @@ public class Interpreter {
 		for (int i = 0; i < methods.length; i++) {
 			if (methods[i].contains("filter")) {
 				String[] split = methods[i].split(" ");
-
 				Constraints c = new Constraints(chunks, "date");
-				System.out.println("value: " + split[THREE]);
-				System.out.println("operator: " + split[FOUR]);
-				System.out.println("table: " + split[FIVE]);
-				System.out.println(SingletonDb.getDb().getTables());
 				try {
 					ArrayList<Chunk> list = c.constraint(split[THREE],
 							split[FOUR], split[FIVE]);
+					Db data = SingletonDb.getDb();
 					for (Chunk chunk : list) {
-						System.out.println(chunk);
+						ResultSet rs = data.selectAllWithWhereClause(
+								"result", "resultid = " + chunk.getLine());
+						while (rs.next()) {
+							System.out.print("Hospital: ");
+							System.out.print(rs.getString("omschrijving"));
+							System.out.print("; Date: ");
+							System.out.print(rs.getDate("date"));
+							System.out.print("; Creatine: ");
+							System.out.print(rs.getInt("value"));
+							System.out.println();
+						}
 					}
 				} catch (Exception e) {
 					System.out.println(e); // TODO catch this exception.
