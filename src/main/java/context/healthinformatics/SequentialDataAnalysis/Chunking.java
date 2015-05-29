@@ -1,6 +1,5 @@
 package context.healthinformatics.SequentialDataAnalysis;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**

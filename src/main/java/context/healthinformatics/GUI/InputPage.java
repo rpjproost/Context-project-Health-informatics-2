@@ -2,16 +2,12 @@ package context.healthinformatics.GUI;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
-import context.healthinformatics.Database.SingletonDb;
-import context.healthinformatics.Parser.XMLParser;
 
 /**
  * Class which represents one of the states for the variabel panel in the
