@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 
 import context.healthinformatics.Database.SingletonDb;
 import context.healthinformatics.Parser.XMLParser;
+import context.healthinformatics.Writer.XMLDocument;
 
 /**
  * Class which represents one of the states for the variabel panel in the
@@ -26,6 +27,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	private FileTree ft;
 	private InputPageComponents ipc;
 	private ArrayList<ArrayList<String>> folder;
+	private ArrayList<XMLDocument> xmlDocs;
 
 	private JPanel leftPanel;
 	private JFileChooser selecter;
@@ -44,17 +46,25 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 * @throws IOException 
 	 */
 	public InputPage(MainFrame m) {
-		XMLParser parser = new XMLParser("src/main/data/demo/demo.xml");
-		try {
-			parser.parse();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		mf = m;
 		folder = new ArrayList<ArrayList<String>>();
 		ft = new FileTree(m, this);
 		ipc = new InputPageComponents(m, this);
 		xmledit = new XMLEditor();
+		try {
+			XMLParser parser = new XMLParser("src/main/data/demo/demo.xml");
+			parser.parse();
+			xmlDocs = parser.getXMLDocs();
+			addComboItem("ADMIRE");
+			for (int i = 0; i < xmlDocs.size(); i++) {
+				int project = findFolderProject((String) ipc.getComboBox()
+						.getSelectedItem());
+				folder.get(project).add(xmlDocs.get(i).getPath());
+				ft.addFileToTree(project, xmlDocs.get(i).getPath());
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

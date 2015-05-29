@@ -50,6 +50,7 @@ public class FileTree implements TreeSelectionListener, Serializable {
 		selectedFiles = new ArrayList<String>();
 		xmlList = new ArrayList<String>();
 		initXmlList();
+		initTree();
 	}
 	
 	/**
@@ -68,7 +69,7 @@ public class FileTree implements TreeSelectionListener, Serializable {
 		JPanel section3 = MainFrame.createPanel(Color.decode(InputPage.COLOR),
 				mf.getScreenWidth(), FOLDERSECTIONHEIGHT);
 		section3.setLayout(new  GridBagLayout());
-		initTree();
+//		initTree(); //TODO remove after demo
 		addTreePane(section3);
 		return section3;
 	}

@@ -59,6 +59,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 		mf = m;
 		ip = p;
 		screenWidth = mf.getScreenWidth() / 2;
+		box = new JComboBox<String>(ip.getProjects()); //TODO remove after demo
 	}
 
 	/**
@@ -90,7 +91,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 	 *            to which the combobox will be added.
 	 */
 	public void addCombobox(JPanel panel) {
-		box = new JComboBox<String>(ip.getProjects());
+//		box = new JComboBox<String>(ip.getProjects());
 		panel.add(box, ip.setGrids(1, 0));
 	}
 
