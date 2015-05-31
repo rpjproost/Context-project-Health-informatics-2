@@ -264,18 +264,6 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	 * @param node is the selected TreeNode.
 	 */
 	private void setNodeToSelected(String selected, DefaultMutableTreeNode node) {
-<<<<<<< HEAD:src/main/java/context/healthinformatics/GUI/FileTree.java
-		if (index < 2) { //TODO remove after demo.
-			ArrayList<XMLDocument> xmlDocs = ip.xmlDocs;
-			for (int i = 0; i < xmlDocs.size(); i++) {
-				if (xmlDocs.get(i).getPath().equals(selected)) {
-					ip.getEditor().addXMLDocumentToContainerScrollPanel(xmlDocs.get(i));
-				}
-			}
-			index++;
-		}
-=======
->>>>>>> ad3a4e129f45e780cd6ab8ca3e18d46ff41c22f5:src/main/java/context/healthinformatics/gui/FileTree.java
 		getSelectedFiles().add(selected);
 		node.setUserObject(node.getUserObject().toString()
 				+ "   [SELECTED]");

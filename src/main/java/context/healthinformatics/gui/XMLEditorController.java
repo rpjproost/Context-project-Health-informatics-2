@@ -2,7 +2,7 @@ package context.healthinformatics.gui;
 
 import java.util.ArrayList;
 
-import context.healthinformatics.Writer.XMLDocument;;
+import context.healthinformatics.writer.XMLDocument;;
 
 /**
  * The controller of the XMLEditor Panel.

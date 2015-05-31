@@ -1,4 +1,4 @@
-package context.healthinformatics.GUI;
+package context.healthinformatics.gui;
 
 import static org.junit.Assert.assertEquals;
 
@@ -7,15 +7,21 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
-import context.healthinformatics.Parser.Column;
-import context.healthinformatics.Writer.XMLDocument;
+import context.healthinformatics.parser.Column;
+import context.healthinformatics.writer.XMLDocument;
 
+/**
+ * Tests the xml editor controller.
+ */
 public class XMLEditorControllerTest {
 	
 	private XMLDocument documentOne;
 	private XMLDocument documentTwo;
 	private XMLEditorController controller;
 
+	/**
+	 * Setup multiple objects for the tests.
+	 */
 	@Before
 	public void setup() {
 		Column column = new Column(1, "comment", "String");
@@ -28,18 +34,27 @@ public class XMLEditorControllerTest {
 		controller = new XMLEditorController(docs);
 	}
 
+	/**
+	 * Tests the selected documents method.
+	 */
 	@Test
 	public void testGetSelectedDocs() {
 		XMLEditorController controller = new XMLEditorController();
 		assertEquals(0, controller.getSelectedDocs().size());
 	}
 
+	/**
+	 * Tests the select document when everything is used normally.
+	 */
 	@Test
 	public void testSelectDocumentCorrect() {
 		controller.selectDocument("src/main");
 		assertEquals(1, controller.getSelectedDocs().size());
 	}
 	
+	/**
+	 * Tests the select document method when there is already that document.
+	 */
 	@Test
 	public void testSelectDocumentDuplicate() {
 		XMLEditorController controller = new XMLEditorController();
@@ -52,12 +67,18 @@ public class XMLEditorControllerTest {
 		assertEquals(2, controller.getSelectedDocs().size());
 	}
 	
+	/**
+	 * Tests the select document when this document doesn't exist.
+	 */
 	@Test
 	public void testSelectDocumentMissing() {
 		controller.selectDocument("src/test");
 		assertEquals(0, controller.getSelectedDocs().size());
 	}
 	
+	/**
+	 * Test the deselect document correctly.
+	 */
 	@Test
 	public void testDeselectDocumentCorrect() {
 		testSelectDocumentCorrect();
@@ -65,6 +86,9 @@ public class XMLEditorControllerTest {
 		assertEquals(0, controller.getSelectedDocs().size());
 	}
 	
+	/**
+	 * Tests the deselect method when the document doesn't exist.
+	 */
 	@Test
 	public void testDeselectDocumentMissing() {
 		testSelectDocumentCorrect();
@@ -72,6 +96,9 @@ public class XMLEditorControllerTest {
 		assertEquals(1, controller.getSelectedDocs().size());
 	}
 	
+	/**
+	 * Tests deselect method when the file exists but not yet in the selected files list.
+	 */
 	@Test
 	public void testDeselectDocumentNotInSelected() {
 		testSelectDocumentCorrect();
