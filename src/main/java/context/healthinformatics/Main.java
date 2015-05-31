@@ -1,6 +1,6 @@
 package context.healthinformatics;
 
-import context.healthinformatics.GUI.MainFrame;
+import context.healthinformatics.gui.MainFrame;
 
 /**
  * Start this to run the program.
