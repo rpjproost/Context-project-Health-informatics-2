@@ -272,7 +272,7 @@ public class FileTree implements TreeSelectionListener, Serializable {
 			ArrayList<XMLDocument> xmlDocs = ip.xmlDocs;
 			for (int i = 0; i < xmlDocs.size(); i++) {
 				if (xmlDocs.get(i).getPath().equals(selected)) {
-					ip.xmledit.addXMLDocumentToContainerScrollPanel(xmlDocs.get(i));
+					ip.getEditor().addXMLDocumentToContainerScrollPanel(xmlDocs.get(i));
 				}
 			}
 			index++;

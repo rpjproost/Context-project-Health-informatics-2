@@ -36,7 +36,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	public static final int THREE = 3;
 	public static final String COLOR = "#81DAF5";
 
-	protected XMLEditor xmledit;
+	private XMLEditor xmledit;
 
 	/**
 	 * Constructor.
@@ -225,6 +225,10 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 */
 	public void setFolder(ArrayList<ArrayList<String>> f) {
 		folder = f;
+	}
+	
+	public XMLEditor getEditor() {
+		return xmledit;
 	}
 
 	/**
