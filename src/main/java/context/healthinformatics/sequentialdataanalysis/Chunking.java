@@ -1,14 +1,14 @@
 package context.healthinformatics.sequentialdataanalysis;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
  * Class for chunking a list of chunks.
  *
  */
-public class Chunking {
+public class Chunking extends Tasks {
 
-	private ArrayList<Chunk> chunks;
 	private Chunk temp;
 
 	/**
@@ -18,9 +18,46 @@ public class Chunking {
 	 *            the list of chunks
 	 */
 	public Chunking(ArrayList<Chunk> chunks) {
-		this.chunks = chunks;
+		setChunks(chunks);
+		chunks = getChunks();
 	}
 
+	/**
+	 * Create chunks on constraint data.
+	 * @param whereClause for sql query.
+	 * @return new Arraylist with chunked chunks.
+	 * @throws SQLException if whereclause was not correct.
+	 */
+	public ArrayList<Chunk> constraintOnData(String whereClause) throws SQLException {
+		ArrayList<Chunk> res = new ArrayList<Chunk>();
+		ArrayList<Chunk> chunks = getChunks();
+		temp = new Chunk();
+		ArrayList<Integer> ints = getLinesFromData(whereClause);
+		for (int i = 0; i < chunks.size(); i++) {
+			Chunk curChunk = chunks.get(i);
+			addChunkOnEqualsData(ints, curChunk, res);
+		}
+		addLastElementToChunks(res);
+		return res;
+	}
+	
+	/**
+	 * Add chunks with data to new chunks if constraint on data passes.
+	 * @param ints the arraylist with integers with correct data.
+	 * @param curChunk Chunk that currently is being checked.
+	 * @param res arraylist result.
+	 */
+	public void addChunkOnEqualsData(ArrayList<Integer> ints, Chunk curChunk,
+			ArrayList<Chunk> res) {
+		if (ints.contains(curChunk.getLine())) {
+			temp.setChunk(curChunk);
+		}
+		else {
+			addChunkToChunk(res, curChunk);
+			this.temp = new Chunk();
+		}
+	}
+	
 	/**
 	 * Chunking chunks on a code constraint.
 	 * @param code Code constraint for a chunk.
@@ -28,13 +65,31 @@ public class Chunking {
 	 */
 	public ArrayList<Chunk> constraintOnCode(String code) {
 		ArrayList<Chunk> res = new ArrayList<Chunk>();
-		temp  = new Chunk();
+		ArrayList<Chunk> chunks = getChunks();
+ 		temp  = new Chunk();
 		for (int i = 0; i < chunks.size(); i++) {
 			Chunk curChunk = chunks.get(i);
 			addChunkOnEqualsCode(curChunk, code, res);
 		}
 		addLastElementToChunks(res);
 		return res;
+	}
+	
+	/**
+	 * Add chunk to new Chunk in new ArrayList if it equals code.
+	 * @param curChunk Chunk to be checked on constraint.
+	 * @param temp New chunk that will be returned in new ArrayList<Chunk>
+	 * @param c String for code constraint.
+	 * @param res ArrayList<Chunk> chunked.
+	 */
+	private void addChunkOnEqualsCode(Chunk curChunk, String c, ArrayList<Chunk> res) {
+		if (curChunk.getCode().equals(c)) {
+			temp.setChunk(curChunk);
+		}
+		else {
+			addChunkToChunk(res, curChunk);
+			this.temp  = new Chunk();
+		}
 	}
 
 	/**
@@ -44,6 +99,7 @@ public class Chunking {
 	 */
 	public ArrayList<Chunk> constraintOnContainsComment(String comment) {
 		ArrayList<Chunk> res = new ArrayList<Chunk>();
+		ArrayList<Chunk> chunks = getChunks();
 		temp  = new Chunk();
 		for (int i = 0; i < chunks.size(); i++) {
 			Chunk curChunk = chunks.get(i);
@@ -60,6 +116,7 @@ public class Chunking {
 	 */
 	public ArrayList<Chunk> constraintOnEqualsComment(String comment) {
 		ArrayList<Chunk> res = new ArrayList<Chunk>();
+		ArrayList<Chunk> chunks = getChunks();
 		temp  = new Chunk();
 		for (int i = 0; i < chunks.size(); i++) {
 			Chunk curChunk = chunks.get(i);
@@ -106,23 +163,6 @@ public class Chunking {
 	}
 	
 	/**
-	 * Add chunk to new Chunk in new ArrayList if it equals code.
-	 * @param curChunk Chunk to be checked on constraint.
-	 * @param temp New chunk that will be returned in new ArrayList<Chunk>
-	 * @param c String for code constraint.
-	 * @param res ArrayList<Chunk> chunked.
-	 */
-	private void addChunkOnEqualsCode(Chunk curChunk, String c, ArrayList<Chunk> res) {
-		if (curChunk.getCode().equals(c)) {
-			temp.setChunk(curChunk);
-		}
-		else {
-			addChunkToChunk(res, curChunk);
-			this.temp  = new Chunk();
-		}
-	}
-	
-	/**
 	 * Adds a Chunk to a new chunk if it is part of the Chunk.
 	 * @param temp The new Chunk.
 	 * @param res The new ArrayList<Chunk> to be returned after chunking.
@@ -146,17 +186,16 @@ public class Chunking {
 			res.add(temp);
 		}
 	}
-	
-	/**
-	 * Return the chunks from the constructor.
-	 * 
-	 * @return the chunks
-	 */
-	public ArrayList<Chunk> getChunks() {
-		return chunks;
+
+	@Override
+	public ArrayList<Chunk> undo() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	//TODO: Add a recursive function for chunking on data 
-	//(for example by periods of time), will be added in another class.
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+	}
 
 }
