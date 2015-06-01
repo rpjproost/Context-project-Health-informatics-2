@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * Class which represents one of the states for the variabel panel in the
@@ -69,13 +70,11 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		JPanel leftPanel = createPanel(Color.decode(COLOR),
 				mf.getScreenWidth() / 2, mf.getStatePanelSize());
 		leftPanel.add(ipc.loadProjectSelection(), setGrids(0, 0));
-		leftPanel.add(ipc.loadFileSelection(), setGrids(0, 1));
-		leftPanel.add(ft.loadFolder(), setGrids(0, 2));
-		GridBagConstraints c = setGrids(1, 0);
-		c = setGrids(0, THREE);
+		leftPanel.add(ft.loadFolder(), setGrids(0, 1));
+		GridBagConstraints c = setGrids(0, 2);
 		c.weighty = 1;
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
-		leftPanel.add(ipc.loadHelpButtonSection(), c);
+		leftPanel.add(ipc.loadButtonSection(), c);
 		return leftPanel;
 	}
 
@@ -144,8 +143,12 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 */
 	public int openFileChooser() {
 		selecter = new JFileChooser();
-		selecter.setDialogType(JFileChooser.SAVE_DIALOG);
-		return selecter.showSaveDialog(leftPanel);
+		selecter.setMultiSelectionEnabled(true);
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Only txt, excel and xml"
+				, "txt", "csv", "xlsx", "xls", "xml");
+		selecter.setFileFilter(filter);
+		selecter.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		return selecter.showOpenDialog(leftPanel);
 	}
 
 	/**
@@ -169,6 +172,13 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 */
 	public FileTree getFileTree() {
 		return ft;
+	}
+	
+	/**
+	 * @return the left panel.
+	 */
+	public JPanel getLeftPanel() {
+		return leftPanel;
 	}
 
 	/**
@@ -213,17 +223,19 @@ public class InputPage extends InterfaceHelper implements PanelState,
 
 	/**
 	 * Method which adds a project to the folder and FileTree.
+	 * @param path is the path of the added file.
 	 */
-	public void addFile() {
-		if (folder.size() != 0 && !ipc.getTextArea().getText().equals("")) {
-			String text = ipc.getTextArea().getText();
-			int project = findFolderProject((String) ipc.getComboBox()
-					.getSelectedItem());
-			folder.get(project).add(text);
-			ft.addFileToTree(project, text);
+	public void addFile(String path) {
+		//String text = ipc.getTextArea().getText();
+		int project = findFolderProject((String) ipc.getComboBox()
+				.getSelectedItem());
+		if (folder.size() > 0 && project >= 0 && !path.equals("")
+				&& !folder.get(project).contains(path)) {
+			folder.get(project).add(path);
+			ft.addFileToTree(project, path);
 		} else {
 			JOptionPane.showMessageDialog(null,
-					"No project created yet, or no file specified!");
+					"No project created yet, or no file specified, or file already in project!");
 		}
 	}
 
