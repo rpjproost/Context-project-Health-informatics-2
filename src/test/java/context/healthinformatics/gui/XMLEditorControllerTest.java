@@ -1,6 +1,7 @@
 package context.healthinformatics.gui;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.util.ArrayList;
 
@@ -106,5 +107,22 @@ public class XMLEditorControllerTest {
 		controller.deselectDocument("src/test");
 		assertEquals(1, controller.getSelectedDocs().size());
 	}
-
+	
+	/**
+	 * Tests the document with only the end of the path string.
+	 */
+	@Test
+	public void testGetDocumentWithPartofPath() {
+		XMLDocument test = controller.getDocumentWithPartofPath("main");
+		assertEquals("main", test.getDocName());
+	}
+	
+	/**
+	 * Tests when it doesn't exists with only the end of the path string.
+	 */
+	@Test
+	public void testGetDocumentWithPartofPathWrong() {
+		assertNull(controller.getDocumentWithPartofPath("test"));
+	}
+	
 }
