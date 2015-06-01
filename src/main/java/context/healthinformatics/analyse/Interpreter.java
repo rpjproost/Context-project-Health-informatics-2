@@ -44,10 +44,16 @@ public class Interpreter {
 			ParsingResult<?> result = new RecoveringParseRunner<Task>(parser.task())
 					.run(line);
 			Task task = (Task) result.resultValue;
+			task.run();
+			tasks.push(task);
 		}
 		sc.close();
 	}
 	
+	/**
+	 * getter for the current chunkList.
+	 * @return the current chunkList
+	 */
 	public ArrayList<Chunk> getChunks() {
 		if (!tasks.isEmpty()) {
 			return tasks.peek().getChunks();
