@@ -57,6 +57,20 @@ public class InterfaceHelper extends JPanel {
 	}
 	
 	/**
+	 * Set the gridbag location of a Component with margin top.
+	 * @param x coordinate.
+	 * @param y coordinate.
+	 * @param marginTop let gridbag marge top.
+	 * @return the location for the Component.
+	 */
+	protected GridBagConstraints setGrids(int x, int y, int marginTop) {
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridx = x;
+		c.gridy = y;
+		return c;
+	}
+	
+	/**
 	 * Set the gridbag location of a Component.
 	 * @param x coordinate.
 	 * @param y coordinate.

@@ -34,9 +34,25 @@ public class DocumentFieldsContainer {
 				.setSelectedIndex(getComboBoxIndex(xmlDoc.getDocType()));
 		this.documentPath = new JTextField(xmlDoc.getPath());
 		this.startLine = new JTextField(Integer.toString(xmlDoc.getStartLine()));
-		this.delimiter = new JTextField(Integer.toString(xmlDoc.getSheet()));
+		initSheetOrDelimiterField(xmlDoc.getDocType(), xmlDoc);
 		columnFields = new ArrayList<ColumnFieldContainer>();
 		initColumns(xmlDoc.getColumns());
+	}
+
+	/**
+	 * Init one of the two textfields bases on the document type.
+	 * 
+	 * @param docType
+	 *            the type of the document
+	 * @param xmlDoc
+	 *            the xml document
+	 */
+	public void initSheetOrDelimiterField(String docType, XMLDocument xmlDoc) {
+		if (docType.toLowerCase().equals("excel")) {
+			this.sheet = new JTextField(Integer.toString(xmlDoc.getSheet()));
+		} else {
+			this.delimiter = new JTextField(xmlDoc.getDelimiter());
+		}
 	}
 
 	/**
@@ -67,60 +83,6 @@ public class DocumentFieldsContainer {
 	}
 
 	/**
-	 * Constructor for a text document.
-	 * 
-	 * @param documentName
-	 *            the document name
-	 * @param documentTypes
-	 *            the document type
-	 * @param documentPath
-	 *            the document path
-	 * @param startLine
-	 *            the start line
-	 * @param delimiter
-	 *            the delimiter of the textfile
-	 * @param comboIndex
-	 *            the index of the selected combobox value
-	 */
-	public DocumentFieldsContainer(String documentName, String[] documentTypes,
-			String documentPath, int startLine, String delimiter, int comboIndex) {
-		this.documentName = new JTextField(documentName);
-		this.documentType = new JComboBox<>(documentTypes);
-		this.documentType.setSelectedIndex(comboIndex);
-		this.documentPath = new JTextField(documentPath);
-		this.startLine = new JTextField(Integer.toString(startLine));
-		this.delimiter = new JTextField(delimiter);
-		columnFields = new ArrayList<ColumnFieldContainer>();
-	}
-
-	/**
-	 * Constructor for an excel document.
-	 * 
-	 * @param documentName
-	 *            the document name
-	 * @param documentTypes
-	 *            the document type
-	 * @param documentPath
-	 *            the document path
-	 * @param startLine
-	 *            the start line
-	 * @param sheet
-	 *            the number of the sheet
-	 * @param comboIndex
-	 *            the index of the selected combobox value
-	 */
-	public DocumentFieldsContainer(String documentName, String[] documentTypes,
-			String documentPath, int startLine, int sheet, int comboIndex) {
-		this.documentName = new JTextField(documentName);
-		this.documentType = new JComboBox<>(documentTypes);
-		this.documentType.setSelectedIndex(comboIndex);
-		this.documentPath = new JTextField(documentPath);
-		this.startLine = new JTextField(Integer.toString(startLine));
-		this.delimiter = new JTextField(Integer.toString(sheet));
-		columnFields = new ArrayList<ColumnFieldContainer>();
-	}
-
-	/**
 	 * Build a new XMLDocument from the values of the input fields.
 	 * 
 	 * @return a xmldocument
@@ -143,15 +105,6 @@ public class DocumentFieldsContainer {
 	 */
 	public void addColumnField(ColumnFieldContainer columnField) {
 		columnFields.add(columnField);
-	}
-
-	/**
-	 * Get the type of the document.
-	 * 
-	 * @return the selected type of the document
-	 */
-	public String getTypeOfDocument() {
-		return documentType.getSelectedItem().toString();
 	}
 
 	/**
