@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * Class for chunking a list of chunks.
  *
  */
-public class Chunking extends Tasks {
+public class Chunking extends Task {
 
 	private Chunk temp;
 

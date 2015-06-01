@@ -1,25 +1,33 @@
 package context.healthinformatics.analyse;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 
-import context.healthinformatics.database.Db;
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.Stack;
+
+import org.parboiled.Parboiled;
+import org.parboiled.parserunners.RecoveringParseRunner;
+import org.parboiled.support.ParsingResult;
+
 import context.healthinformatics.database.MergeTable;
-import context.healthinformatics.database.SingletonDb;
 import context.healthinformatics.sequentialdataanalysis.Chunk;
-import context.healthinformatics.sequentialdataanalysis.Constraints;
+import context.healthinformatics.sequentialdataanalysis.Task;
+
 
 /**
  * class handling the interpreting of the user input.
  */
 public class Interpreter {
-
+	
+	private Stack<Task> tasks;
+	private UserInputParser parser;
 
 	/**
 	 * constructor for the Interpreter.
 	 */
-	public Interpreter() {
+	protected Interpreter() {
+		tasks = new Stack<Task>();
+		parser = Parboiled.createParser(UserInputParser.class);
 	}
 
 	/**
@@ -29,6 +37,25 @@ public class Interpreter {
 	 *            code to interpret.
 	 */
 	public void interpret(String code) {
+		Scanner sc = new Scanner(code);
+		
+		while (sc.hasNextLine()) {
+			String line = sc.nextLine();
+			ParsingResult<?> result = new RecoveringParseRunner<Task>(parser.task())
+					.run(line);
+			Task task = (Task) result.resultValue;
+		}
+		sc.close();
+	}
+	
+	public ArrayList<Chunk> getChunks() {
+		if (!tasks.isEmpty()) {
+			return tasks.peek().getChunks();
+		}
+		else {
+			//TODO first workspace.
+			return null;
+		}
 		
 	}
 

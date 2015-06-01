@@ -10,19 +10,22 @@ import context.healthinformatics.database.SingletonDb;
 /**
  * Class Constraints.
  */
-public class Constraints {
-	private ArrayList<Chunk> chunks;
+public class Constraints extends Task {
 	private String columnName;
 
 	/**
 	 * Constructor Constraints.
-	 * 
 	 * @param chunks
 	 *            the list of chunks
 	 */
 	public Constraints(ArrayList<Chunk> chunks) {
-		this.chunks = chunks;
+		setChunks(chunks);
 	}
+	
+	/**
+	 * Constructor Constraints without workspace previously set.
+	 */
+	public Constraints() {}
 
 	/**
 	 * Constructor Constraints.
@@ -33,7 +36,7 @@ public class Constraints {
 	 *            the list of chunks
 	 */
 	public Constraints(ArrayList<Chunk> chunks, String columnName) {
-		this.chunks = chunks;
+		setChunks(chunks);
 		this.columnName = columnName;
 	}
 
@@ -134,15 +137,6 @@ public class Constraints {
 	}
 
 	/**
-	 * Return the chunks the constraint must apply to.
-	 * 
-	 * @return the chunks
-	 */
-	public ArrayList<Chunk> getChunks() {
-		return chunks;
-	}
-
-	/**
 	 * Get the column name.
 	 * 
 	 * @return the name of the column
@@ -211,7 +205,7 @@ public class Constraints {
 	 */
 	public ArrayList<Chunk> constraint(String value, String operator,
 			String tableName) throws SQLException {
-		String rowClause = getAllChunkLines(chunks, new StringBuilder(),
+		String rowClause = getAllChunkLines(getChunks(), new StringBuilder(),
 				tableName);
 		rowClause = "(" + rowClause.substring(2, rowClause.length()) + ")";
 		String constraint = columnName + " " + operator + " ";
@@ -221,8 +215,8 @@ public class Constraints {
 			constraint += "'" + value + "' ";
 		}
 		String whereClause = constraint + " AND " + rowClause;
-		removeChunks(getRemainingIDs(tableName, whereClause), this.chunks);
-		return this.chunks;
+		removeChunks(getRemainingIDs(tableName, whereClause), getChunks());
+		return getChunks();
 	}
 
 	/**
@@ -264,5 +258,17 @@ public class Constraints {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public ArrayList<Chunk> undo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
 	}
 }

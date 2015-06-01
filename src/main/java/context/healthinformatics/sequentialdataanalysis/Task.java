@@ -12,7 +12,7 @@ import context.healthinformatics.database.SingletonDb;
  * Abstract class that every C class uses.
  *
  */
-public abstract class Tasks {
+public abstract class Task {
 	
 	/**
 	 * List of chunks that every Class. 

@@ -4,10 +4,12 @@ import org.parboiled.BaseParser;
 import org.parboiled.Rule;
 import org.parboiled.annotations.BuildParseTree;
 
+import context.healthinformatics.sequentialdataanalysis.*;
+
 public class UserInputParser extends BaseParser<Task> {
 	private Task t;
 	public Rule task() {
-		return Sequence(ZeroOrMore(' '), method(), EOI, push(t));
+		return Sequence(ZeroOrMore(' '), method(), EOI);
 	}
 	
 	public Rule method() {
@@ -15,15 +17,23 @@ public class UserInputParser extends BaseParser<Task> {
 	}
 	
 	public Rule operation() {
-		return OneOrMore();
+		return OneOrMore(dataOperation(), codeOperation(), commentOperation());
 	}
 	
+	/**
+	 * rule for dataOperation.
+	 * @return the rule.
+	 */
 	public Rule dataOperation() {
-		return Sequence(strData(), TestNot(strCode()));
+		return Sequence(strData(), Optional(strWhere()), push(new Constraints() 
+		@overide run(){
+			setChunks(SingletonInterpreter.getInterpreter().getChunks());
+			onData(ANY)};
+		));
 	}
-	
+
 	private Rule filter() {
-		return Sequence(strFilter(),operation());
+		return Sequence(strFilter(), operation());
 	}
 	
 	private Rule strFilter() {
@@ -39,15 +49,20 @@ public class UserInputParser extends BaseParser<Task> {
 	}
 	
 	private Rule strComment() {
-		return Sequence(ZeroOrMore(' '), Ch('c'), Ch('o'), Ch('m'), Ch('m'), Ch('e'), Ch('n'), Ch('t'));
+		return Sequence(ZeroOrMore(' '), Ch('c'), Ch('o'), Ch('m'), Ch('m'),
+				Ch('e'), Ch('n'), Ch('t'));
 	}
 	
 	private Rule strConnect() {
-		return Sequence(ZeroOrMore(' '), Ch('c'), Ch('o'), Ch('n'), Ch('n'), Ch('e'), Ch('c'), Ch('t'));
+		return Sequence(ZeroOrMore(' '), Ch('c'), Ch('o'), Ch('n'), Ch('n'),
+				Ch('e'), Ch('c'), Ch('t'));
 	}
-	
-	
+
 	private Rule strData() {
 		return Sequence(ZeroOrMore(' '), Ch('d'), Ch('a'), Ch('t'), Ch('a'));
+	}
+	
+	private Rule strWhere() {
+		return Sequence(ZeroOrMore(' '), Ch('w'), Ch('h'), Ch('e'), Ch('r'), Ch('e'));
 	}
 }
