@@ -1,11 +1,13 @@
 package context.healthinformatics.gui;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import javax.swing.Action;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -33,6 +35,9 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	public static final int BUTTONFONTSIZE = 15;
 	public static final int THREE = 3;
 	public static final String COLOR = "#81DAF5";
+
+	private static final int SELECTERHEIGHT = 500;
+	private static final int SELECTERWIDTH = 600;
 
 	private XMLEditor xmledit;
 	private XMLEditorController xmlController;
@@ -153,7 +158,10 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		FileNameExtensionFilter filter = new FileNameExtensionFilter("Only txt, excel and xml"
 				, "txt", "csv", "xlsx", "xls", "xml");
 		selecter.setFileFilter(filter);
+		selecter.setPreferredSize(new Dimension(SELECTERWIDTH, SELECTERHEIGHT));
 		selecter.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		Action details = selecter.getActionMap().get("viewTypeDetails");
+		details.actionPerformed(null);
 		return selecter.showOpenDialog(leftPanel);
 	}
 
