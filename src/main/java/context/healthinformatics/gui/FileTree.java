@@ -66,12 +66,12 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	 * @return The tree folder structure Panel.
 	 */
 	public JPanel loadFolder() {
-		JPanel section3 = MainFrame.createPanel(Color.decode(InputPage.COLOR),
+		JPanel folderPanel = MainFrame.createPanel(Color.decode(InputPage.COLOR),
 				mf.getScreenWidth(), FOLDERSECTIONHEIGHT);
-		section3.setLayout(new  GridBagLayout());
+		folderPanel.setLayout(new  GridBagLayout());
 		initTree();
-		addTreePane(section3);
-		return section3;
+		addTreePane(folderPanel);
+		return folderPanel;
 	}
 	
 	/**

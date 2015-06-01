@@ -64,12 +64,12 @@ public class InputPageComponents implements Serializable, ActionListener {
 	 * @return section1 Panel.
 	 */
 	public JPanel loadProjectSelection() {
-		JPanel section1 = MainFrame.createPanel(Color.decode(InputPage.COLOR),
+		JPanel projectSelectionPanel = MainFrame.createPanel(Color.decode(InputPage.COLOR),
 				screenWidth, PROJECTSELECTIONPANELHEIGHT);
-		addProjectLabel(section1);
-		section1.add(box, ip.setGrids(1, 0));
-		addProjectButton(section1);
-		return section1;
+		addProjectLabel(projectSelectionPanel);
+		projectSelectionPanel.add(box, ip.setGrids(1, 0));
+		addProjectButton(projectSelectionPanel);
+		return projectSelectionPanel;
 	}
 
 	/**
