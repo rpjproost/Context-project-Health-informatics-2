@@ -56,7 +56,7 @@ public class XMLDocument {
 		this.docName = "";
 		this.path = "";
 		this.delimiter = "";
-		this.columns = null;
+		this.columns = new ArrayList<Column>();
 	}
 
 	/**

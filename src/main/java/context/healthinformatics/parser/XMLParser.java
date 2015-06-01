@@ -13,6 +13,7 @@ import org.xml.sax.SAXException;
 
 import context.healthinformatics.database.Db;
 import context.healthinformatics.database.SingletonDb;
+import context.healthinformatics.writer.XMLDocument;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -27,11 +28,15 @@ public class XMLParser extends Parser {
 
 	private Document doc;
 	private String docName;
+	private String docType;
 	private String delimiter;
 	private String path;
 	private int startLine;
 	private int sheet;
 	private ArrayList<Column> columns;
+	
+	private ArrayList<XMLDocument> documents;
+	private ArrayList<Parser> parsers;
 
 	/**
 	 * Creates a parser for the data in the file.
@@ -68,8 +73,7 @@ public class XMLParser extends Parser {
 					clear();
 				}
 			}
-		} catch (ParserConfigurationException | InvalidFormatException
-				| SQLException e) {
+		} catch (ParserConfigurationException | InvalidFormatException e) {
 			throw new FileNotFoundException(e.getMessage());
 		} catch (SAXException e) {
 			throw new FileNotFoundException(
@@ -103,12 +107,9 @@ public class XMLParser extends Parser {
 	 * 
 	 * @param n
 	 *            the document node.
-	 * @throws IOException
 	 * @throws InvalidFormatException
-	 * @throws SQLException
 	 */
-	private void parseDocument(Node n) throws IOException,
-			InvalidFormatException, SQLException {
+	private void parseDocument(Node n) throws InvalidFormatException {
 		Element e = (Element) n;
 		setDocName(e.getAttribute("docname"));
 		setPath(getString(e, "path"));
@@ -117,8 +118,33 @@ public class XMLParser extends Parser {
 		parseColumns(columnList);
 		setDelimiter(getString(e, "delimiter"));
 		setSheet(getInt(e, getString(e, "sheet")));
-		createTableDb();
-		getParser(getString(e, "doctype")).parse();
+		setDocType(getString(e, "doctype"));
+		parsers.add(getParser(getDocType()));
+		addDocument();
+	}
+
+	/**
+	 * Creates a database a parse all documents into it.
+	 */
+	public void createDatabase() {
+		try {
+			createTableDb();
+			for (Parser parser : parsers) {
+				parser.parse();
+			}
+		} catch (SQLException | IOException e) {
+			//TODO exception
+		}
+	}
+	
+	/**
+	 * Creates a xml Document object from the data
+	 * and adds it to a list of all of the entire document.
+	 */
+	private void addDocument() {
+		XMLDocument current = new XMLDocument(getDocType(), getDocName(), 
+				getDelimiter(), getPath(), getStartLine(), getSheet(), getColumns());
+		documents.add(current);
 	}
 
 	/**
@@ -313,6 +339,27 @@ public class XMLParser extends Parser {
 	 */
 	public void setSheet(int sheet) {
 		this.sheet = sheet;
+	}
+
+	/**
+	 * @return the documents
+	 */
+	public ArrayList<XMLDocument> getDocuments() {
+		return documents;
+	}
+
+	/**
+	 * @return the docType
+	 */
+	public String getDocType() {
+		return docType;
+	}
+
+	/**
+	 * @param docType the docType to set
+	 */
+	public void setDocType(String docType) {
+		this.docType = docType;
 	}
 
 }

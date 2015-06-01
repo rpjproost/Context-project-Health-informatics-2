@@ -11,6 +11,7 @@ public class XMLEditorController {
 
 	private ArrayList<XMLDocument> allDocs;
 	private ArrayList<XMLDocument> selectedDocs;
+	private ArrayList<XMLDocument> docsShownInEditor;
 
 	/**
 	 * Constructor for the XMLEditorController.
@@ -18,6 +19,7 @@ public class XMLEditorController {
 	public XMLEditorController() {
 		allDocs = new ArrayList<XMLDocument>();
 		setSelectedDocs(new ArrayList<XMLDocument>());
+		docsShownInEditor = new ArrayList<XMLDocument>();
 	}
 	
 	/**
@@ -99,10 +101,10 @@ public class XMLEditorController {
 	/**
 	 * Search in all documents if a document with the file path exists
 	 * if not return a null Object.
-	 * @param filePath, String with the path to the file.
+	 * @param filePath String with the path to the file.
 	 * @return the document out of all documents if it exists.
 	 */
-	private XMLDocument getDocument(String filePath) {
+	public XMLDocument getDocument(String filePath) {
 		for (int i = 0; i < allDocs.size(); i++) {
 			if (allDocs.get(i).getPath().equals(filePath)) {
 				return allDocs.get(i);
@@ -110,5 +112,4 @@ public class XMLEditorController {
 		}
 		return null;
 	}
-
 }

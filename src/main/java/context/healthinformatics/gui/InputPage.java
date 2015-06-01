@@ -267,10 +267,9 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 * @param files all files that should be added.
 	 */
 	protected void openFiles(File[] files) {
-		for (int i = 0; i < files.length; i++) {
-			String path = files[i].getPath();
-			addDocument(path);
-			addFile(path);
+		for (int i = 0; i < files.length; i++) {			
+			addDocumentAndShowInEditor(files[i].getPath());
+			addFile(files[i].getName());
 		}
 	}
 	
@@ -278,10 +277,13 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 * Adds the file with a path to all documents.
 	 * @param path the path to a file.
 	 */
-	private void addDocument(String path) {
-		XMLDocument current = new XMLDocument();
-		current.setPath(path);
-		xmlController.addDocument(current);
+	private void addDocumentAndShowInEditor(String path) {
+		if (xmlController.getDocument(path) == null) {
+			XMLDocument current = new XMLDocument();
+			current.setPath(path);
+			xmlController.addDocument(current);
+			xmledit.addXMLDocumentToContainerScrollPanel(current);
+		}
 	}
 
 	/**
