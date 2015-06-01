@@ -130,20 +130,6 @@ public class InputPageTest {
 	}
 	
 	/**
-	 * Checks if the an file can be selected correctly.
-	 */
-//	@Test
-//	public void testFileSelection() {
-//		ip.getFileTree().getTree().expandRow(4);
-//		ip.getFileTree().getTree().setSelectionRow(5);
-//		DefaultMutableTreeNode node1 = ((DefaultMutableTreeNode) ip.getFileTree()
-//				.getRoot().getLastChild());
-//		DefaultMutableTreeNode node2 = node1.getFirstLeaf();
-//		//assertEquals("6   [SELECTED]", node2.getUserObject().toString());
-//		assertEquals(ip.getFileTree().getSelectedFiles().contains("6"), true);
-//	}
-	
-	/**
 	 * Checks if the projects are read from the folder correctly.
 	 */
 	@SuppressWarnings("deprecation")
@@ -158,9 +144,8 @@ public class InputPageTest {
 	 */
 	@Test
 	public void testAddFile() {
-		ip.getInputPageComponent().getTextArea().setText("test");
 		ip.addComboItem("1");
-		ip.addFile();
+		ip.addFile("test");
 		ArrayList<String> list = ip.getFolder().get(0);
 		assertEquals(list.get(list.size() - 1), "test");
 	}

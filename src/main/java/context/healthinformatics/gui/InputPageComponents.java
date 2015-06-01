@@ -14,7 +14,6 @@ import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
 
 /**
  * Class which can load components of the InputPage.
@@ -27,9 +26,9 @@ public class InputPageComponents implements Serializable, ActionListener {
 	private InputPage ip;
 
 	private JComboBox<String> box;
-	private JTextArea txt;
+	//private JTextArea txt;
 	private JButton projectButton;
-	private JButton fileButton;
+	private JButton openFileButton;
 	private JButton selectButton;
 	private JButton helpButton;
 	private JButton analyseButton;
@@ -69,7 +68,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 		JPanel section1 = MainFrame.createPanel(Color.decode(InputPage.COLOR),
 				screenWidth, PROJECTSELECTIONPANELHEIGHT);
 		addProjectLabel(section1);
-		addCombobox(section1);
+		section1.add(box, ip.setGrids(1, 0));
 		addProjectButton(section1);
 		return section1;
 	}
@@ -84,15 +83,6 @@ public class InputPageComponents implements Serializable, ActionListener {
 				.setFont(new Font("Arial", Font.PLAIN, PROJECTLABELFONTSIZE));
 		projectLabel.setSize(new Dimension(DIMESIONWIDTH, DIMESIONHEIGHT));
 		panel.add(projectLabel, ip.setGrids(0, 0));
-	}
-
-	/**
-	 * @param panel
-	 *            to which the combobox will be added.
-	 */
-	public void addCombobox(JPanel panel) {
-//		box = new JComboBox<String>(ip.getProjects());
-		panel.add(box, ip.setGrids(1, 0));
 	}
 
 	/**
@@ -112,66 +102,24 @@ public class InputPageComponents implements Serializable, ActionListener {
 	}
 
 	/**
-	 * @return section2 Panel.
-	 */
-	public JPanel loadFileSelection() {
-		JPanel section2 = MainFrame.createPanel(Color.decode(InputPage.COLOR),
-				screenWidth, PROJECTSELECTIONPANELHEIGHT);
-		addFileLabel(section2);
-		addTextArea(section2);
-		addSelectButton(section2);
-		addFileButton(section2);
-		return section2;
-	}
-
-	/**
-	 * @param panel
-	 *            to which the fileLabel will be added.
-	 */
-	public void addFileLabel(JPanel panel) {
-		JLabel fileLabel = new JLabel("      File :   ");
-		fileLabel.setFont(new Font("Arial", Font.PLAIN, PROJECTLABELFONTSIZE));
-		fileLabel.setSize(new Dimension(DIMESIONWIDTH, DIMESIONHEIGHT));
-		panel.add(fileLabel, ip.setGrids(0, 0));
-	}
-
-	/**
-	 * @param panel
-	 *            to which the addTextArea will be added.
-	 */
-	public void addTextArea(JPanel panel) {
-		txt = new JTextArea();
-		txt.setMinimumSize(new Dimension(TXTFIELDWIDTH, TXTFIELDHEIGHT));
-		panel.add(txt, ip.setGrids(1, 0));
-	}
-
-	/**
 	 * @param panel
 	 *            to which the addSelectButton will be added.
 	 */
-	public void addSelectButton(JPanel panel) {
-		GridBagConstraints c = ip.setGrids(2, 0);
-		selectButton = ip.createButton("SELECT", DIMESIONWIDTH, DIMESIONHEIGHT);
-		selectButton.addActionListener(this);
-		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS,
-				BUTTONINSETS);
-		panel.add(selectButton, c);
-	}
 
 	/**
 	 * @param panel
 	 *            to which the addFileButton will be added.
 	 */
-	public void addFileButton(JPanel panel) {
-		GridBagConstraints c = ip.setGrids(THREE, 0);
-		fileButton = ip.createButton("ADD new File", DIMESIONWIDTH,
+	public void addOpenFileButton(JPanel panel) {
+		GridBagConstraints c = ip.setGrids(1, 0);
+		openFileButton = ip.createButton("Open File", DIMESIONWIDTH,
 				DIMESIONHEIGHT);
-		fileButton.addActionListener(this);
+		openFileButton.addActionListener(this);
+		c.weightx = 1;
 		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS,
 				BUTTONINSETS);
-		c.weightx = 1;
-		c.anchor = GridBagConstraints.LINE_START;
-		panel.add(fileButton, c);
+		c.anchor = GridBagConstraints.WEST;
+		panel.add(openFileButton, c);
 	}
 
 	/**
@@ -181,6 +129,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 		JPanel section4 = MainFrame.createPanel(Color.decode(InputPage.COLOR),
 				screenWidth, FOLDERSECTIONHEIGHT);
 		addHelpButton(section4);
+		addOpenFileButton(section4);
 		return section4;
 	}
 
@@ -205,10 +154,6 @@ public class InputPageComponents implements Serializable, ActionListener {
 		helpButton = ip.createButton("HELP", HELPBUTTONWIDTH, HELPBUTTONHEIGHT);
 		helpButton.addActionListener(this);
 		GridBagConstraints c = ip.setGrids(0, 0);
-		c.weightx = 1;
-		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS,
-				BUTTONINSETS);
-		c.anchor = GridBagConstraints.WEST;
 		panel.add(helpButton, c);
 	}
 
@@ -259,15 +204,8 @@ public class InputPageComponents implements Serializable, ActionListener {
 	/**
 	 * @return the analyseButton.
 	 */
-	public JButton getFileButton() {
-		return fileButton;
-	}
-
-	/**
-	 * @return the TextArea.
-	 */
-	public JTextArea getTextArea() {
-		return txt;
+	public JButton getOpenFileButton() {
+		return openFileButton;
 	}
 
 	/**
@@ -288,13 +226,10 @@ public class InputPageComponents implements Serializable, ActionListener {
 		if (e.getSource() == getProjectButton()) {
 			ip.createProject();
 		}
-		if (e.getSource() == getFileButton()) {
-			ip.addFile();
-		}
-		if (e.getSource() == getSelectButton()) {
+		if (e.getSource() == getOpenFileButton()) {
 			if (ip.openFileChooser() == JFileChooser.APPROVE_OPTION) {
 				String path = ip.getSelecter().getSelectedFile().toString();
-				getTextArea().setText(path);
+				ip.addFile(path);
 			}
 			ip.getSelecter().setVisible(false);
 		}
