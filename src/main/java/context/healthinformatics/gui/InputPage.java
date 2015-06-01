@@ -70,22 +70,11 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		JPanel leftPanel = createPanel(Color.decode(COLOR),
 				mf.getScreenWidth() / 2, mf.getStatePanelSize());
 		leftPanel.add(ipc.loadProjectSelection(), setGrids(0, 0));
-		
-		
-//		leftPanel.add(ipc.loadFileSelection(), setGrids(0, 1));
-//		leftPanel.add(ft.loadFolder(), setGrids(0, 2));
-//		GridBagConstraints c = setGrids(1, 0);
-//		c = setGrids(0, THREE);
-//		c.weighty = 1;
-//		c.anchor = GridBagConstraints.FIRST_LINE_START;
-//		leftPanel.add(ipc.loadHelpButtonSection(), c);
-//		return leftPanel;
-		
 		leftPanel.add(ft.loadFolder(), setGrids(0, 1));
 		GridBagConstraints c = setGrids(0, 2);
 		c.weighty = 1;
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
-		leftPanel.add(ipc.loadHelpButtonSection(), c);
+		leftPanel.add(ipc.loadButtonSection(), c);
 		return leftPanel;
 	}
 

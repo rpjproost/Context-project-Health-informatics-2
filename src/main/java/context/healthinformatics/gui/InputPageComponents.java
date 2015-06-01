@@ -26,7 +26,6 @@ public class InputPageComponents implements Serializable, ActionListener {
 	private InputPage ip;
 
 	private JComboBox<String> box;
-	//private JTextArea txt;
 	private JButton projectButton;
 	private JButton openFileButton;
 	private JButton selectButton;
@@ -58,7 +57,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 		mf = m;
 		ip = p;
 		screenWidth = mf.getScreenWidth() / 2;
-		box = new JComboBox<String>(ip.getProjects()); //TODO remove after demo
+		box = new JComboBox<String>(ip.getProjects());
 	}
 
 	/**
@@ -78,7 +77,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 	 *            to which the projectlabel will be added.
 	 */
 	public void addProjectLabel(JPanel panel) {
-		JLabel projectLabel = new JLabel("      Project :   ");
+		JLabel projectLabel = new JLabel("   Project :   ");
 		projectLabel
 				.setFont(new Font("Arial", Font.PLAIN, PROJECTLABELFONTSIZE));
 		projectLabel.setSize(new Dimension(DIMESIONWIDTH, DIMESIONHEIGHT));
@@ -102,35 +101,44 @@ public class InputPageComponents implements Serializable, ActionListener {
 	}
 
 	/**
-	 * @param panel
-	 *            to which the addSelectButton will be added.
+	 * @return Button  Panel.
 	 */
+	public JPanel loadButtonSection() {
+		JPanel buttonSection = MainFrame.createPanel(Color.decode(InputPage.COLOR),
+				screenWidth, FOLDERSECTIONHEIGHT);
+		addHelpButton(buttonSection);
+		addOpenFileButton(buttonSection);
+		return buttonSection;
+	}
 
 	/**
 	 * @param panel
 	 *            to which the addFileButton will be added.
 	 */
 	public void addOpenFileButton(JPanel panel) {
-		GridBagConstraints c = ip.setGrids(1, 0);
+		GridBagConstraints c = ip.setGrids(0, 0);
 		openFileButton = ip.createButton("Open File", DIMESIONWIDTH,
 				DIMESIONHEIGHT);
 		openFileButton.addActionListener(this);
-		c.weightx = 1;
+		c.anchor = GridBagConstraints.WEST;
 		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS,
 				BUTTONINSETS);
-		c.anchor = GridBagConstraints.WEST;
 		panel.add(openFileButton, c);
 	}
 
 	/**
-	 * @return section4 Panel.
+	 * @param panel
+	 *            to which the addHelpButton will be added.
 	 */
-	public JPanel loadHelpButtonSection() {
-		JPanel section4 = MainFrame.createPanel(Color.decode(InputPage.COLOR),
-				screenWidth, FOLDERSECTIONHEIGHT);
-		addHelpButton(section4);
-		addOpenFileButton(section4);
-		return section4;
+	public void addHelpButton(JPanel panel) {
+		helpButton = ip.createButton("HELP", HELPBUTTONWIDTH, HELPBUTTONHEIGHT);
+		helpButton.addActionListener(this);
+		GridBagConstraints c = ip.setGrids(0, 1);
+		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS,
+				BUTTONINSETS);
+		c.weightx = 1;
+		c.anchor = GridBagConstraints.WEST;
+		panel.add(helpButton, c);
 	}
 
 	/**
@@ -145,18 +153,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 		addAnalyseButton(analyseButton);
 		return analyseButton;
 	}
-
-	/**
-	 * @param panel
-	 *            to which the addHelpButton will be added.
-	 */
-	public void addHelpButton(JPanel panel) {
-		helpButton = ip.createButton("HELP", HELPBUTTONWIDTH, HELPBUTTONHEIGHT);
-		helpButton.addActionListener(this);
-		GridBagConstraints c = ip.setGrids(0, 0);
-		panel.add(helpButton, c);
-	}
-
+	
 	/**
 	 * @param panel
 	 *            to which the addAnalyseButton will be added.
