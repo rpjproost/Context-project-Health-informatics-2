@@ -101,8 +101,6 @@ public class FileTree implements TreeSelectionListener, Serializable {
 				file = new DefaultMutableTreeNode(node + isSelected(node));
 				project.add(file);
 			}
-			DefaultMutableTreeNode xml = new DefaultMutableTreeNode("SET XML FILE");
-			project.add(xml);
 			root.add(project);
 		}
 	}
@@ -156,22 +154,9 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	public void valueChanged(TreeSelectionEvent e) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
 				.getLastSelectedPathComponent();
-		if (node != null && node.isLeaf()
-				&& !node.getUserObject().toString().equals("PROJECTS :")) {
+		if (node != null && node.isLeaf() && !node.equals(getRoot())
+				&& !node.getParent().equals(getRoot())) {
 			String selected = node.getUserObject().toString();
-			useSelectedTreeNode(selected, node);
-		}
-	}
-	
-	/**
-	 * Do something with the selected TreeNode.
-	 * @param selected is the string of the selected TreeNode.
-	 * @param node is the selected TreeNode.
-	 */
-	private void useSelectedTreeNode(String selected, DefaultMutableTreeNode node) {
-		if (selected.equals("SET XML FILE")) {
-			addXmlFile(node);
-		} else {
 			selectNode(selected, node);
 		}
 	}
@@ -300,8 +285,6 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	 */
 	public void addProjectToTree(String project) {
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode(project);
-		DefaultMutableTreeNode xml = new DefaultMutableTreeNode("SET XML FILE");
-		node.add(xml);
 		model.insertNodeInto(node, root, root.getChildCount());
 		xmlList.add(null);
 		tree.expandRow(0);
