@@ -1,5 +1,8 @@
 package context.healthinformatics.analyse;
 
+import java.sql.SQLException;
+import java.util.logging.Logger;
+
 import org.parboiled.BaseParser;
 import org.parboiled.Rule;
 import org.parboiled.annotations.BuildParseTree;
@@ -9,31 +12,48 @@ import context.healthinformatics.sequentialdataanalysis.*;
 public class UserInputParser extends BaseParser<Task> {
 	private Task t;
 	public Rule task() {
-		return Sequence(ZeroOrMore(' '), method(), EOI);
+		return Sequence(ZeroOrMore(' '), method(), EOI, push(t));
 	}
 	
 	public Rule method() {
 		return OneOrMore(filter());
 	}
 	
-	public Rule operation() {
-		return OneOrMore(dataOperation(), codeOperation(), commentOperation());
+	public Rule filterOperation() {
+		return OneOrMore(filterDataOperation(), filterCodeOperation(), filterCommentOperation());
+	}
+
+	/**
+	 * rule for dataOperation when using a filter.
+	 * @return the rule.
+	 */
+	private Rule filterDataOperation() {
+		return Sequence(strData(), Optional(strWhere()), ANY, push(new Constraints() {
+		@Override public void run() {
+			setChunks(SingletonInterpreter.getInterpreter().getChunks());
+			try {
+				constraintOnData(match(), "Result");
+			} catch (SQLException e) {
+				Logger.getLogger(Constraints.class.getName()).warning(e.getMessage());
+			}
+			}; }
+		));
 	}
 	
 	/**
-	 * rule for dataOperation.
+	 * rule for codeOperation when using a filter.
 	 * @return the rule.
 	 */
-	public Rule dataOperation() {
-		return Sequence(strData(), Optional(strWhere()), push(new Constraints() 
-		@overide run(){
-			setChunks(SingletonInterpreter.getInterpreter().getChunks());
-			onData(ANY)};
-		));
+	private Rule filterCodeOperation() {
+		return Sequence(strCode(), Optional(strWhere()), Optional(filterEquals(), filterContains());
+		
+	private Object filterCommentOperation() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private Rule filter() {
-		return Sequence(strFilter(), operation());
+		return Sequence(strFilter(), filterOperation());
 	}
 	
 	private Rule strFilter() {
