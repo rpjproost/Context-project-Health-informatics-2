@@ -13,6 +13,7 @@ import context.healthinformatics.database.SingletonDb;
 public class Constraints extends Task {
 	private String columnName;
 
+	private ArrayList<Chunk> oldList;
 	/**
 	 * Constructor Constraints.
 	 * @param chunks
@@ -322,16 +323,21 @@ public class Constraints extends Task {
 		}
 		return true;
 	}
+	
+	@Override
+	protected void setChunks(ArrayList<Chunk> c) {
+		super.setChunks(c);
+		oldList = c;
+	}
 
 	@Override
 	public ArrayList<Chunk> undo() {
-		// TODO Auto-generated method stub
-		return null;
+		return oldList;
+		
 	}
 
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
 
 	}
 }

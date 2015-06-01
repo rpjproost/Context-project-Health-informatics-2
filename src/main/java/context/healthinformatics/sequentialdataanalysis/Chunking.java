@@ -193,9 +193,12 @@ public class Chunking extends Task {
 		return null;
 	}
 
+	/**
+	 * method that is called to calculate the new changes.
+	 * This method is overwritten at runtime to have the correct methods in it.
+	 */
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
 	}
 
 }
