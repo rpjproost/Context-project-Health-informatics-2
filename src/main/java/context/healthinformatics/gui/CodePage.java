@@ -23,6 +23,7 @@ public class CodePage extends InterfaceHelper implements PanelState, Serializabl
 	private static final int ANALYZEBUTTONHEIGHT = 75;
 	private MainFrame mf;
 	private JTextArea code;
+	private JTextArea intermediateResult;
 	private JButton button;
 	
 	/**
@@ -38,12 +39,33 @@ public class CodePage extends InterfaceHelper implements PanelState, Serializabl
 		JPanel panel = MainFrame.createPanel(Color.decode("#01A9DB"),
 				mf.getScreenWidth(), mf.getStatePanelSize());
 		panel.setLayout(new GridBagLayout());
-		code = createTextField(mf.getScreenWidth() / 2, mf.getStatePanelSize() - FIELDCORRECTION);
+		code = createTextField(mf.getScreenWidth() / 2, 
+				mf.getStatePanelSize() / 2 - FIELDCORRECTION);
+		intermediateResult = createTextField(mf.getScreenWidth() / 2, 
+				mf.getStatePanelSize() / 2 - FIELDCORRECTION);
 		panel.add(code, setGrids(0, 0));
+		intermediateResult.setEditable(false);
+		panel.add(intermediateResult, setGrids(0, 2));
+		intermediateResult.setText("test");
 		button = createButton("Analyse", ANALYZEBUTTONWIDTH, ANALYZEBUTTONHEIGHT);
 		button.addActionListener(new ActionHandler());
 		panel.add(button, setGrids(1, 1));
 		return panel;
+	}
+	
+	/**
+	 * Appends result Strings to intermediate result textfield.
+	 * @param res String to be appended in textfield.
+	 */
+	public void setResult(String res) {
+		intermediateResult.append(res);
+	}
+	
+	/**
+	 * Clears textfield of intermediate result.
+	 */
+	public void emptyResult() {
+		intermediateResult.setText("");
 	}
 	
 	/**
