@@ -34,20 +34,11 @@ public class InputPageTest {
 		mf = new MainFrame();
 		ip = (InputPage) mf.getInputPage();
 		handler = (ActionListener) ip.getInputPageComponent();
-		
-		folder = new ArrayList<ArrayList<String>>();
-		folder.add(new ArrayList<String>());
-		folder.get(0).add("1");
-		folder.add(new ArrayList<String>());
-		folder.get(1).add("2");
-		folder.get(1).add("3");
-		folder.get(1).add("4");
-		folder.add(new ArrayList<String>());
-		folder.get(2).add("5");
-		folder.get(2).add("6");
-		ip.setFolder(folder);
-		ip.getFileTree().initXmlList();
 		ip.getFileTree().initTree();
+		ArrayList<String> temp = new ArrayList<String>();
+		temp.add("(default)");
+		folder = new ArrayList<ArrayList<String>>();
+		folder.add(temp);
 	}
 	
 	/**
@@ -67,7 +58,7 @@ public class InputPageTest {
 	@Test
 	public void testFillTree() {
 		ip.getFileTree().fillTree();
-		assertEquals(ip.getFileTree().getRoot().getChildCount() / 2, THREE);
+		assertEquals(ip.getFileTree().getRoot().getChildCount() / 2, 1);
 	}
 	
 	/**
@@ -79,19 +70,11 @@ public class InputPageTest {
 	}
 	
 	/**
-	 * Checks if the node selection is intitialised as empty.
-	 */
-	@Test
-	public void testgetSelectedNodesisEmpty() {
-		assertEquals(ip.getFileTree().getSelectedFiles().isEmpty(), true);
-	}
-	
-	/**
 	 * Checks if the method finds the correct project.
 	 */
 	@Test
 	public void testfindFolderProject() {
-		assertEquals(ip.findFolderProject("5"), 2);
+		assertEquals(ip.findFolderProject("(default)"), 0);
 	}
 	
 	/**
@@ -112,14 +95,6 @@ public class InputPageTest {
 	}
 	
 	/**
-	 * Checks if the xmlList is initialised correctly.
-	 */
-	@Test
-	public void testinitXml() {
-		assertEquals(ip.getFileTree().getXmlList().size(), ip.getFolder().size());
-	}
-	
-	/**
 	 * Checks if the a comboItem can be added correctly.
 	 */
 	@Test
@@ -132,11 +107,12 @@ public class InputPageTest {
 	/**
 	 * Checks if the projects are read from the folder correctly.
 	 */
-	@SuppressWarnings("deprecation")
 	@Test
 	public void testGetProjects() {
-		String[] test = {"1", "2", "5"};
-		assertEquals(ip.getProjects(), test);
+		String[] test = {"(default)"};
+		for (int i = 0; i < test.length; i++) {
+			assertEquals(test[i], ip.getProjects()[i]);
+		}
 	}
 	
 	/**
@@ -144,7 +120,6 @@ public class InputPageTest {
 	 */
 	@Test
 	public void testAddFile() {
-		ip.addComboItem("1");
 		ip.addFile("test");
 		ArrayList<String> list = ip.getFolder().get(0);
 		assertEquals(list.get(list.size() - 1), "test");

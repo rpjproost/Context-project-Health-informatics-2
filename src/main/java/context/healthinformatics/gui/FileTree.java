@@ -6,7 +6,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.io.Serializable;
-import java.util.ArrayList;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -32,8 +31,6 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	private JTree tree;
 	private DefaultMutableTreeNode root;
 	private DefaultTreeModel model;
-	private ArrayList<String> xmlList;
-	private ArrayList<String> selectedFiles;
 	
 	public static final int FOLDERSECTIONHEIGHT = 400;
 	public static final int TREEPANEWIDTH = 700;
@@ -49,19 +46,7 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	public FileTree(MainFrame m, InputPage p) {
 		mf = m;
 		ip = p;
-		selectedFiles = new ArrayList<String>();
-		xmlList = new ArrayList<String>();
-		initXmlList();
 		initTree();
-	}
-	
-	/**
-	 * Method which initialises the XML list.
-	 */
-	public void initXmlList() {
-		for (int i = 0; i < ip.getFolder().size(); i++) {
-			xmlList.add(null);
-		}
 	}
 
 	/**
@@ -99,24 +84,10 @@ public class FileTree implements TreeSelectionListener, Serializable {
 			project = new DefaultMutableTreeNode(ip.getFolder().get(i).get(0));
 			for (int j = 1; j < ip.getFolder().get(i).size(); j++) {
 				String node = ip.getFolder().get(i).get(j);
-				file = new DefaultMutableTreeNode(node + isSelected(node));
+				file = new DefaultMutableTreeNode(node);
 				project.add(file);
 			}
 			root.add(project);
-		}
-	}
-	
-	/**
-	 * Method which checks if the TreeNode is selected.
-	 * @param node is the current node.
-	 * @return empty String if the Node is not selcted, and return "   [SELECTED]" otherwise.
-	 */
-	private String isSelected(String node) {
-		if (getSelectedFiles().contains(node)) {
-			return "   [SELECTED]";
-		}
-		else {
-			return "";
 		}
 	}
 	
@@ -221,7 +192,6 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	public void addProjectToTree(String project) {
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode(project);
 		model.insertNodeInto(node, root, root.getChildCount());
-		xmlList.add(null);
 		expandTree();
 	}
 	
@@ -238,20 +208,6 @@ public class FileTree implements TreeSelectionListener, Serializable {
 				count++;
 			}
 		}
-	}
-	
-	/**
-	 * @return Arraylist of slected files.
-	 */
-	public ArrayList<String> getSelectedFiles() {
-		return selectedFiles;
-	}
-	
-	/**
-	 * @return the xmlList.
-	 */
-	public ArrayList<String> getXmlList() {
-		return xmlList;
 	}
 	
 	/**

@@ -232,13 +232,13 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		return selecter;
 	}
 
-	/**
-	 * @param f
-	 *            a 2D array of projects and files.
-	 */
-	public void setFolder(ArrayList<ArrayList<String>> f) {
-		folder = f;
-	}
+//	/**
+//	 * @param f
+//	 *            a 2D array of projects and files.
+//	 */
+//	public void setFolder(ArrayList<ArrayList<String>> f) {
+//		folder = f;
+//	}
 	
 	/**
 	 * @return the XML editor.

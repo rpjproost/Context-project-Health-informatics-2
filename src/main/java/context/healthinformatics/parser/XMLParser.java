@@ -133,9 +133,9 @@ public class XMLParser extends Parser {
 	 */
 	public void createDatabase() {
 		try {
-			createTableDb();
-			for (Parser parser : parsers) {
-				parser.parse();
+			for (int i = 0; i < parsers.size(); i++) {
+				createTableDb(documents.get(i));
+				parsers.get(i).parse();
 			}
 		} catch (SQLException | IOException e) {
 			// TODO exception
@@ -194,15 +194,16 @@ public class XMLParser extends Parser {
 
 	/**
 	 * creates a table in the database for the file to parse.
+	 * @param xmlDocument 
 	 * 
 	 * @throws SQLException
 	 *             throws this if the table could not be created. This probably
 	 *             is due to the fact that the table already exists.
 	 */
-	private void createTableDb() throws SQLException {
+	private void createTableDb(XMLDocument xmlDocument) throws SQLException {
 		Db data = SingletonDb.getDb();
 		try {
-			data.createTable(docName, columns);
+			data.createTable(xmlDocument.getDocName(), xmlDocument.getColumns());
 		} catch (SQLException e) {
 			throw new SQLException("The Table could not be created.");
 		}

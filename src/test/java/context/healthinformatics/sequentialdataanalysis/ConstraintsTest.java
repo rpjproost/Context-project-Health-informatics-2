@@ -105,6 +105,7 @@ public class ConstraintsTest {
 	public void testValueIntConstraint() throws Exception {
 		xmlp = new XMLParser(path + "constraintsxml.xml");
 		xmlp.parse();
+		xmlp.createDatabase();
 		cs = new Constraints(cList2, "date");
 		cs.constraint("2014-01-03", "<", "stat");
 		

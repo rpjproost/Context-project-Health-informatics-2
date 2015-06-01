@@ -64,6 +64,7 @@ public class MergeTableTest {
 	public void mergeTableTest() throws IOException, SQLException {
 		xmlp = new XMLParser(path + "twoDocs.xml");
 		xmlp.parse();
+		xmlp.createDatabase();
 		final int res = 209;
 		String[] clause = new String[1];
 		clause[0] = "StatSensor.value = 209";
@@ -93,6 +94,7 @@ public class MergeTableTest {
 	public void checkDateTest() throws IOException, SQLException {
 		xmlp = new XMLParser(path + "twoDocs.xml");
 		xmlp.parse();
+		xmlp.createDatabase();
 		String[] clause = new String[1];
 		clause[0] = "StatSensor.value = 209";
 		MergeTable test = new MergeTable();
@@ -116,7 +118,7 @@ public class MergeTableTest {
 	public void mergeViewTest() throws IOException, SQLException {
 		xmlp = new XMLParser(path + "twoDocs.xml");
 		xmlp.parse();
-		
+		xmlp.createDatabase();
 		String[] clause = new String[1];
 		clause[0] = "StatSensor.value = 209";
 		
@@ -175,6 +177,7 @@ public class MergeTableTest {
 	public void mergeTest() throws IOException, SQLException {
 		xmlp = new XMLParser(path + "twoDocs.xml");
 		xmlp.parse();
+		xmlp.createDatabase();
 		String[] clause = new String[1];
 		clause[0] = "StatSensor.value = 209";
 		MergeTable test = new MergeTable();
@@ -214,6 +217,7 @@ public class MergeTableTest {
 	public void testChunkArray() throws IOException, SQLException {
 		xmlp = new XMLParser(path + "twoDocs.xml");
 		xmlp.parse();
+		xmlp.createDatabase();
 		String[] clause = new String[1];
 		clause[0] = "HospitalRecords.Groep = 2";
 		MergeTable test = new MergeTable();
