@@ -1,6 +1,7 @@
 package context.healthinformatics.gui;
 
 import javax.swing.JComboBox;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import context.healthinformatics.parser.Column;
@@ -13,6 +14,7 @@ public class ColumnFieldContainer {
 	private JTextField columnName;
 	private JComboBox<String> columnType;
 	private JTextField dateType;
+	private JPanel panel;
 	private String[] comboBoxValues = { "String", "Int", "Date" };
 
 	/**
@@ -31,6 +33,34 @@ public class ColumnFieldContainer {
 		if (hasDateType(column.getColumnType())) {
 			this.dateType = new JTextField(column.getDateType());
 		}
+	}
+
+	/**
+	 * Set the panel of this columnfields.
+	 * 
+	 * @param panel
+	 *            the panel
+	 */
+	public void setPanel(JPanel panel) {
+		this.panel = panel;
+	}
+
+	/**
+	 * Check if columnfield has a panel.
+	 * 
+	 * @return true if panel is set
+	 */
+	public boolean hasPanel() {
+		return this.panel != null;
+	}
+
+	/**
+	 * Get the current panel.
+	 * 
+	 * @return the panel of this fields
+	 */
+	public JPanel getPanel() {
+		return panel;
 	}
 
 	/**

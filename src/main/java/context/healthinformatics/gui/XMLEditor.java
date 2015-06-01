@@ -2,10 +2,8 @@ package context.healthinformatics.gui;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
-import java.awt.Insets;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -55,7 +53,7 @@ public class XMLEditor extends InterfaceHelper {
 		containerScrollPanel = createContainerPanel();
 		extraContainer.add(containerScrollPanel, setGrids(0, 0));
 		extraContainer.add(makeFormRowWithButton(new JButton(
-				"Create new Document")), setGrids(0, 1, MARGINTOP));
+				"Create new Document"), new JButton("Remove Document")), setGrids(0, 1, MARGINTOP));
 		numberOfXMLDocuments = 0;
 		scrollPane = makeScrollPaneForContainerPanel(extraContainer);
 	}
@@ -63,17 +61,19 @@ public class XMLEditor extends InterfaceHelper {
 	/**
 	 * Create a row with a single button to add columns.
 	 * 
-	 * @param button
-	 *            the button
+	 * @param buttonLeft
+	 *            the button on the left side of the panel
+	 * @param buttonRight
+	 *            the button on the right side of the panel
 	 * @return the panel with white space and the button
 	 */
-	public JPanel makeFormRowWithButton(JButton button) {
+	public JPanel makeFormRowWithButton(JButton buttonLeft, JButton buttonRight) {
 		JPanel buttonPanel = createPanel(Color.WHITE, FORMELEMENTWIDTH,
 				BUTTONHEIGHT);
 		buttonPanel.setLayout(new GridLayout(1, THREE));
+		buttonPanel.add(buttonLeft);
 		buttonPanel.add(new JPanel());
-		buttonPanel.add(new JPanel());
-		buttonPanel.add(button);
+		buttonPanel.add(buttonRight);
 		return buttonPanel;
 	}
 
@@ -95,7 +95,8 @@ public class XMLEditor extends InterfaceHelper {
 	 *            the xmldocument which is read
 	 */
 	public void addXMLDocumentToContainerScrollPanel(XMLDocument xmlDocument) {
-		documentFieldsContainers.add(new DocumentFieldsContainer(xmlDocument));
+		documentFieldsContainers.add(new DocumentFieldsContainer(xmlDocument,
+				this));
 		containerScrollPanel.add(createDocumentPanel(documentFieldsContainers
 				.get(numberOfXMLDocuments)),
 				setGrids(0, numberOfXMLDocuments, MARGINTOP));
@@ -156,8 +157,11 @@ public class XMLEditor extends InterfaceHelper {
 		JPanel columnFormPanel = documentFieldContainer.getColumnFormPanel();
 		ArrayList<ColumnFieldContainer> columnsOfDocument = documentFieldContainer
 				.getColumnFields();
-		columnFormPanel.add(makeFormRowWithButton(documentFieldContainer
-				.getAddColumnButton()), setGrids(0, 1));
+		columnFormPanel.add(
+				makeFormRowWithButton(
+						documentFieldContainer.getAddColumnButton(),
+						documentFieldContainer.getRemoveColumnButton()),
+				setGrids(0, 0));
 		for (int i = 0; i < columnsOfDocument.size(); i++) {
 			columnFormPanel.add(createColumnForm(columnsOfDocument.get(i)),
 					setGrids(0, i + 1));
@@ -255,6 +259,7 @@ public class XMLEditor extends InterfaceHelper {
 		}
 		JPanel containerPanel = createPanel(Color.WHITE, FORMELEMENTWIDTH,
 				width);
+		currentColumnFieldContainer.setPanel(containerPanel);
 		containerPanel.add(
 				makeFormRowWithTextField("Column id: ",
 						currentColumnFieldContainer.getColumnID()),

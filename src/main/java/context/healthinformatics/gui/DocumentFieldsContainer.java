@@ -16,7 +16,8 @@ import context.healthinformatics.writer.XMLDocument;
 /**
  * Class to keep track of all fields of a document for the form.
  */
-public class DocumentFieldsContainer implements ActionListener {
+public class DocumentFieldsContainer extends InterfaceHelper implements
+		ActionListener {
 	private JTextField documentName;
 	private JComboBox<String> documentType;
 	private JTextField documentPath;
@@ -25,8 +26,11 @@ public class DocumentFieldsContainer implements ActionListener {
 	private JTextField delimiter;
 	private ArrayList<ColumnFieldContainer> columnFields;
 	private String[] doctypes = { "Excel", "txt/csv" };
+
 	private JPanel columnFormPanel;
 	private JButton addColumnButton = new JButton("Add new Column");
+	private JButton removeColumnButton = new JButton("Remove column");
+	private XMLEditor xmledit;
 
 	/**
 	 * Build a DocumentField container with a XMLDocument.
@@ -34,9 +38,11 @@ public class DocumentFieldsContainer implements ActionListener {
 	 * @param xmlDoc
 	 *            the xml document
 	 */
-	public DocumentFieldsContainer(XMLDocument xmlDoc) {
+	public DocumentFieldsContainer(XMLDocument xmlDoc, XMLEditor xmledit) {
+		this.xmledit = xmledit;
 		columnFormPanel = new JPanel();
 		addColumnButton.addActionListener(this);
+		removeColumnButton.addActionListener(this);
 		columnFormPanel.setLayout(new GridBagLayout());
 		this.documentName = new JTextField(xmlDoc.getDocName());
 		this.documentType = new JComboBox<>(doctypes);
@@ -65,6 +71,15 @@ public class DocumentFieldsContainer implements ActionListener {
 	 */
 	public JButton getAddColumnButton() {
 		return addColumnButton;
+	}
+
+	/**
+	 * Get the button to remove a column.
+	 * 
+	 * @return the button
+	 */
+	public JButton getRemoveColumnButton() {
+		return removeColumnButton;
 	}
 
 	/**
@@ -242,8 +257,19 @@ public class DocumentFieldsContainer implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		// if source is the button to add a new column
 		if (e.getSource() == addColumnButton) {
-			// jemoeder
-			System.out.println("HALL");
+			columnFields.size();
+			ColumnFieldContainer cfc = new ColumnFieldContainer(new Column(-1,
+					"", ""));
+			columnFields.add(cfc);
+			columnFormPanel.add(xmledit.createColumnForm(cfc),
+					setGrids(0, columnFields.size()));
+			columnFormPanel.revalidate();
+		} else if (e.getSource() == removeColumnButton) {
+			if (columnFields.size() > 0) {
+				ColumnFieldContainer cfc = columnFields.remove(columnFields
+						.size() - 1);
+				cfc.getPanel().setVisible(false);
+			}
 		}
 
 	}
