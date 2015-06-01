@@ -17,7 +17,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 
-import context.healthinformatics.parser.Column;
 import context.healthinformatics.writer.XMLDocument;
 
 /**
@@ -40,7 +39,6 @@ public class XMLEditor extends InterfaceHelper {
 	private static final int MARGINTOP = 10;
 
 	private static final int THREE = 3;
-	private static final int FOUR = 4;
 
 	private JPanel containerScrollPanel;
 	private int numberOfXMLDocuments;
@@ -56,11 +54,8 @@ public class XMLEditor extends InterfaceHelper {
 		JPanel extraContainer = createContainerPanel();
 		containerScrollPanel = createContainerPanel();
 		extraContainer.add(containerScrollPanel, setGrids(0, 0));
-		GridBagConstraints c = setGrids(0, 1);
-		// margin top
-		c.insets = new Insets(MARGINTOP, 0, 0, 0);
-		extraContainer.add(makeFormRowWithButton("Create new Document", null),
-				c);
+		extraContainer.add(makeFormRowWithButton(new JButton(
+				"Create new Document")), setGrids(0, 1, MARGINTOP));
 		numberOfXMLDocuments = 0;
 		scrollPane = makeScrollPaneForContainerPanel(extraContainer);
 	}
@@ -68,23 +63,17 @@ public class XMLEditor extends InterfaceHelper {
 	/**
 	 * Create a row with a single button to add columns.
 	 * 
-	 * @param nameButton1
-	 *            the name of the button
-	 * @param color
-	 *            the background color
+	 * @param button
+	 *            the button
 	 * @return the panel with white space and the button
 	 */
-	public JPanel makeFormRowWithButton(String nameButton1, Color color) {
+	public JPanel makeFormRowWithButton(JButton button) {
 		JPanel buttonPanel = createPanel(Color.WHITE, FORMELEMENTWIDTH,
 				BUTTONHEIGHT);
 		buttonPanel.setLayout(new GridLayout(1, THREE));
-		JPanel dummyPanel = new JPanel();
-		JPanel dummyPanel2 = new JPanel();
-		dummyPanel.setBackground(color);
-		dummyPanel2.setBackground(color);
-		buttonPanel.add(dummyPanel);
-		buttonPanel.add(dummyPanel2);
-		buttonPanel.add(new JButton(nameButton1));
+		buttonPanel.add(new JPanel());
+		buttonPanel.add(new JPanel());
+		buttonPanel.add(button);
 		return buttonPanel;
 	}
 
@@ -129,8 +118,8 @@ public class XMLEditor extends InterfaceHelper {
 	/**
 	 * Create a panel for a xml document.
 	 * 
-	 * @param xmlDocument
-	 *            the xml document which is loaded in
+	 * @param documentFieldContainer
+	 *            the container with the fields for the xml document
 	 * @return the panel with the added components
 	 */
 	public JPanel createDocumentPanel(
@@ -150,17 +139,30 @@ public class XMLEditor extends InterfaceHelper {
 					.add(createStandardTXTDocumentSettingFields(documentFieldContainer),
 							setGrids(0, 0));
 		}
-		// add all column fields
+		documentPanel.add(createColumnFormPanel(documentFieldContainer),
+				setGrids(0, 1));
+		return documentPanel;
+	}
+
+	/**
+	 * Add al columns to the panel for the columns.
+	 * 
+	 * @param documentFieldContainer
+	 *            the container
+	 * @return the panel with the columns
+	 */
+	public JPanel createColumnFormPanel(
+			DocumentFieldsContainer documentFieldContainer) {
+		JPanel columnFormPanel = documentFieldContainer.getColumnFormPanel();
 		ArrayList<ColumnFieldContainer> columnsOfDocument = documentFieldContainer
 				.getColumnFields();
-		documentPanel.add(
-				makeFormRowWithButton("Add extra Column", Color.WHITE),
-				setGrids(0, 1));
+		columnFormPanel.add(makeFormRowWithButton(documentFieldContainer
+				.getAddColumnButton()), setGrids(0, 1));
 		for (int i = 0; i < columnsOfDocument.size(); i++) {
-			documentPanel.add(createColumnForm(columnsOfDocument.get(i)),
-					setGrids(0, i + 2));
+			columnFormPanel.add(createColumnForm(columnsOfDocument.get(i)),
+					setGrids(0, i + 1));
 		}
-		return documentPanel;
+		return columnFormPanel;
 	}
 
 	/**
@@ -177,25 +179,11 @@ public class XMLEditor extends InterfaceHelper {
 		JPanel documentSettingsPanel = new JPanel();
 		documentSettingsPanel.setLayout(new GridBagLayout());
 		documentSettingsPanel.add(
-				makeFormRowWithTextField("Document name: ",
-						documentFieldContainer.getDocumentName()),
+				createStandardSettingFields(documentFieldContainer),
 				setGrids(0, 0));
 		documentSettingsPanel.add(
-				makeFormRowWithComboBox("Document type: ",
-						documentFieldContainer.getDocumentType()),
-				setGrids(0, 1));
-		documentSettingsPanel.add(
-				makeFormRowWithTextField("Document path: ",
-						documentFieldContainer.getDocumentPath()),
-				setGrids(0, 2));
-		documentSettingsPanel.add(
-				makeFormRowWithTextField("Document start line: ",
-						documentFieldContainer.getStartLine()),
-				setGrids(0, THREE));
-		documentSettingsPanel.add(
 				makeFormRowWithTextField("Document delimiter: ",
-						documentFieldContainer.getDelimiter()),
-				setGrids(0, FOUR));
+						documentFieldContainer.getDelimiter()), setGrids(0, 1));
 		return documentSettingsPanel;
 	}
 
@@ -214,25 +202,42 @@ public class XMLEditor extends InterfaceHelper {
 		JPanel documentSettingsPanel = new JPanel();
 		documentSettingsPanel.setLayout(new GridBagLayout());
 		documentSettingsPanel.add(
+				createStandardSettingFields(documentFieldContainer),
+				setGrids(0, 0));
+		documentSettingsPanel.add(
+				makeFormRowWithTextField("Document sheet: ",
+						documentFieldContainer.getSheet()), setGrids(0, 1));
+		return documentSettingsPanel;
+	}
+
+	/**
+	 * Create the setting fields which every document has.
+	 * 
+	 * @param documentFieldContainer
+	 *            the container of the elements
+	 * @return a panel with the fields
+	 */
+	public JPanel createStandardSettingFields(
+			DocumentFieldsContainer documentFieldContainer) {
+		JPanel standardSettingsPanel = new JPanel();
+		standardSettingsPanel.setLayout(new GridBagLayout());
+		standardSettingsPanel.add(
 				makeFormRowWithTextField("Document name: ",
 						documentFieldContainer.getDocumentName()),
 				setGrids(0, 0));
-		documentSettingsPanel.add(
+		standardSettingsPanel.add(
 				makeFormRowWithComboBox("Document type: ",
 						documentFieldContainer.getDocumentType()),
 				setGrids(0, 1));
-		documentSettingsPanel.add(
+		standardSettingsPanel.add(
 				makeFormRowWithTextField("Document path: ",
 						documentFieldContainer.getDocumentPath()),
 				setGrids(0, 2));
-		documentSettingsPanel.add(
+		standardSettingsPanel.add(
 				makeFormRowWithTextField("Document start line: ",
 						documentFieldContainer.getStartLine()),
 				setGrids(0, THREE));
-		documentSettingsPanel.add(
-				makeFormRowWithTextField("Document sheet: ",
-						documentFieldContainer.getSheet()), setGrids(0, FOUR));
-		return documentSettingsPanel;
+		return standardSettingsPanel;
 	}
 
 	/**

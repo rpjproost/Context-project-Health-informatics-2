@@ -1,8 +1,13 @@
 package context.healthinformatics.gui;
 
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import context.healthinformatics.parser.Column;
@@ -11,7 +16,7 @@ import context.healthinformatics.writer.XMLDocument;
 /**
  * Class to keep track of all fields of a document for the form.
  */
-public class DocumentFieldsContainer {
+public class DocumentFieldsContainer implements ActionListener {
 	private JTextField documentName;
 	private JComboBox<String> documentType;
 	private JTextField documentPath;
@@ -20,6 +25,8 @@ public class DocumentFieldsContainer {
 	private JTextField delimiter;
 	private ArrayList<ColumnFieldContainer> columnFields;
 	private String[] doctypes = { "Excel", "txt/csv" };
+	private JPanel columnFormPanel;
+	private JButton addColumnButton = new JButton("Add new Column");
 
 	/**
 	 * Build a DocumentField container with a XMLDocument.
@@ -28,6 +35,9 @@ public class DocumentFieldsContainer {
 	 *            the xml document
 	 */
 	public DocumentFieldsContainer(XMLDocument xmlDoc) {
+		columnFormPanel = new JPanel();
+		addColumnButton.addActionListener(this);
+		columnFormPanel.setLayout(new GridBagLayout());
 		this.documentName = new JTextField(xmlDoc.getDocName());
 		this.documentType = new JComboBox<>(doctypes);
 		this.documentType
@@ -37,6 +47,24 @@ public class DocumentFieldsContainer {
 		initSheetOrDelimiterField(xmlDoc.getDocType(), xmlDoc);
 		columnFields = new ArrayList<ColumnFieldContainer>();
 		initColumns(xmlDoc.getColumns());
+	}
+
+	/**
+	 * Get the Panel for the form.
+	 * 
+	 * @return the panel for the columns.
+	 */
+	public JPanel getColumnFormPanel() {
+		return columnFormPanel;
+	}
+
+	/**
+	 * Get the button to add a column.
+	 * 
+	 * @return the button
+	 */
+	public JButton getAddColumnButton() {
+		return addColumnButton;
 	}
 
 	/**
@@ -208,6 +236,16 @@ public class DocumentFieldsContainer {
 	 */
 	public ArrayList<ColumnFieldContainer> getColumnFields() {
 		return columnFields;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// if source is the button to add a new column
+		if (e.getSource() == addColumnButton) {
+			// jemoeder
+			System.out.println("HALL");
+		}
+
 	}
 
 }
