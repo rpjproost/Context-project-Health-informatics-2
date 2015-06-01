@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -13,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import context.healthinformatics.parser.XMLParser;
 import context.healthinformatics.writer.XMLDocument;
 
 /**
@@ -267,23 +269,66 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 * @param files all files that should be added.
 	 */
 	protected void openFiles(File[] files) {
-		for (int i = 0; i < files.length; i++) {			
-			addDocumentAndShowInEditor(files[i].getPath());
-			addFile(files[i].getName());
+		for (int i = 0; i < files.length; i++) {
+			String path = files[i].getPath();
+			if (!path.endsWith("xml")) {
+				addDocumentAndShowInEditor(path);
+				addFile(files[i].getName());
+			} else {
+				addXmlFile(path);
+			}
 		}
 	}
 	
+	/**
+	 * Adds a xml file to the file tree and to the editor.
+	 * @param path the source of the xml file.
+	 */
+	private void addXmlFile(String path) {
+		XMLParser parser = new XMLParser(path);
+		try {
+			parser.parse();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		ArrayList<XMLDocument> internDocs = parser.getDocuments();
+		for (int i = 0; i < internDocs.size(); i++) {
+			XMLDocument current = internDocs.get(i);
+			addDocumentAndShowInEditor(current);
+			addFile(obtainFileName(current.getPath()));
+		}
+	}
+
 	/**
 	 * Adds the file with a path to all documents.
 	 * @param path the path to a file.
 	 */
 	private void addDocumentAndShowInEditor(String path) {
-		if (xmlController.getDocument(path) == null) {
-			XMLDocument current = new XMLDocument();
-			current.setPath(path);
-			xmlController.addDocument(current);
-			xmledit.addXMLDocumentToContainerScrollPanel(current);
+		XMLDocument current = new XMLDocument();
+		current.setPath(path);
+		addDocumentAndShowInEditor(current);
+	}
+	
+	/**
+	 * Adds document to all documents and show it,
+	 * if it isn't already loaded.
+	 * @param doc the xml document to be added.
+	 */
+	private void addDocumentAndShowInEditor(XMLDocument doc) {
+		if (xmlController.getDocument(doc.getPath()) == null) {
+			xmlController.addDocument(doc);
+			xmledit.addXMLDocumentToContainerScrollPanel(doc);
 		}
+	}
+	
+	/**
+	 * Splits a path string and obtain only the file name.
+	 * @param path the source path of a file.
+	 * @return only the file name.
+	 */
+	private String obtainFileName(String path) {
+		String[] split = path.split("/");
+		return split[split.length - 1];
 	}
 
 	/**

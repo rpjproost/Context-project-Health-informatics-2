@@ -47,16 +47,19 @@ public class XMLDocument {
 
 	/**
 	 * Creates an empty XMLDocument.
-	 * Integers are set to -1, String to "" and other objects null.
+	 * Integers are set to 1, String to "" and column is auto-generated with one date column.
 	 */
 	public XMLDocument() {
-		this.startLine = -1;
-		this.sheet = -1;
+		this.startLine = 1;
+		this.sheet = 1;
 		this.docType = "";
 		this.docName = "";
 		this.path = "";
 		this.delimiter = "";
+		Column c = new Column(0, "date", "Date");
+		c.setDateType("");
 		this.columns = new ArrayList<Column>();
+		columns.add(c);
 	}
 
 	/**
