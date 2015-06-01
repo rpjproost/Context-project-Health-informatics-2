@@ -7,8 +7,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.io.Serializable;
 import java.util.ArrayList;
-
-import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -158,61 +156,6 @@ public class FileTree implements TreeSelectionListener, Serializable {
 				&& !node.getParent().equals(getRoot())) {
 			String selected = node.getUserObject().toString();
 			selectNode(selected, node);
-		}
-	}
-	
-	/**
-	 * Method which asks the user for an xml file and updates the tree.
-	 * @param node is the selected treeNode.
-	 */
-	public void addXmlFile(DefaultMutableTreeNode node) {
-		askUserForXml(node);
-		model.nodeStructureChanged(node.getParent());
-	}
-	
-	/**
-	 * Method which asks the user.
-	 * @param node is the node that is selected.
-	 */
-	private void askUserForXml(DefaultMutableTreeNode node) {
-		if (ip.openFileChooser() == JFileChooser.APPROVE_OPTION) {
-		    String path = ip.getFileSelecter().getSelectedFile().toString();
-			if (!path.equals("")) {
-				setProjectNodeToSelected(path, node);
-			}
-		}
-		ip.getFileSelecter().setVisible(false);
-	}
-	
-	/**
-	 * Set the selected projectNode to Set.
-	 * @param path is the entered XML file path.
-	 * @param node is the selected TreeNode.
-	 */
-	private void setProjectNodeToSelected(String path, DefaultMutableTreeNode node) {
-		DefaultMutableTreeNode projectNode = (DefaultMutableTreeNode) node
-	    		.getParent();
-		String temp = projectNode.getUserObject().toString();
-		String project = checkProjectNodeString(temp);
-	    int c = ip.findFolderProject(project);
-		if (getXmlList().get(c) == null) {
-			projectNode.setUserObject(projectNode.getUserObject()
-					.toString() + "   [SET]");
-		}
-		getXmlList().set(c, path);
-	}
-	
-	/**
-	 * Check the string of the projectNode.
-	 * @param string is the string of the selected TreeNode.
-	 * @return the string of the projectNode.
-	 */
-	private String checkProjectNodeString(String string) {
-		if (string.length() > EIGHT && string.substring(
-				string.length() - EIGHT).equals("   [SET]")) {
-			return string.substring(0, string.length() - EIGHT);
-		} else {
-			return string;
 		}
 	}
 	
