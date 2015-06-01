@@ -211,15 +211,16 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 * Method which adds a project to the folder and FileTree.
 	 */
 	public void addFile() {
-		if (folder.size() != 0 && !ipc.getTextArea().getText().equals("")) {
-			String text = ipc.getTextArea().getText();
-			int project = findFolderProject((String) ipc.getComboBox()
-					.getSelectedItem());
+		String text = ipc.getTextArea().getText();
+		int project = findFolderProject((String) ipc.getComboBox()
+				.getSelectedItem());
+		if (folder.size() > 0 && project >= 0 && !text.equals("")
+				&& !folder.get(project).contains(text)) {
 			folder.get(project).add(text);
 			ft.addFileToTree(project, text);
 		} else {
 			JOptionPane.showMessageDialog(null,
-					"No project created yet, or no file specified!");
+					"No project created yet, or no file specified, or file already in project!");
 		}
 	}
 
