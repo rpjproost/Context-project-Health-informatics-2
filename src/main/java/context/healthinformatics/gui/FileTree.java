@@ -277,6 +277,7 @@ public class FileTree implements TreeSelectionListener, Serializable {
 		model.insertNodeInto(newNode,
 				(MutableTreeNode) root.getChildAt(project)
 				, root.getChildAt(project).getChildCount());
+		expandTree();
 	}
 	
 	/**
@@ -287,8 +288,22 @@ public class FileTree implements TreeSelectionListener, Serializable {
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode(project);
 		model.insertNodeInto(node, root, root.getChildCount());
 		xmlList.add(null);
+		expandTree();
+	}
+	
+	/**
+	 * Expand all paths of the tree.
+	 */
+	public void expandTree() {
 		tree.expandRow(0);
-		tree.expandRow(root.getChildCount() + root.getLeafCount() - 1);
+		int count = 1;
+		for (int i = 0; i < ip.getFolder().size(); i++) {
+			tree.expandRow(count);
+			count++;
+			for (int j = 0; j < ip.getFolder().get(i).size(); j++) {
+				count++;
+			}
+		}
 	}
 	
 	/**
