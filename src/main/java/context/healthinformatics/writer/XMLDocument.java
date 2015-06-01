@@ -57,7 +57,7 @@ public class XMLDocument {
 		this.path = "";
 		this.delimiter = "";
 		Column c = new Column(0, "date", "Date");
-		c.setDateType("");
+		c.setDateType("yyMMdd");
 		this.columns = new ArrayList<Column>();
 		columns.add(c);
 	}

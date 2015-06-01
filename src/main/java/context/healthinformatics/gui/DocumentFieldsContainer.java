@@ -18,6 +18,9 @@ import context.healthinformatics.writer.XMLDocument;
  */
 public class DocumentFieldsContainer extends InterfaceHelper implements
 		ActionListener {
+
+	private static final long serialVersionUID = 1L;
+
 	private JTextField documentName;
 	private JComboBox<String> documentType;
 	private JTextField documentPath;
@@ -37,6 +40,8 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	 * 
 	 * @param xmlDoc
 	 *            the xml document
+	 * @param xmledit
+	 *            the xml editor
 	 */
 	public DocumentFieldsContainer(XMLDocument xmlDoc, XMLEditor xmledit) {
 		this.xmledit = xmledit;
@@ -53,33 +58,6 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 		initSheetOrDelimiterField(xmlDoc.getDocType(), xmlDoc);
 		columnFields = new ArrayList<ColumnFieldContainer>();
 		initColumns(xmlDoc.getColumns());
-	}
-
-	/**
-	 * Get the Panel for the form.
-	 * 
-	 * @return the panel for the columns.
-	 */
-	public JPanel getColumnFormPanel() {
-		return columnFormPanel;
-	}
-
-	/**
-	 * Get the button to add a column.
-	 * 
-	 * @return the button
-	 */
-	public JButton getAddColumnButton() {
-		return addColumnButton;
-	}
-
-	/**
-	 * Get the button to remove a column.
-	 * 
-	 * @return the button
-	 */
-	public JButton getRemoveColumnButton() {
-		return removeColumnButton;
 	}
 
 	/**
@@ -106,7 +84,7 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	 */
 	public void initColumns(ArrayList<Column> cols) {
 		for (int i = 0; i < cols.size(); i++) {
-			columnFields.add(new ColumnFieldContainer(cols.get(i)));
+			columnFields.add(new ColumnFieldContainer(cols.get(i), xmledit));
 		}
 	}
 
@@ -253,13 +231,39 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 		return columnFields;
 	}
 
+	/**
+	 * Get the Panel for the form.
+	 * 
+	 * @return the panel for the columns.
+	 */
+	public JPanel getColumnFormPanel() {
+		return columnFormPanel;
+	}
+
+	/**
+	 * Get the button to add a column.
+	 * 
+	 * @return the button
+	 */
+	public JButton getAddColumnButton() {
+		return addColumnButton;
+	}
+
+	/**
+	 * Get the button to remove a column.
+	 * 
+	 * @return the button
+	 */
+	public JButton getRemoveColumnButton() {
+		return removeColumnButton;
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// if source is the button to add a new column
 		if (e.getSource() == addColumnButton) {
 			columnFields.size();
 			ColumnFieldContainer cfc = new ColumnFieldContainer(new Column(-1,
-					"", ""));
+					"", ""), xmledit);
 			columnFields.add(cfc);
 			columnFormPanel.add(xmledit.createColumnForm(cfc),
 					setGrids(0, columnFields.size()));

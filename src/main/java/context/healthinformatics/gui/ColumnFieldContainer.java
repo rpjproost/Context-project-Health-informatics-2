@@ -1,5 +1,9 @@
 package context.healthinformatics.gui;
 
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -9,59 +13,51 @@ import context.healthinformatics.parser.Column;
 /**
  * Class which contains all field for a column form element.
  */
-public class ColumnFieldContainer {
+public class ColumnFieldContainer extends InterfaceHelper implements
+		ActionListener {
+	private static final long serialVersionUID = 1L;
+	
 	private JTextField columnID;
 	private JTextField columnName;
 	private JComboBox<String> columnType;
 	private JTextField dateType;
 	private JPanel panel;
 	private String[] comboBoxValues = { "String", "Int", "Date" };
+	private XMLEditor xmledit;
+	private String comboValue;
+	private JPanel dateTypePanel;
+
+	private static final int FORMELEMENTWIDTH = 800;
+	private static final int FORMELEMENTHEIGHT = 25;
+	private static final int FORMHEIGHT = 75;
+	private static final int THREE = 3;
+
+	
 
 	/**
 	 * Constructor of the columnFieldContainer based on the input Column.
 	 * 
 	 * @param column
 	 *            the column
+	 * @param xmledit
+	 *            the xml editor
 	 */
-	public ColumnFieldContainer(Column column) {
+	public ColumnFieldContainer(Column column, XMLEditor xmledit) {
+		this.xmledit = xmledit;
 		this.columnID = new JTextField(Integer.toString(column
 				.getColumnNumber()));
 		this.columnName = new JTextField(column.getColumnName());
 		this.columnType = new JComboBox<>(comboBoxValues);
-		this.columnType.setSelectedIndex(getComboBoxIndex(column
-				.getColumnType()));
+		this.comboValue = column.getColumnType();
+		this.columnType.setSelectedIndex(getComboBoxIndex(comboValue));
+		this.columnType.addActionListener(this);
 		if (hasDateType(column.getColumnType())) {
 			this.dateType = new JTextField(column.getDateType());
+		} else {
+			this.dateType = new JTextField("");
 		}
 	}
 
-	/**
-	 * Set the panel of this columnfields.
-	 * 
-	 * @param panel
-	 *            the panel
-	 */
-	public void setPanel(JPanel panel) {
-		this.panel = panel;
-	}
-
-	/**
-	 * Check if columnfield has a panel.
-	 * 
-	 * @return true if panel is set
-	 */
-	public boolean hasPanel() {
-		return this.panel != null;
-	}
-
-	/**
-	 * Get the current panel.
-	 * 
-	 * @return the panel of this fields
-	 */
-	public JPanel getPanel() {
-		return panel;
-	}
 
 	/**
 	 * Check if a column has a date type.
@@ -122,7 +118,7 @@ public class ColumnFieldContainer {
 	 * @return true if has date type
 	 */
 	public boolean hasDateType() {
-		return dateType != null;
+		return !dateType.getText().equals("");
 	}
 
 	/**
@@ -199,5 +195,77 @@ public class ColumnFieldContainer {
 	 */
 	public JTextField getDateType() {
 		return dateType;
+	}
+	
+
+	/**
+	 * Set the panel of this columnfields.
+	 * 
+	 * @param panel
+	 *            the panel
+	 */
+	public void setPanel(JPanel panel) {
+		this.panel = panel;
+	}
+
+	/**
+	 * Check if columnfield has a panel.
+	 * 
+	 * @return true if panel is set
+	 */
+	public boolean hasPanel() {
+		return this.panel != null;
+	}
+
+	/**
+	 * Get the current panel.
+	 * 
+	 * @return the panel of this fields
+	 */
+	public JPanel getPanel() {
+		return panel;
+	}
+	
+	/**
+	 * @return the dateTypePanel
+	 */
+	public JPanel getDateTypePanel() {
+		return dateTypePanel;
+	}
+
+	/**
+	 * @param dateTypePanel
+	 *            the dateTypePanel to set
+	 */
+	public void setDateTypePanel(JPanel dateTypePanel) {
+		this.dateTypePanel = dateTypePanel;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == columnType) {
+			String selectedItem = columnType.getSelectedItem().toString();
+			if (selectedItem.equals("Date")
+					&& !comboValue.toLowerCase().equals("date")) {
+				comboValue = selectedItem;
+				// private static final int FORMELEMENTWIDTH = 800;
+				// private static final int FORMELEMENTHEIGHT = 25;
+				panel.setPreferredSize(new Dimension(FORMELEMENTWIDTH,
+						FORMHEIGHT + FORMELEMENTHEIGHT));
+				dateTypePanel = xmledit.makeFormRowWithTextField(
+						"Specified datetype: ", getDateType());
+				panel.add(dateTypePanel, setGrids(0, THREE));
+				panel.revalidate();
+			} else if (selectedItem.equals("Int")
+					|| selectedItem.equals("String")
+					&& comboValue.toLowerCase().equals("date")) {
+				comboValue = selectedItem;
+				panel.setPreferredSize(new Dimension(FORMELEMENTWIDTH,
+						FORMHEIGHT));
+				dateTypePanel.setVisible(false);
+				panel.revalidate();
+
+			}
+		}
 	}
 }

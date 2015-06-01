@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.Toolkit;
 
 import javax.swing.JButton;
@@ -13,17 +14,17 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
 /**
- * Class that defines the most methods that are needed in
- * several interface classes.
+ * Class that defines the most methods that are needed in several interface
+ * classes.
  */
 public class InterfaceHelper extends JPanel {
-	
+
 	private static final long serialVersionUID = 1L;
 	private int tabsX;
 	private static final int TABSY = 120;
 	private static final int TABTEXTFONTSIZE = 40;
 	private static final int TEXTSIZE = 20;
-	
+
 	/**
 	 * @return JPanel with attributes specified by the arguments.
 	 * @param color
@@ -42,11 +43,13 @@ public class InterfaceHelper extends JPanel {
 		tempPanel.setLayout(new GridBagLayout());
 		return tempPanel;
 	}
-	
+
 	/**
 	 * @return a panel which represents a tab indicating one of the states.
-	 * @param tabName is the name of the tab.
-	 * @param col is  the color of the tab.
+	 * @param tabName
+	 *            is the name of the tab.
+	 * @param col
+	 *            is the color of the tab.
 	 */
 	protected JPanel createTab(String tabName, Color col) {
 		JPanel page = createPanel(col, tabsX, TABSY);
@@ -55,25 +58,33 @@ public class InterfaceHelper extends JPanel {
 		page.add(label);
 		return page;
 	}
-	
+
 	/**
 	 * Set the gridbag location of a Component with margin top.
-	 * @param x coordinate.
-	 * @param y coordinate.
-	 * @param marginTop let gridbag marge top.
+	 * 
+	 * @param x
+	 *            coordinate.
+	 * @param y
+	 *            coordinate.
+	 * @param marginTop
+	 *            let gridbag marge top.
 	 * @return the location for the Component.
 	 */
 	protected GridBagConstraints setGrids(int x, int y, int marginTop) {
 		GridBagConstraints c = new GridBagConstraints();
+		c.insets = new Insets(marginTop, 0, 0, 0);
 		c.gridx = x;
 		c.gridy = y;
 		return c;
 	}
-	
+
 	/**
 	 * Set the gridbag location of a Component.
-	 * @param x coordinate.
-	 * @param y coordinate.
+	 * 
+	 * @param x
+	 *            coordinate.
+	 * @param y
+	 *            coordinate.
 	 * @return the location for the Component.
 	 */
 	protected GridBagConstraints setGrids(int x, int y) {
@@ -82,12 +93,15 @@ public class InterfaceHelper extends JPanel {
 		c.gridy = y;
 		return c;
 	}
-	
+
 	/**
-	 * Creates a text area with a specified width and height.
-	 * default font is Arial with letter size 20.
-	 * @param fieldwidth the width of the text area.
-	 * @param fieldheight the height of the text area.
+	 * Creates a text area with a specified width and height. default font is
+	 * Arial with letter size 20.
+	 * 
+	 * @param fieldwidth
+	 *            the width of the text area.
+	 * @param fieldheight
+	 *            the height of the text area.
 	 * @return new text field area.
 	 */
 	protected JTextArea createTextField(int fieldwidth, int fieldheight) {
@@ -96,13 +110,17 @@ public class InterfaceHelper extends JPanel {
 		area.setFont(new Font("Arial", Font.PLAIN, TEXTSIZE));
 		return area;
 	}
-	
+
 	/**
-	 * Creates a button width a specified name width and height.
-	 * Default font is Arial with letter size 20.
-	 * @param name the text in the button.
-	 * @param width of the button.
-	 * @param height of the button.
+	 * Creates a button width a specified name width and height. Default font is
+	 * Arial with letter size 20.
+	 * 
+	 * @param name
+	 *            the text in the button.
+	 * @param width
+	 *            of the button.
+	 * @param height
+	 *            of the button.
 	 * @return a new button with no actionhandler.
 	 */
 	protected JButton createButton(String name, int width, int height) {
@@ -111,29 +129,31 @@ public class InterfaceHelper extends JPanel {
 		button.setFont(new Font("Arial", Font.PLAIN, TEXTSIZE));
 		return button;
 	}
-	
+
 	/**
 	 * set the width of the tabs.
-	 * @param i the new width.
+	 * 
+	 * @param i
+	 *            the new width.
 	 */
 	protected void setTabX(int i) {
 		tabsX = i;
 	}
-	
+
 	/**
 	 * @return the width of the tabs.
 	 */
 	protected int getTabsX() {
 		return tabsX;
 	}
-	
+
 	/**
 	 * @return the height of the tabs.
 	 */
 	protected int getTabsY() {
 		return TABSY;
 	}
-	
+
 	/**
 	 * @return the width of the users screen.
 	 */
@@ -141,7 +161,7 @@ public class InterfaceHelper extends JPanel {
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		return screenSize.width;
 	}
-	
+
 	/**
 	 * @return the height of the state panel.
 	 */
