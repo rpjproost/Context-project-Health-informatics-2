@@ -21,11 +21,11 @@ public class Constraints extends Task {
 	public Constraints(ArrayList<Chunk> chunks) {
 		setChunks(chunks);
 	}
-	
+
 	/**
 	 * Constructor Constraints without workspace previously set.
 	 */
-	public Constraints() {}
+	public Constraints() { }
 
 	/**
 	 * Constructor Constraints.
@@ -191,6 +191,69 @@ public class Constraints extends Task {
 	}
 
 	/**
+	 * Checks current arraylist on constraint on data.
+	 * @param whereClause sql clause over data.
+	 * @param tableName table where data is stored.
+	 * @return filtered arraylist.
+	 * @throws SQLException iff sql could not be executed.
+	 */
+	public ArrayList<Chunk> constraintOnData(String whereClause, String tableName) 
+			throws SQLException {
+		ArrayList<Chunk> res = new ArrayList<Chunk>();
+		ArrayList<Chunk> chunks = getChunks();
+		ArrayList<Integer> ints = getLinesFromData(whereClause);
+		for (int i = 0; i < chunks.size(); i++) {
+			Chunk curChunk = chunks.get(i);
+			checkConstraintOnData(curChunk, ints, res);
+		}
+		return res;
+	}
+
+	/**
+	 * Checks if chunk passes constraint.
+	 * @param curChunk Chunk to be checked.
+	 * @param ints list of ints of chunks that should pass.
+	 * @param res arrayList to return.
+	 */
+	public void checkConstraintOnData(Chunk curChunk, ArrayList<Integer> ints, 
+			ArrayList<Chunk> res) {
+		if (ints.contains(curChunk.getLine())) {
+			res.add(curChunk);
+		}
+		else {
+			if (curChunk.hasChild()) {
+				checkChildsOnData(curChunk, curChunk.getChunks(), ints, res);
+			}	
+		}
+	}
+
+	/**
+	 * Remove childs from resul arraylist if they do not pass constraint.
+	 * @param curChunk Chunk that has to be added to res if it passes constraint.
+	 * @param childs childs of currentChunk that are being checked.
+	 * @param ints list of ints of Chunks that should pass constraint.
+	 * @param res result arrayList to be returned.
+	 */
+	public void checkChildsOnData(Chunk curChunk, ArrayList<Chunk> childs,
+			ArrayList<Integer> ints, ArrayList<Chunk> res) {
+		for (int i = 0; i < childs.size(); i++) {
+			if (ints.contains(childs.get(i).getLine())) {
+				if (!res.contains(curChunk)) {
+					res.add(curChunk);
+				}
+			}
+			else {
+				if (childs.get(i).hasChild()) {
+					checkChildsOnData(curChunk, childs.get(i).getChunks(), ints, res);
+				}
+				else {
+					childs.remove(i);
+				}
+			}
+		}
+	}
+
+	/**
 	 * Constraint on a data value string.
 	 * 
 	 * @param value
@@ -269,6 +332,6 @@ public class Constraints extends Task {
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
