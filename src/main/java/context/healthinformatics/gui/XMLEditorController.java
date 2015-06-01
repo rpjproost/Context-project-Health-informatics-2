@@ -11,7 +11,6 @@ public class XMLEditorController {
 
 	private ArrayList<XMLDocument> allDocs;
 	private ArrayList<XMLDocument> selectedDocs;
-	private ArrayList<XMLDocument> docsShownInEditor;
 
 	/**
 	 * Constructor for the XMLEditorController.
@@ -19,7 +18,6 @@ public class XMLEditorController {
 	public XMLEditorController() {
 		allDocs = new ArrayList<XMLDocument>();
 		setSelectedDocs(new ArrayList<XMLDocument>());
-		docsShownInEditor = new ArrayList<XMLDocument>();
 	}
 	
 	/**

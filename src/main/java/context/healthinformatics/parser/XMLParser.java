@@ -47,6 +47,8 @@ public class XMLParser extends Parser {
 	public XMLParser(String fileName) {
 		super(fileName);
 		columns = new ArrayList<Column>();
+		documents = new ArrayList<XMLDocument>();
+		parsers = new ArrayList<Parser>();
 		startLine = 1;
 	}
 
