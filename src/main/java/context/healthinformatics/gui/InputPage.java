@@ -271,9 +271,12 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	protected void openFiles(File[] files) {
 		for (int i = 0; i < files.length; i++) {
 			String path = files[i].getPath();
+			XMLDocument currentDoc = makeDocument(path);
 			if (!path.endsWith("xml")) {
-				addDocumentAndShowInEditor(path);
-				addFile(files[i].getName());
+				if (xmlController.getDocument(path) == null) {
+					addDocumentAndShowInEditor(currentDoc);
+					addFile(files[i].getName());
+				}
 			} else {
 				addXmlFile(path);
 			}
@@ -295,18 +298,19 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		for (int i = 0; i < internDocs.size(); i++) {
 			XMLDocument current = internDocs.get(i);
 			addDocumentAndShowInEditor(current);
-			addFile(obtainFileName(current.getPath()));
+			addFile(xmlController.obtainFileName(current.getPath()));
 		}
 	}
 
 	/**
 	 * Adds the file with a path to all documents.
 	 * @param path the path to a file.
+	 * @return 
 	 */
-	private void addDocumentAndShowInEditor(String path) {
+	private XMLDocument makeDocument(String path) {
 		XMLDocument current = new XMLDocument();
 		current.setPath(path);
-		addDocumentAndShowInEditor(current);
+		return current;
 	}
 	
 	/**
@@ -315,20 +319,8 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 * @param doc the xml document to be added.
 	 */
 	private void addDocumentAndShowInEditor(XMLDocument doc) {
-		if (xmlController.getDocument(doc.getPath()) == null) {
-			xmlController.addDocument(doc);
-			xmledit.addXMLDocumentToContainerScrollPanel(doc);
-		}
-	}
-	
-	/**
-	 * Splits a path string and obtain only the file name.
-	 * @param path the source path of a file.
-	 * @return only the file name.
-	 */
-	private String obtainFileName(String path) {
-		String[] split = path.split("/");
-		return split[split.length - 1];
+		xmlController.addDocument(doc);
+		xmledit.addXMLDocumentToContainerScrollPanel(doc);
 	}
 
 	/**

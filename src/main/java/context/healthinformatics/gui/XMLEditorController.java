@@ -110,4 +110,15 @@ public class XMLEditorController {
 		}
 		return null;
 	}
+	
+
+	/**
+	 * Splits a path string and obtain only the file name.
+	 * @param path the source path of a file.
+	 * @return only the file name.
+	 */
+	public String obtainFileName(String path) {
+		String[] split = path.split("/");
+		return split[split.length - 1];
+	}
 }

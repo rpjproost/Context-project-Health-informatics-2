@@ -34,7 +34,7 @@ public class XMLParser extends Parser {
 	private int startLine;
 	private int sheet;
 	private ArrayList<Column> columns;
-	
+
 	private ArrayList<XMLDocument> documents;
 	private ArrayList<Parser> parsers;
 
@@ -121,8 +121,11 @@ public class XMLParser extends Parser {
 		setDelimiter(getString(e, "delimiter"));
 		setSheet(getInt(e, getString(e, "sheet")));
 		setDocType(getString(e, "doctype"));
-		parsers.add(getParser(getDocType()));
-		addDocument();
+		Parser parser = getParser(getDocType());
+		if (parser != null) {
+			parsers.add(parser);
+			addDocument();
+		}
 	}
 
 	/**
@@ -135,17 +138,18 @@ public class XMLParser extends Parser {
 				parser.parse();
 			}
 		} catch (SQLException | IOException e) {
-			//TODO exception
+			// TODO exception
 		}
 	}
-	
+
 	/**
-	 * Creates a xml Document object from the data
-	 * and adds it to a list of all of the entire document.
+	 * Creates a xml Document object from the data and adds it to a list of all
+	 * of the entire document.
 	 */
 	private void addDocument() {
-		XMLDocument current = new XMLDocument(getDocType(), getDocName(), 
-				getDelimiter(), getPath(), getStartLine(), getSheet(), getColumns());
+		XMLDocument current = new XMLDocument(getDocType(), getDocName(),
+				getDelimiter(), getPath(), getStartLine(), getSheet(),
+				getColumns());
 		documents.add(current);
 	}
 
@@ -171,25 +175,29 @@ public class XMLParser extends Parser {
 	 * @return The Parser with all settings.
 	 */
 	protected Parser getParser(String label) {
-		switch (label.toLowerCase()) {
-		case "text":
-			return new TXTParser(getPath(), getStartLine(), getDelimiter(),
-					getColumns(), getDocName());
-		case "excel":
-			return new ExcelParser(getPath(), getStartLine(), getColumns(),
-					getSheet(), getDocName());
-		case "csv":
-			return new TXTParser(getPath(), getStartLine(), ";", getColumns(),
-					getDocName());
-		default:
-			return null;
-		}
+		if (label != null) {
+			switch (label.toLowerCase()) {
+			case "text":
+				return new TXTParser(getPath(), getStartLine(), getDelimiter(),
+						getColumns(), getDocName());
+			case "excel":
+				return new ExcelParser(getPath(), getStartLine(), getColumns(),
+						getSheet(), getDocName());
+			case "csv":
+				return new TXTParser(getPath(), getStartLine(), ";",
+						getColumns(), getDocName());
+			default:
+				return null;
+			}
+		} return null;
 	}
 
 	/**
 	 * creates a table in the database for the file to parse.
-	 * @throws SQLException throws this if the table could not be created.
-	 * This probably is due to the fact that the table already exists.
+	 * 
+	 * @throws SQLException
+	 *             throws this if the table could not be created. This probably
+	 *             is due to the fact that the table already exists.
 	 */
 	private void createTableDb() throws SQLException {
 		Db data = SingletonDb.getDb();
@@ -358,7 +366,8 @@ public class XMLParser extends Parser {
 	}
 
 	/**
-	 * @param docType the docType to set
+	 * @param docType
+	 *            the docType to set
 	 */
 	public void setDocType(String docType) {
 		this.docType = docType;
