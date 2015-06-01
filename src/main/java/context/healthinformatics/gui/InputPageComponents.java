@@ -69,6 +69,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 		addProjectLabel(projectSelectionPanel);
 		projectSelectionPanel.add(box, ip.setGrids(1, 0));
 		addProjectButton(projectSelectionPanel);
+		box.addActionListener(this);
 		return projectSelectionPanel;
 	}
 
@@ -235,6 +236,10 @@ public class InputPageComponents implements Serializable, ActionListener {
 			ip.loadDatabase();
 			mf.setState(mf.getCodePage());
 			mf.reloadStatePanel();
+		}
+		if (e.getSource() == box) {
+			ip.getXMLController().setProject((String) getComboBox().getSelectedItem());
+			ip.getXMLController().loadProject(ip.getEditor());
 		}
 	}
 

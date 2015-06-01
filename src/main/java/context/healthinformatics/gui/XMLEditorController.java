@@ -1,6 +1,7 @@
 package context.healthinformatics.gui;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import context.healthinformatics.writer.XMLDocument;;
 
@@ -9,24 +10,28 @@ import context.healthinformatics.writer.XMLDocument;;
  */
 public class XMLEditorController {
 
-	private ArrayList<XMLDocument> allDocs;
+	private HashMap<String, ArrayList<XMLDocument>> allDocs;
 	private ArrayList<XMLDocument> selectedDocs;
+	private String project;
 
 	/**
 	 * Constructor for the XMLEditorController.
 	 */
 	public XMLEditorController() {
-		allDocs = new ArrayList<XMLDocument>();
+		allDocs = new HashMap<String, ArrayList<XMLDocument>>();
 		setSelectedDocs(new ArrayList<XMLDocument>());
 	}
 	
 	/**
 	 * Constructor created a list with all document already loaded.
-	 * @param allDocs the list of documents already made.
+	 * @param project the name of project you are working in.
+	 * @param projectDocs the list of documents already made.
 	 */
-	public XMLEditorController(ArrayList<XMLDocument> allDocs) {
-		this.allDocs = allDocs;
+	public XMLEditorController(String project, ArrayList<XMLDocument> projectDocs) {
+		allDocs = new HashMap<String, ArrayList<XMLDocument>>();
 		setSelectedDocs(new ArrayList<XMLDocument>());
+		allDocs.put(project, projectDocs);
+		setProject(project);
 	}
 
 	/**
@@ -49,7 +54,14 @@ public class XMLEditorController {
 	 * @param doc the document that should be added.
 	 */
 	public void addDocument(XMLDocument doc) {
-		allDocs.add(doc);
+		ArrayList<XMLDocument> projectDocs;
+		if (allDocs.containsKey(project)) {
+			projectDocs = allDocs.get(project);
+		} else {
+			projectDocs = new ArrayList<XMLDocument>();
+		}
+		projectDocs.add(doc);
+		allDocs.put(project, projectDocs);
 	}
 	
 	/**
@@ -103,9 +115,12 @@ public class XMLEditorController {
 	 * @return the document out of all documents if it exists.
 	 */
 	public XMLDocument getDocument(String filePath) {
-		for (int i = 0; i < allDocs.size(); i++) {
-			if (allDocs.get(i).getPath().equals(filePath)) {
-				return allDocs.get(i);
+		ArrayList<XMLDocument> projectDocs = allDocs.get(project);
+		if (projectDocs != null) {
+			for (int i = 0; i < projectDocs.size(); i++) {
+				if (projectDocs.get(i).getPath().equals(filePath)) {
+					return projectDocs.get(i);
+				}
 			}
 		}
 		return null;
@@ -118,15 +133,17 @@ public class XMLEditorController {
 	 * @return Document that corresponds to that little piece of path.	
 	 */
 	public XMLDocument getDocumentWithPartofPath(String filePath) {
-		for (int i = 0; i < allDocs.size(); i++) {
-			String path = allDocs.get(i).getPath();
-			if (obtainFileName(path).equals(filePath)) {
-				return allDocs.get(i);
+		ArrayList<XMLDocument> projectDocs = allDocs.get(project);
+		if (projectDocs != null) {
+			for (int i = 0; i < projectDocs.size(); i++) {
+				String path = projectDocs.get(i).getPath();
+				if (obtainFileName(path).equals(filePath)) {
+					return projectDocs.get(i);
+				}
 			}
 		}
 		return null;
 	}
-	
 
 	/**
 	 * Splits a path string and obtain only the file name.
@@ -136,5 +153,33 @@ public class XMLEditorController {
 	public String obtainFileName(String path) {
 		String[] split = path.split("/");
 		return split[split.length - 1];
+	}
+	
+	/**
+	 * Set the directory of the files to another project.
+	 * @param project the new project you want to work with.
+	 */
+	public void setProject(String project) {
+		this.project = project;
+	}
+	
+	/**
+	 * @return a list of all documents that are in a project.
+	 */
+	public ArrayList<XMLDocument> getProjectDocuments() {
+		return allDocs.get(project);
+	}
+
+	/**
+	 * Empties the editor and add the new related files into the editor.
+	 * @param editor the panel that should be cleared etc.
+	 */
+	public void loadProject(XMLEditor editor) {
+		editor.emptyEditor();
+		if (getProjectDocuments() != null) {
+			for (XMLDocument doc : getProjectDocuments()) {
+				editor.addXMLDocumentToContainerScrollPanel(doc);
+			}
+		}
 	}
 }

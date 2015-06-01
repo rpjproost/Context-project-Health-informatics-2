@@ -58,6 +58,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		ipc = new InputPageComponents(m, this);
 		xmledit = new XMLEditor();
 		xmlController = new XMLEditorController();
+		xmlController.setProject("(default)");
 		addComboItem("(default)");
 	}
 
@@ -148,6 +149,8 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		list.add(project);
 		folder.add(list);
 		ipc.getComboBox().addItem(project);
+		ipc.getComboBox().setSelectedItem(project);
+		xmlController.setProject(project);
 		ft.addProjectToTree(project);
 	}
 

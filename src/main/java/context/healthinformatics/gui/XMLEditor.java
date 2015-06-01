@@ -366,4 +366,17 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 		}
 
 	}
+	
+	/**
+	 * Empties the editor.
+	 */
+	public void emptyEditor() {
+		while (documentFieldsContainers.size() > 0) {
+			documentFieldsContainers
+					.remove(documentFieldsContainers.size() - 1);
+			JPanel docContainerPanel = documentPanels.remove(documentPanels
+					.size() - 1);
+			docContainerPanel.setVisible(false);
+		}
+	}
 }

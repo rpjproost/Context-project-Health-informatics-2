@@ -32,7 +32,7 @@ public class XMLEditorControllerTest {
 		documentTwo = new XMLDocument("text", "test", ",", "src/test", 2, 1, columns);
 		ArrayList<XMLDocument> docs = new ArrayList<XMLDocument>();
 		docs.add(documentOne);
-		controller = new XMLEditorController(docs);
+		controller = new XMLEditorController("ADMIRE", docs);
 	}
 
 	/**
@@ -59,6 +59,7 @@ public class XMLEditorControllerTest {
 	@Test
 	public void testSelectDocumentDuplicate() {
 		XMLEditorController controller = new XMLEditorController();
+		controller.setProject("controllerTest");
 		controller.addDocument(documentOne);
 		controller.addDocument(documentTwo);
 		controller.selectDocument("src/main");
