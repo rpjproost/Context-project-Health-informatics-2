@@ -2,6 +2,7 @@ package context.healthinformatics.gui;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
+import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -9,6 +10,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import context.healthinformatics.writer.XMLDocument;
 
 /**
  * Class which represents one of the states for the variabel panel in the
@@ -32,6 +35,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	public static final String COLOR = "#81DAF5";
 
 	private XMLEditor xmledit;
+	private XMLEditorController xmlController;
 
 	/**
 	 * Constructor.
@@ -46,6 +50,8 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		ft = new FileTree(m, this);
 		ipc = new InputPageComponents(m, this);
 		xmledit = new XMLEditor();
+		xmlController = new XMLEditorController();
+		addComboItem("(default)");
 	}
 
 	/**
@@ -194,6 +200,13 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	public JFileChooser getFileSelecter() {
 		return selecter;
 	}
+	
+	/**
+	 * @return the xml editor controller.
+	 */
+	public XMLEditorController getXMLController() {
+		return xmlController;
+	}
 
 	/**
 	 * @return folder of projects and files.
@@ -217,6 +230,9 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		folder = f;
 	}
 	
+	/**
+	 * @return the XML editor.
+	 */
 	public XMLEditor getEditor() {
 		return xmledit;
 	}
@@ -226,7 +242,6 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 * @param path is the path of the added file.
 	 */
 	public void addFile(String path) {
-		//String text = ipc.getTextArea().getText();
 		int project = findFolderProject((String) ipc.getComboBox()
 				.getSelectedItem());
 		if (folder.size() > 0 && project >= 0 && !path.equals("")
@@ -237,6 +252,28 @@ public class InputPage extends InterfaceHelper implements PanelState,
 			JOptionPane.showMessageDialog(null,
 					"No project created yet, or no file specified, or file already in project!");
 		}
+	}
+	
+	/**
+	 * Open files and adds them to the tree.
+	 * @param files all files that should be added.
+	 */
+	protected void openFiles(File[] files) {
+		for (int i = 0; i < files.length; i++) {
+			String path = files[i].getPath();
+			addDocument(path);
+			addFile(path);
+		}
+	}
+	
+	/**
+	 * Adds the file with a path to all documents.
+	 * @param path the path to a file.
+	 */
+	private void addDocument(String path) {
+		XMLDocument current = new XMLDocument();
+		current.setPath(path);
+		xmlController.addDocument(current);
 	}
 
 	/**

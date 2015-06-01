@@ -225,10 +225,8 @@ public class InputPageComponents implements Serializable, ActionListener {
 		}
 		if (e.getSource() == getOpenFileButton()) {
 			if (ip.openFileChooser() == JFileChooser.APPROVE_OPTION) {
-				String path = ip.getSelecter().getSelectedFile().toString();
-				ip.addFile(path);
+				ip.openFiles(ip.getFileSelecter().getSelectedFiles());
 			}
-			ip.getSelecter().setVisible(false);
 		}
 		if (e.getSource() == getHelpButton()) {
 			return; // TODO

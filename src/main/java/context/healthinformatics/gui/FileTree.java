@@ -49,6 +49,7 @@ public class FileTree implements TreeSelectionListener, Serializable {
 		selectedFiles = new ArrayList<String>();
 		xmlList = new ArrayList<String>();
 		initXmlList();
+		initTree();
 	}
 	
 	/**
@@ -67,7 +68,6 @@ public class FileTree implements TreeSelectionListener, Serializable {
 		JPanel folderPanel = MainFrame.createPanel(Color.decode(InputPage.COLOR),
 				mf.getScreenWidth(), FOLDERSECTIONHEIGHT);
 		folderPanel.setLayout(new  GridBagLayout());
-		initTree();
 		addTreePane(folderPanel);
 		return folderPanel;
 	}
@@ -93,27 +93,13 @@ public class FileTree implements TreeSelectionListener, Serializable {
 		DefaultMutableTreeNode project = null;
 		DefaultMutableTreeNode file = null;
 		for (int i = 0; i < ip.getFolder().size(); i++) {
-			project = new DefaultMutableTreeNode(ip.getFolder().get(i).get(0) + isXmlSet(i));
+			project = new DefaultMutableTreeNode(ip.getFolder().get(i).get(0));
 			for (int j = 1; j < ip.getFolder().get(i).size(); j++) {
 				String node = ip.getFolder().get(i).get(j);
 				file = new DefaultMutableTreeNode(node + isSelected(node));
 				project.add(file);
 			}
 			root.add(project);
-		}
-	}
-	
-	/**
-	 * Method which checks if the SML file for this project is set.
-	 * @param i is the index of the project.
-	 * @return empty String if the XML is not yet set, and return "   [SET]" otherwise.
-	 */
-	private String isXmlSet(int i) {
-		if (getXmlList().get(i) == null) {
-			return "";
-		}
-		else {
-			return "   [SET]";
 		}
 	}
 	
