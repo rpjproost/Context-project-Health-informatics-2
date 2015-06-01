@@ -7,6 +7,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.io.Serializable;
 import java.util.ArrayList;
+
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -16,6 +17,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
+
+import context.healthinformatics.writer.XMLDocument;
 
 /**
  * Class which represents the FileTree on the InputPage.
@@ -178,7 +181,8 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	 * @param node is the selected TreeNode.
 	 */
 	private void setNodeToSelected(String selected, DefaultMutableTreeNode node) {
-		getSelectedFiles().add(selected);
+		XMLDocument doc = ip.getXMLController().getDocumentWithPartofPath(selected);
+		ip.getXMLController().selectDocument(doc.getPath());
 		node.setUserObject(node.getUserObject().toString()
 				+ "   [SELECTED]");
 		model.nodeStructureChanged(node.getParent());
@@ -190,9 +194,10 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	 * @param node is the selected TreeNode.
 	 */
 	private void setNodeToNotSelected(String selected, DefaultMutableTreeNode node) {
-		getSelectedFiles().remove(selected);
-		String s = node.getUserObject().toString();
-		node.setUserObject(s.substring(0, s.length() - FLAGLENGTH));
+		String origin = selected.substring(0, selected.length() - FLAGLENGTH);
+		XMLDocument doc = ip.getXMLController().getDocumentWithPartofPath(origin);
+		ip.getXMLController().deselectDocument(doc.getPath());
+		node.setUserObject(origin);
 		model.nodeStructureChanged(node.getParent());
 	}
 	

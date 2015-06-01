@@ -111,6 +111,22 @@ public class XMLEditorController {
 		return null;
 	}
 	
+	/**
+	 * Search in all documents if a document with only a piece of the file path exists
+	 * if not return a null Object.
+	 * @param filePath the part of a entire path.
+	 * @return Document that corresponds to that little piece of path.	
+	 */
+	public XMLDocument getDocumentWithPartofPath(String filePath) {
+		for (int i = 0; i < allDocs.size(); i++) {
+			String path = allDocs.get(i).getPath();
+			if (obtainFileName(path).equals(filePath)) {
+				return allDocs.get(i);
+			}
+		}
+		return null;
+	}
+	
 
 	/**
 	 * Splits a path string and obtain only the file name.
