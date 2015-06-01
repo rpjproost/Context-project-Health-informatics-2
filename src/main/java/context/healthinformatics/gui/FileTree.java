@@ -234,7 +234,7 @@ public class FileTree implements TreeSelectionListener, Serializable {
 		for (int i = 0; i < ip.getFolder().size(); i++) {
 			tree.expandRow(count);
 			count++;
-			for (int j = 0; j < ip.getFolder().get(i).size(); j++) {
+			for (int j = 1; j < ip.getFolder().get(i).size(); j++) {
 				count++;
 			}
 		}
