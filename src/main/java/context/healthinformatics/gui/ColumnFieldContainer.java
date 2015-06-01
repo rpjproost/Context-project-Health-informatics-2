@@ -3,6 +3,8 @@ package context.healthinformatics.gui;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
+import context.healthinformatics.parser.Column;
+
 /**
  * Class which contains all field for a column form element.
  */
@@ -11,43 +13,67 @@ public class ColumnFieldContainer {
 	private JTextField columnName;
 	private JComboBox<String> columnType;
 	private JTextField dateType;
+	private String[] comboBoxValues = { "String", "Int", "Date" };
 
 	/**
-	 * Constructor for column without a datetype.
+	 * Constructor of the columnFieldContainer based on the input Column.
 	 * 
-	 * @param columnID
-	 *            the id of the column
-	 * @param columnName
-	 *            the name of the column
-	 * @param comboBoxStrings
-	 *            the strings for the combox
+	 * @param column
+	 *            the column
 	 */
-	public ColumnFieldContainer(int columnID, String columnName,
-			String[] comboBoxStrings) {
-		this.columnID = new JTextField(columnID);
-		this.columnName = new JTextField(columnName);
-		this.columnType = new JComboBox<>(comboBoxStrings);
-		this.dateType = null;
+	public ColumnFieldContainer(Column column) {
+		this.columnID = new JTextField(Integer.toString(column
+				.getColumnNumber()));
+		this.columnName = new JTextField(column.getColumnName());
+		this.columnType = new JComboBox<>(comboBoxValues);
+		this.columnType.setSelectedIndex(getComboBoxIndex(column
+				.getColumnType()));
+		if (hasDateType(column.getColumnType())) {
+			this.dateType = new JTextField(column.getDateType());
+		}
 	}
 
 	/**
-	 * Constructor for a columnField whit all needed TextFields and combobox.
+	 * Check if a column has a date type.
 	 * 
-	 * @param columnID
-	 *            the id value of the column
-	 * @param columnName
-	 *            the name of the column
-	 * @param comboBoxStrings
-	 *            the column type dropdown
-	 * @param dateType
-	 *            the datetype
+	 * @param columnType
+	 *            the type of the column
+	 * @return true if has datetype else false
 	 */
-	public ColumnFieldContainer(int columnID, String columnName,
-			String[] comboBoxStrings, String dateType) {
-		this.columnID = new JTextField(columnID);
-		this.columnName = new JTextField(columnName);
-		this.columnType = new JComboBox<>(comboBoxStrings);
-		this.dateType = new JTextField(dateType);
+	public boolean hasDateType(String columnType) {
+		return columnType.equals("DATE");
+	}
+
+	/**
+	 * Get the index of the combo box based on the given columntype.
+	 * 
+	 * @param columnType
+	 *            the columntype of the column
+	 * @return the index of the combo box
+	 */
+	public int getComboBoxIndex(String columnType) {
+		if (columnType.equals("DATE")) {
+			return 2;
+		} else if (columnType.equals("INT")) {
+			return 1;
+		} else {
+			return 0;
+		}
+
+	}
+
+	/**
+	 * Build a column object from the textfield values.
+	 * 
+	 * @return a Column Object
+	 */
+	public Column getColumn() {
+		Column col = new Column(Integer.parseInt(getColumnIDValue()),
+				getColumnNameValue(), getColumnTypeValue());
+		if (hasDateType()) {
+			col.setDateType(getColumnDateTypeValue());
+		}
+		return col;
 	}
 
 	/**

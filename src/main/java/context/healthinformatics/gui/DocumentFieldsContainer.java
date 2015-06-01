@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
+import context.healthinformatics.parser.Column;
+import context.healthinformatics.writer.XMLDocument;
+
 /**
  * Class to keep track of all fields of a document for the form.
  */
@@ -16,6 +19,52 @@ public class DocumentFieldsContainer {
 	private JTextField sheet;
 	private JTextField delimiter;
 	private ArrayList<ColumnFieldContainer> columnFields;
+	private String[] doctypes = { "Excel", "txt/csv" };
+
+	/**
+	 * Build a DocumentField container with a XMLDocument.
+	 * 
+	 * @param xmlDoc
+	 *            the xml document
+	 */
+	public DocumentFieldsContainer(XMLDocument xmlDoc) {
+		this.documentName = new JTextField(xmlDoc.getDocName());
+		this.documentType = new JComboBox<>(doctypes);
+		this.documentType
+				.setSelectedIndex(getComboBoxIndex(xmlDoc.getDocType()));
+		this.documentPath = new JTextField(xmlDoc.getPath());
+		this.startLine = new JTextField(Integer.toString(xmlDoc.getStartLine()));
+		this.delimiter = new JTextField(Integer.toString(xmlDoc.getSheet()));
+		columnFields = new ArrayList<ColumnFieldContainer>();
+		initColumns(xmlDoc.getColumns());
+	}
+
+	/**
+	 * Init the columnfield containers for all the columns in the xmldocument.
+	 * 
+	 * @param cols
+	 *            the columns
+	 */
+	public void initColumns(ArrayList<Column> cols) {
+		for (int i = 0; i < cols.size(); i++) {
+			columnFields.add(new ColumnFieldContainer(cols.get(i)));
+		}
+	}
+
+	/**
+	 * Get the index of the document type for the combobox.
+	 * 
+	 * @param doctype
+	 *            the type of the document
+	 * @return the index
+	 */
+	public int getComboBoxIndex(String doctype) {
+		if (doctype.toLowerCase().equals("excel")) {
+			return 0;
+		} else {
+			return 1;
+		}
+	}
 
 	/**
 	 * Constructor for a text document.
@@ -72,6 +121,21 @@ public class DocumentFieldsContainer {
 	}
 
 	/**
+	 * Build a new XMLDocument from the values of the input fields.
+	 * 
+	 * @return a xmldocument
+	 */
+	public XMLDocument getXMLDocument() {
+		ArrayList<Column> cols = new ArrayList<Column>();
+		for (int i = 0; i < cols.size(); i++) {
+			cols.add(columnFields.get(i).getColumn());
+		}
+		return new XMLDocument(getDocumentTypeValue(), getDocumentNameValue(),
+				getDelimiterValue(), getDocumentPathValue(),
+				getDocumentStartLineValue(), getSheetValue(), cols);
+	}
+
+	/**
 	 * Add a columnfield to the documentcontainer.
 	 * 
 	 * @param columnField
@@ -122,8 +186,8 @@ public class DocumentFieldsContainer {
 	 * 
 	 * @return the start line value
 	 */
-	public String getDocumentStartLineValue() {
-		return documentPath.getText();
+	public int getDocumentStartLineValue() {
+		return Integer.parseInt(documentPath.getText());
 	}
 
 	/**
@@ -131,8 +195,8 @@ public class DocumentFieldsContainer {
 	 * 
 	 * @return the sheet value
 	 */
-	public String getSheetValue() {
-		return sheet.getText();
+	public int getSheetValue() {
+		return Integer.parseInt(sheet.getText());
 	}
 
 	/**
