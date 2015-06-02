@@ -170,90 +170,54 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 		JPanel documentPanel = new JPanel();
 		documentPanel.setLayout(new GridBagLayout());
 		documentPanel.setBorder(BorderFactory.createLineBorder(Color.black));
-
-		// other setting fields
-		if (documentFieldContainer.getDocumentTypeValue().toLowerCase()
-				.equals("excel")) {
-			documentPanel
-					.add(createStandardExcelDocumentSettingFields(documentFieldContainer),
-							setGrids(0, 0));
-		} else {
-			documentPanel
-					.add(createStandardTXTDocumentSettingFields(documentFieldContainer),
-							setGrids(0, 0));
-		}
+		documentPanel.add(
+				createStandardDocumentSettingFields(documentFieldContainer),
+				setGrids(0, 0));
 		documentPanel.add(createColumnFormPanel(documentFieldContainer),
 				setGrids(0, 1));
 		return documentPanel;
 	}
 
 	/**
-	 * Add al columns to the panel for the columns.
+	 * Create the document setting fields with a delimiter or sheet row.
 	 * 
 	 * @param documentFieldContainer
-	 *            the container
-	 * @return the panel with the columns
-	 */
-	public JPanel createColumnFormPanel(
-			DocumentFieldsContainer documentFieldContainer) {
-		JPanel columnFormPanel = documentFieldContainer.getColumnFormPanel();
-		ArrayList<ColumnFieldContainer> columnsOfDocument = documentFieldContainer
-				.getColumnFields();
-		columnFormPanel.add(
-				makeFormRowWithButton(
-						documentFieldContainer.getAddColumnButton(),
-						documentFieldContainer.getRemoveColumnButton()),
-				setGrids(0, 0));
-		for (int i = 0; i < columnsOfDocument.size(); i++) {
-			columnFormPanel.add(createColumnForm(columnsOfDocument.get(i)),
-					setGrids(0, i + 1));
-		}
-		return columnFormPanel;
-	}
-
-	/**
-	 * Create the document setting fields which are required for all documents.
-	 * 
-	 * @param documentFieldContainer
-	 *            the container which contains all gui elements for the xml
-	 *            editor form
-	 * 
-	 * @return the panel with the components
-	 */
-	public JPanel createStandardTXTDocumentSettingFields(
-			DocumentFieldsContainer documentFieldContainer) {
-		JPanel documentSettingsPanel = new JPanel();
-		documentSettingsPanel.setLayout(new GridBagLayout());
-		documentSettingsPanel.add(
-				createStandardSettingFields(documentFieldContainer),
-				setGrids(0, 0));
-		documentSettingsPanel.add(
-				makeFormRowWithTextField("Document delimiter: ",
-						documentFieldContainer.getDelimiter()), setGrids(0, 1));
-		return documentSettingsPanel;
-	}
-
-	/**
-	 * Create the document setting fields for excel which are required for all
-	 * documents.
-	 * 
-	 * @param documentFieldContainer
-	 *            the container which contains all gui elements for the xml
-	 *            editor form
-	 * 
+	 *            the container which contains all gui elements for the xml;
+	 *            containerPanel.add(dateTypePanel, setGrids(0, THREE));
 	 * @return the panel with de components
 	 */
-	public JPanel createStandardExcelDocumentSettingFields(
+	public JPanel createStandardDocumentSettingFields(
 			DocumentFieldsContainer documentFieldContainer) {
-		JPanel documentSettingsPanel = new JPanel();
-		documentSettingsPanel.setLayout(new GridBagLayout());
+		JPanel documentSettingsPanel = documentFieldContainer
+				.getDocumentFormPanel();
 		documentSettingsPanel.add(
 				createStandardSettingFields(documentFieldContainer),
 				setGrids(0, 0));
-		documentSettingsPanel.add(
-				makeFormRowWithTextField("Document sheet: ",
-						documentFieldContainer.getSheet()), setGrids(0, 1));
+		JPanel specificRowElement = createSpecificFormRow(documentFieldContainer);
+		documentFieldContainer
+				.setPanelForDocTypeSpecificInput(specificRowElement);
+		documentSettingsPanel.add(specificRowElement, setGrids(0, 1));
 		return documentSettingsPanel;
+	}
+
+	/**
+	 * Create a panel for a form row with a delimiter row or a sheet row
+	 * depending on doctype.
+	 * 
+	 * @param documentFieldContainer
+	 *            the container containg the doctype
+	 * @return the panel
+	 */
+	public JPanel createSpecificFormRow(
+			DocumentFieldsContainer documentFieldContainer) {
+		if (documentFieldContainer.getDocumentTypeValue().toLowerCase()
+				.equals("excel")) {
+			return makeFormRowWithTextField("Document sheet: ",
+					documentFieldContainer.getSheet());
+		} else {
+			return makeFormRowWithTextField("Document delimiter: ",
+					documentFieldContainer.getDelimiter());
+		}
 	}
 
 	/**
@@ -284,6 +248,30 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 						documentFieldContainer.getStartLine()),
 				setGrids(0, THREE));
 		return standardSettingsPanel;
+	}
+
+	/**
+	 * Add al columns to the panel for the columns.
+	 * 
+	 * @param documentFieldContainer
+	 *            the container
+	 * @return the panel with the columns
+	 */
+	public JPanel createColumnFormPanel(
+			DocumentFieldsContainer documentFieldContainer) {
+		JPanel columnFormPanel = documentFieldContainer.getColumnFormPanel();
+		ArrayList<ColumnFieldContainer> columnsOfDocument = documentFieldContainer
+				.getColumnFields();
+		columnFormPanel.add(
+				makeFormRowWithButton(
+						documentFieldContainer.getAddColumnButton(),
+						documentFieldContainer.getRemoveColumnButton()),
+				setGrids(0, 0));
+		for (int i = 0; i < columnsOfDocument.size(); i++) {
+			columnFormPanel.add(createColumnForm(columnsOfDocument.get(i)),
+					setGrids(0, i + 1));
+		}
+		return columnFormPanel;
 	}
 
 	/**
@@ -381,7 +369,8 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == addDocument) {
 			addXMLDocumentToContainerScrollPanel(new XMLDocument());
-			inputPage.getXMLController().updateDocuments(inputPage, getAllXMLDocuments());
+			inputPage.getXMLController().updateDocuments(inputPage,
+					getAllXMLDocuments());
 		} else if (e.getSource() == removeDocument) {
 			if (documentFieldsContainers.size() > 0) {
 				documentFieldsContainers
@@ -389,7 +378,8 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 				JPanel docContainerPanel = documentPanels.remove(documentPanels
 						.size() - 1);
 				docContainerPanel.setVisible(false);
-				inputPage.getXMLController().updateDocuments(inputPage, getAllXMLDocuments());
+				inputPage.getXMLController().updateDocuments(inputPage,
+						getAllXMLDocuments());
 			}
 
 		} else if (e.getSource() == saveXMLDocument) {

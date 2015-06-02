@@ -92,7 +92,6 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 		} else {
 			return 0;
 		}
-
 	}
 
 	/**

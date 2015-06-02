@@ -28,9 +28,12 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	private JTextField sheet;
 	private JTextField delimiter;
 	private ArrayList<ColumnFieldContainer> columnFields;
-	private String[] doctypes = { "Excel", "txt/csv" };
+	private String[] doctypes = { "Excel", "Txt", "Csv" };
 
 	private JPanel columnFormPanel;
+	private JPanel documentFormPanel;
+	private JPanel panelForDocTypeSpecificInput;
+
 	private JButton addColumnButton = new JButton("Add new Column");
 	private JButton removeColumnButton = new JButton("Remove column");
 	private XMLEditor xmledit;
@@ -45,8 +48,7 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	 */
 	public DocumentFieldsContainer(XMLDocument xmlDoc, XMLEditor xmledit) {
 		this.xmledit = xmledit;
-		columnFormPanel = new JPanel();
-		columnFormPanel.setLayout(new GridBagLayout());
+		initPanels();
 		initTextFieldsWithValues(xmlDoc);
 		initSheetOrDelimiterField(xmlDoc.getDocType(), xmlDoc);
 		columnFields = new ArrayList<ColumnFieldContainer>();
@@ -55,11 +57,22 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	}
 
 	/**
+	 * Init the panels for the document fields.
+	 */
+	public void initPanels() {
+		columnFormPanel = new JPanel();
+		columnFormPanel.setLayout(new GridBagLayout());
+		documentFormPanel = new JPanel();
+		documentFormPanel.setLayout(new GridBagLayout());
+	}
+
+	/**
 	 * Add all action listeners.
 	 */
 	public void addActionListeners() {
 		addColumnButton.addActionListener(this);
 		removeColumnButton.addActionListener(this);
+		documentType.addActionListener(this);
 	}
 
 	/**
@@ -88,8 +101,10 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	public void initSheetOrDelimiterField(String docType, XMLDocument xmlDoc) {
 		if (docType.toLowerCase().equals("excel")) {
 			this.sheet = new JTextField(Integer.toString(xmlDoc.getSheet()));
+			this.delimiter = new JTextField(",");
 		} else {
 			this.delimiter = new JTextField(xmlDoc.getDelimiter());
+			this.sheet = new JTextField("1");
 		}
 	}
 
@@ -115,6 +130,8 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	public int getComboBoxIndex(String doctype) {
 		if (doctype.toLowerCase().equals("excel")) {
 			return 0;
+		} else if (doctype.toLowerCase().equals("csv")) {
+			return 2;
 		} else {
 			return 1;
 		}
@@ -140,6 +157,15 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 					getDocumentPathValue(), getDocumentStartLineValue(), -1,
 					cols);
 		}
+	}
+
+	/**
+	 * Get the panel where all the elements for this document are added on.
+	 * 
+	 * @return the document Panel.
+	 */
+	public JPanel getDocumentFormPanel() {
+		return documentFormPanel;
 	}
 
 	/**
@@ -282,6 +308,26 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 		return removeColumnButton;
 	}
 
+	/**
+	 * Get the panel for the delimiter or sheet.
+	 * 
+	 * @return the panel
+	 */
+	public JPanel getPanelForDocTypeSpecificInput() {
+		return panelForDocTypeSpecificInput;
+	}
+
+	/**
+	 * Set the panel for the delimiter or sheet.
+	 * 
+	 * @param panelForDocTypeSpecificInput
+	 *            the panel of the delimiter or sheet
+	 */
+	public void setPanelForDocTypeSpecificInput(
+			JPanel panelForDocTypeSpecificInput) {
+		this.panelForDocTypeSpecificInput = panelForDocTypeSpecificInput;
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == addColumnButton) {
@@ -298,8 +344,32 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 						.size() - 1);
 				cfc.getPanel().setVisible(false);
 			}
+		} else if (e.getSource() == documentType) {
+			String selectedItem = documentType.getSelectedItem().toString();
+			if (selectedItem.equals("Excel")) {
+				changeLastDocumentRow("Document sheet: ", getSheet());
+			} else {
+				changeLastDocumentRow("Document delimiter: ", getDelimiter());
+			}
+
 		}
 
 	}
 
+	/**
+	 * Changes the last row from delimiter to sheet.
+	 * 
+	 * @param labelName
+	 *            the name of the label: sheet or delimiter
+	 * @param theTextField
+	 *            one of the two textfields
+	 */
+	public void changeLastDocumentRow(String labelName, JTextField theTextField) {
+		panelForDocTypeSpecificInput.setVisible(false);
+		JPanel testPanel = xmledit.makeFormRowWithTextField(labelName,
+				theTextField);
+		documentFormPanel.add(testPanel, setGrids(0, 1));
+		setPanelForDocTypeSpecificInput(testPanel);
+		documentFormPanel.revalidate();
+	}
 }
