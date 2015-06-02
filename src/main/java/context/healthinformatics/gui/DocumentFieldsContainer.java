@@ -84,6 +84,7 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	 */
 	public void initColumns(ArrayList<Column> cols) {
 		for (int i = 0; i < cols.size(); i++) {
+			System.out.println("ALLO");
 			columnFields.add(new ColumnFieldContainer(cols.get(i), xmledit));
 		}
 	}
@@ -110,12 +111,20 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	 */
 	public XMLDocument getXMLDocument() {
 		ArrayList<Column> cols = new ArrayList<Column>();
-		for (int i = 0; i < cols.size(); i++) {
+		for (int i = 0; i < columnFields.size(); i++) {
 			cols.add(columnFields.get(i).getColumn());
 		}
-		return new XMLDocument(getDocumentTypeValue(), getDocumentNameValue(),
-				getDelimiterValue(), getDocumentPathValue(),
-				getDocumentStartLineValue(), getSheetValue(), cols);
+		if (getDocumentTypeValue().toLowerCase().equals("excel")) {
+			return new XMLDocument(getDocumentTypeValue(),
+					getDocumentNameValue(), "",
+					getDocumentPathValue(), getDocumentStartLineValue(),
+					getSheetValue(), cols);
+		} else {
+			return new XMLDocument(getDocumentTypeValue(),
+					getDocumentNameValue(), getDelimiterValue(),
+					getDocumentPathValue(), getDocumentStartLineValue(),
+					-1, cols);
+		}
 	}
 
 	/**
@@ -161,7 +170,7 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	 * @return the start line value
 	 */
 	public int getDocumentStartLineValue() {
-		return Integer.parseInt(documentPath.getText());
+		return Integer.parseInt(startLine.getText());
 	}
 
 	/**

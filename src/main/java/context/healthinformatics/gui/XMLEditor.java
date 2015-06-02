@@ -17,7 +17,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 
+import org.apache.derby.tools.sysinfo;
+
 import context.healthinformatics.writer.XMLDocument;
+import context.healthinformatics.writer.XMLWriter;
 
 /**
  * XMLEditor class makes a panel which is filled with a form to edit xml files.
@@ -27,7 +30,7 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	private static final long serialVersionUID = 1L;
 
 	private static final int PARENTWIDTH = 900;
-	private static final int PARENTHEIGHT = 700;
+	private static final int PARENTHEIGHT = 650;
 
 	private static final int FORMELEMENTWIDTH = 800;
 	private static final int FORMELEMENTHEIGHT = 25;
@@ -45,6 +48,7 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 
 	private JButton addDocument = new JButton("Create new Document");
 	private JButton removeDocument = new JButton("Remove Document");
+	private JButton saveXMLDocument = new JButton("Save XML file");
 
 	private ArrayList<DocumentFieldsContainer> documentFieldsContainers;
 	private ArrayList<JPanel> documentPanels = new ArrayList<JPanel>();
@@ -57,10 +61,10 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 		JPanel extraContainer = createContainerPanel();
 		containerScrollPanel = createContainerPanel();
 		extraContainer.add(containerScrollPanel, setGrids(0, 0));
-		extraContainer.add(makeFormRowWithButton(addDocument, removeDocument),
-				setGrids(0, 1, MARGINTOP));
+
 		addDocument.addActionListener(this);
 		removeDocument.addActionListener(this);
+		saveXMLDocument.addActionListener(this);
 		scrollPane = makeScrollPaneForContainerPanel(extraContainer);
 	}
 
@@ -83,14 +87,31 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 		return buttonPanel;
 	}
 
+	public JPanel makeFormRowWithButton(JButton buttonLeft,
+			JButton middleButton, JButton buttonRight) {
+		JPanel buttonPanel = createPanel(Color.WHITE, FORMELEMENTWIDTH,
+				BUTTONHEIGHT);
+		buttonPanel.setLayout(new GridLayout(1, THREE));
+		buttonPanel.add(buttonLeft);
+		buttonPanel.add(middleButton);
+		buttonPanel.add(buttonRight);
+		return buttonPanel;
+	}
+
 	/**
 	 * Load the parent panel.
 	 * 
 	 * @return the parent panel
 	 */
 	public JPanel loadPanel() {
+		JPanel scrollPaneContainerPanel = new JPanel();
+		scrollPaneContainerPanel.add(scrollPane);
 		JPanel parentPanel = new JPanel();
-		parentPanel.add(scrollPane);
+		parentPanel.setLayout(new GridBagLayout());
+		parentPanel.add(scrollPaneContainerPanel, setGrids(0, 0));
+		parentPanel.add(
+				makeFormRowWithButton(addDocument, saveXMLDocument,
+						removeDocument), setGrids(0, 1, MARGINTOP));
 		return parentPanel;
 	}
 
@@ -355,18 +376,28 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 				docContainerPanel.setVisible(false);
 			}
 
-		} else if (e.getSource() == "SAVEXMLEDITBUTTON") {
-			//TODO Couple this with writer and a real save button
-			ArrayList<XMLDocument> xmlDocuments = new ArrayList<XMLDocument>();
-			for (int i = 0; i < documentFieldsContainers.size(); i++) {
-				xmlDocuments.add(documentFieldsContainers.get(i)
-						.getXMLDocument());
-			}
+		} else if (e.getSource() == saveXMLDocument) {
+			// TODO Couple this with writer and a real save button
+			System.out.println("HERRO");
+			saveXMLFile();
 
 		}
 
 	}
-	
+
+	public void saveXMLFile() {
+		ArrayList<XMLDocument> xmlDocuments = new ArrayList<XMLDocument>();
+		for (int i = 0; i < documentFieldsContainers.size(); i++) {
+			xmlDocuments.add(documentFieldsContainers.get(i).getXMLDocument());
+			XMLDocument temp = documentFieldsContainers.get(i).getXMLDocument();
+			System.out.println(temp.getDocName() + " " + temp.getDelimiter()
+					+ " " + temp.getPath() + " " + temp.getDocType() + " "
+					+ temp.getStartLine() + " " + temp.getColumns().size());
+		}
+		XMLWriter writeToXMLFile = new XMLWriter(xmlDocuments);
+		writeToXMLFile.writeXML("src/test/data/writerfiles/test2.xml");
+	}
+
 	/**
 	 * Empties the editor.
 	 */
