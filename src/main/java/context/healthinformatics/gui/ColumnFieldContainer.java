@@ -16,7 +16,7 @@ import context.healthinformatics.parser.Column;
 public class ColumnFieldContainer extends InterfaceHelper implements
 		ActionListener {
 	private static final long serialVersionUID = 1L;
-	
+
 	private JTextField columnID;
 	private JTextField columnName;
 	private JComboBox<String> columnType;
@@ -32,8 +32,6 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	private static final int FORMHEIGHT = 75;
 	private static final int THREE = 3;
 
-	
-
 	/**
 	 * Constructor of the columnFieldContainer based on the input Column.
 	 * 
@@ -44,20 +42,29 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	 */
 	public ColumnFieldContainer(Column column, XMLEditor xmledit) {
 		this.xmledit = xmledit;
-		this.columnID = new JTextField(Integer.toString(column
-				.getColumnNumber()));
-		this.columnName = new JTextField(column.getColumnName());
+		initTextFieldsWithValues(column);
 		this.columnType = new JComboBox<>(comboBoxValues);
 		this.comboValue = column.getColumnType();
 		this.columnType.setSelectedIndex(getComboBoxIndex(comboValue));
 		this.columnType.addActionListener(this);
+	}
+
+	/**
+	 * Init the textfield with the given values from the Column object.
+	 * 
+	 * @param column
+	 *            the column object
+	 */
+	public void initTextFieldsWithValues(Column column) {
+		this.columnID = new JTextField(Integer.toString(column
+				.getColumnNumber()));
+		this.columnName = new JTextField(column.getColumnName());
 		if (hasDateType(column.getColumnType())) {
 			this.dateType = new JTextField(column.getDateType());
 		} else {
 			this.dateType = new JTextField("");
 		}
 	}
-
 
 	/**
 	 * Check if a column has a date type.
@@ -196,7 +203,6 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	public JTextField getDateType() {
 		return dateType;
 	}
-	
 
 	/**
 	 * Set the panel of this columnfields.
@@ -225,7 +231,7 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	public JPanel getPanel() {
 		return panel;
 	}
-	
+
 	/**
 	 * @return the dateTypePanel
 	 */
@@ -248,8 +254,6 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 			if (selectedItem.equals("Date")
 					&& !comboValue.toLowerCase().equals("date")) {
 				comboValue = selectedItem;
-				// private static final int FORMELEMENTWIDTH = 800;
-				// private static final int FORMELEMENTHEIGHT = 25;
 				panel.setPreferredSize(new Dimension(FORMELEMENTWIDTH,
 						FORMHEIGHT + FORMELEMENTHEIGHT));
 				dateTypePanel = xmledit.makeFormRowWithTextField(

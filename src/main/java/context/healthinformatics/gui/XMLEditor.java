@@ -17,8 +17,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 
-import org.apache.derby.tools.sysinfo;
-
 import context.healthinformatics.writer.XMLDocument;
 import context.healthinformatics.writer.XMLWriter;
 
@@ -52,11 +50,16 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 
 	private ArrayList<DocumentFieldsContainer> documentFieldsContainers;
 	private ArrayList<JPanel> documentPanels = new ArrayList<JPanel>();
+	private InputPage inputPage;
 
 	/**
 	 * Empty Constructor of the XMLEditor.
+	 * 
+	 * @param inputPage
+	 *            the input page with the xmleditorcontroller
 	 */
-	public XMLEditor() {
+	public XMLEditor(InputPage inputPage) {
+		this.inputPage = inputPage;
 		documentFieldsContainers = new ArrayList<DocumentFieldsContainer>();
 		JPanel extraContainer = createContainerPanel();
 		containerScrollPanel = createContainerPanel();
@@ -87,7 +90,18 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 		return buttonPanel;
 	}
 
-	public JPanel makeFormRowWithButton(JButton buttonLeft,
+	/**
+	 * Make a Panel containing 3 buttons.
+	 * 
+	 * @param buttonLeft
+	 *            the button on the left.
+	 * @param middleButton
+	 *            the button in the middle
+	 * @param buttonRight
+	 *            the button on the right.
+	 * @return the panel containing the buttons
+	 */
+	public JPanel makeFormRowWithThreeButton(JButton buttonLeft,
 			JButton middleButton, JButton buttonRight) {
 		JPanel buttonPanel = createPanel(Color.WHITE, FORMELEMENTWIDTH,
 				BUTTONHEIGHT);
@@ -110,7 +124,7 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 		parentPanel.setLayout(new GridBagLayout());
 		parentPanel.add(scrollPaneContainerPanel, setGrids(0, 0));
 		parentPanel.add(
-				makeFormRowWithButton(addDocument, saveXMLDocument,
+				makeFormRowWithThreeButton(addDocument, saveXMLDocument,
 						removeDocument), setGrids(0, 1, MARGINTOP));
 		return parentPanel;
 	}
@@ -377,23 +391,32 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 			}
 
 		} else if (e.getSource() == saveXMLDocument) {
-			// TODO Couple this with writer and a real save button
-			System.out.println("HERRO");
 			saveXMLFile();
 
 		}
 
 	}
 
-	public void saveXMLFile() {
+	/**
+	 * Get all documents from the fields in the xml editor.
+	 * 
+	 * @return a list of XMLDocuments
+	 */
+	public ArrayList<XMLDocument> getAllXMLDocuments() {
 		ArrayList<XMLDocument> xmlDocuments = new ArrayList<XMLDocument>();
 		for (int i = 0; i < documentFieldsContainers.size(); i++) {
 			xmlDocuments.add(documentFieldsContainers.get(i).getXMLDocument());
-			XMLDocument temp = documentFieldsContainers.get(i).getXMLDocument();
-			System.out.println(temp.getDocName() + " " + temp.getDelimiter()
-					+ " " + temp.getPath() + " " + temp.getDocType() + " "
-					+ temp.getStartLine() + " " + temp.getColumns().size());
 		}
+		return xmlDocuments;
+	}
+
+	/**
+	 * Saves an XML File.
+	 */
+	public void saveXMLFile() {
+		// TODO Couple this with writer and a real save button
+		ArrayList<XMLDocument> xmlDocuments = getAllXMLDocuments();
+		inputPage.getXMLController().addProjectDocuments(xmlDocuments);
 		XMLWriter writeToXMLFile = new XMLWriter(xmlDocuments);
 		writeToXMLFile.writeXML("src/test/data/writerfiles/test2.xml");
 	}

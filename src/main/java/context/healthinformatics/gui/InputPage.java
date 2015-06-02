@@ -56,7 +56,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		folder = new ArrayList<ArrayList<String>>();
 		ft = new FileTree(m, this);
 		ipc = new InputPageComponents(m, this);
-		xmledit = new XMLEditor();
+		xmledit = new XMLEditor(this);
 		xmlController = new XMLEditorController();
 		xmlController.setProject("(default)");
 		addComboItem("(default)");

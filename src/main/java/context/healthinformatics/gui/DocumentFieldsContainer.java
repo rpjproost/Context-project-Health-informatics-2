@@ -46,18 +46,35 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	public DocumentFieldsContainer(XMLDocument xmlDoc, XMLEditor xmledit) {
 		this.xmledit = xmledit;
 		columnFormPanel = new JPanel();
+		columnFormPanel.setLayout(new GridBagLayout());
+		initTextFieldsWithValues(xmlDoc);
+		initSheetOrDelimiterField(xmlDoc.getDocType(), xmlDoc);
+		columnFields = new ArrayList<ColumnFieldContainer>();
+		initColumns(xmlDoc.getColumns());
+		addActionListeners();
+	}
+
+	/**
+	 * Add all action listeners.
+	 */
+	public void addActionListeners() {
 		addColumnButton.addActionListener(this);
 		removeColumnButton.addActionListener(this);
-		columnFormPanel.setLayout(new GridBagLayout());
+	}
+
+	/**
+	 * Init the JTextFields with the given values.
+	 * 
+	 * @param xmlDoc
+	 *            the document with the values
+	 */
+	public void initTextFieldsWithValues(XMLDocument xmlDoc) {
 		this.documentName = new JTextField(xmlDoc.getDocName());
 		this.documentType = new JComboBox<>(doctypes);
 		this.documentType
 				.setSelectedIndex(getComboBoxIndex(xmlDoc.getDocType()));
 		this.documentPath = new JTextField(xmlDoc.getPath());
 		this.startLine = new JTextField(Integer.toString(xmlDoc.getStartLine()));
-		initSheetOrDelimiterField(xmlDoc.getDocType(), xmlDoc);
-		columnFields = new ArrayList<ColumnFieldContainer>();
-		initColumns(xmlDoc.getColumns());
 	}
 
 	/**
@@ -84,7 +101,6 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	 */
 	public void initColumns(ArrayList<Column> cols) {
 		for (int i = 0; i < cols.size(); i++) {
-			System.out.println("ALLO");
 			columnFields.add(new ColumnFieldContainer(cols.get(i), xmledit));
 		}
 	}
@@ -116,14 +132,13 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 		}
 		if (getDocumentTypeValue().toLowerCase().equals("excel")) {
 			return new XMLDocument(getDocumentTypeValue(),
-					getDocumentNameValue(), "",
-					getDocumentPathValue(), getDocumentStartLineValue(),
-					getSheetValue(), cols);
+					getDocumentNameValue(), "", getDocumentPathValue(),
+					getDocumentStartLineValue(), getSheetValue(), cols);
 		} else {
 			return new XMLDocument(getDocumentTypeValue(),
 					getDocumentNameValue(), getDelimiterValue(),
-					getDocumentPathValue(), getDocumentStartLineValue(),
-					-1, cols);
+					getDocumentPathValue(), getDocumentStartLineValue(), -1,
+					cols);
 		}
 	}
 
