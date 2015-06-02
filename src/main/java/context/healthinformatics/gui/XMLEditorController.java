@@ -16,7 +16,7 @@ public class XMLEditorController implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private HashMap<String, ArrayList<XMLDocument>> allDocs;
-	private ArrayList<XMLDocument> selectedDocs;
+	private HashMap<String, ArrayList<XMLDocument>> selectedDocs;
 	private String project;
 
 	/**
@@ -24,7 +24,7 @@ public class XMLEditorController implements Serializable {
 	 */
 	public XMLEditorController() {
 		allDocs = new HashMap<String, ArrayList<XMLDocument>>();
-		setSelectedDocs(new ArrayList<XMLDocument>());
+		setSelectedDocs(new HashMap<String, ArrayList<XMLDocument>>());
 	}
 	
 	/**
@@ -34,7 +34,7 @@ public class XMLEditorController implements Serializable {
 	 */
 	public XMLEditorController(String project, ArrayList<XMLDocument> projectDocs) {
 		allDocs = new HashMap<String, ArrayList<XMLDocument>>();
-		setSelectedDocs(new ArrayList<XMLDocument>());
+		setSelectedDocs(new HashMap<String, ArrayList<XMLDocument>>());
 		allDocs.put(project, projectDocs);
 		setProject(project);
 	}
@@ -42,7 +42,7 @@ public class XMLEditorController implements Serializable {
 	/**
 	 * @return the selected documents of the input.
 	 */
-	public ArrayList<XMLDocument> getSelectedDocs() {
+	public HashMap<String, ArrayList<XMLDocument>> getSelectedDocs() {
 		return selectedDocs;
 	}
 
@@ -50,7 +50,7 @@ public class XMLEditorController implements Serializable {
 	 * Set the selectDos to a specific list of documents.
 	 * @param selectedDocs the new list of selected documents.
 	 */
-	private void setSelectedDocs(ArrayList<XMLDocument> selectedDocs) {
+	private void setSelectedDocs(HashMap<String, ArrayList<XMLDocument>> selectedDocs) {
 		this.selectedDocs = selectedDocs;
 	}
 	
@@ -92,14 +92,24 @@ public class XMLEditorController implements Serializable {
 			deleteFromSelectedFiles(deselect);
 		}
 	}
+	
+	private ArrayList<XMLDocument> getSelectedDocuments() {
+		if (selectedDocs.containsKey(project)) {
+			return selectedDocs.get(project);
+		} else {
+			return new ArrayList<XMLDocument>();
+		}
+	}
 
 	/**
 	 * Adds a XML document to the list of selected files.
 	 * @param select, the file that could be added.
 	 */
 	private void addToSelectedFiles(XMLDocument select) {
-		if (!selectedDocs.contains(select)) {
-			selectedDocs.add(select);
+		ArrayList<XMLDocument> projectSelected = getSelectedDocuments();
+		if (!projectSelected.contains(select)) {
+			projectSelected.add(select);
+			selectedDocs.put(project, projectSelected);
 		}
 	}
 	
@@ -108,9 +118,11 @@ public class XMLEditorController implements Serializable {
 	 * @param deselect, the file that must be removed.
 	 */
 	private void deleteFromSelectedFiles(XMLDocument deselect) {
-		if (selectedDocs.contains(deselect)) {
-			selectedDocs.remove(deselect);
-		}
+		ArrayList<XMLDocument> projectSelected = getSelectedDocuments();
+		if (projectSelected.contains(deselect)) {
+			projectSelected.add(deselect);
+			selectedDocs.put(project, projectSelected);
+		} 
 	}
 
 	/**
@@ -200,8 +212,8 @@ public class XMLEditorController implements Serializable {
 			ip.getFolder().set(projectIndex, docPieces);
 			setDocumentsInProject(newDocuments);
 			ip.getFileTree().reloadProjects();
+			selectedDocs = new HashMap<String, ArrayList<XMLDocument>>();
 		}
-		selectedDocs = new ArrayList<XMLDocument>();
 	}
 	
 	/**
