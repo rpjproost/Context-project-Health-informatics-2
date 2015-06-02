@@ -186,6 +186,14 @@ public class XMLEditorController implements Serializable {
 			}
 		}
 	}
+	
+	/**
+	 * Saves all xml document to the current project.
+	 * @param newDocuments the new documents to the project.
+	 */
+	public void addProjectDocuments(ArrayList<XMLDocument> newDocuments) {
+		allDocs.put(project, newDocuments);
+	}
 
 	/**
 	 * Removes a project entirely from all Documents.
