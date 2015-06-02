@@ -116,7 +116,7 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	 */
 	public void initColumns(ArrayList<Column> cols) {
 		for (int i = 0; i < cols.size(); i++) {
-			columnFields.add(new ColumnFieldContainer(cols.get(i), xmledit));
+			columnFields.add(new ColumnFieldContainer(cols.get(i)));
 		}
 	}
 
@@ -147,15 +147,27 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 		for (int i = 0; i < columnFields.size(); i++) {
 			cols.add(columnFields.get(i).getColumn());
 		}
+		return getCorrect(cols);
+
+	}
+
+	/**
+	 * Get the XMLDocument with the excel values or txt/csv values.
+	 * 
+	 * @param columns
+	 *            the columns of the document
+	 * @return the XMLDocument object
+	 */
+	public XMLDocument getCorrect(ArrayList<Column> columns) {
 		if (getDocumentTypeValue().toLowerCase().equals("excel")) {
 			return new XMLDocument(getDocumentTypeValue(),
 					getDocumentNameValue(), "", getDocumentPathValue(),
-					getDocumentStartLineValue(), getSheetValue(), cols);
+					getDocumentStartLineValue(), getSheetValue(), columns);
 		} else {
 			return new XMLDocument(getDocumentTypeValue(),
 					getDocumentNameValue(), getDelimiterValue(),
 					getDocumentPathValue(), getDocumentStartLineValue(), -1,
-					cols);
+					columns);
 		}
 	}
 
@@ -331,29 +343,47 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == addColumnButton) {
-			columnFields.size();
-			ColumnFieldContainer cfc = new ColumnFieldContainer(new Column(-1,
-					"", ""), xmledit);
-			columnFields.add(cfc);
-			columnFormPanel.add(xmledit.createColumnForm(cfc),
-					setGrids(0, columnFields.size()));
-			columnFormPanel.revalidate();
+			handleAddColumnButton();
 		} else if (e.getSource() == removeColumnButton) {
-			if (columnFields.size() > 0) {
-				ColumnFieldContainer cfc = columnFields.remove(columnFields
-						.size() - 1);
-				cfc.getPanel().setVisible(false);
-			}
+			handleRemoveColumnButton();
 		} else if (e.getSource() == documentType) {
-			String selectedItem = documentType.getSelectedItem().toString();
-			if (selectedItem.equals("Excel")) {
-				changeLastDocumentRow("Document sheet: ", getSheet());
-			} else {
-				changeLastDocumentRow("Document delimiter: ", getDelimiter());
-			}
-
+			handleDoctypeDropDown();
 		}
+	}
 
+	/**
+	 * Handle the actionlistener of the addColumnButton.
+	 */
+	public void handleAddColumnButton() {
+		ColumnFieldContainer cfc = new ColumnFieldContainer(new Column(-1, "",
+				""));
+		columnFields.add(cfc);
+		columnFormPanel.add(xmledit.createColumnForm(cfc),
+				setGrids(0, columnFields.size()));
+		columnFormPanel.revalidate();
+	}
+
+	/**
+	 * Handle the actionlistener of the removeColumnButton.
+	 */
+	public void handleRemoveColumnButton() {
+		if (columnFields.size() > 0) {
+			ColumnFieldContainer cfc = columnFields
+					.remove(columnFields.size() - 1);
+			cfc.getPanel().setVisible(false);
+		}
+	}
+
+	/**
+	 * Handle the actionlistener of the doctypebutton dropdown.
+	 */
+	public void handleDoctypeDropDown() {
+		String selectedItem = documentType.getSelectedItem().toString();
+		if (selectedItem.equals("Excel")) {
+			changeLastDocumentRow("Document sheet: ", getSheet());
+		} else {
+			changeLastDocumentRow("Document delimiter: ", getDelimiter());
+		}
 	}
 
 	/**
@@ -366,8 +396,7 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	 */
 	public void changeLastDocumentRow(String labelName, JTextField theTextField) {
 		panelForDocTypeSpecificInput.setVisible(false);
-		JPanel testPanel = xmledit.makeFormRowWithTextField(labelName,
-				theTextField);
+		JPanel testPanel = makeFormRowWithTextField(labelName, theTextField);
 		documentFormPanel.add(testPanel, setGrids(0, 1));
 		setPanelForDocTypeSpecificInput(testPanel);
 		documentFormPanel.revalidate();

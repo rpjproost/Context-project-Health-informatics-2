@@ -5,13 +5,18 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ScrollPaneConstants;
 
 /**
  * Class that defines the most methods that are needed in several interface
@@ -25,6 +30,13 @@ public class InterfaceHelper extends JPanel {
 	private static final int TABTEXTFONTSIZE = 40;
 	public static final int TITLEFONT = 28;
 	private static final int TEXTSIZE = 20;
+
+	private static final int PARENTWIDTH = 900;
+	private static final int PARENTHEIGHT = 650;
+	private static final int BUTTONHEIGHT = 35;
+	private static final int FORMELEMENTWIDTH = 800;
+	private static final int THREE = 3;
+	private static final int FORMELEMENTHEIGHT = 25;
 
 	/**
 	 * @return JPanel with attributes specified by the arguments.
@@ -130,10 +142,12 @@ public class InterfaceHelper extends JPanel {
 		button.setFont(new Font("Arial", Font.PLAIN, TEXTSIZE));
 		return button;
 	}
-	
+
 	/**
 	 * Creates a label with special letter size.
-	 * @param titleName the text of the title.
+	 * 
+	 * @param titleName
+	 *            the text of the title.
 	 * @return a Label with the title.
 	 */
 	protected JLabel createTitle(String titleName) {
@@ -179,5 +193,122 @@ public class InterfaceHelper extends JPanel {
 	 */
 	public int getStatePanelSize() {
 		return Toolkit.getDefaultToolkit().getScreenSize().height - getTabsY();
+	}
+
+	/**
+	 * Create a row with a single button to add columns.
+	 * 
+	 * @param buttonLeft
+	 *            the button on the left side of the panel
+	 * @param buttonRight
+	 *            the button on the right side of the panel
+	 * @return the panel with white space and the button
+	 */
+	public JPanel makeFormRowWithButton(JButton buttonLeft, JButton buttonRight) {
+		JPanel buttonPanel = createPanel(Color.WHITE, FORMELEMENTWIDTH,
+				BUTTONHEIGHT);
+		buttonPanel.setLayout(new GridLayout(1, THREE));
+		buttonPanel.add(buttonLeft);
+		buttonPanel.add(new JPanel());
+		buttonPanel.add(buttonRight);
+		return buttonPanel;
+	}
+
+	/**
+	 * Make a Panel containing 3 buttons.
+	 * 
+	 * @param buttonLeft
+	 *            the button on the left.
+	 * @param middleButton
+	 *            the button in the middle
+	 * @param buttonRight
+	 *            the button on the right.
+	 * @return the panel containing the buttons
+	 */
+	public JPanel makeFormRowWithThreeButton(JButton buttonLeft,
+			JButton middleButton, JButton buttonRight) {
+		JPanel buttonPanel = createPanel(Color.WHITE, FORMELEMENTWIDTH,
+				BUTTONHEIGHT);
+		buttonPanel.setLayout(new GridLayout(1, THREE));
+		buttonPanel.add(buttonLeft);
+		buttonPanel.add(middleButton);
+		buttonPanel.add(buttonRight);
+		return buttonPanel;
+	}
+
+	/**
+	 * Make a row with display text field and field to fill in value.
+	 * 
+	 * @param name
+	 *            the name of the label.
+	 * @param comboBox
+	 *            the given comboBox
+	 * @return panel with the two textfields
+	 */
+	public JPanel makeFormRowWithComboBox(String name,
+			JComboBox<String> comboBox) {
+		JPanel containerPanel = createPanel(Color.WHITE, FORMELEMENTWIDTH,
+				FORMELEMENTHEIGHT);
+		containerPanel.setLayout(new GridLayout(1, 2));
+		containerPanel.add(new JLabel(name));
+		containerPanel.add(comboBox);
+		return containerPanel;
+	}
+
+	/**
+	 * Make a row with display text field and field to fill in value.
+	 * 
+	 * @param labelName
+	 *            the name of the label.
+	 * @param textField
+	 *            the textfield of the row
+	 * @return panel with the the textfield and label
+	 */
+	public JPanel makeFormRowWithTextField(String labelName,
+			JTextField textField) {
+		JPanel containerPanel = createPanel(Color.WHITE, FORMELEMENTWIDTH,
+				FORMELEMENTHEIGHT);
+		containerPanel.setLayout(new GridLayout(1, 2));
+		containerPanel.add(new JLabel(labelName));
+		containerPanel.add(textField);
+		return containerPanel;
+	}
+
+	/**
+	 * Make a scrollPanefor the container.
+	 * 
+	 * @param containerPanel
+	 *            the panel for which the scrollpane is made
+	 * @return the scrollPane
+	 */
+	public JScrollPane makeScrollPaneForContainerPanel(JPanel containerPanel) {
+		JScrollPane scrollPane = new JScrollPane(containerPanel,
+				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollPane.setPreferredSize(new Dimension(PARENTWIDTH, PARENTHEIGHT));
+		return scrollPane;
+	}
+
+	/**
+	 * Create a container panel for the document of xml files to container.
+	 * 
+	 * @return the panel to container the documents
+	 */
+	public JPanel createContainerPanel() {
+		JPanel parentPanel = new JPanel();
+		parentPanel.setMinimumSize(new Dimension(PARENTWIDTH, PARENTHEIGHT));
+		parentPanel.setLayout(new GridBagLayout());
+		return parentPanel;
+	}
+
+	/**
+	 * Create a panel with gridbaglayout.
+	 * 
+	 * @return the panel
+	 */
+	public JPanel createEmptyWithGridBagLayoutPanel() {
+		JPanel panel = new JPanel();
+		panel.setLayout(new GridBagLayout());
+		return panel;
 	}
 }

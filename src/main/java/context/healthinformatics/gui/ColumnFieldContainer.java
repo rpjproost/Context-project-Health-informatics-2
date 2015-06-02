@@ -1,6 +1,5 @@
 package context.healthinformatics.gui;
 
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -23,13 +22,9 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	private JTextField dateType;
 	private JPanel panel;
 	private String[] comboBoxValues = { "String", "Int", "Date" };
-	private XMLEditor xmledit;
 	private String comboValue;
 	private JPanel dateTypePanel;
 
-	private static final int FORMELEMENTWIDTH = 800;
-	private static final int FORMELEMENTHEIGHT = 25;
-	private static final int FORMHEIGHT = 75;
 	private static final int THREE = 3;
 
 	/**
@@ -37,14 +32,11 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	 * 
 	 * @param column
 	 *            the column
-	 * @param xmledit
-	 *            the xml editor
 	 */
-	public ColumnFieldContainer(Column column, XMLEditor xmledit) {
-		this.xmledit = xmledit;
+	public ColumnFieldContainer(Column column) {
 		this.comboValue = column.getColumnType();
 		initTextFieldsWithValues(column);
-		this.columnType = new JComboBox<>(comboBoxValues);	
+		this.columnType = new JComboBox<>(comboBoxValues);
 		this.columnType.setSelectedIndex(getComboBoxIndex(comboValue));
 		this.columnType.addActionListener(this);
 	}
@@ -115,8 +107,6 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	public void setColumnType(int index) {
 		columnType.setSelectedIndex(index);
 	}
-
-
 
 	/**
 	 * Get the inputed value of the columnID field.
@@ -240,26 +230,49 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == columnType) {
-			String selectedItem = columnType.getSelectedItem().toString();
-			if (selectedItem.equals("Date")
-					&& !comboValue.toLowerCase().equals("date")) {
-				comboValue = selectedItem;
-				panel.setPreferredSize(new Dimension(FORMELEMENTWIDTH,
-						FORMHEIGHT + FORMELEMENTHEIGHT));
-				dateTypePanel = xmledit.makeFormRowWithTextField(
-						"Specified datetype: ", getDateType());
-				panel.add(dateTypePanel, setGrids(0, THREE));
-				panel.revalidate();
-			} else if (selectedItem.equals("Int")
-					|| selectedItem.equals("String")
-					&& comboValue.toLowerCase().equals("date")) {
-				comboValue = selectedItem;
-				panel.setPreferredSize(new Dimension(FORMELEMENTWIDTH,
-						FORMHEIGHT));
-				dateTypePanel.setVisible(false);
-				panel.revalidate();
-
-			}
+			handleColumnTypeDrowDown();
 		}
+	}
+
+	/**
+	 * Handle the actionlistener of the type drop down menu.
+	 */
+	public void handleColumnTypeDrowDown() {
+		String selectedItem = columnType.getSelectedItem().toString();
+		if (selectedItem.equals("Date")
+				&& !comboValue.toLowerCase().equals("date")) {
+			addTheDateTypeElement(selectedItem);
+		} else if (selectedItem.equals("Int") || selectedItem.equals("String")
+				&& comboValue.toLowerCase().equals("date")) {
+			removeTheDateTypeElement(selectedItem);
+		}
+	}
+
+	/**
+	 * Add the date type element to the column panel.
+	 * 
+	 * @param selectedItem
+	 *            the string of the selected item
+	 */
+	public void addTheDateTypeElement(String selectedItem) {
+		comboValue = selectedItem;
+		dateTypePanel = makeFormRowWithTextField("Specified datetype: ",
+				getDateType());
+		panel.add(dateTypePanel, setGrids(0, THREE));
+		panel.revalidate();
+	}
+
+	/**
+	 * Remove the date type element from the column panel.
+	 * 
+	 * @param selectedItem
+	 *            the string of the selected item
+	 */
+	public void removeTheDateTypeElement(String selectedItem) {
+		// TODO not sure if here is a bug but sometimes datetype field
+		// doesnt properly appear.
+		comboValue = selectedItem;
+		dateTypePanel.setVisible(false);
+		panel.revalidate();
 	}
 }

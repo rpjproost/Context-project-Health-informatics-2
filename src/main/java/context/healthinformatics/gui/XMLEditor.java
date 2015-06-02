@@ -1,21 +1,15 @@
 package context.healthinformatics.gui;
 
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
+
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
 
 import context.healthinformatics.writer.XMLDocument;
 import context.healthinformatics.writer.XMLWriter;
@@ -26,16 +20,6 @@ import context.healthinformatics.writer.XMLWriter;
 public class XMLEditor extends InterfaceHelper implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
-
-	private static final int PARENTWIDTH = 900;
-	private static final int PARENTHEIGHT = 650;
-
-	private static final int FORMELEMENTWIDTH = 800;
-	private static final int FORMELEMENTHEIGHT = 25;
-
-	private static final int COLUMNPANELHEIGHT = 75;
-
-	private static final int BUTTONHEIGHT = 35;
 
 	private static final int MARGINTOP = 10;
 
@@ -64,52 +48,17 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 		JPanel extraContainer = createContainerPanel();
 		containerScrollPanel = createContainerPanel();
 		extraContainer.add(containerScrollPanel, setGrids(0, 0));
-
-		addDocument.addActionListener(this);
-		removeDocument.addActionListener(this);
-		saveXMLDocument.addActionListener(this);
+		addActionListeners();
 		scrollPane = makeScrollPaneForContainerPanel(extraContainer);
 	}
 
 	/**
-	 * Create a row with a single button to add columns.
-	 * 
-	 * @param buttonLeft
-	 *            the button on the left side of the panel
-	 * @param buttonRight
-	 *            the button on the right side of the panel
-	 * @return the panel with white space and the button
+	 * Add the action listeners of the XMLEditor.
 	 */
-	public JPanel makeFormRowWithButton(JButton buttonLeft, JButton buttonRight) {
-		JPanel buttonPanel = createPanel(Color.WHITE, FORMELEMENTWIDTH,
-				BUTTONHEIGHT);
-		buttonPanel.setLayout(new GridLayout(1, THREE));
-		buttonPanel.add(buttonLeft);
-		buttonPanel.add(new JPanel());
-		buttonPanel.add(buttonRight);
-		return buttonPanel;
-	}
-
-	/**
-	 * Make a Panel containing 3 buttons.
-	 * 
-	 * @param buttonLeft
-	 *            the button on the left.
-	 * @param middleButton
-	 *            the button in the middle
-	 * @param buttonRight
-	 *            the button on the right.
-	 * @return the panel containing the buttons
-	 */
-	public JPanel makeFormRowWithThreeButton(JButton buttonLeft,
-			JButton middleButton, JButton buttonRight) {
-		JPanel buttonPanel = createPanel(Color.WHITE, FORMELEMENTWIDTH,
-				BUTTONHEIGHT);
-		buttonPanel.setLayout(new GridLayout(1, THREE));
-		buttonPanel.add(buttonLeft);
-		buttonPanel.add(middleButton);
-		buttonPanel.add(buttonRight);
-		return buttonPanel;
+	public void addActionListeners() {
+		addDocument.addActionListener(this);
+		removeDocument.addActionListener(this);
+		saveXMLDocument.addActionListener(this);
 	}
 
 	/**
@@ -120,12 +69,12 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	public JPanel loadPanel() {
 		JPanel scrollPaneContainerPanel = new JPanel();
 		scrollPaneContainerPanel.add(scrollPane);
-		JPanel parentPanel = new JPanel();
-		parentPanel.setLayout(new GridBagLayout());
-		parentPanel.add(scrollPaneContainerPanel, setGrids(0, 0));
+		JPanel parentPanel = createEmptyWithGridBagLayoutPanel();
+		parentPanel.add(createTitle("The XMLEditor:"), setGrids(0, 0));
+		parentPanel.add(scrollPaneContainerPanel, setGrids(0, 1));
 		parentPanel.add(
 				makeFormRowWithThreeButton(addDocument, saveXMLDocument,
-						removeDocument), setGrids(0, 1, MARGINTOP));
+						removeDocument), setGrids(0, 2, MARGINTOP));
 		return parentPanel;
 	}
 
@@ -147,18 +96,6 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	}
 
 	/**
-	 * Create a container panel for the document of xml files to container.
-	 * 
-	 * @return the panel to container the documents
-	 */
-	public JPanel createContainerPanel() {
-		JPanel parentPanel = new JPanel();
-		parentPanel.setMinimumSize(new Dimension(PARENTWIDTH, PARENTHEIGHT));
-		parentPanel.setLayout(new GridBagLayout());
-		return parentPanel;
-	}
-
-	/**
 	 * Create a panel for a xml document.
 	 * 
 	 * @param documentFieldContainer
@@ -167,8 +104,7 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	 */
 	public JPanel createDocumentPanel(
 			DocumentFieldsContainer documentFieldContainer) {
-		JPanel documentPanel = new JPanel();
-		documentPanel.setLayout(new GridBagLayout());
+		JPanel documentPanel = createEmptyWithGridBagLayoutPanel();
 		documentPanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		documentPanel.add(
 				createStandardDocumentSettingFields(documentFieldContainer),
@@ -229,8 +165,7 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	 */
 	public JPanel createStandardSettingFields(
 			DocumentFieldsContainer documentFieldContainer) {
-		JPanel standardSettingsPanel = new JPanel();
-		standardSettingsPanel.setLayout(new GridBagLayout());
+		JPanel standardSettingsPanel = createEmptyWithGridBagLayoutPanel();
 		standardSettingsPanel.add(
 				makeFormRowWithTextField("Document name: ",
 						documentFieldContainer.getDocumentName()),
@@ -281,15 +216,46 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	 *            the container of all input elements for the current columns
 	 * @return the panel with all field for a column
 	 */
+
 	public JPanel createColumnForm(
 			ColumnFieldContainer currentColumnFieldContainer) {
-		int width = COLUMNPANELHEIGHT;
-		if (currentColumnFieldContainer.hasDateType()) {
-			width += FORMELEMENTHEIGHT;
-		}
-		JPanel containerPanel = createPanel(Color.WHITE, FORMELEMENTWIDTH,
-				width);
+		JPanel containerPanel = createEmptyWithGridBagLayoutPanel();
 		currentColumnFieldContainer.setPanel(containerPanel);
+		containerPanel.add(
+				createStandardColumnSettingFields(currentColumnFieldContainer),
+				setGrids(0, 0));
+		if (currentColumnFieldContainer.hasDateType()) {
+			containerPanel.add(getDateTypePanel(currentColumnFieldContainer),
+					setGrids(0, 1));
+		}
+		return containerPanel;
+	}
+
+	/**
+	 * Create the date type panel and set it at the currentColumnFieldcontainer.
+	 * 
+	 * @param currentColumnFieldContainer
+	 *            the container for the columns
+	 * @return the panel with the date type panel
+	 */
+	private JPanel getDateTypePanel(
+			ColumnFieldContainer currentColumnFieldContainer) {
+		JPanel dateTypePanel = makeFormRowWithTextField("Specified datetype: ",
+				currentColumnFieldContainer.getDateType());
+		currentColumnFieldContainer.setDateTypePanel(dateTypePanel);
+		return dateTypePanel;
+	}
+
+	/**
+	 * Create the column settings fields which every column needs.
+	 * 
+	 * @param currentColumnFieldContainer
+	 *            the column field container
+	 * @return the panel with the fields
+	 */
+	public JPanel createStandardColumnSettingFields(
+			ColumnFieldContainer currentColumnFieldContainer) {
+		JPanel containerPanel = createEmptyWithGridBagLayoutPanel();
 		containerPanel.add(
 				makeFormRowWithTextField("Column id: ",
 						currentColumnFieldContainer.getColumnID()),
@@ -302,91 +268,7 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 				makeFormRowWithComboBox("Select type: ",
 						currentColumnFieldContainer.getColumnType()),
 				setGrids(0, 2));
-		if (currentColumnFieldContainer.hasDateType()) {
-			JPanel dateTypePanel = makeFormRowWithTextField(
-					"Specified datetype: ",
-					currentColumnFieldContainer.getDateType());
-			currentColumnFieldContainer.setDateTypePanel(dateTypePanel);
-			containerPanel.add(dateTypePanel, setGrids(0, THREE));
-		}
 		return containerPanel;
-	}
-
-	/**
-	 * Make a row with display text field and field to fill in value.
-	 * 
-	 * @param name
-	 *            the name of the label.
-	 * @param comboBox
-	 *            the given comboBox
-	 * @return panel with the two textfields
-	 */
-	public JPanel makeFormRowWithComboBox(String name,
-			JComboBox<String> comboBox) {
-		JPanel containerPanel = createPanel(Color.WHITE, FORMELEMENTWIDTH,
-				FORMELEMENTHEIGHT);
-		containerPanel.setLayout(new GridLayout(1, 2));
-		containerPanel.add(new JLabel(name));
-		containerPanel.add(comboBox);
-		return containerPanel;
-	}
-
-	/**
-	 * Make a row with display text field and field to fill in value.
-	 * 
-	 * @param labelName
-	 *            the name of the label.
-	 * @param textField
-	 *            the textfield of the row
-	 * @return panel with the the textfield and label
-	 */
-	public JPanel makeFormRowWithTextField(String labelName,
-			JTextField textField) {
-		JPanel containerPanel = createPanel(Color.WHITE, FORMELEMENTWIDTH,
-				FORMELEMENTHEIGHT);
-		containerPanel.setLayout(new GridLayout(1, 2));
-		containerPanel.add(new JLabel(labelName));
-		containerPanel.add(textField);
-		return containerPanel;
-	}
-
-	/**
-	 * Make a scrollPanefor the container.
-	 * 
-	 * @param containerPanel
-	 *            the panel for which the scrollpane is made
-	 * @return the scrollPane
-	 */
-	public JScrollPane makeScrollPaneForContainerPanel(JPanel containerPanel) {
-		JScrollPane scrollPane = new JScrollPane(containerPanel,
-				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane.setPreferredSize(new Dimension(PARENTWIDTH, PARENTHEIGHT));
-		return scrollPane;
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == addDocument) {
-			addXMLDocumentToContainerScrollPanel(new XMLDocument());
-			inputPage.getXMLController().updateDocuments(inputPage,
-					getAllXMLDocuments());
-		} else if (e.getSource() == removeDocument) {
-			if (documentFieldsContainers.size() > 0) {
-				documentFieldsContainers
-						.remove(documentFieldsContainers.size() - 1);
-				JPanel docContainerPanel = documentPanels.remove(documentPanels
-						.size() - 1);
-				docContainerPanel.setVisible(false);
-				inputPage.getXMLController().updateDocuments(inputPage,
-						getAllXMLDocuments());
-			}
-
-		} else if (e.getSource() == saveXMLDocument) {
-			saveXMLFile();
-
-		}
-
 	}
 
 	/**
@@ -423,6 +305,33 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 			JPanel docContainerPanel = documentPanels.remove(documentPanels
 					.size() - 1);
 			docContainerPanel.setVisible(false);
+		}
+	}
+
+	/**
+	 * Remove a document from the document field.
+	 */
+	private void removeDocument() {
+		documentFieldsContainers.remove(documentFieldsContainers.size() - 1);
+		JPanel docContainerPanel = documentPanels
+				.remove(documentPanels.size() - 1);
+		docContainerPanel.setVisible(false);
+		inputPage.getXMLController().updateDocuments(inputPage,
+				getAllXMLDocuments());
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == addDocument) {
+			addXMLDocumentToContainerScrollPanel(new XMLDocument());
+			inputPage.getXMLController().updateDocuments(inputPage,
+					getAllXMLDocuments());
+		} else if (e.getSource() == removeDocument) {
+			if (documentFieldsContainers.size() > 0) {
+				removeDocument();
+			}
+		} else if (e.getSource() == saveXMLDocument) {
+			saveXMLFile();
 		}
 	}
 }
