@@ -7,6 +7,7 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.io.Serializable;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -37,6 +38,7 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	public static final int FOLDERSECTIONHEIGHT = 400;
 	public static final int TREEPANEWIDTH = 700;
 	public static final int TREEPANEHEIGHT = 300;
+	public static final int BUTTONINSETS = 10;
 	public static final int FLAGLENGTH = 13;
 	public static final int EIGHT = 8;
 	
@@ -58,8 +60,22 @@ public class FileTree implements TreeSelectionListener, Serializable {
 		folderPanel = MainFrame.createPanel(Color.decode(InputPage.COLOR),
 				mf.getScreenWidth(), FOLDERSECTIONHEIGHT);
 		folderPanel.setLayout(new  GridBagLayout());
+		loadFileSelectionTitle(folderPanel);
 		addTreePane(folderPanel);
 		return folderPanel;
+	}
+	
+	/**
+	 * Loads a title for the file selection part.
+	 * @param titlePanel where the title for file selection must come.
+	 */
+	public void loadFileSelectionTitle(JPanel titlePanel) {
+		JLabel title = ip.createTitle("File Selection:");
+		GridBagConstraints c = ip.setGrids(0, 0);
+		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS,
+				BUTTONINSETS);
+		c.anchor = GridBagConstraints.LAST_LINE_START;
+		titlePanel.add(title, c);
 	}
 	
 	/**
@@ -99,7 +115,7 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	private void addTreePane(JPanel panel) {
 		treePane = new JScrollPane(tree);
         treePane.setPreferredSize(new Dimension(TREEPANEWIDTH, TREEPANEHEIGHT));
-        GridBagConstraints c = ip.setGrids(0, 0);
+        GridBagConstraints c = ip.setGrids(0, 1);
         c.weightx = 1;
         c.insets = new Insets(InputPageComponents.BUTTONINSETS, InputPageComponents.BUTTONINSETS
         		, InputPageComponents.BUTTONINSETS, InputPageComponents.BUTTONINSETS);
@@ -200,7 +216,7 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	/**
 	 * Method which remove the project selected in the combobox from the tree.
 	 */
-	public void removeProject() {
+	public void reloadProjects() {
 		folderPanel.remove(treePane);
 		initTree();
 		addTreePane(folderPanel);

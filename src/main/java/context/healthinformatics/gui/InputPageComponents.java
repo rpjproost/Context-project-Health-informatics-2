@@ -35,6 +35,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 	private JButton removeProjectButton;
 
 	public static final int PROJECTSELECTIONPANELHEIGHT = 100;
+	public static final int TITLEHEIGHT = 50;
 	public static final int PROJECTLABELFONTSIZE = 20;
 	public static final int DIMESIONHEIGHT = 150;
 	public static final int DIMESIONWIDTH = 40;
@@ -60,6 +61,20 @@ public class InputPageComponents implements Serializable, ActionListener {
 		screenWidth = mf.getScreenWidth() / 2;
 		box = new JComboBox<String>(ip.getProjects());
 	}
+	
+	/**
+	 * Loads a title for the project selection part.
+	 * @param panel where the title belongs.
+	 */
+	public void loadProjectTitle(JPanel panel) {
+		JLabel title = ip.createTitle("Project Selection:");
+		GridBagConstraints c = ip.setGrids(0, 0);
+		c.gridwidth = THREE;
+		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS,
+				BUTTONINSETS);
+		c.anchor = GridBagConstraints.LINE_START;
+		panel.add(title, c);
+	}
 
 	/**
 	 * @return section1 Panel.
@@ -67,8 +82,9 @@ public class InputPageComponents implements Serializable, ActionListener {
 	public JPanel loadProjectSelection() {
 		JPanel projectSelectionPanel = MainFrame.createPanel(Color.decode(InputPage.COLOR),
 				screenWidth, PROJECTSELECTIONPANELHEIGHT);
+		loadProjectTitle(projectSelectionPanel);
 		addProjectLabel(projectSelectionPanel);
-		projectSelectionPanel.add(box, ip.setGrids(1, 0));
+		projectSelectionPanel.add(box, ip.setGrids(1, 1));
 		addProjectButton(projectSelectionPanel);
 		removeProjectButton(projectSelectionPanel);
 		box.addActionListener(this);
@@ -84,7 +100,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 		projectLabel
 				.setFont(new Font("Arial", Font.PLAIN, PROJECTLABELFONTSIZE));
 		projectLabel.setSize(new Dimension(DIMESIONWIDTH, DIMESIONHEIGHT));
-		panel.add(projectLabel, ip.setGrids(0, 0));
+		panel.add(projectLabel, ip.setGrids(0, 1));
 	}
 
 	/**
@@ -92,7 +108,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 	 *            to which the projectButton will be added.
 	 */
 	public void addProjectButton(JPanel panel) {
-		GridBagConstraints c = ip.setGrids(2, 0);
+		GridBagConstraints c = ip.setGrids(2, 1);
 		projectButton = ip.createButton("ADD new Project", DIMESIONWIDTH,
 				DIMESIONHEIGHT);
 		projectButton.addActionListener(this);
@@ -106,7 +122,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 	 *            to which a remove project button will be added.
 	 */
 	public void removeProjectButton(JPanel panel) {
-		GridBagConstraints c = ip.setGrids(THREE, 0);
+		GridBagConstraints c = ip.setGrids(THREE, 1);
 		removeProjectButton = ip.createButton("Remove Project", DIMESIONWIDTH,
 				DIMESIONHEIGHT);
 		removeProjectButton.addActionListener(this);
@@ -255,5 +271,4 @@ public class InputPageComponents implements Serializable, ActionListener {
 			ip.getXMLController().loadProject(ip.getEditor());
 		}
 	}
-
 }

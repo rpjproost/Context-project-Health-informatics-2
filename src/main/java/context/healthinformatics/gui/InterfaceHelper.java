@@ -23,6 +23,7 @@ public class InterfaceHelper extends JPanel {
 	private int tabsX;
 	private static final int TABSY = 120;
 	private static final int TABTEXTFONTSIZE = 40;
+	public static final int TITLEFONT = 28;
 	private static final int TEXTSIZE = 20;
 
 	/**
@@ -128,6 +129,17 @@ public class InterfaceHelper extends JPanel {
 		button.setPreferredSize(new Dimension(width, height));
 		button.setFont(new Font("Arial", Font.PLAIN, TEXTSIZE));
 		return button;
+	}
+	
+	/**
+	 * Creates a label with special letter size.
+	 * @param titleName the text of the title.
+	 * @return a Label with the title.
+	 */
+	protected JLabel createTitle(String titleName) {
+		JLabel title = new JLabel(titleName);
+		title.setFont(new Font("Arial", Font.PLAIN, TITLEFONT));
+		return title;
 	}
 
 	/**

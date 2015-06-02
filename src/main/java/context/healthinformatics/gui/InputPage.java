@@ -324,14 +324,15 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		xmledit.addXMLDocumentToContainerScrollPanel(doc);
 	}
 	
+	/**
+	 * Removes a project from all devices.
+	 * @param project the project that must be removed.
+	 */
 	public void removeProject(String project) {
 		int index = findFolderProject(project);
-		System.out.println(index);
-		System.out.println(folder);
 		if (index != -1) {
 			folder.remove(index);
-			System.out.println(folder);
-			ft.removeProject();
+			ft.reloadProjects();
 			xmlController.removeProject(project);
 		}
 	}
