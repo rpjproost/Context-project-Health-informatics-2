@@ -19,7 +19,7 @@ public class ConnectionsTest {
 	private Chunk c3;
 	
 	/**
-	 * Before each method create a arraylist with chunks already.
+	 * CodeBefore each method create a arraylist with chunks already.
 	 */
 	@Before
 	public void before() {
@@ -27,14 +27,30 @@ public class ConnectionsTest {
 		chunks = new ArrayList<Chunk>();
 		c1 = new Chunk();
 		c1.setLine(1);
-		c1.setCode("A");
+		c1.setCode("CodeA");
+		c1.setComment("CommentA");
 		chunks.add(c1);
 		c2 = new Chunk();
+		c2.setComment("CommentB");
 		chunks.add(c2);
 		c3 = new Chunk();
-		c3.setCode("B");
+		c3.setCode("CodeB");
 		c3.setLine(2);
 		chunks.add(c3);
+	}
+	
+	/**
+	 * Method which checks if there is no connection made,
+	 * if you try to connect to a chunk higher in the table.
+	 * @throws Exception e
+	 */
+	@Test
+	public void testUpwardConnection() throws Exception {
+		Connections c = new Connections(chunks);
+		c.connectToLine(c3, 1, note);
+		assertEquals(c1.getPointer().get(c1), null);
+		c.connectToChunk(c3, c2, note);
+		assertEquals(c3.getPointer().get(c2), null);
 	}
 	
 	/**
@@ -79,19 +95,44 @@ public class ConnectionsTest {
 	 * @throws Exception e
 	 */
 	@Test(expected = Exception.class)
-	public void testGetChunkByLineException() throws Exception {
+	public void testGetChunkCodeByLineException() throws Exception {
 		Connections c = new Connections(chunks);
 		c.getChunkByLine(-1);
 	}
 	
 	/**
-	 * Method which tests if a connection is made from chunks with code "A" to chunks with code "B".
+	 * Method which tests if a connection is made from chunks
+	 * with code "CodeA" to chunks with code "CodeB".
 	 * @throws Exception e
 	 */
 	@Test
 	public void testConnectOnCode() throws Exception {
 		Connections c = new Connections(chunks);
-		c.connectOnCode("A", "B", note);
+		c.connectOnCode("CodeA", "CodeB", note);
 		assertEquals(c1.getPointer().get(c3), "test");
+	}
+	
+	/**
+	 * Method which tests if a connection is made from chunks
+	 * on line "CodeA" to chunks on line "CodeB".
+	 * @throws Exception e
+	 */
+	@Test
+	public void testConnectOnLine() throws Exception {
+		Connections c = new Connections(chunks);
+		c.connectOnLine(1, 2, note);
+		assertEquals(c1.getPointer().get(c3), "test");
+	}
+	
+	/**
+	 * Method which tests if a connection is made
+	 * from chunks with comment "CodeA" to chunks with comment "CodeB".
+	 * @throws Exception e
+	 */
+	@Test
+	public void testConnectOnCmment() throws Exception {
+		Connections c = new Connections(chunks);
+		c.connectOnComment("CommentA", "CommentB", note);
+		assertEquals(c1.getPointer().get(c2), "test");
 	}
 }

@@ -71,7 +71,7 @@ public class Connections extends Tasks {
 	}
 	
 	/**
-	 * Method which connects all chunks with code equal to c to chunk.
+	 * Method which connects all chunks with code equal to c, to chunk.
 	 * @param c1 code where the connection originates.
 	 * @param c2 code where the connections is made to.
 	 * @param noteForConnection string along the connection
@@ -82,15 +82,51 @@ public class Connections extends Tasks {
 		Chunk curChunk2 = null;
 		for (int i = 0; i < chunks.size(); i++) {
 			curChunk1 = chunks.get(i);
-			if (curChunk1.getCode() == c1) {
+			if (curChunk1.getCode().equals(c1)) {
 				for (int j = i + 1; j < chunks.size(); j++) {
 					curChunk2 = chunks.get(j);
-					if (curChunk2.getCode() == c2) {
+					if (curChunk2.getCode().equals(c2)) {
 						connectToChunk(curChunk1, curChunk2, noteForConnection);
 					}
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Method which connects all chunks with comment equal to c, to chunk.
+	 * @param c1 comment where the connection originates.
+	 * @param c2 comment where the connections is made to.
+	 * @param noteForConnection string along the connection.
+	 * @throws Exception 
+	 */
+	public void connectOnComment(String c1, String c2, String noteForConnection) throws Exception {
+		Chunk curChunk1 = null;
+		Chunk curChunk2 = null;
+		for (int i = 0; i < chunks.size(); i++) {
+			curChunk1 = chunks.get(i);
+			if (curChunk1.getComment().equals(c1)) {
+				for (int j = i + 1; j < chunks.size(); j++) {
+					curChunk2 = chunks.get(j);
+					if (curChunk2.getComment().equals(c2)) {
+						connectToChunk(curChunk1, curChunk2, noteForConnection);
+					}
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Method which connects on line numbers.
+	 * @param c1 the line where the connection originates.
+	 * @param c2 the line where the connections is made to.
+	 * @param noteForConnection string along the connection.
+	 * @throws Exception e
+	 */
+	public void connectOnLine(int c1, int c2, String noteForConnection) throws Exception {
+		Chunk curChunk1 = getChunkByLine(c1);
+		Chunk curChunk2 = getChunkByLine(c2);
+		connectToChunk(curChunk1, curChunk2, noteForConnection);
 	}
 	
 	/**
