@@ -28,7 +28,6 @@ public class InputPageComponents implements Serializable, ActionListener {
 	private JComboBox<String> box;
 	private JButton projectButton;
 	private JButton openFileButton;
-	private JButton selectButton;
 	private JButton helpButton;
 	private JButton analyseButton;
 	private int screenWidth;
@@ -186,13 +185,6 @@ public class InputPageComponents implements Serializable, ActionListener {
 	}
 
 	/**
-	 * @return the SelectButton.
-	 */
-	public JButton getSelectButton() {
-		return selectButton;
-	}
-
-	/**
 	 * @return the analyseButton.
 	 */
 	public JButton getHelpButton() {
@@ -224,10 +216,9 @@ public class InputPageComponents implements Serializable, ActionListener {
 		if (e.getSource() == getProjectButton()) {
 			ip.createProject();
 		}
-		if (e.getSource() == getOpenFileButton()) {
-			if (ip.openFileChooser() == JFileChooser.APPROVE_OPTION) {
+		if (e.getSource() == getOpenFileButton() 
+				&& ip.openFileChooser() == JFileChooser.APPROVE_OPTION) {
 				ip.openFiles(ip.getFileSelecter().getSelectedFiles());
-			}
 		}
 		if (e.getSource() == getHelpButton()) {
 			return; // TODO

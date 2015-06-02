@@ -138,7 +138,7 @@ public class XMLParser extends Parser {
 				parsers.get(i).parse();
 			}
 		} catch (SQLException | IOException e) {
-			// TODO exception
+			System.out.println("One of the parsers failed!"); // TODO exception
 		}
 	}
 

@@ -1,6 +1,7 @@
 package context.healthinformatics.gui;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -9,7 +10,9 @@ import context.healthinformatics.writer.XMLDocument;;
 /**
  * The controller of the XMLEditor Panel.
  */
-public class XMLEditorController {
+public class XMLEditorController implements Serializable {
+	
+	private static final long serialVersionUID = 1L;
 
 	private HashMap<String, ArrayList<XMLDocument>> allDocs;
 	private ArrayList<XMLDocument> selectedDocs;
