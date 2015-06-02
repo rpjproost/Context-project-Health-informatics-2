@@ -56,8 +56,10 @@ public class XMLWriter {
 	 *            the directory where the xml is written to.
 	 */
 	public void writeXML(String fileDir) {
+		Element rootElement = doc.createElement("xml");
+		doc.appendChild(rootElement);
 		for (int i = 0; i < docs.size(); i++) {
-			writeDocument(docs.get(i));
+			writeDocument(rootElement, docs.get(i));
 		}
 		DOMSource source = new DOMSource(doc);
 		StreamResult result = new StreamResult(new File(fileDir));
@@ -70,20 +72,21 @@ public class XMLWriter {
 
 	/**
 	 * Write one single document to xml format.
+	 * @param rootElement the root where eveything will be added to.
 	 * @param xmlDocument the specific document.
 	 */
-	private void writeDocument(XMLDocument xmlDocument) {
-		Element rootElement = doc.createElement("document");
-		rootElement = setAttribute(rootElement, "docname", xmlDocument.getDocName());
-		doc.appendChild(rootElement);
+	private void writeDocument(Element rootElement, XMLDocument xmlDocument) {
+		Element docElement = doc.createElement("document");
+		docElement = setAttribute(docElement, "docname", xmlDocument.getDocName());
+		rootElement.appendChild(docElement);
 		
-		appendElement(rootElement, "doctype", xmlDocument.getDocType());
-		appendElement(rootElement, "path", xmlDocument.getPath());
-		appendElement(rootElement, "start", xmlDocument.getStartLine() + "");
-		appendIfElement(rootElement, "sheet", xmlDocument.getSheet() + "", 
+		appendElement(docElement, "doctype", xmlDocument.getDocType());
+		appendElement(docElement, "path", xmlDocument.getPath());
+		appendElement(docElement, "start", xmlDocument.getStartLine() + "");
+		appendIfElement(docElement, "sheet", xmlDocument.getSheet() + "", 
 				xmlDocument.getDocType(), "excel");
-		appendElement(rootElement, "delimiter", xmlDocument.getDelimiter());
-		appendColumns(rootElement, xmlDocument.getColumns());
+		appendElement(docElement, "delimiter", xmlDocument.getDelimiter());
+		appendColumns(docElement, xmlDocument.getColumns());
 	}
 
 	/**
