@@ -130,10 +130,8 @@ public class InputPage extends InterfaceHelper implements PanelState,
 			JOptionPane.showMessageDialog(null, "Project name already exists!");
 			return;
 		}
-		if (newProject != null) {
+		if (newProject != null && !newProject.isEmpty()) {
 			addComboItem(newProject);
-		} else {
-			JOptionPane.showMessageDialog(null, "No projects specified");
 		}
 	}
 
@@ -324,6 +322,18 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	private void addDocumentAndShowInEditor(XMLDocument doc) {
 		xmlController.addDocument(doc);
 		xmledit.addXMLDocumentToContainerScrollPanel(doc);
+	}
+	
+	public void removeProject(String project) {
+		int index = findFolderProject(project);
+		System.out.println(index);
+		System.out.println(folder);
+		if (index != -1) {
+			folder.remove(index);
+			System.out.println(folder);
+			ft.removeProject();
+			xmlController.removeProject(project);
+		}
 	}
 
 	/**

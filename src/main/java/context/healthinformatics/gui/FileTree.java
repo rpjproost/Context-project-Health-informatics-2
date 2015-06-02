@@ -195,6 +195,15 @@ public class FileTree implements TreeSelectionListener, Serializable {
 		expandTree();
 	}
 	
+	public void removeProject() {
+//		tree.setVisible(false);
+//		initTree();
+//		tree.revalidate();
+//		loadFolder();
+//		expandTree();
+		//TODO remove one project out of the tee
+	}
+	
 	/**
 	 * Expand all paths of the tree.
 	 */

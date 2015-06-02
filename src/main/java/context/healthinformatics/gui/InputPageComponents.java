@@ -32,6 +32,8 @@ public class InputPageComponents implements Serializable, ActionListener {
 	private JButton analyseButton;
 	private int screenWidth;
 
+	private JButton removeProjectButton;
+
 	public static final int PROJECTSELECTIONPANELHEIGHT = 100;
 	public static final int PROJECTLABELFONTSIZE = 20;
 	public static final int DIMESIONHEIGHT = 150;
@@ -68,6 +70,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 		addProjectLabel(projectSelectionPanel);
 		projectSelectionPanel.add(box, ip.setGrids(1, 0));
 		addProjectButton(projectSelectionPanel);
+		removeProjectButton(projectSelectionPanel);
 		box.addActionListener(this);
 		return projectSelectionPanel;
 	}
@@ -95,9 +98,21 @@ public class InputPageComponents implements Serializable, ActionListener {
 		projectButton.addActionListener(this);
 		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS,
 				BUTTONINSETS);
+		panel.add(projectButton, c);
+	}
+	
+	/**
+	 * @param panel
+	 *            to which a remove project button will be added.
+	 */
+	public void removeProjectButton(JPanel panel) {
+		GridBagConstraints c = ip.setGrids(THREE, 0);
+		removeProjectButton = ip.createButton("Remove Project", DIMESIONWIDTH,
+				DIMESIONHEIGHT);
+		removeProjectButton.addActionListener(this);
 		c.weightx = 1;
 		c.anchor = GridBagConstraints.LINE_START;
-		panel.add(projectButton, c);
+		panel.add(removeProjectButton, c);
 	}
 
 	/**
@@ -215,6 +230,13 @@ public class InputPageComponents implements Serializable, ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == getProjectButton()) {
 			ip.createProject();
+		}
+		if (e.getSource() == removeProjectButton
+				&& ip.getFolder().size() > 1) {
+			ip.removeProject((String) getComboBox().getSelectedItem());
+			getComboBox().removeItemAt(getComboBox().getSelectedIndex());
+			ip.getXMLController().setProject((String) getComboBox().getSelectedItem());
+			ip.getXMLController().loadProject(ip.getEditor());
 		}
 		if (e.getSource() == getOpenFileButton() 
 				&& ip.openFileChooser() == JFileChooser.APPROVE_OPTION) {

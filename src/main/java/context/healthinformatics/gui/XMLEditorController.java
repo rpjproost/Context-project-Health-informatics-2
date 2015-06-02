@@ -186,4 +186,12 @@ public class XMLEditorController implements Serializable {
 			}
 		}
 	}
+
+	/**
+	 * Removes a project entirely from all Documents.
+	 * @param project the project that must be removed
+	 */
+	public void removeProject(String project) {
+		allDocs.remove(project);
+	}
 }
