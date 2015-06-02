@@ -279,8 +279,9 @@ public class InputPageComponents implements Serializable, ActionListener {
 	 */
 	protected void updateProject() {
 		ArrayList<XMLDocument> projectDocs = ip.getEditor().getAllXMLDocuments();
-		ip.getXMLController().setDocumentsInProject(projectDocs);
-		ip.getXMLController().setProject((String) getComboBox().getSelectedItem());
-		ip.getXMLController().loadProject(ip.getEditor());
+		XMLEditorController controller = ip.getXMLController();
+		controller.setDocumentsInProject(projectDocs);
+		controller.setProject((String) getComboBox().getSelectedItem());
+		controller.loadProject(ip.getEditor());
 	}
 }
