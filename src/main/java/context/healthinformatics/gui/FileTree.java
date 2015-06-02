@@ -28,7 +28,9 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	
 	private MainFrame mf;
 	private InputPage ip;
+	private JPanel folderPanel;
 	private JTree tree;
+	private JScrollPane treePane;
 	private DefaultMutableTreeNode root;
 	private DefaultTreeModel model;
 	
@@ -53,7 +55,7 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	 * @return The tree folder structure Panel.
 	 */
 	public JPanel loadFolder() {
-		JPanel folderPanel = MainFrame.createPanel(Color.decode(InputPage.COLOR),
+		folderPanel = MainFrame.createPanel(Color.decode(InputPage.COLOR),
 				mf.getScreenWidth(), FOLDERSECTIONHEIGHT);
 		folderPanel.setLayout(new  GridBagLayout());
 		addTreePane(folderPanel);
@@ -95,7 +97,7 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	 * @param panel to which the treePane will be added.
 	 */
 	private void addTreePane(JPanel panel) {
-		JScrollPane treePane = new JScrollPane(tree);
+		treePane = new JScrollPane(tree);
         treePane.setPreferredSize(new Dimension(TREEPANEWIDTH, TREEPANEHEIGHT));
         GridBagConstraints c = ip.setGrids(0, 0);
         c.weightx = 1;
@@ -195,13 +197,15 @@ public class FileTree implements TreeSelectionListener, Serializable {
 		expandTree();
 	}
 	
+	/**
+	 * Method which remove the project selected in the combobox from the tree.
+	 */
 	public void removeProject() {
-//		tree.setVisible(false);
-//		initTree();
-//		tree.revalidate();
-//		loadFolder();
-//		expandTree();
-		//TODO remove one project out of the tee
+		folderPanel.remove(treePane);
+		initTree();
+		addTreePane(folderPanel);
+		folderPanel.revalidate();
+		expandTree();
 	}
 	
 	/**
