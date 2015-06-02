@@ -42,9 +42,9 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	 */
 	public ColumnFieldContainer(Column column, XMLEditor xmledit) {
 		this.xmledit = xmledit;
-		initTextFieldsWithValues(column);
-		this.columnType = new JComboBox<>(comboBoxValues);
 		this.comboValue = column.getColumnType();
+		initTextFieldsWithValues(column);
+		this.columnType = new JComboBox<>(comboBoxValues);	
 		this.columnType.setSelectedIndex(getComboBoxIndex(comboValue));
 		this.columnType.addActionListener(this);
 	}
@@ -59,22 +59,20 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 		this.columnID = new JTextField(Integer.toString(column
 				.getColumnNumber()));
 		this.columnName = new JTextField(column.getColumnName());
-		if (hasDateType(column.getColumnType())) {
+		if (hasDateType()) {
 			this.dateType = new JTextField(column.getDateType());
 		} else {
-			this.dateType = new JTextField("");
+			this.dateType = new JTextField("dd-MM-yyyy");
 		}
 	}
 
 	/**
 	 * Check if a column has a date type.
 	 * 
-	 * @param columnType
-	 *            the type of the column
 	 * @return true if has datetype else false
 	 */
-	public boolean hasDateType(String columnType) {
-		return columnType.equals("DATE");
+	public boolean hasDateType() {
+		return comboValue.toLowerCase().equals("date");
 	}
 
 	/**
@@ -118,14 +116,7 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 		columnType.setSelectedIndex(index);
 	}
 
-	/**
-	 * Check if has date type field.
-	 * 
-	 * @return true if has date type
-	 */
-	public boolean hasDateType() {
-		return !dateType.getText().equals("");
-	}
+
 
 	/**
 	 * Get the inputed value of the columnID field.
