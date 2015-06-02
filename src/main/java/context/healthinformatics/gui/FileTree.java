@@ -134,6 +134,10 @@ public class FileTree implements TreeSelectionListener, Serializable {
 				&& !node.getParent().equals(getRoot())) {
 			String selected = node.getUserObject().toString();
 			selectNode(selected, node);
+		} else if (node != null && !node.equals(getRoot())
+				&& node.getParent().equals(getRoot())) {
+			String selected = node.getUserObject().toString();
+			ip.getInputPageComponent().getComboBox().setSelectedItem(selected);
 		}
 	}
 	

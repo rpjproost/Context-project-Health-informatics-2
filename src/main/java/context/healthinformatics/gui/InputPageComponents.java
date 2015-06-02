@@ -251,8 +251,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 				&& ip.getFolder().size() > 1) {
 			ip.removeProject((String) getComboBox().getSelectedItem());
 			getComboBox().removeItemAt(getComboBox().getSelectedIndex());
-			ip.getXMLController().setProject((String) getComboBox().getSelectedItem());
-			ip.getXMLController().loadProject(ip.getEditor());
+			updateProject();
 		}
 		if (e.getSource() == getOpenFileButton() 
 				&& ip.openFileChooser() == JFileChooser.APPROVE_OPTION) {
@@ -267,8 +266,16 @@ public class InputPageComponents implements Serializable, ActionListener {
 			mf.reloadStatePanel();
 		}
 		if (e.getSource() == box) {
-			ip.getXMLController().setProject((String) getComboBox().getSelectedItem());
-			ip.getXMLController().loadProject(ip.getEditor());
+			updateProject();
 		}
+	}
+	
+	/**
+	 * Updates the project settings.
+	 * Sets controller on the new one and loads into the editor.
+	 */
+	protected void updateProject() {
+		ip.getXMLController().setProject((String) getComboBox().getSelectedItem());
+		ip.getXMLController().loadProject(ip.getEditor());
 	}
 }

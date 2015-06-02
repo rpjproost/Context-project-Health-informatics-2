@@ -189,10 +189,28 @@ public class XMLEditorController implements Serializable {
 	
 	/**
 	 * Saves all xml document to the current project.
+	 * @param ip the place where the update will happen.
 	 * @param newDocuments the new documents to the project.
 	 */
-	public void addProjectDocuments(ArrayList<XMLDocument> newDocuments) {
-		allDocs.put(project, newDocuments);
+	public void updateDocuments(InputPage ip, ArrayList<XMLDocument> newDocuments) {
+		int projectIndex = ip.findFolderProject(project);
+		if (projectIndex != -1) {
+			ArrayList<String> docPieces = breakDownXMLDocumentsIntoNames(newDocuments);
+			ip.getFolder().set(projectIndex, docPieces);
+			allDocs.put(project, newDocuments);
+			ip.getFileTree().reloadProjects();
+		}
+		selectedDocs = new ArrayList<XMLDocument>();
+	}
+
+	private ArrayList<String> breakDownXMLDocumentsIntoNames(ArrayList<XMLDocument> docs) {
+		ArrayList<String> splittedDocuments = new ArrayList<String>();
+		splittedDocuments.add(project);
+		for (int i = 0; i < docs.size(); i++) {
+			String fileName = obtainFileName(docs.get(i).getPath());
+			splittedDocuments.add(fileName);
+		}
+		return splittedDocuments;
 	}
 
 	/**

@@ -381,6 +381,7 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == addDocument) {
 			addXMLDocumentToContainerScrollPanel(new XMLDocument());
+			inputPage.getXMLController().updateDocuments(inputPage, getAllXMLDocuments());
 		} else if (e.getSource() == removeDocument) {
 			if (documentFieldsContainers.size() > 0) {
 				documentFieldsContainers
@@ -388,6 +389,7 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 				JPanel docContainerPanel = documentPanels.remove(documentPanels
 						.size() - 1);
 				docContainerPanel.setVisible(false);
+				inputPage.getXMLController().updateDocuments(inputPage, getAllXMLDocuments());
 			}
 
 		} else if (e.getSource() == saveXMLDocument) {
@@ -416,7 +418,7 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	public void saveXMLFile() {
 		// TODO Couple this with writer and a real save button
 		ArrayList<XMLDocument> xmlDocuments = getAllXMLDocuments();
-		inputPage.getXMLController().addProjectDocuments(xmlDocuments);
+		inputPage.getXMLController().updateDocuments(inputPage, xmlDocuments);
 		XMLWriter writeToXMLFile = new XMLWriter(xmlDocuments);
 		writeToXMLFile.writeXML("src/test/data/writerfiles/test2.xml");
 	}
