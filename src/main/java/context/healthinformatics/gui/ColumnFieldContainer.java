@@ -142,7 +142,7 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	 * @return the value
 	 */
 	public String getColumnNameValue() {
-		return columnID.getText();
+		return columnName.getText();
 	}
 
 	/**
