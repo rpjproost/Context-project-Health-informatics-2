@@ -16,6 +16,7 @@ public class ConnectionsTest {
 	private String note;
 	private Chunk c1;
 	private Chunk c2;
+	private Chunk c3;
 	
 	/**
 	 * Before each method create a arraylist with chunks already.
@@ -26,9 +27,14 @@ public class ConnectionsTest {
 		chunks = new ArrayList<Chunk>();
 		c1 = new Chunk();
 		c1.setLine(1);
+		c1.setCode("A");
 		chunks.add(c1);
 		c2 = new Chunk();
 		chunks.add(c2);
+		c3 = new Chunk();
+		c3.setCode("B");
+		c3.setLine(2);
+		chunks.add(c3);
 	}
 	
 	/**
@@ -40,8 +46,8 @@ public class ConnectionsTest {
 	@Test
 	public void testConnectToLine() throws Exception {
 		Connections c = new Connections(chunks);
-		c.connectToLine(c2, 1, note);
-		assertEquals(c2.getPointer().get(c1), "test");
+		c.connectToLine(c1, 2, note);
+		assertEquals(c1.getPointer().get(c3), "test");
 	}
 	
 	/**
@@ -65,5 +71,27 @@ public class ConnectionsTest {
 	public void testGetChunks() throws Exception {
 		Connections c = new Connections(chunks);
 		assertEquals(c.getChunkByLine(1), c1);
+		assertEquals(c.getChunkByLine(2), c3);
+	}
+	
+	/**
+	 * Method which tests if an exception is thrown with incorrect input for the method.
+	 * @throws Exception e
+	 */
+	@Test(expected = Exception.class)
+	public void testGetChunkByLineException() throws Exception {
+		Connections c = new Connections(chunks);
+		c.getChunkByLine(-1);
+	}
+	
+	/**
+	 * Method which tests if a connection is made from chunks with code "A" to chunks with code "B".
+	 * @throws Exception e
+	 */
+	@Test
+	public void testConnectOnCode() throws Exception {
+		Connections c = new Connections(chunks);
+		c.connectOnCode("A", "B", note);
+		assertEquals(c1.getPointer().get(c3), "test");
 	}
 }
