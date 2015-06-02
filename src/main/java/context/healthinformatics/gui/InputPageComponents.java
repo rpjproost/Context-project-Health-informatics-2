@@ -8,12 +8,15 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import context.healthinformatics.writer.XMLDocument;
 
 /**
  * Class which can load components of the InputPage.
@@ -275,6 +278,8 @@ public class InputPageComponents implements Serializable, ActionListener {
 	 * Sets controller on the new one and loads into the editor.
 	 */
 	protected void updateProject() {
+		ArrayList<XMLDocument> projectDocs = ip.getEditor().getAllXMLDocuments();
+		ip.getXMLController().setDocumentsInProject(projectDocs);
 		ip.getXMLController().setProject((String) getComboBox().getSelectedItem());
 		ip.getXMLController().loadProject(ip.getEditor());
 	}

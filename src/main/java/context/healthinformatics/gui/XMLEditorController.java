@@ -5,7 +5,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import context.healthinformatics.writer.XMLDocument;;
+import context.healthinformatics.writer.XMLDocument;
+import context.healthinformatics.writer.XMLWriter;
 
 /**
  * The controller of the XMLEditor Panel.
@@ -197,12 +198,26 @@ public class XMLEditorController implements Serializable {
 		if (projectIndex != -1) {
 			ArrayList<String> docPieces = breakDownXMLDocumentsIntoNames(newDocuments);
 			ip.getFolder().set(projectIndex, docPieces);
-			allDocs.put(project, newDocuments);
+			setDocumentsInProject(newDocuments);
 			ip.getFileTree().reloadProjects();
 		}
 		selectedDocs = new ArrayList<XMLDocument>();
 	}
+	
+	/**
+	 * Gives a project a new set of documents.
+	 * @param newDocuments the new list of documents for the project.
+	 */
+	public void setDocumentsInProject(ArrayList<XMLDocument> newDocuments) {
+		allDocs.put(project, newDocuments);
+	}
 
+	/**
+	 * Splits for all documents the path into a file name.
+	 * That means that only something like file.txt is left from the entire path.
+	 * @param docs the list that must be checked.
+	 * @return a array list of string with only the file names.
+	 */
 	private ArrayList<String> breakDownXMLDocumentsIntoNames(ArrayList<XMLDocument> docs) {
 		ArrayList<String> splittedDocuments = new ArrayList<String>();
 		splittedDocuments.add(project);
@@ -211,6 +226,16 @@ public class XMLEditorController implements Serializable {
 			splittedDocuments.add(fileName);
 		}
 		return splittedDocuments;
+	}
+	
+	/**
+	 * Saves multiple files in a xml from the project the user is working in.
+	 */
+	public void save() {
+		ArrayList<XMLDocument> xmlDocuments = allDocs.get(project);
+		XMLWriter writeToXMLFile = new XMLWriter(xmlDocuments);
+		writeToXMLFile.writeXML("src/test/data/writerfiles/test2.xml"); 
+		//TODO must be saved correctly
 	}
 
 	/**
