@@ -1,5 +1,6 @@
 package context.healthinformatics.gui;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -151,8 +152,8 @@ public class XMLEditorController {
 	 * @return only the file name.
 	 */
 	public String obtainFileName(String path) {
-		String[] split = path.split("/");
-		return split[split.length - 1];
+		File file = new File(path);
+		return file.getName();
 	}
 	
 	/**
