@@ -178,7 +178,7 @@ public class MergeTableTest {
 		String[] clause = new String[1];
 		clause[0] = "StatSensor.value = 209";
 		MergeTable test = new MergeTable();
-		tables.add("restult");
+		tables.add("result");
 		test.merge(clause);
 		
 		ResultSet rs = getResult("workspace", "date");
