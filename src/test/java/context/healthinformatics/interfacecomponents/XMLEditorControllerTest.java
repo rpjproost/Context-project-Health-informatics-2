@@ -44,7 +44,7 @@ public class XMLEditorControllerTest {
 	@Test
 	public void testGetSelectedDocs() {
 		XMLEditorController controller = new XMLEditorController();
-		assertEquals(0, controller.getSelectedDocs().size());
+		assertNull(controller.getSelectedDocs());
 	}
 
 	/**
@@ -64,9 +64,9 @@ public class XMLEditorControllerTest {
 		controller.addDocument(documentTwo);
 		controller.selectDocument("src/main");
 		controller.selectDocument("src/test");
-		assertEquals(2, controller.getSelectedDocs().get(project).size());
+		assertEquals(2, controller.getSelectedDocs().size());
 		controller.selectDocument("src/main");
-		assertEquals(2, controller.getSelectedDocs().get(project).size());
+		assertEquals(2, controller.getSelectedDocs().size());
 	}
 	
 	/**
@@ -76,7 +76,7 @@ public class XMLEditorControllerTest {
 	public void testSelectDocumentMissing() {
 		controller.selectDocument("src/main");
 		controller.selectDocument("src/test");
-		assertEquals(1, controller.getSelectedDocs().get(project).size());
+		assertEquals(1, controller.getSelectedDocs().size());
 	}
 	
 	/**
@@ -86,7 +86,7 @@ public class XMLEditorControllerTest {
 	public void testDeselectDocumentCorrect() {
 		testSelectDocumentCorrect();
 		controller.deselectDocument("src/main");
-		assertEquals(0, controller.getSelectedDocs().get(project).size());
+		assertEquals(0, controller.getSelectedDocs().size());
 	}
 	
 	/**
@@ -96,7 +96,7 @@ public class XMLEditorControllerTest {
 	public void testDeselectDocumentMissing() {
 		testSelectDocumentCorrect();
 		controller.deselectDocument("src/test");
-		assertEquals(1, controller.getSelectedDocs().get(project).size());
+		assertEquals(1, controller.getSelectedDocs().size());
 	}
 	
 	/**
@@ -107,7 +107,7 @@ public class XMLEditorControllerTest {
 		testSelectDocumentCorrect();
 		controller.addDocument(documentTwo);
 		controller.deselectDocument("src/test");
-		assertEquals(1, controller.getSelectedDocs().get(project).size());
+		assertEquals(1, controller.getSelectedDocs().size());
 	}
 	
 	/**

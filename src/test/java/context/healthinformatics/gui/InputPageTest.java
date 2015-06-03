@@ -1,18 +1,12 @@
 package context.healthinformatics.gui;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
-import java.awt.AWTException;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import context.healthinformatics.database.SingletonDb;
 
 /**
  * Test for the InputPage of the Interface.
@@ -21,7 +15,6 @@ public class InputPageTest {
 
 	private MainFrame mf;
 	private InputPage ip;
-	private ActionListener handler;
 	private ArrayList<ArrayList<String>> folder;
 	
 	public static final int THREE = 3;
@@ -33,23 +26,11 @@ public class InputPageTest {
 	public void createFrame() {
 		mf = new MainFrame();
 		ip = (InputPage) mf.getInputPage();
-		handler = (ActionListener) ip.getInputPageComponent();
 		ip.getFileTree().initTree();
 		ArrayList<String> temp = new ArrayList<String>();
 		temp.add("(default)");
 		folder = new ArrayList<ArrayList<String>>();
 		folder.add(temp);
-	}
-	
-	/**
-	 * Checks if the state changes when you click code tab.
-	 * @throws AWTException 
-	 */
-	@Test
-	public void testAnalyseButton() throws AWTException {
-		ActionEvent e = new ActionEvent(ip.getInputPageComponent().getAnalyseButton(), 0, "");
-		handler.actionPerformed(e);		
-		assertEquals(mf.getPanelState(), mf.getCodePage());
 	}
 	
 	/**
@@ -67,15 +48,6 @@ public class InputPageTest {
 	@Test
 	public void testfindFolderProject() {
 		assertEquals(ip.findFolderProject("(default)"), 0);
-	}
-	
-	/**
-	 * Testing if the database will be made.
-	 */
-	@Test
-	public void testLoadDatabase() {
-		ip.loadDatabase();
-		assertNotNull(SingletonDb.getDb());
 	}
 	
 	/**

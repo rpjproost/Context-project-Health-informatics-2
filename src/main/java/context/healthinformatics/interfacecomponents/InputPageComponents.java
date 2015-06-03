@@ -204,7 +204,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 	 *            to which the addAnalyseButton will be added.
 	 */
 	public void addAnalyseButton(JPanel panel) {
-		analyseButton = ip.createButton("ANALYSE", HELPBUTTONWIDTH,
+		analyseButton = ip.createButton("Save & Load", HELPBUTTONWIDTH,
 				HELPBUTTONHEIGHT);
 		analyseButton.addActionListener(this);
 		GridBagConstraints c = ip.setGrids(0, 0);
@@ -277,9 +277,11 @@ public class InputPageComponents implements Serializable, ActionListener {
 			handleHelpButton();
 		}
 		if (e.getSource() == getAnalyseButton()) {
-			ip.loadDatabase();
-			mf.setState(mf.getCodePage());
-			mf.reloadStatePanel();
+			if (ip.getXMLController().getSelectedDocs() != null) {
+				ip.loadDatabase();
+				mf.setState(mf.getCodePage());
+				mf.reloadStatePanel();
+			}
 		}
 		if (e.getSource() == box) {
 			updateProject();

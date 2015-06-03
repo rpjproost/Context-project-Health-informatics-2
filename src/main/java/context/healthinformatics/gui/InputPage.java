@@ -392,6 +392,21 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 * Load the database.
 	 */
 	public void loadDatabase() {
-		
+		ArrayList<XMLDocument> xmlDocuments = xmledit.getAllXMLDocuments();
+		xmlController.setDocumentsInProject(xmlDocuments);
+		xmlController.save();
+		XMLParser parser = new XMLParser(xmlController.getFileLocation());
+		try {
+			parser.parse();
+			ArrayList<Integer> indexesOfSelectedFiles = xmlController.getIndexesOfSelectedFiles(
+					parser.getDocuments());
+			parser.createDatabase(indexesOfSelectedFiles);
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null,
+					"Something went wrong, please check all fields!");
+		}
+		xmlController.updateDocuments(this, xmlDocuments);	
 	}
+	
+	
 }

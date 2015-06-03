@@ -28,8 +28,8 @@ public class XMLEditorController {
 	/**
 	 * @return the selected documents of the input.
 	 */
-	public HashMap<String, ArrayList<XMLDocument>> getSelectedDocs() {
-		return selectedDocs;
+	public ArrayList<XMLDocument> getSelectedDocs() {
+		return selectedDocs.get(project);
 	}
 
 	/**
@@ -232,7 +232,7 @@ public class XMLEditorController {
 	/**
 	 * @return the path to where projects will be saved and opened.
 	 */
-	private String getFileLocation() {
+	public String getFileLocation() {
 		return "src/main/data/savedXML/" + project + ".xml";
 	}
 	
@@ -253,5 +253,23 @@ public class XMLEditorController {
 		File file = new File(getFileLocation());
 		file.delete();
 		allDocs.remove(project);
+	}
+
+	/**
+	 * Gives the indexes of the selected items out of the given documents.
+	 * @param documents all documents to compare with.
+	 * @return indexes of all files that are selected.
+	 */
+	public ArrayList<Integer> getIndexesOfSelectedFiles(ArrayList<XMLDocument> documents) {
+		ArrayList<Integer> indexes = new ArrayList<Integer>();
+		ArrayList<XMLDocument> selectedDocuments = selectedDocs.get(project);
+		for (int i = 0; i < documents.size(); i++) {
+			for (int j = 0; j < selectedDocuments.size(); j++) {
+				if (documents.get(i).getPath().equals(selectedDocuments.get(j).getPath())) {
+					indexes.add(i);
+				}
+			}
+		}
+		return indexes;
 	}
 }

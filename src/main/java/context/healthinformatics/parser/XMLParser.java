@@ -141,6 +141,23 @@ public class XMLParser extends Parser {
 			System.out.println("One of the parsers failed!"); // TODO exception
 		}
 	}
+	
+	/**
+	 * Creates a database on specific parsers.
+	 * @param indexesForParsers is a list of integers 
+	 * which refers to the correct parser in the list of parsers.
+	 */
+	public void createDatabase(ArrayList<Integer> indexesForParsers) {
+		try {
+			for (int i = 0; i < indexesForParsers.size(); i++) {
+				int index = indexesForParsers.get(i);
+				createTableDb(documents.get(index));
+				parsers.get(index).parse();
+			}
+		} catch (SQLException | IOException e) {
+			System.out.println("One of the parsers failed!"); // TODO exception
+		}
+	}
 
 	/**
 	 * Creates a xml Document object from the data and adds it to a list of all
@@ -203,7 +220,9 @@ public class XMLParser extends Parser {
 	private void createTableDb(XMLDocument xmlDocument) throws SQLException {
 		Db data = SingletonDb.getDb();
 		try {
-			data.createTable(xmlDocument.getDocName(), xmlDocument.getColumns());
+			if (!data.getTables().containsKey(xmlDocument.getDocName())) {
+				data.createTable(xmlDocument.getDocName(), xmlDocument.getColumns());
+			}
 		} catch (SQLException e) {
 			throw new SQLException("The Table could not be created.");
 		}
@@ -373,7 +392,6 @@ public class XMLParser extends Parser {
 	public void setDocType(String docType) {
 		this.docType = docType;
 	}
-
 }
 
 /**
