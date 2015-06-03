@@ -25,6 +25,7 @@ public class Db {
 	private Connection conn;
 	private Statement stmt = null;
 	private HashMap<String, ArrayList<Column>> tables;
+	private String mergeTable = "result";
 
 	/**
 	 * Constructor, sets variables and calls setupConn.
@@ -330,6 +331,20 @@ public class Db {
 		}
 		return dir.delete();
 	}
+	
+	/**
+	 * Gets mergeTable name.
+	 * @return String of mergeTable name.
+	 */
+	public String getMergeTable() {
+		return mergeTable;
+	}
 
-
+	/**
+	 * Sets mergeTable name.
+	 * @param mt String of mergeTable name.
+	 */
+	public void setMergeTable(String mt) {
+		mergeTable = mt;
+	}
 }

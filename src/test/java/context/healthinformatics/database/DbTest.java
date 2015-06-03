@@ -300,5 +300,16 @@ public class DbTest {
 		assertEquals(SingletonDb.getPath(), "C:/db/");
 		assertEquals(SingletonDb.getDbName(), "analyze");
 	}
+	
+	/**
+	 * Tests set/get mergeTable name.
+	 */
+	@Test
+	public void testMergeTableName() {
+		Db data = SingletonDb.getDb();
+		assertEquals("result", data.getMergeTable());
+		data.setMergeTable("result2");
+		assertEquals("result2", data.getMergeTable());
+	}
 
 }
