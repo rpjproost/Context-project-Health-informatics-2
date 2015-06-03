@@ -1,0 +1,4 @@
+Add Project
+To add a project follow the following steps: \n 1. You have to click on the button with the text "ADD new Project". \n 2. A popup will appear \n 3. Fill in the name of your project in the popup. \n 4. Click on  After you've clicked this button a popup will appear where you have to put in the name of your new project.
+Remove Project
+To remove a project follow the following steps: \n1. Select the project you want to delete.\n 2. You have to click on the button with the text "Remove Project".\n3. The selected Project is now removed.

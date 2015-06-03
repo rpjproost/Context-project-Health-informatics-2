@@ -7,6 +7,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -66,10 +67,12 @@ public class InputPageComponents implements Serializable, ActionListener {
 		screenWidth = mf.getScreenWidth() / 2;
 		box = new JComboBox<String>(ip.getProjects());
 	}
-	
+
 	/**
 	 * Loads a title for the project selection part.
-	 * @param panel where the title belongs.
+	 * 
+	 * @param panel
+	 *            where the title belongs.
 	 */
 	public void loadProjectTitle(JPanel panel) {
 		JLabel title = ip.createTitle("Project Selection:");
@@ -85,8 +88,9 @@ public class InputPageComponents implements Serializable, ActionListener {
 	 * @return section1 Panel.
 	 */
 	public JPanel loadProjectSelection() {
-		JPanel projectSelectionPanel = MainFrame.createPanel(Color.decode(InputPage.COLOR),
-				screenWidth, PROJECTSELECTIONPANELHEIGHT);
+		JPanel projectSelectionPanel = MainFrame.createPanel(
+				Color.decode(InputPage.COLOR), screenWidth,
+				PROJECTSELECTIONPANELHEIGHT);
 		loadProjectTitle(projectSelectionPanel);
 		addProjectLabel(projectSelectionPanel);
 		projectSelectionPanel.add(box, ip.setGrids(1, 1));
@@ -121,7 +125,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 				BUTTONINSETS);
 		panel.add(projectButton, c);
 	}
-	
+
 	/**
 	 * @param panel
 	 *            to which a remove project button will be added.
@@ -137,11 +141,12 @@ public class InputPageComponents implements Serializable, ActionListener {
 	}
 
 	/**
-	 * @return Button  Panel.
+	 * @return Button Panel.
 	 */
 	public JPanel loadButtonSection() {
-		JPanel buttonSection = MainFrame.createPanel(Color.decode(InputPage.COLOR),
-				screenWidth, FOLDERSECTIONHEIGHT);
+		JPanel buttonSection = MainFrame
+				.createPanel(Color.decode(InputPage.COLOR), screenWidth,
+						FOLDERSECTIONHEIGHT);
 		addHelpButton(buttonSection);
 		addOpenFileButton(buttonSection);
 		return buttonSection;
@@ -183,13 +188,13 @@ public class InputPageComponents implements Serializable, ActionListener {
 	 * @return the analyze button
 	 */
 	public JPanel loadAnalyzeButtonSection() {
-		JPanel analyseButton = MainFrame.createPanel(
-				Color.decode(InputPage.COLOR), screenWidth,
-				FOLDERSECTIONHEIGHT);
+		JPanel analyseButton = MainFrame
+				.createPanel(Color.decode(InputPage.COLOR), screenWidth,
+						FOLDERSECTIONHEIGHT);
 		addAnalyseButton(analyseButton);
 		return analyseButton;
 	}
-	
+
 	/**
 	 * @param panel
 	 *            to which the addAnalyseButton will be added.
@@ -252,18 +257,17 @@ public class InputPageComponents implements Serializable, ActionListener {
 		if (e.getSource() == getProjectButton()) {
 			ip.createProject();
 		}
-		if (e.getSource() == removeProjectButton
-				&& ip.getFolder().size() > 1) {
+		if (e.getSource() == removeProjectButton && ip.getFolder().size() > 1) {
 			ip.removeProject((String) getComboBox().getSelectedItem());
 			getComboBox().removeItemAt(getComboBox().getSelectedIndex());
 			updateProject();
 		}
-		if (e.getSource() == getOpenFileButton() 
+		if (e.getSource() == getOpenFileButton()
 				&& ip.openFileChooser() == JFileChooser.APPROVE_OPTION) {
-				ip.openFiles(ip.getFileSelecter().getSelectedFiles());
+			ip.openFiles(ip.getFileSelecter().getSelectedFiles());
 		}
 		if (e.getSource() == getHelpButton()) {
-			return; // TODO
+			handleHelpButton();
 		}
 		if (e.getSource() == getAnalyseButton()) {
 			ip.loadDatabase();
@@ -274,16 +278,34 @@ public class InputPageComponents implements Serializable, ActionListener {
 			updateProject();
 		}
 	}
-	
+
 	/**
-	 * Updates the project settings.
-	 * Sets controller on the new one and loads into the editor.
+	 * Updates the project settings. Sets controller on the new one and loads
+	 * into the editor.
 	 */
 	protected void updateProject() {
-		ArrayList<XMLDocument> projectDocs = ip.getEditor().getAllXMLDocuments();
+		ArrayList<XMLDocument> projectDocs = ip.getEditor()
+				.getAllXMLDocuments();
 		XMLEditorController controller = ip.getXMLController();
 		controller.setDocumentsInProject(projectDocs);
 		controller.setProject((String) getComboBox().getSelectedItem());
 		controller.loadProject(ip.getEditor());
+	}
+
+	/**
+	 * Handle the help button.
+	 */
+	private void handleHelpButton() {
+		ReadHelpInfoFromTXTFile test = new ReadHelpInfoFromTXTFile(
+				"src/main/data/guihelpdata/inputpagehelp.txt");
+		try {
+			test.parse();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ArrayList<HelpFrameInfoContainer> listOfHelpFrameInfo = test
+				.getHelpFrameInfoContainer();
+		new HelpFrame("Input Page Help", listOfHelpFrameInfo);
 	}
 }
