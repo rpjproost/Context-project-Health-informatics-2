@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import context.healthinformatics.gui.InputPage;
@@ -254,9 +255,12 @@ public class InputPageComponents implements Serializable, ActionListener {
 		}
 		if (e.getSource() == removeProjectButton
 				&& ip.getFolder().size() > 1) {
-			ip.removeProject((String) getComboBox().getSelectedItem());
-			getComboBox().removeItemAt(getComboBox().getSelectedIndex());
-			updateProject();
+			int reply = JOptionPane.showConfirmDialog(null, 
+					"Are you sure you want to remove the project?", 
+					"Remove Project", JOptionPane.YES_NO_OPTION);
+			if (reply == JOptionPane.YES_OPTION) {
+				remove();
+			}
 		}
 		if (e.getSource() == getOpenFileButton() 
 				&& ip.openFileChooser() == JFileChooser.APPROVE_OPTION) {
@@ -275,11 +279,17 @@ public class InputPageComponents implements Serializable, ActionListener {
 		}
 	}
 	
+	private void remove() {
+		ip.removeProject((String) getComboBox().getSelectedItem());
+		getComboBox().removeItemAt(getComboBox().getSelectedIndex());
+		updateProject();
+	}
+
 	/**
 	 * Updates the project settings.
 	 * Sets controller on the new one and loads into the editor.
 	 */
-	protected void updateProject() {
+	public void updateProject() {
 		ArrayList<XMLDocument> projectDocs = ip.getEditor().getAllXMLDocuments();
 		XMLEditorController controller = ip.getXMLController();
 		controller.setDocumentsInProject(projectDocs);

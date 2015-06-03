@@ -24,18 +24,6 @@ public class XMLEditorController {
 		allDocs = new HashMap<String, ArrayList<XMLDocument>>();
 		setSelectedDocs(new HashMap<String, ArrayList<XMLDocument>>());
 	}
-	
-	/**
-	 * Constructor created a list with all document already loaded.
-	 * @param project the name of project you are working in.
-	 * @param projectDocs the list of documents already made.
-	 */
-	public XMLEditorController(String project, ArrayList<XMLDocument> projectDocs) {
-		allDocs = new HashMap<String, ArrayList<XMLDocument>>();
-		setSelectedDocs(new HashMap<String, ArrayList<XMLDocument>>());
-		allDocs.put(project, projectDocs);
-		setProject(project);
-	}
 
 	/**
 	 * @return the selected documents of the input.
@@ -228,7 +216,7 @@ public class XMLEditorController {
 	 * @param docs the list that must be checked.
 	 * @return a array list of string with only the file names.
 	 */
-	private ArrayList<String> breakDownXMLDocumentsIntoNames(ArrayList<XMLDocument> docs) {
+	public ArrayList<String> breakDownXMLDocumentsIntoNames(ArrayList<XMLDocument> docs) {
 		ArrayList<String> splittedDocuments = new ArrayList<String>();
 		splittedDocuments.add(project);
 		for (int i = 0; i < docs.size(); i++) {
@@ -238,14 +226,17 @@ public class XMLEditorController {
 		return splittedDocuments;
 	}
 	
+	private String getFileLocation() {
+		return "src/main/data/savedXML/" + project + ".xml";
+	}
+	
 	/**
 	 * Saves multiple files in a xml from the project the user is working in.
 	 */
 	public void save() {
 		ArrayList<XMLDocument> xmlDocuments = allDocs.get(project);
 		XMLWriter writeToXMLFile = new XMLWriter(xmlDocuments);
-		writeToXMLFile.writeXML("src/test/data/writerfiles/test2.xml"); 
-		//TODO must be saved correctly
+		writeToXMLFile.writeXML(getFileLocation()); 
 	}
 
 	/**
@@ -253,6 +244,8 @@ public class XMLEditorController {
 	 * @param project the project that must be removed
 	 */
 	public void removeProject(String project) {
+		File file = new File(getFileLocation());
+		file.delete();
 		allDocs.remove(project);
 	}
 }

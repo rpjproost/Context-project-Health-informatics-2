@@ -3,21 +3,16 @@ package context.healthinformatics.interfacecomponents;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import context.healthinformatics.gui.InputPage;
 import context.healthinformatics.gui.InterfaceHelper;
 import context.healthinformatics.writer.XMLDocument;
-import context.healthinformatics.writer.XMLWriter;
 
 /**
  * XMLEditor class makes a panel which is filled with a form to edit xml files.
@@ -295,47 +290,7 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	public void saveXMLFile() {
 		ArrayList<XMLDocument> xmlDocuments = getAllXMLDocuments();
 		inputPage.getXMLController().updateDocuments(inputPage, xmlDocuments);
-		XMLWriter writeToXMLFile = new XMLWriter(xmlDocuments);
-		writeToXMLFile.writeXML(chooseSaveFile());
-	}
-
-	/**
-	 * Make a pop up to save the xml file.
-	 * 
-	 * @return the path of where to save the xml file
-	 */
-	public String chooseSaveFile() {
-		JFileChooser chooser = new JFileChooser();
-		FileNameExtensionFilter filter = new FileNameExtensionFilter(
-				"XML files", "xml");
-		chooser.setFileFilter(filter);
-		int returnVal = chooser.showSaveDialog(containerScrollPanel);
-		return getSavePath(returnVal, chooser);
-	}
-
-	/**
-	 * Get the absolute path of where to save the xml file.
-	 * 
-	 * @param returnVal
-	 *            the value of the dialog
-	 * @param chooser
-	 *            the file chooser
-	 * @return the absolute path
-	 */
-	private String getSavePath(int returnVal, JFileChooser chooser) {
-		File selectedFile = new File("");
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			selectedFile = chooser.getSelectedFile();
-			try {
-				String fileName = selectedFile.getCanonicalPath();
-				if (!fileName.endsWith(".xml")) {
-					selectedFile = new File(fileName + ".xml");
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		return selectedFile.getAbsolutePath();
+		inputPage.getXMLController().save();
 	}
 
 	/**
