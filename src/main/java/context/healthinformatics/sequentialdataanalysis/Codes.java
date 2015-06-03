@@ -75,11 +75,11 @@ public class Codes extends Tasks {
 	
 	/**
 	 * Method which sets the code for every chunk in a list.
-	 * @param chunk List of chunks.
+	 * @param list of chunks.
 	 * @param code code to be set.
 	 */
-	public void setCodeOfListOfChunks(ArrayList<Chunk> chunk, String code) {
-		for (Chunk c : chunk) {
+	public void setCodeOfListOfChunks(ArrayList<Chunk> list, String code) {
+		for (Chunk c : list) {
 			c.setCode(code);
 		}
 	}
