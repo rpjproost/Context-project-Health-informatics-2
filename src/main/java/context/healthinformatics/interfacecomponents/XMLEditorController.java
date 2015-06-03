@@ -79,6 +79,9 @@ public class XMLEditorController {
 		}
 	}
 	
+	/**
+	 * @return the selected documents of the project user is working in.
+	 */
 	private ArrayList<XMLDocument> getSelectedDocuments() {
 		if (selectedDocs.containsKey(project)) {
 			return selectedDocs.get(project);
@@ -226,6 +229,9 @@ public class XMLEditorController {
 		return splittedDocuments;
 	}
 	
+	/**
+	 * @return the path to where projects will be saved and opened.
+	 */
 	private String getFileLocation() {
 		return "src/main/data/savedXML/" + project + ".xml";
 	}

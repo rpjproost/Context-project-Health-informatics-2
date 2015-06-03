@@ -53,7 +53,6 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 * 
 	 * @param m
 	 *            is the mainframe object
-	 * @throws IOException 
 	 */
 	public InputPage(MainFrame m) {
 		mf = m;
@@ -64,6 +63,9 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		checkOnFiles();	
 	}
 
+	/**
+	 * 
+	 */
 	private void checkOnFiles() {
 		File directory = new File("src/main/data/savedXML/");
 		File[] listOfFiles = directory.listFiles();
@@ -74,6 +76,10 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		}
 	}
 	
+	/**
+	 * Founded files will be parsed and will be added to the interface.
+	 * @param listOfFiles list of files that are found by java.
+	 */
 	private void foundFiles(File[] listOfFiles) {
 		for (int i = 0; i < listOfFiles.length; i++) {
 			String project = listOfFiles[i].getName().replace(".xml", "");
@@ -90,6 +96,11 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		}
 	}
 
+	/**
+	 * Sets all saved values in all components that are involved.
+	 * @param project the project which should be added.
+	 * @param docsOfFile all files that are belongs to the project.
+	 */
 	private void runOldProject(String project, ArrayList<XMLDocument> docsOfFile) {
 		xmlController.setProject(project);
 		xmlController.setDocumentsInProject(docsOfFile);
@@ -101,6 +112,9 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		ft.expandTree();
 	}
 
+	/**
+	 * Creates a clear project with a standard project default.
+	 */
 	private void runClearedProject() {
 		ft = new FileTree(mf, this);
 		xmlController.setProject("(default)");
