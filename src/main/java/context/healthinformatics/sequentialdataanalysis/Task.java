@@ -29,8 +29,9 @@ public abstract class Task {
 	
 	/**
 	 * Runs the C method from parser.
+	 * @param query An array of query words.
 	 */
-	public abstract void run();
+	public abstract void run(String[] query);
 	
 	/**
 	 * Return the chunks from the constructor.
