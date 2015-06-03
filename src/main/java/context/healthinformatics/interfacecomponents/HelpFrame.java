@@ -39,6 +39,8 @@ public class HelpFrame extends InterfaceHelper {
 
 	private JTextArea displayInfoTextArea = new JTextArea();
 
+	private InputPageComponents inputPageComponents;
+
 	private ArrayList<HelpFrameInfoContainer> listOfHelpFrameInfo;
 
 	/**
@@ -48,14 +50,31 @@ public class HelpFrame extends InterfaceHelper {
 	 *            the title of the frame
 	 * @param listOfHelpFrameInfo
 	 *            the list with info for the help frame
+	 * @param inputPageComponents
+	 *            the input page components
 	 */
 	public HelpFrame(String titleFrame,
-			ArrayList<HelpFrameInfoContainer> listOfHelpFrameInfo) {
+			ArrayList<HelpFrameInfoContainer> listOfHelpFrameInfo,
+			InputPageComponents inputPageComponents) {
 		this.listOfHelpFrameInfo = listOfHelpFrameInfo;
+		this.inputPageComponents = inputPageComponents;
 		helpMainFrame = new JFrame(titleFrame);
 		setTextAreaSettings();
 		initMainPanel();
+		setWindowListener();
+	}
 
+	/**
+	 * Add a WindowsListener to tell the input page components when the windows
+	 * is closed.
+	 */
+	private void setWindowListener() {
+		helpMainFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+				inputPageComponents.setHelpFrameOpen(false);
+			}
+		});
 	}
 
 	/**

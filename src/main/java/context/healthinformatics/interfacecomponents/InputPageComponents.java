@@ -55,6 +55,8 @@ public class InputPageComponents implements Serializable, ActionListener {
 	public static final int HELPBUTTONWIDTH = 300;
 	public static final int FOLDERSECTIONHEIGHT = 100;
 
+	private boolean helpFrameOpen = false;
+
 	/**
 	 * Constructor.
 	 * 
@@ -259,10 +261,9 @@ public class InputPageComponents implements Serializable, ActionListener {
 		if (e.getSource() == getProjectButton()) {
 			ip.createProject();
 		}
-		if (e.getSource() == removeProjectButton
-				&& ip.getFolder().size() > 1) {
-			int reply = JOptionPane.showConfirmDialog(null, 
-					"Are you sure you want to remove the project?", 
+		if (e.getSource() == removeProjectButton && ip.getFolder().size() > 1) {
+			int reply = JOptionPane.showConfirmDialog(null,
+					"Are you sure you want to remove the project?",
 					"Remove Project", JOptionPane.YES_NO_OPTION);
 			if (reply == JOptionPane.YES_OPTION) {
 				remove();
@@ -284,7 +285,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 			updateProject();
 		}
 	}
-	
+
 	/**
 	 * Removes a project out the system.
 	 */
@@ -308,19 +309,31 @@ public class InputPageComponents implements Serializable, ActionListener {
 	}
 
 	/**
+	 * Set if the help frame is open or not.
+	 * 
+	 * @param helpFrameNew
+	 *            the boolean value
+	 */
+	public void setHelpFrameOpen(boolean helpFrameNew) {
+		this.helpFrameOpen = helpFrameNew;
+	}
+
+	/**
 	 * Handle the help button.
 	 */
 	private void handleHelpButton() {
-		ReadHelpInfoFromTXTFile test = new ReadHelpInfoFromTXTFile(
-				"src/main/data/guihelpdata/inputpagehelp.txt");
-		try {
-			test.parse();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (!helpFrameOpen) {
+			setHelpFrameOpen(true);
+			ReadHelpInfoFromTXTFile test = new ReadHelpInfoFromTXTFile(
+					"src/main/data/guihelpdata/inputpagehelp.txt");
+			try {
+				test.parse();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			ArrayList<HelpFrameInfoContainer> listOfHelpFrameInfo = test
+					.getHelpFrameInfoContainer();
+			new HelpFrame("Input Page Help", listOfHelpFrameInfo, this);
 		}
-		ArrayList<HelpFrameInfoContainer> listOfHelpFrameInfo = test
-				.getHelpFrameInfoContainer();
-		new HelpFrame("Input Page Help", listOfHelpFrameInfo);
 	}
 }
