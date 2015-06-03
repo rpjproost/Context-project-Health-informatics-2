@@ -14,6 +14,8 @@ import context.healthinformatics.database.SingletonDb;
  */
 public abstract class Task {
 	
+	private String mergeTable = SingletonDb.getDb().getMergeTable();
+			
 	/**
 	 * List of chunks that every Class. 
 	 */
@@ -57,9 +59,9 @@ public abstract class Task {
 		ArrayList<Integer> res = new ArrayList<Integer>();
 		Db data = SingletonDb.getDb();
 		try {
-			ResultSet rs = data.selectResultSet("result", "resultid", whereClause);
+			ResultSet rs = data.selectResultSet(mergeTable, mergeTable + "id", whereClause);
 			while (rs.next()) {
-				res.add(rs.getInt("resultid"));
+				res.add(rs.getInt(mergeTable + "id"));
 			}
 		} catch (SQLException e) {
 			throw new SQLException(e);

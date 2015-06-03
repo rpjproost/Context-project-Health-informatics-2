@@ -20,6 +20,7 @@ public class MergeTable {
 	
 	private Db data;
 	private Logger log = Logger.getLogger(MergeTable.class.getName());
+	private String mergeTable = SingletonDb.getDb().getMergeTable();
 	
 	/**
 	 * 
@@ -43,7 +44,7 @@ public class MergeTable {
 	public void mergeTablesView() {
 		//TODO make sure this works with 1 date column.
 		StringBuilder sql = new StringBuilder();
-		sql.append("CREATE VIEW workspace AS SELECT * FROM result ORDER BY ");
+		sql.append("CREATE VIEW workspace AS SELECT * FROM  " + mergeTable + " ORDER BY ");
 		sql.append("date");
 		try {
 			data.executeUpdate(sql.toString());
@@ -70,7 +71,7 @@ public class MergeTable {
 				}
 			}
 		}
-		data.createTable("result", columns);
+		data.createTable(mergeTable, columns);
 		insertTables(allTables, clause);
 	}
 	
@@ -100,7 +101,9 @@ public class MergeTable {
 	 */
 	public void insertTable(String key, ArrayList<Column> cols, String clause) {
 		StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO result (");
+		sql.append("INSERT INTO ");
+		sql.append(mergeTable);
+		sql.append(" (");
 		appendColumns(cols, sql);
 		sql.append(") SELECT ");
 		appendColumns(cols, sql);
@@ -165,10 +168,10 @@ public class MergeTable {
 	 */
 	public ArrayList<Chunk> getChunks() throws SQLException {
 		ArrayList<Chunk> chunks = new ArrayList<Chunk>();
-		ResultSet rs = data.selectResultSet("workspace", "resultid", "");
+		ResultSet rs = data.selectResultSet("workspace", mergeTable + "id", "");
 		while (rs.next()) {
 			Chunk c = new Chunk();
-			int line = rs.getInt("resultid");
+			int line = rs.getInt(mergeTable + "id");
 			c.setLine(line);
 			chunks.add(c);
 		}
