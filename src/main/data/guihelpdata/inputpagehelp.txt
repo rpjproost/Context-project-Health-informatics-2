@@ -1,22 +1,177 @@
+%%
 Add Project
-To add a project follow the following steps: \n\n1. You have to click on the button with the text "ADD new Project". This is in the left corner of the screen.\n2. A popup will appear \n3. Fill in the name of your new project in the textfield of the popup. \n4. Click on "OK" if you filled in your project name.\n5. A new Project will appear in the File Selection area!
+<html>
+	<body>
+	<h2>To add a project follow the following steps:</h2>
+	<ol>
+	  <li>You have to click on the button with the text "ADD new Project". This is in the left corner of the screen.</li>
+	  <li>A pop-up will appear</li>
+	  <li>Fill in the name of your new project in the text field of the pop-up.</li>
+	  <li>Click on "OK" if you filled in your project name.</li>
+	  <li>A new Project will appear in the File Selection area!</li>
+	</ol>  
+	</body>
+</html>
+%%
 Remove Project
-To remove a project follow the following steps: \n\n1. Select the project you want to delete.\n2. You have to click on the button with the text "Remove Project".\n3. The selected Project is now removed.
+<html>
+	<body>
+	<h2>To remove a project follow the following steps:</h2>
+	<ol>
+	  <li>Select the project you want to delete. You can do this two ways either by selecting a project in the drop down menu or select it in the project selection section.</li>
+	  <li>You have to click on the button with the text "Remove Project".</li>
+	  <li>The selected Project is now removed.</li>
+	</ol>  
+	</body>
+</html>
+%%
 Switch Project
-You can switch between project in two different ways: \n\n1. Click on de dropdown element in the top left corner of the screen and select the project you want to switch too.\n2. In the file selection section select the project name of the project you want to work with.
+<html>
+	<body>
+	<h2>You can switch between project in two different ways:</h2>
+	<ol>
+	  <li>Click on de drop down element in the top left corner of the screen and select the project you want to switch too.</li>
+	  <li>In the file selection section select the project name of the project you want to work with.</li>
+	</ol>  
+	</body>
+</html>
+%%
 Open File
-To open a File for your project you have to follow the following steps:\n\n1. Click on the button "Open File".\n2. After you clicked the button a file select window will open. Here you can browse your computer for the desired .txt,.csv,.xls,.xlsx or .xml file.\n3.Once selected the file click on open en the file or files will be added to the project.
+<html>
+	<body>
+	<h2>To open a File for your project you have to follow the following steps:</h2>
+	<ol>
+	  <li>Click on the button "Open File".</li>
+	  <li>After you clicked the button a file select window will open. Here you can browse your computer 
+	  for the desired <b>.txt</b>,<b>.csv</b>,<b>.xls</b>,<b>.xlsx</b> or <b>.xml</b> file.</li>
+	  <li>Once selected the file click on open en the file or files will be added to the project.</li>
+	</ol>  
+	</body>
+</html>
+%%
 Edit XML
-To edit an XML file you first have to setup a project. See for more info Add Project, and Open File.\n\nOnce your project is setup you will see the specified documents appear in the XML editor.\n In the XML editor you have to specify for each document the name of the document, the type of the document, the path of where the document is located and the line of where the data starts. If the document you are describing is a txt or csv file you have to set the delimiter on which the fields are separated. This usually is a ",". If however your document is an excel file you have to specify which sheet you want to read.\n\nWhen you've set all the Document variables you can add or remove columns. Per column you have to specify the number of the column, and give it a name. After that you can select which type of Document it is: A String, int or Date. If the column is a Date you have to specify the datetype. There is extra info about how to specify this datetype in the set DateType section. 
+<html>
+	<body>
+	<h2>Edit an XML file</h2>
+	<p>To edit an XML file you first have to set-up a project. For more info see the <b>Add Project</b>, and <b>Open File</b> sections.</p> 
+	<p>
+	Once your project is set-up you will see the specified documents appear in the XML editor.<br/>
+	In the XML editor you have to specify for each document:<br/>
+	<ul>
+		<li>the name of the document</li>
+		<li>the type of the document</li>
+		<li>the path of where the document is located</li>
+		<li>the line of where the data starts</li>
+	</ul>
+	If the document you are describing is a <i>txt</i> or <i>csv</i> file you have to set the <b>delimiter</b> on which the fields are
+	separated. This usually is a ",".<br/>
+	If however your document is an <i>excel</i> file you have to specify which <b>sheet</b> you want to read. 
+	You can specify this by setting an Integer from 1 to n. Where 1 indicates the first sheet.<br/>
+	</p>
+	<p>
+	When you've set all the Document variables you can add or remove <b>columns</b>.<br/>
+	Per column you have to specify:
+	<ul>
+		<li>the number of the column. This is also an Integer from 1 to n. Where 1 indicates the first column</li>
+		<li>the name of the column</li>
+	    <li>select the type of column: A <i>String</i> <i>int</i> or <i></i>Date</li>
+	</ul> 
+	If the column is a Date you have to specify the date type. There is extra info about how to specify this date type in the set <b>Set DateType</b> section. 
+	</p>
+	</body>
+</html>
+%%
 Add Column
-To add a column you have to follow the following steps: \n\n1. Click on the button "Add new Column".\n2.A new column will appear on the bottem of the XMLDocument.\n3.Fill in the empty fields and select the column type.\n4. You succesfully added a new Column!:)
+<html>
+	<body>
+	<h2>To add a column you have to follow the following steps:</h2>
+	<ol>
+	  <li>Click on the button "Add new Column".</li>
+	  <li>A new column will appear on the bottom of the XMLDocument.</li>
+	  <li>Fill in the empty fields and select the column type.</li>
+	  <li>You successfully added a new Column!:)</li>
+	</ol>  
+	</body>
+</html>
+%%
 Remove Column
-To remove a column you have to follow the following steps: \n\n1. Click on the button "Remove Column".\n2. The last column of the document will be removed.
+<html>
+	<body>
+	<h2>To remove a column you have to follow the following steps:</h2>
+	<ol>
+	  <li>Click on the button "Remove Column".</li>
+	  <li>The last column of the document will be removed.</li>
+	</ol>  
+	</body>
+</html>
+%%
 Set DateType
-A datetype is needed so the program knows in what order it needs to read the date. To show you how datetypes work we have here some examples:\n\ndd-MM-yyyy	21-12-2014\nddMMyyyy	21122014\nddMMyy	211214\nHH:mm:ss	12:08:56\n\nFor a more detailed view on how DateTypes work and more examples, you can take a look at: http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
+<html>
+	<body>
+	<h2>Set a Date Type</h2>
+	<p>A date type is needed so the program knows in what order it needs to read the date.<br/>
+	To show you how date types work we specified some examples below:
+	</p>
+	<table style="width:100%">
+	  <tr>
+		<td>dd-MM-yyyy</td>
+		<td>21-12-2014</td>		
+	  </tr>
+	  <tr>
+		<td>ddMMyyyy</td>
+		<td>21122014</td>		
+	  </tr>
+	  <tr>
+		<td>ddMMyy</td>
+		<td>211214</td>		
+	  </tr>
+	  <tr>
+		<td>HH:mm:ss</td>
+		<td>12:08:56</td>		
+	  </tr>
+	</table>
+	<p>
+	For a more detailed view on how DateTypes work and more examples, you can take a look at: 
+	<a href='http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html'>The Oracle SimpleDateFormat Page</a>
+	</p>
+	</body>
+</html>
 Create new Document
-To create a new Document you have to follow the following steps: \n\n1. Click on the button "Add new Document\n2.A new Document will appear on the bottem of the XMLEditor\n3.Fill in the empty fields and select the document type. Also don't forgot to set the columns!\n4. You succesfully added a new Document!:)
+<html>
+	<body>
+	<h2>To create a new Document you have to follow the following steps:</h2>
+	<ol>
+	  <li>Click on the button "Add new Document".</li>
+	  <li>A new Document will appear on the bottom of the XMLEditor</li>
+	  <li>Fill in the empty fields and select the document type. Also don't forget to set the columns!</li>
+	  <li>You succesfully added a new Document!:)</li>
+	</ol>  
+	</body>
+</html>
+%%
 Remove Document
-To remove a Document you have to follow the following steps: \n\n1. Click on the button "Remove Document".\n2. The last document of the XMLEditor will be removed.
+<html>
+	<body>
+	<h2>To remove a Document you have to follow the following steps:</h2>
+	<ol>
+	  <li>Click on the button "Remove Document".</li>
+	  <li>The last document of the XMLEditor will be removed.</li>
+	</ol>  
+	</body>
+</html>
+%%
 Save XML file
-To Save the XML file you have to follow the following steps: \n\n1. Click on the button "Save XML file".\n2. The xmlfile in the xmleditor will be saved on your computer on a preset location. This way the program knows which xml files you've used the lasttime you used the program and asks to reload them.
+<html>
+	<body>
+	<h2>To Save the XML file you have to follow the following steps:</h2>
+	<ol>
+	  <li>Click on the button "Save XML file".</li>
+	  <li>The XML file in the XML editor will be saved on your computer on a pre-set location.</li> 
+	</ol>  
+	<p>
+	By presetting the location of the saved file, the program knows which XML files you've used the last time you used the program 
+	  and asks to reload them when you restart it.
+	</p>
+	</body>
+</html>
+%%

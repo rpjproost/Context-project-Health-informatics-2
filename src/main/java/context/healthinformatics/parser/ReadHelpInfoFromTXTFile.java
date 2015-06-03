@@ -54,14 +54,43 @@ public class ReadHelpInfoFromTXTFile extends Parser {
 	}
 
 	/**
-	 * Reads the lines of the file.
+	 * Initialize variables to read the lines.
 	 */
 	private void readRelevantLines() {
+		StringBuilder buildInfoString = new StringBuilder();
+		String title = "";
+		int count = 0;
+		readLines(title, count, buildInfoString);
+	}
+
+	/**
+	 * Read the actual lines.
+	 * 
+	 * @param title
+	 *            the title of the info
+	 * @param count
+	 *            count how many lines are read.
+	 * @param buildInfoString
+	 *            the string with HTML info
+	 */
+	private void readLines(String title, int count,
+			StringBuilder buildInfoString) {
 		while (sc.hasNextLine()) {
-			String title = sc.nextLine();
-			String info = sc.nextLine().replace("\\n",
-					System.getProperty("line.separator"));
-			helpFrameInfoContainer.add(new HelpFrameInfoContainer(title, info));
+			String thisLine = sc.nextLine();
+			if (!sc.hasNextLine()) {
+				helpFrameInfoContainer.add(new HelpFrameInfoContainer(title,
+						buildInfoString.toString()));
+			} else if (thisLine.equals("%%")) {
+				if (count > 0) {
+					helpFrameInfoContainer.add(new HelpFrameInfoContainer(
+							title, buildInfoString.toString()));
+				}
+				count++;
+				title = sc.nextLine();
+				buildInfoString.setLength(0);
+			} else {
+				buildInfoString.append(thisLine);
+			}
 		}
 	}
 

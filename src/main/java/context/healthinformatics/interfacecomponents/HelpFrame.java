@@ -1,16 +1,23 @@
 package context.healthinformatics.interfacecomponents;
 
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 
 import context.healthinformatics.gui.InterfaceHelper;
 
@@ -36,8 +43,9 @@ public class HelpFrame extends InterfaceHelper {
 	private JPanel mainPanel;
 	private JPanel tabPanel;
 	private JPanel infoPanel;
+	private JScrollPane scroll;
 
-	private JTextArea displayInfoTextArea = new JTextArea();
+	private JEditorPane displayHtmlPane = new JEditorPane();
 
 	private InputPageComponents inputPageComponents;
 
@@ -62,6 +70,7 @@ public class HelpFrame extends InterfaceHelper {
 		setTextAreaSettings();
 		initMainPanel();
 		setWindowListener();
+		addHyperLinkListener();
 	}
 
 	/**
@@ -81,13 +90,24 @@ public class HelpFrame extends InterfaceHelper {
 	 * Set the settings of the text area.
 	 */
 	private void setTextAreaSettings() {
-		this.displayInfoTextArea.setEditable(false);
-		this.displayInfoTextArea.setLineWrap(true);
-		this.displayInfoTextArea.setWrapStyleWord(true);
-		this.displayInfoTextArea.setPreferredSize(new Dimension(TEXTAREA_WIDTH,
+		this.displayHtmlPane.setEditable(false);
+		displayHtmlPane.setContentType("text/html");
+		this.displayHtmlPane.setPreferredSize(new Dimension(TEXTAREA_WIDTH,
 				TEXTARE_HEIGHT));
-		this.displayInfoTextArea.setFont(displayInfoTextArea.getFont()
-				.deriveFont(FONT_SIZE));
+		this.displayHtmlPane.setFont(displayHtmlPane.getFont().deriveFont(
+				FONT_SIZE));
+		this.displayHtmlPane.setCaretPosition(0);
+		initScrollPane();
+	}
+
+	/**
+	 * Initialize the scrollPane.
+	 */
+	private void initScrollPane() {
+		scroll = new JScrollPane(displayHtmlPane);
+		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scroll.setPreferredSize(new Dimension(TEXTAREA_WIDTH, TEXTARE_HEIGHT));
+		scroll.getVerticalScrollBar().setValue(0);
 	}
 
 	/**
@@ -130,11 +150,11 @@ public class HelpFrame extends InterfaceHelper {
 	 * Add the tab and info panel to the Main Panel.
 	 */
 	private void addTabAndInfoPanel() {
-		infoPanel.add(displayInfoTextArea, setGrids(0, 0));
+		infoPanel.add(scroll, setGrids(0, 0));
 		mainPanel.add(tabPanel, setGrids(0, 0));
 		mainPanel.add(infoPanel, setGrids(1, 0));
 		addButtonsToTabPanel();
-		addTextAreaToInfo();
+		adddisplayHtmlPaneToInfo();
 	}
 
 	/**
@@ -163,16 +183,40 @@ public class HelpFrame extends InterfaceHelper {
 		final int buttonIndex = index;
 		currentButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ae2) {
-				displayInfoTextArea.setText(listOfHelpFrameInfo
-						.get(buttonIndex).getInfo());
+				displayHtmlPane.setText(listOfHelpFrameInfo.get(buttonIndex)
+						.getInfo());
+				displayHtmlPane.setCaretPosition(0);
 			}
 		});
 	}
 
 	/**
-	 * Add the TextArea to the info panel.
+	 * Add the HtmlPane to the info panel.
 	 */
-	private void addTextAreaToInfo() {
-		displayInfoTextArea.setText(listOfHelpFrameInfo.get(0).getInfo());
+	private void adddisplayHtmlPaneToInfo() {
+		displayHtmlPane.setText(listOfHelpFrameInfo.get(0).getInfo());
+		displayHtmlPane.setCaretPosition(0);
+	}
+
+	/**
+	 * Create action listener for a link in the html documents.
+	 */
+	private void addHyperLinkListener() {
+		this.displayHtmlPane.addHyperlinkListener(new HyperlinkListener() {
+			@Override
+			public void hyperlinkUpdate(HyperlinkEvent e) {
+				if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+					if (Desktop.isDesktopSupported()) {
+						try {
+							Desktop.getDesktop().browse(e.getURL().toURI());
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						} catch (URISyntaxException e1) {
+							e1.printStackTrace();
+						}
+					}
+				}
+			}
+		});
 	}
 }
