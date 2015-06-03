@@ -4,9 +4,7 @@ package context.healthinformatics.analyse;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Stack;
-import java.util.regex.Pattern;
 
-import context.healthinformatics.database.MergeTable;
 import context.healthinformatics.sequentialdataanalysis.Chunk;
 import context.healthinformatics.sequentialdataanalysis.Chunking;
 import context.healthinformatics.sequentialdataanalysis.Codes;
