@@ -15,6 +15,7 @@ import context.healthinformatics.database.SingletonDb;
 public abstract class Task {
 
 	private String mergeTable = SingletonDb.getDb().getMergeTable();
+	private int querypart = 1;
 
 	/**
 	 * List of chunks that every Class. 
@@ -79,7 +80,7 @@ public abstract class Task {
 	 * @return true/false.
 	 */
 	protected boolean isData(String[] query) {
-		return query[1].toLowerCase().equals("data");
+		return query[querypart].equals("data");
 	}
 
 	/**
@@ -88,7 +89,7 @@ public abstract class Task {
 	 * @return true/false.
 	 */
 	protected boolean isCode(String[] query) {
-		return query[1].toLowerCase().equals("code");
+		return query[querypart].equals("code");
 	}
 
 	/**
@@ -97,23 +98,64 @@ public abstract class Task {
 	 * @return true/false.
 	 */
 	protected boolean isComment(String[] query) {
-		return query[1].toLowerCase().equals("comment");
+		return query[querypart].equals("comment");
 	}
 
+	/**
+	 * Returns if query constraints on contains.
+	 * @param query The word in the query.
+	 * @return true/false.
+	 */
 	protected boolean isContains(String query) {
-		return query.toLowerCase().equals("contains");
+		return query.equals("contains");
 	}
 
+	/**
+	 * Returns if query constraints on equals.
+	 * @param query The word in the query.
+	 * @return true/false.
+	 */
 	protected boolean isEquals(String query) {
-		return query.toLowerCase().equals("equals");
+		return query.equals("equals");
 	}
 
+	/**
+	 * Sets result after list is analyzed.
+	 * @param list Analyzed list of chunks.
+	 */
 	protected void setResult(ArrayList<Chunk> list) {
 		result = list;
 	}
 
+	/**
+	 * Gets analyzed list of chunks.
+	 * @return List of analyzed chunks.
+	 */
 	public ArrayList<Chunk> getResult() {
 		return result;
+	}
+	
+	/**
+	 * Increment the querypart (word you are interpreting).
+	 * @param i Integer for how many words you skip.
+	 */
+	protected void increment(int i) {
+		querypart += i;
+	}
+	
+	/**
+	 * Increment querypart counter with 1.
+	 */
+	protected void inc() {
+		querypart++;
+	}
+	
+	/**
+	 * Returns actual query counter.
+	 * @return Integer of query counter.
+	 */
+	protected int getQueryPart() {
+		return querypart;
 	}
 
 }

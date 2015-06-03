@@ -210,30 +210,60 @@ public class Chunking extends Task {
 	@Override
 	public void run(String[] query) throws Exception {
 		chunks = SingletonInterpreter.getInterpreter().getChunks();
-		StringBuilder q = new StringBuilder();
 		if (isData(query)) {
-			for (int i = 3; i < query.length; i++) {
-				q.append(query[i]);
-				q.append(" ");
-			}
-			System.out.println(q.toString());
-			setResult(constraintOnData(q.toString()));
+			runData(query);
 		}
 		else if (isCode(query)) {
-			if (isEquals(query[3])) {
-				constraintOnCode(q.toString());
-			}
+			runCode(query);
 		}
 		else if (isComment(query)) {
-			if (isEquals(query[3])) {
-				constraintOnEqualsComment(query[4]);
-			}
-			if (isContains(query[3])) {
-				constraintOnContainsComment(query[4]);
-			}
+			runComment(query);
 		}
 		else {
-			throw new Exception("query input is wrong at: " +query[1]);
+			throw new Exception("query input is wrong at: " + query[getQueryPart()]);
+		}
+	}
+	
+	/**
+	 * Executes constraintOnData with query.
+	 * @param query interpreter query.
+	 * @throws SQLException iff sql query goes wrong.
+	 */
+	private void runData(String[] query) throws SQLException {
+		StringBuilder q = new StringBuilder();
+		increment(2);
+		for (int i = getQueryPart(); i < query.length; i++) {
+			q.append(query[i]);
+			q.append(" ");
+		}
+		setResult(constraintOnData(q.toString()));
+	}
+	
+	/**
+	 * Executes constraintOnCode with query.
+	 * @param query interpreter query.
+	 */
+	private void runCode(String[] query) {
+		increment(2);
+		if (isEquals(query[getQueryPart()])) {
+			inc();
+			setResult(constraintOnCode(query[getQueryPart()]));
+		}
+	}
+	
+	/**
+	 * Executes constraint on contains/equals comment.
+	 * @param query interpreter query.
+	 */
+	private void runComment(String[] query) {
+		increment(2);
+		if (isEquals(query[getQueryPart()])) {
+			inc();
+			constraintOnEqualsComment(query[getQueryPart()]);
+		}
+		if (isContains(query[getQueryPart()])) {
+			inc();
+			constraintOnContainsComment(query[getQueryPart()]);
 		}
 	}
 
