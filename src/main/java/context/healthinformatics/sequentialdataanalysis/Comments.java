@@ -88,7 +88,7 @@ public class Comments extends Tasks {
 	 */
 	public void setCommentOnComment(String newComment, String previousComment) {
 		for (Chunk c : chunks) {
-			if (c.getCode().equals(previousComment)) {
+			if (c.getComment().equals(previousComment)) {
 				c.setComment(newComment);
 			}
 		}
@@ -125,9 +125,9 @@ public class Comments extends Tasks {
 			if (curChunk.getLine() == line) {
 				return curChunk;
 			}
-//			else if (curChunk.hasChild()) {
-//				return getChunkByLine(line, curChunk.getChunks());///////////// is recursief nodig?
-//			}
+			else if (curChunk.hasChild()) {
+				return getChunkByLine(line, curChunk.getChunks());
+			}
 		}
 		return curChunk;
 	}
