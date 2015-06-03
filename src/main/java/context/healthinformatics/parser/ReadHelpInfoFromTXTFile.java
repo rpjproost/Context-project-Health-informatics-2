@@ -67,9 +67,9 @@ public class ReadHelpInfoFromTXTFile extends Parser {
 	}
 
 	/**
-	 * Get the arraylist of all HelpFrameInfoContainers.
+	 * Get the ArrayList of all HelpFrameInfoContainers.
 	 * 
-	 * @return the arraylist
+	 * @return the ArrayList
 	 */
 	public ArrayList<HelpFrameInfoContainer> getHelpFrameInfoContainer() {
 		return this.helpFrameInfoContainer;
