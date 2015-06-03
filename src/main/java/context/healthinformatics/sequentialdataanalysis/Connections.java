@@ -65,9 +65,7 @@ public class Connections extends Tasks {
 	 */
 	public void connectToLine(Chunk chunk, int line, String noteForConnection) throws Exception {
 		Chunk c = getChunkByLine(line);
-		if (chunks.indexOf(chunk) < chunks.indexOf(c)) {
-			connectToChunk(chunk, c, noteForConnection);
-		}
+		connectToChunk(chunk, c, noteForConnection);
 	}
 	
 	/**
@@ -155,6 +153,22 @@ public class Connections extends Tasks {
 		Chunk curChunk1 = getChunkByLine(c1);
 		Chunk curChunk2 = getChunkByLine(c2);
 		connectToChunk(curChunk1, curChunk2, noteForConnection);
+	}
+	
+	/**
+	 * MEthod which connects a chunk to all chunks.
+	 * @param chunk which m connections.
+	 * @param whereClause condition to be met.
+	 * @param noteForConnection String associated with the connetion.
+	 * @throws Exception e
+	 */
+	public void connectOnData(Chunk chunk, String whereClause
+			, String noteForConnection) throws Exception {
+		
+		ArrayList<Integer> list = getLinesFromData(whereClause);
+		for (Integer i : list) {
+			connectToLine(chunk, i, noteForConnection);
+		}
 	}
 	
 	/**
