@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
-import context.healthinformatics.interfacecomponents.XMLEditorController;
 import context.healthinformatics.parser.Column;
 import context.healthinformatics.writer.XMLDocument;
 
@@ -20,6 +19,7 @@ public class XMLEditorControllerTest {
 	private XMLDocument documentOne;
 	private XMLDocument documentTwo;
 	private XMLEditorController controller;
+	private String project = "ADMIRE";
 	
 	/**
 	 * @throws java.lang.Exception
@@ -33,7 +33,7 @@ public class XMLEditorControllerTest {
 		documentTwo = new XMLDocument("text", "test", ",", "src/test", 2, 1, columns);
 		ArrayList<XMLDocument> docs = new ArrayList<XMLDocument>();
 		docs.add(documentOne);
-		controller = new XMLEditorController("ADMIRE", docs);
+		controller = new XMLEditorController(project, docs);
 	}
 
 	/**
@@ -76,8 +76,9 @@ public class XMLEditorControllerTest {
 	 */
 	@Test
 	public void testSelectDocumentMissing() {
+		controller.selectDocument("src/main");
 		controller.selectDocument("src/test");
-		assertEquals(0, controller.getSelectedDocs().size());
+		assertEquals(1, controller.getSelectedDocs().get(project).size());
 	}
 	
 	/**
@@ -87,7 +88,7 @@ public class XMLEditorControllerTest {
 	public void testDeselectDocumentCorrect() {
 		testSelectDocumentCorrect();
 		controller.deselectDocument("src/main");
-		assertEquals(0, controller.getSelectedDocs().get("ADMIRE").size());
+		assertEquals(0, controller.getSelectedDocs().get(project).size());
 	}
 	
 	/**
@@ -97,7 +98,7 @@ public class XMLEditorControllerTest {
 	public void testDeselectDocumentMissing() {
 		testSelectDocumentCorrect();
 		controller.deselectDocument("src/test");
-		assertEquals(1, controller.getSelectedDocs().size());
+		assertEquals(1, controller.getSelectedDocs().get(project).size());
 	}
 	
 	/**
@@ -108,7 +109,7 @@ public class XMLEditorControllerTest {
 		testSelectDocumentCorrect();
 		controller.addDocument(documentTwo);
 		controller.deselectDocument("src/test");
-		assertEquals(1, controller.getSelectedDocs().size());
+		assertEquals(1, controller.getSelectedDocs().get(project).size());
 	}
 	
 	/**
