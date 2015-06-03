@@ -22,7 +22,7 @@ import context.healthinformatics.sequentialdataanalysis.Task;
 public class Interpreter {
 	
 	private Stack<Task> tasks;
-
+	private ArrayList<Chunk> firstList;
 	/**
 	 * constructor for the Interpreter.
 	 */
@@ -99,6 +99,14 @@ public class Interpreter {
 			ans[i] = strings.get(i);
 		}
 		return ans;
+	}
+	
+	/**
+	 * setter for the initial list of chunks.
+	 * @param list list to set
+	 */
+	public void setIntialChunks(ArrayList<Chunk> list) {
+		firstList = list;
 	}
 
 }
