@@ -1,4 +1,4 @@
-package context.healthinformatics.interfacecomponents;
+package context.healthinformatics.parser;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import context.healthinformatics.parser.Parser;
+import context.healthinformatics.interfacecomponents.HelpFrameInfoContainer;
 
 /**
  * Class which reads a text file and makes a list of HelpFrameInfoContainers.
