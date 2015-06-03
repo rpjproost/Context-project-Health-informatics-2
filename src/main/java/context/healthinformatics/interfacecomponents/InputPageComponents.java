@@ -1,4 +1,4 @@
-package context.healthinformatics.gui;
+package context.healthinformatics.interfacecomponents;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -16,6 +16,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import context.healthinformatics.gui.InputPage;
+import context.healthinformatics.gui.MainFrame;
 import context.healthinformatics.writer.XMLDocument;
 
 /**

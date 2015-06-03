@@ -1,4 +1,4 @@
-package context.healthinformatics.gui;
+package context.healthinformatics.interfacecomponents;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -60,14 +60,15 @@ public class XMLEditorControllerTest {
 	@Test
 	public void testSelectDocumentDuplicate() {
 		XMLEditorController controller = new XMLEditorController();
-		controller.setProject("controllerTest");
+		String project = "controllerTest";
+		controller.setProject(project);
 		controller.addDocument(documentOne);
 		controller.addDocument(documentTwo);
 		controller.selectDocument("src/main");
 		controller.selectDocument("src/test");
-		assertEquals(2, controller.getSelectedDocs().size());
+		assertEquals(2, controller.getSelectedDocs().get(project).size());
 		controller.selectDocument("src/main");
-		assertEquals(2, controller.getSelectedDocs().size());
+		assertEquals(2, controller.getSelectedDocs().get(project).size());
 	}
 	
 	/**
@@ -86,7 +87,7 @@ public class XMLEditorControllerTest {
 	public void testDeselectDocumentCorrect() {
 		testSelectDocumentCorrect();
 		controller.deselectDocument("src/main");
-		assertEquals(0, controller.getSelectedDocs().size());
+		assertEquals(0, controller.getSelectedDocs().get("ADMIRE").size());
 	}
 	
 	/**

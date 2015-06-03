@@ -14,6 +14,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import context.healthinformatics.interfacecomponents.FileTree;
+import context.healthinformatics.interfacecomponents.InputPageComponents;
+import context.healthinformatics.interfacecomponents.XMLEditor;
+import context.healthinformatics.interfacecomponents.XMLEditorController;
 import context.healthinformatics.parser.XMLParser;
 import context.healthinformatics.writer.XMLDocument;
 
@@ -269,7 +273,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 * Open files and adds them to the tree.
 	 * @param files all files that should be added.
 	 */
-	protected void openFiles(File[] files) {
+	public void openFiles(File[] files) {
 		for (int i = 0; i < files.length; i++) {
 			String path = files[i].getPath();
 			XMLDocument currentDoc = makeDocument(path);
@@ -340,7 +344,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	/**
 	 * Load the database.
 	 */
-	protected void loadDatabase() {
+	public void loadDatabase() {
 		
 	}
 }

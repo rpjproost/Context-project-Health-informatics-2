@@ -47,7 +47,7 @@ public class InterfaceHelper extends JPanel {
 	 * @param height
 	 *            of panel
 	 */
-	protected static JPanel createPanel(Color color, int width, int height) {
+	public static JPanel createPanel(Color color, int width, int height) {
 		JPanel tempPanel = new JPanel();
 		tempPanel.setBackground(color);
 		tempPanel.setMinimumSize(new Dimension(width, height));
@@ -100,7 +100,7 @@ public class InterfaceHelper extends JPanel {
 	 *            coordinate.
 	 * @return the location for the Component.
 	 */
-	protected GridBagConstraints setGrids(int x, int y) {
+	public GridBagConstraints setGrids(int x, int y) {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = x;
 		c.gridy = y;
@@ -136,7 +136,7 @@ public class InterfaceHelper extends JPanel {
 	 *            of the button.
 	 * @return a new button with no actionhandler.
 	 */
-	protected JButton createButton(String name, int width, int height) {
+	public JButton createButton(String name, int width, int height) {
 		JButton button = new JButton(name);
 		button.setPreferredSize(new Dimension(width, height));
 		button.setFont(new Font("Arial", Font.PLAIN, TEXTSIZE));
@@ -150,7 +150,7 @@ public class InterfaceHelper extends JPanel {
 	 *            the text of the title.
 	 * @return a Label with the title.
 	 */
-	protected JLabel createTitle(String titleName) {
+	public JLabel createTitle(String titleName) {
 		JLabel title = new JLabel(titleName);
 		title.setFont(new Font("Arial", Font.PLAIN, TITLEFONT));
 		return title;

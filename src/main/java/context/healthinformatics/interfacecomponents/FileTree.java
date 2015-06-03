@@ -1,4 +1,4 @@
-package context.healthinformatics.gui;
+package context.healthinformatics.interfacecomponents;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -18,6 +18,8 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
+import context.healthinformatics.gui.InputPage;
+import context.healthinformatics.gui.MainFrame;
 import context.healthinformatics.writer.XMLDocument;
 
 /**

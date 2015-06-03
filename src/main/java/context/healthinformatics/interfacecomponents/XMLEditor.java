@@ -1,4 +1,4 @@
-package context.healthinformatics.gui;
+package context.healthinformatics.interfacecomponents;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import context.healthinformatics.gui.InputPage;
+import context.healthinformatics.gui.InterfaceHelper;
 import context.healthinformatics.writer.XMLDocument;
 import context.healthinformatics.writer.XMLWriter;
 

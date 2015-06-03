@@ -1,10 +1,11 @@
-package context.healthinformatics.gui;
+package context.healthinformatics.interfacecomponents;
 
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import context.healthinformatics.gui.InputPage;
 import context.healthinformatics.writer.XMLDocument;
 import context.healthinformatics.writer.XMLWriter;
 
@@ -120,7 +121,7 @@ public class XMLEditorController implements Serializable {
 	private void deleteFromSelectedFiles(XMLDocument deselect) {
 		ArrayList<XMLDocument> projectSelected = getSelectedDocuments();
 		if (projectSelected.contains(deselect)) {
-			projectSelected.add(deselect);
+			projectSelected.remove(deselect);
 			selectedDocs.put(project, projectSelected);
 		} 
 	}
