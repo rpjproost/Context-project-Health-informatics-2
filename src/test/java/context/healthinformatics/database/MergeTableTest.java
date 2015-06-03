@@ -9,11 +9,9 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.junit.After;
 import org.junit.Test;
 
 import context.healthinformatics.parser.XMLParser;
@@ -41,18 +39,21 @@ public class MergeTableTest {
 	 */
 	private Db data = SingletonDb.getDb();
 
-	//used for cleaning up;
-		private Set<ResultSet> results;
-		private Set<String> tables;
-		
-		/**
-		 * method preparing for environment for tests.
-		 */
-		@org.junit.Before
-		public void before() {
-			tables = new TreeSet<String>();
-			results = new HashSet<ResultSet>();
+	/**
+	 * method preparing for environment for tests.
+	 */
+	@org.junit.Before
+	public void before() {
+		Set<String> tables = new TreeSet<String>();
+		tables.addAll(data.getTables().keySet());
+		try {
+			for (String key : tables) {
+				data.dropTable(key);
+			}
+		} catch (SQLException e) {
+			System.out.println("Something went wrong preparing db for tests.");
 		}
+	}
 	
 	/**
 	 * Test for merging two tables with condition.
@@ -68,7 +69,7 @@ public class MergeTableTest {
 		clause[0] = "StatSensor.value = 209";
 		MergeTable test = new MergeTable();
 		test.mergeTables(clause);
-		ResultSet rs = getResult("result", "value");
+		ResultSet rs = data.selectResultSet("result", "value", "");
 		while (rs.next()) {
 			if (rs.getInt("value") == 0) {
 				assertEquals((rs.getInt("value")), 0);
@@ -91,19 +92,19 @@ public class MergeTableTest {
 	@Test
 	public void checkDateTest() throws IOException, SQLException {
 		xmlp = new XMLParser(path + "twoDocs.xml");
-		tables.add("HospitalRecords");
-		tables.add("StatSensor");
 		xmlp.parse();
 		String[] clause = new String[1];
 		clause[0] = "StatSensor.value = 209";
 		MergeTable test = new MergeTable();
-		tables.add("result");
 		test.mergeTables(clause);
-		ResultSet rs = getResult("result", "date");
+		ResultSet rs = data.selectResultSet("result", "date", "");
 		while (rs.next()) {
 			assertNotNull(rs.getDate("date"));
 		}
-		test.dropView("workspace");
+		rs.close();
+		data.dropTable("result");
+		data.dropTable("HospitalRecords");
+		data.dropTable("StatSensor");
 	}
 
 	/**
@@ -114,23 +115,23 @@ public class MergeTableTest {
 	@Test
 	public void mergeViewTest() throws IOException, SQLException {
 		xmlp = new XMLParser(path + "twoDocs.xml");
-		tables.add("HospitalRecords");
-		tables.add("StatSensor");
 		xmlp.parse();
 		
 		String[] clause = new String[1];
 		clause[0] = "StatSensor.value = 209";
 		
 		MergeTable test = new MergeTable();
-		tables.add("result");
 		test.mergeTables(clause);
 		test.mergeTablesView();
 		
-		ResultSet rs = getResult("workspace", "date");
+		ResultSet rs = data.selectResultSet("workspace", "date", "");
 		
 		orderedByDate(rs);
 
 		test.dropView("workspace");
+		data.dropTable("result");
+		data.dropTable("HospitalRecords");
+		data.dropTable("StatSensor");
 	}
 	
 	/**
@@ -167,25 +168,26 @@ public class MergeTableTest {
 	
 	/**
 	 * Tests the full merge method.
-	 * @throws Exception 
+	 * @throws IOException if files could not be read.
+	 * @throws SQLException if tables could not be created.
 	 */
 	@Test
-	public void mergeTest() throws Exception {
+	public void mergeTest() throws IOException, SQLException {
 		xmlp = new XMLParser(path + "twoDocs.xml");
-		tables.add("HospitalRecords");
-		tables.add("StatSensor");
 		xmlp.parse();
 		String[] clause = new String[1];
 		clause[0] = "StatSensor.value = 209";
 		MergeTable test = new MergeTable();
-		tables.add("result");
 		test.merge(clause);
 		
-		ResultSet rs = getResult("workspace", "date");
+		ResultSet rs = data.selectResultSet("workspace", "date", "");
 		
 		orderedByDate(rs);
 		
 		test.dropView("workspace");
+		data.dropTable("result");
+		data.dropTable("HospitalRecords");
+		data.dropTable("StatSensor");
 	}
 	
 	/**
@@ -211,46 +213,20 @@ public class MergeTableTest {
 	@Test
 	public void testChunkArray() throws IOException, SQLException {
 		xmlp = new XMLParser(path + "twoDocs.xml");
-		tables.add("HospitalRecords");
-		tables.add("StatSensor");
 		xmlp.parse();
 		String[] clause = new String[1];
 		clause[0] = "HospitalRecords.Groep = 2";
 		MergeTable test = new MergeTable();
-		tables.add("result");
 		test.merge(clause);
 		ArrayList<Chunk> chunks = test.getChunks();
 		for (Chunk c : chunks) {
 			assertTrue(c.getLine() > 0);
 		}
+
 		test.dropView("workspace");
-	}
-	
-	/**
-	 * Retrieves the correct result set from the database.
-	 * @param table table to get the result set from.
-	 * @param column column to get the result set for
-	 * @return the retrieved result set.
-	 * @throws SQLException might throw an SQL exception if table does not exist.
-	 */
-	private ResultSet getResult(String table, String column) throws SQLException {
-		ResultSet res = data.selectResultSet(table, column, "");
-		results.add(res);
-		return res;
-	}
-	
-	/**
-	 * method that cleans up after a test.
-	 * @throws SQLException if something goes wrong closing resultsets of dropping tables.
-	 */
-	@After
-	public void after() throws SQLException {
-		for (ResultSet r : results) {
-			r.close();
-		}
-		for (String table : tables) {
-			data.dropTable(table);
-		}
+		data.dropTable("result");
+		data.dropTable("HospitalRecords");
+		data.dropTable("StatSensor");
 	}
 
 
