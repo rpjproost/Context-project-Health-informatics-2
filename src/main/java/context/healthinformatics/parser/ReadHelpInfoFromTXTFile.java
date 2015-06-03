@@ -3,7 +3,6 @@ package context.healthinformatics.parser;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -50,18 +49,18 @@ public class ReadHelpInfoFromTXTFile extends Parser {
 			readRelevantLines();
 		} catch (FileNotFoundException e) {
 			throw new FileNotFoundException("The TXT file was not found!");
-		} catch (SQLException e) {
-			throw new FileNotFoundException(
-					"TXT data could not be inserted into the database");
 		}
 		sc.close();
 	}
 
-	private void readRelevantLines() throws SQLException {
+	/**
+	 * Reads the lines of the file.
+	 */
+	private void readRelevantLines() {
 		while (sc.hasNextLine()) {
 			String title = sc.nextLine();
-			String info = sc.nextLine().replace("\\n", System.getProperty("line.separator"));
-			
+			String info = sc.nextLine().replace("\\n",
+					System.getProperty("line.separator"));
 			helpFrameInfoContainer.add(new HelpFrameInfoContainer(title, info));
 		}
 	}
