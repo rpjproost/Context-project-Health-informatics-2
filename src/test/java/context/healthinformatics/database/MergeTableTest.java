@@ -168,11 +168,10 @@ public class MergeTableTest {
 	
 	/**
 	 * Tests the full merge method.
-	 * @throws IOException if files could not be read.
-	 * @throws SQLException if tables could not be created.
+	 * @throws Exception 
 	 */
 	@Test
-	public void mergeTest() throws IOException, SQLException {
+	public void mergeTest() throws Exception {
 		xmlp = new XMLParser(path + "twoDocs.xml");
 		xmlp.parse();
 		String[] clause = new String[1];

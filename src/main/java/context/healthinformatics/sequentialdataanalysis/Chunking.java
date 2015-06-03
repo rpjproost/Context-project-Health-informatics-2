@@ -62,7 +62,7 @@ public class Chunking extends Task {
 			temp.setChunk(curChunk);
 		}
 		else {
-			addChunkToChunk(res, curChunk);
+			addChunkToRes(res, curChunk);
 			this.temp = new Chunk();
 		}
 	}
@@ -96,7 +96,7 @@ public class Chunking extends Task {
 			temp.setChunk(curChunk);
 		}
 		else {
-			addChunkToChunk(res, curChunk);
+			addChunkToRes(res, curChunk);
 			this.temp  = new Chunk();
 		}
 	}
@@ -117,6 +117,24 @@ public class Chunking extends Task {
 		addLastElementToChunks(res);
 		return res;
 	}
+	
+	/**
+	 * Add chunk to new Chunk in new ArrayList if it contains comment.
+	 * @param curChunk Chunk to be checked on constraint.
+	 * @param temp New chunk that will be returned in new ArrayList<Chunk>
+	 * @param c String for comment constraint.
+	 * @param res ArrayList<Chunk> chunked.
+	 */
+	private void addChunkOnContainsComment(Chunk curChunk, String c, 
+			ArrayList<Chunk> res) {
+		if (curChunk.getComment().contains(c)) {
+			temp.setChunk(curChunk);
+		}
+		else {
+			addChunkToRes(res, curChunk);
+			temp  = new Chunk();
+		}
+	}
 
 	/**
 	 * Chunking chunks on a comment equals constraint.
@@ -136,24 +154,6 @@ public class Chunking extends Task {
 	}
 
 	/**
-	 * Add chunk to new Chunk in new ArrayList if it contains comment.
-	 * @param curChunk Chunk to be checked on constraint.
-	 * @param temp New chunk that will be returned in new ArrayList<Chunk>
-	 * @param c String for comment constraint.
-	 * @param res ArrayList<Chunk> chunked.
-	 */
-	private void addChunkOnContainsComment(Chunk curChunk, String c, 
-			ArrayList<Chunk> res) {
-		if (curChunk.getComment().contains(c)) {
-			temp.setChunk(curChunk);
-		}
-		else {
-			addChunkToChunk(res, curChunk);
-			temp  = new Chunk();
-		}
-	}
-
-	/**
 	 * Add chunk to new Chunk in new ArrayList if it equals comment.
 	 * @param curChunk Chunk to be checked on constraint.
 	 * @param temp New chunk that will be returned in new ArrayList<Chunk>
@@ -166,7 +166,7 @@ public class Chunking extends Task {
 			temp.setChunk(curChunk);
 		}
 		else {
-			addChunkToChunk(res, curChunk);
+			addChunkToRes(res, curChunk);
 			temp  = new Chunk();
 		}
 	}
@@ -176,7 +176,7 @@ public class Chunking extends Task {
 	 * @param temp The new Chunk.
 	 * @param res The new ArrayList<Chunk> to be returned after chunking.
 	 */
-	private void addChunkToChunk(ArrayList<Chunk> res, Chunk curChunk) {
+	private void addChunkToRes(ArrayList<Chunk> res, Chunk curChunk) {
 		if (temp.hasChild()) {
 			res.add(temp);
 			res.add(curChunk);
@@ -212,11 +212,12 @@ public class Chunking extends Task {
 		chunks = SingletonInterpreter.getInterpreter().getChunks();
 		StringBuilder q = new StringBuilder();
 		if (isData(query)) {
-			for (int i = 2; i < query.length; i++) {
+			for (int i = 3; i < query.length; i++) {
 				q.append(query[i]);
 				q.append(" ");
 			}
-			constraintOnData(q.toString());
+			System.out.println(q.toString());
+			setResult(constraintOnData(q.toString()));
 		}
 		else if (isCode(query)) {
 			if (isEquals(query[3])) {
@@ -232,7 +233,7 @@ public class Chunking extends Task {
 			}
 		}
 		else {
-			throw new Exception("query input is wrong");
+			throw new Exception("query input is wrong at: " +query[1]);
 		}
 	}
 

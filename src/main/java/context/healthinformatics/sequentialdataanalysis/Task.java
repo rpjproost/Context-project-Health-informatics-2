@@ -13,27 +13,29 @@ import context.healthinformatics.database.SingletonDb;
  *
  */
 public abstract class Task {
-	
+
 	private String mergeTable = SingletonDb.getDb().getMergeTable();
-			
+
 	/**
 	 * List of chunks that every Class. 
 	 */
 	protected ArrayList<Chunk> chunks;
-	
+
+	private ArrayList<Chunk> result;
+
 	/**
 	 * 
 	 * @return previous state of ArrayList<Chunk>.
 	 */
 	public abstract ArrayList<Chunk> undo();
-	
+
 	/**
 	 * Runs the C method from parser.
 	 * @param query An array of query words.
 	 * @throws Exception query input can be wrong.
 	 */
 	public abstract void run(String[] query) throws Exception;
-	
+
 	/**
 	 * Return the chunks from the constructor.
 	 * 
@@ -42,7 +44,7 @@ public abstract class Task {
 	public ArrayList<Chunk> getChunks() {
 		return chunks;
 	}
-	
+
 	/**
 	 * 
 	 * @param c ArrayList of chunks.
@@ -50,7 +52,7 @@ public abstract class Task {
 	protected void setChunks(ArrayList<Chunk> c) {
 		chunks = c;
 	}
-	
+
 	/**
 	 * Get line numbers of data which correspond to sql query.
 	 * @param whereClause clause for sql query.
@@ -70,40 +72,48 @@ public abstract class Task {
 		}
 		return res;
 	}
-	
+
 	/**
 	 * Returns if query constraints on data.
 	 * @param query The query.
 	 * @return true/false.
 	 */
 	protected boolean isData(String[] query) {
-		return query[1].toLowerCase() == "data";
+		return query[1].toLowerCase().equals("data");
 	}
-	
+
 	/**
 	 * Returns if query constraints on code.
 	 * @param query The query.
 	 * @return true/false.
 	 */
 	protected boolean isCode(String[] query) {
-		return query[1].toLowerCase() == "code";
+		return query[1].toLowerCase().equals("code");
 	}
-	
+
 	/**
 	 * Returns if query constraints on comment.
 	 * @param query The query.
 	 * @return true/false.
 	 */
 	protected boolean isComment(String[] query) {
-		return query[1].toLowerCase() == "comment";
+		return query[1].toLowerCase().equals("comment");
 	}
-	
+
 	protected boolean isContains(String query) {
-		return query.toLowerCase() == "contains";
+		return query.toLowerCase().equals("contains");
 	}
-	
+
 	protected boolean isEquals(String query) {
-		return query.toLowerCase() == "equals";
+		return query.toLowerCase().equals("equals");
+	}
+
+	protected void setResult(ArrayList<Chunk> list) {
+		result = list;
+	}
+
+	public ArrayList<Chunk> getResult() {
+		return result;
 	}
 
 }
