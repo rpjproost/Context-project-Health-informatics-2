@@ -323,7 +323,7 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	 * @return the absolute path
 	 */
 	private String getSavePath(int returnVal, JFileChooser chooser) {
-		File selectedFile = null;
+		File selectedFile = new File("");
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			selectedFile = chooser.getSelectedFile();
 			try {
