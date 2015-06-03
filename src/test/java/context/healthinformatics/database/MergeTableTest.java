@@ -44,6 +44,7 @@ public class MergeTableTest {
 	//used for cleaning up;
 		private Set<ResultSet> results;
 		private Set<String> tables;
+		private MergeTable test;
 		
 		/**
 		 * method preparing for environment for tests.
@@ -52,6 +53,7 @@ public class MergeTableTest {
 		public void before() {
 			tables = new TreeSet<String>();
 			results = new HashSet<ResultSet>();
+			test = new MergeTable();
 		}
 	
 	/**
@@ -62,11 +64,13 @@ public class MergeTableTest {
 	@Test
 	public void mergeTableTest() throws IOException, SQLException {
 		xmlp = new XMLParser(path + "twoDocs.xml");
+		tables.add("StatSensor");
+		tables.add("HospitalRecords");
 		xmlp.parse();
 		final int res = 209;
 		String[] clause = new String[1];
 		clause[0] = "StatSensor.value = 209";
-		MergeTable test = new MergeTable();
+		tables.add("result");
 		test.mergeTables(clause);
 		ResultSet rs = getResult("result", "value");
 		while (rs.next()) {
@@ -77,10 +81,6 @@ public class MergeTableTest {
 				assertEquals((rs.getInt("value")), res);
 			}
 		}
-		rs.close();
-		data.dropTable("result");
-		data.dropTable("HospitalRecords");
-		data.dropTable("StatSensor");
 	}
 
 	/**
@@ -96,14 +96,12 @@ public class MergeTableTest {
 		xmlp.parse();
 		String[] clause = new String[1];
 		clause[0] = "StatSensor.value = 209";
-		MergeTable test = new MergeTable();
 		tables.add("result");
 		test.mergeTables(clause);
 		ResultSet rs = getResult("result", "date");
 		while (rs.next()) {
 			assertNotNull(rs.getDate("date"));
 		}
-		test.dropView("workspace");
 	}
 
 	/**
@@ -121,7 +119,6 @@ public class MergeTableTest {
 		String[] clause = new String[1];
 		clause[0] = "StatSensor.value = 209";
 		
-		MergeTable test = new MergeTable();
 		tables.add("result");
 		test.mergeTables(clause);
 		test.mergeTablesView();
@@ -129,8 +126,6 @@ public class MergeTableTest {
 		ResultSet rs = getResult("workspace", "date");
 		
 		orderedByDate(rs);
-
-		test.dropView("workspace");
 	}
 	
 	/**
@@ -177,15 +172,12 @@ public class MergeTableTest {
 		xmlp.parse();
 		String[] clause = new String[1];
 		clause[0] = "StatSensor.value = 209";
-		MergeTable test = new MergeTable();
 		tables.add("result");
 		test.merge(clause);
 		
 		ResultSet rs = getResult("workspace", "date");
 		
 		orderedByDate(rs);
-		
-		test.dropView("workspace");
 	}
 	
 	/**
@@ -193,7 +185,7 @@ public class MergeTableTest {
 	 */
 	@Test 
 	public void appendTest() {
-		MergeTable test = new MergeTable();
+		test = new MergeTable();
 		Set<String> tables = new TreeSet<String>();
 		StringBuilder sql = new StringBuilder();
 		sql.append("tables = ");
@@ -216,14 +208,12 @@ public class MergeTableTest {
 		xmlp.parse();
 		String[] clause = new String[1];
 		clause[0] = "HospitalRecords.Groep = 2";
-		MergeTable test = new MergeTable();
 		tables.add("result");
 		test.merge(clause);
 		ArrayList<Chunk> chunks = test.getChunks();
 		for (Chunk c : chunks) {
 			assertTrue(c.getLine() > 0);
 		}
-		test.dropView("workspace");
 	}
 	
 	/**
@@ -248,6 +238,7 @@ public class MergeTableTest {
 		for (ResultSet r : results) {
 			r.close();
 		}
+		test.dropView("workspace");
 		for (String table : tables) {
 			data.dropTable(table);
 		}
