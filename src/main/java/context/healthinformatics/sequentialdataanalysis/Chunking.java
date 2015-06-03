@@ -198,7 +198,7 @@ public class Chunking extends Task {
 	 * This method is overwritten at runtime to have the correct methods in it.
 	 */
 	@Override
-	public void run() {
+	public void run(String[] query) {
 	}
 
 }

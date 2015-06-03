@@ -337,7 +337,7 @@ public class Constraints extends Task {
 	}
 
 	@Override
-	public void run() {
+	public void run(String[] query) {
 
 	}
 }
