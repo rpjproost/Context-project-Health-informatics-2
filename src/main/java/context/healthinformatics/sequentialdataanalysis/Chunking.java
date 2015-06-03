@@ -40,7 +40,7 @@ public class Chunking extends Task {
 		addLastElementToChunks(res);
 		return res;
 	}
-	
+
 	/**
 	 * Add chunks with data to new chunks if constraint on data passes.
 	 * @param ints the arraylist with integers with correct data.
@@ -57,7 +57,7 @@ public class Chunking extends Task {
 			this.temp = new Chunk();
 		}
 	}
-	
+
 	/**
 	 * Chunking chunks on a code constraint.
 	 * @param code Code constraint for a chunk.
@@ -66,7 +66,7 @@ public class Chunking extends Task {
 	public ArrayList<Chunk> constraintOnCode(String code) {
 		ArrayList<Chunk> res = new ArrayList<Chunk>();
 		ArrayList<Chunk> chunks = getChunks();
- 		temp  = new Chunk();
+		temp  = new Chunk();
 		for (int i = 0; i < chunks.size(); i++) {
 			Chunk curChunk = chunks.get(i);
 			addChunkOnEqualsCode(curChunk, code, res);
@@ -74,7 +74,7 @@ public class Chunking extends Task {
 		addLastElementToChunks(res);
 		return res;
 	}
-	
+
 	/**
 	 * Add chunk to new Chunk in new ArrayList if it equals code.
 	 * @param curChunk Chunk to be checked on constraint.
@@ -108,7 +108,7 @@ public class Chunking extends Task {
 		addLastElementToChunks(res);
 		return res;
 	}
-	
+
 	/**
 	 * Chunking chunks on a comment equals constraint.
 	 * @param comment String for comment.
@@ -125,7 +125,7 @@ public class Chunking extends Task {
 		addLastElementToChunks(res);
 		return res;
 	}
-	
+
 	/**
 	 * Add chunk to new Chunk in new ArrayList if it contains comment.
 	 * @param curChunk Chunk to be checked on constraint.
@@ -143,7 +143,7 @@ public class Chunking extends Task {
 			temp  = new Chunk();
 		}
 	}
-	
+
 	/**
 	 * Add chunk to new Chunk in new ArrayList if it equals comment.
 	 * @param curChunk Chunk to be checked on constraint.
@@ -161,7 +161,7 @@ public class Chunking extends Task {
 			temp  = new Chunk();
 		}
 	}
-	
+
 	/**
 	 * Adds a Chunk to a new chunk if it is part of the Chunk.
 	 * @param temp The new Chunk.
@@ -176,7 +176,7 @@ public class Chunking extends Task {
 			res.add(curChunk);
 		}
 	}
-	
+
 	/**
 	 * Adds last chunked chunk to result ArrayList.
 	 * @param res ArrayList to be returned.
@@ -196,9 +196,34 @@ public class Chunking extends Task {
 	/**
 	 * method that is called to calculate the new changes.
 	 * This method is overwritten at runtime to have the correct methods in it.
+	 * @throws Exception query input can be wrong.
 	 */
 	@Override
-	public void run(String[] query) {
+	public void run(String[] query) throws Exception {
+		StringBuilder q = new StringBuilder();
+		if (isData(query)) {
+			for (int i = 2; i < query.length; i++) {
+				q.append(query[i]);
+				q.append(" ");
+			}
+			constraintOnData(q.toString());
+		}
+		else if (isCode(query)) {
+			if (isEquals(query[3])) {
+				constraintOnCode(q.toString());
+			}
+		}
+		else if (isComment(query)) {
+			if (isEquals(query[3])) {
+				constraintOnEqualsComment(query[4]);
+			}
+			if (isContains(query[3])) {
+				constraintOnContainsComment(query[4]);
+			}
+		}
+		else {
+			throw new Exception("query input is wrong");
+		}
 	}
 
 }

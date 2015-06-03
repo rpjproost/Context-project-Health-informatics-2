@@ -30,15 +30,16 @@ public abstract class Task {
 	/**
 	 * Runs the C method from parser.
 	 * @param query An array of query words.
+	 * @throws Exception query input can be wrong.
 	 */
-	public abstract void run(String[] query);
+	public abstract void run(String[] query) throws Exception;
 	
 	/**
 	 * Return the chunks from the constructor.
 	 * 
 	 * @return the chunks
 	 */
-	public ArrayList<Chunk> getChunks() {
+	protected ArrayList<Chunk> getChunks() {
 		return chunks;
 	}
 	
@@ -56,7 +57,7 @@ public abstract class Task {
 	 * @return lineNumbers of data in arrayList.
 	 * @throws SQLException if data is not found
 	 */
-	public ArrayList<Integer> getLinesFromData(String whereClause) throws SQLException {
+	protected ArrayList<Integer> getLinesFromData(String whereClause) throws SQLException {
 		ArrayList<Integer> res = new ArrayList<Integer>();
 		Db data = SingletonDb.getDb();
 		try {
@@ -68,6 +69,41 @@ public abstract class Task {
 			throw new SQLException(e);
 		}
 		return res;
+	}
+	
+	/**
+	 * Returns if query constraints on data.
+	 * @param query The query.
+	 * @return true/false.
+	 */
+	protected boolean isData(String[] query) {
+		return query[1].toLowerCase() == "data";
+	}
+	
+	/**
+	 * Returns if query constraints on code.
+	 * @param query The query.
+	 * @return true/false.
+	 */
+	protected boolean isCode(String[] query) {
+		return query[1].toLowerCase() == "code";
+	}
+	
+	/**
+	 * Returns if query constraints on comment.
+	 * @param query The query.
+	 * @return true/false.
+	 */
+	protected boolean isComment(String[] query) {
+		return query[1].toLowerCase() == "comment";
+	}
+	
+	protected boolean isContains(String query) {
+		return query.toLowerCase() == "contains";
+	}
+	
+	protected boolean isEquals(String query) {
+		return query.toLowerCase() == "equals";
 	}
 
 }
