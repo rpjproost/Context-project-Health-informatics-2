@@ -27,7 +27,6 @@ public class Interpreter {
 	 */
 	protected Interpreter() {
 		tasks = new Stack<Task>();
-		parser = Parboiled.createParser(UserInputParser.class);
 	}
 
 	/**
@@ -41,9 +40,6 @@ public class Interpreter {
 		
 		while (sc.hasNextLine()) {
 			String line = sc.nextLine();
-			ParsingResult<?> result = new RecoveringParseRunner<Task>(parser.task())
-					.run(line);
-			Task task = (Task) result.resultValue;
 			task.run();
 			tasks.push(task);
 		}
@@ -63,6 +59,12 @@ public class Interpreter {
 			return null;
 		}
 		
+	}
+	
+	private String[] checkSplittedLineForUnwantedSpaces(String[] splittedLine) {
+		for (int i = 0; i < splittedLine.length; i++) {
+			
+		}
 	}
 
 }
