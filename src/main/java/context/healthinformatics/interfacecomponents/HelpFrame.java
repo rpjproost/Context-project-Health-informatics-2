@@ -1,5 +1,6 @@
 package context.healthinformatics.interfacecomponents;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -19,13 +20,16 @@ import context.healthinformatics.gui.InterfaceHelper;
 public class HelpFrame extends InterfaceHelper {
 	private static final long serialVersionUID = 1L;
 
-	private static final int FRAME_SIZE = 500;
-	private static final int TEXTAREA_WIDTH = 325;
+	private static final int FRAME_WIDTH = 600;
+	private static final int FRAME_HEIGHT = 500;
+	private static final int TEXTAREA_WIDTH = 375;
 	private static final int TEXTARE_HEIGHT = 480;
-	private static final int BUTTON_WIDTH = 140;
+	private static final int BUTTON_WIDTH = 180;
 	private static final int BUTTON_HEIGHT = 30;
-	private static final int TABPANEL_WIDTH = 150;
-	private static final int INFOPANEL_WIDTH = 350;
+	private static final int TABPANEL_WIDTH = 200;
+	private static final int INFOPANEL_WIDTH = 400;
+	private static final float FONT_SIZE = 15.0f;
+	private static final int MARGINTOP = 10;
 
 	private JFrame helpMainFrame;
 
@@ -63,6 +67,8 @@ public class HelpFrame extends InterfaceHelper {
 		this.displayInfoTextArea.setWrapStyleWord(true);
 		this.displayInfoTextArea.setPreferredSize(new Dimension(TEXTAREA_WIDTH,
 				TEXTARE_HEIGHT));
+		this.displayInfoTextArea.setFont(displayInfoTextArea.getFont()
+				.deriveFont(FONT_SIZE));
 	}
 
 	/**
@@ -70,7 +76,7 @@ public class HelpFrame extends InterfaceHelper {
 	 */
 	private void initMainPanel() {
 		mainPanel = createEmptyWithGridBagLayoutPanel();
-		mainPanel.setPreferredSize(new Dimension(FRAME_SIZE, FRAME_SIZE));
+		mainPanel.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
 		initHelpMainFrame();
 	}
 
@@ -92,9 +98,12 @@ public class HelpFrame extends InterfaceHelper {
 	 */
 	private void initTabAndInfoPanel() {
 		tabPanel = createEmptyWithGridBagLayoutPanel();
-		tabPanel.setPreferredSize(new Dimension(TABPANEL_WIDTH, FRAME_SIZE));
+		tabPanel.setPreferredSize(new Dimension(TABPANEL_WIDTH, FRAME_HEIGHT));
+		tabPanel.setBackground(Color.WHITE);
 		infoPanel = createEmptyWithGridBagLayoutPanel();
-		infoPanel.setPreferredSize(new Dimension(INFOPANEL_WIDTH, FRAME_SIZE));
+		infoPanel
+				.setPreferredSize(new Dimension(INFOPANEL_WIDTH, FRAME_HEIGHT));
+		infoPanel.setBackground(Color.WHITE);
 		addTabAndInfoPanel();
 	}
 
@@ -119,7 +128,7 @@ public class HelpFrame extends InterfaceHelper {
 			currentButton.setPreferredSize(new Dimension(BUTTON_WIDTH,
 					BUTTON_HEIGHT));
 			addActionListenerToThisButton(currentButton, i);
-			tabPanel.add(currentButton, setGrids(0, i));
+			tabPanel.add(currentButton, setGrids(0, i, MARGINTOP));
 		}
 	}
 

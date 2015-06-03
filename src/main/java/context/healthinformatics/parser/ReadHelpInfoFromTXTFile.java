@@ -60,7 +60,8 @@ public class ReadHelpInfoFromTXTFile extends Parser {
 	private void readRelevantLines() throws SQLException {
 		while (sc.hasNextLine()) {
 			String title = sc.nextLine();
-			String info = sc.nextLine();
+			String info = sc.nextLine().replace("\\n", System.getProperty("line.separator"));
+			
 			helpFrameInfoContainer.add(new HelpFrameInfoContainer(title, info));
 		}
 	}

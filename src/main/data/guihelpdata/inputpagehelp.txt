@@ -1,4 +1,22 @@
 Add Project
-To add a project follow the following steps: \n 1. You have to click on the button with the text "ADD new Project". \n 2. A popup will appear \n 3. Fill in the name of your project in the popup. \n 4. Click on  After you've clicked this button a popup will appear where you have to put in the name of your new project.
+To add a project follow the following steps: \n\n1. You have to click on the button with the text "ADD new Project". This is in the left corner of the screen.\n2. A popup will appear \n3. Fill in the name of your new project in the textfield of the popup. \n4. Click on "OK" if you filled in your project name.\n5. A new Project will appear in the File Selection area!
 Remove Project
-To remove a project follow the following steps: \n1. Select the project you want to delete.\n 2. You have to click on the button with the text "Remove Project".\n3. The selected Project is now removed.
+To remove a project follow the following steps: \n\n1. Select the project you want to delete.\n2. You have to click on the button with the text "Remove Project".\n3. The selected Project is now removed.
+Switch Project
+You can switch between project in two different ways: \n\n1. Click on de dropdown element in the top left corner of the screen and select the project you want to switch too.\n2. In the file selection section select the project name of the project you want to work with.
+Open File
+To open a File for your project you have to follow the following steps:\n\n1. Click on the button "Open File".\n2. After you clicked the button a file select window will open. Here you can browse your computer for the desired .txt,.csv,.xls,.xlsx or .xml file.\n3.Once selected the file click on open en the file or files will be added to the project.
+Edit XML
+To edit an XML file you first have to setup a project. See for more info Add Project, and Open File.\n\nOnce your project is setup you will see the specified documents appear in the XML editor.\n In the XML editor you have to specify for each document the name of the document, the type of the document, the path of where the document is located and the line of where the data starts. If the document you are describing is a txt or csv file you have to set the delimiter on which the fields are separated. This usually is a ",". If however your document is an excel file you have to specify which sheet you want to read.\n\nWhen you've set all the Document variables you can add or remove columns. Per column you have to specify the number of the column, and give it a name. After that you can select which type of Document it is: A String, int or Date. If the column is a Date you have to specify the datetype. There is extra info about how to specify this datetype in the set DateType section. 
+Add Column
+To add a column you have to follow the following steps: \n\n1. Click on the button "Add new Column".\n2.A new column will appear on the bottem of the XMLDocument.\n3.Fill in the empty fields and select the column type.\n4. You succesfully added a new Column!:)
+Remove Column
+To remove a column you have to follow the following steps: \n\n1. Click on the button "Remove Column".\n2. The last column of the document will be removed.
+Set DateType
+A datetype is needed so the program knows in what order it needs to read the date. To show you how datetypes work we have here some examples:\n\ndd-MM-yyyy	21-12-2014\nddMMyyyy	21122014\nddMMyy	211214\nHH:mm:ss	12:08:56\n\nFor a more detailed view on how DateTypes work and more examples, you can take a look at: http://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
+Create new Document
+To create a new Document you have to follow the following steps: \n\n1. Click on the button "Add new Document\n2.A new Document will appear on the bottem of the XMLEditor\n3.Fill in the empty fields and select the document type. Also don't forgot to set the columns!\n4. You succesfully added a new Document!:)
+Remove Document
+To remove a Document you have to follow the following steps: \n\n1. Click on the button "Remove Document".\n2. The last document of the XMLEditor will be removed.
+Save XML file
+To Save the XML file you have to follow the following steps: \n\n1. Click on the button "Save XML file".\n2. The xmlfile in the xmleditor will be saved on your computer on a preset location. This way the program knows which xml files you've used the lasttime you used the program and asks to reload them.
