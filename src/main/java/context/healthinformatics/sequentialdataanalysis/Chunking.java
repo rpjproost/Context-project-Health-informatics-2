@@ -209,7 +209,8 @@ public class Chunking extends Task {
 	 */
 	@Override
 	public void run(String[] query) throws Exception {
-		chunks = SingletonInterpreter.getInterpreter().getChunks();
+		ArrayList<Chunk> c = SingletonInterpreter.getInterpreter().getChunks();
+		setChunks(c);
 		if (isData(query)) {
 			runData(query);
 		}

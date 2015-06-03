@@ -80,6 +80,10 @@ public class ChunkingOnDataTest {
 		data.dropTable("StatSensor");
 	}
 	
+	/**
+	 * Test for chunking with interpretor.
+	 * @throws Exception if query is wrong.
+	 */
 	@Test
 	public void testChunkingWithInterpreter() throws Exception {
 		xmlp = new XMLParser(path + "twoDocs.xml");
