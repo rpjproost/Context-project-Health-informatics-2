@@ -122,7 +122,7 @@ public class MergeTableTest {
 		clause[0] = "StatSensor.value = 209";
 		
 		MergeTable test = new MergeTable();
-		data.dropTable("result");
+		tables.add("result");
 		test.mergeTables(clause);
 		test.mergeTablesView();
 		
