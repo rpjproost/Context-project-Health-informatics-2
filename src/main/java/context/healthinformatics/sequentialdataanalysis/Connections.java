@@ -71,6 +71,34 @@ public class Connections extends Tasks {
 	}
 	
 	/**
+	 * Method which connects every chunk in a list of chunks to a certain chunk.
+	 * @param chunkList list of chunks.
+	 * @param c chunk
+	 * @param noteForConnection String associated with the connection.
+	 * @throws Exception e
+	 */
+	public void connectListOfChunksToChunk(ArrayList<Chunk> chunkList, Chunk c
+			, String noteForConnection) throws Exception {
+		for (Chunk chunk : chunkList) {
+			connectToChunk(chunk, c, noteForConnection);
+		}
+	}
+	
+	/**
+	 * Method which connects a certain chunk to every chunk in a list of chunks.
+	 * @param c chunk
+	 * @param chunkList list of chunks.
+	 * @param noteForConnection String associated with the connection.
+	 * @throws Exception e
+	 */
+	public void connectChunkToListOfChunks(Chunk c, ArrayList<Chunk> chunkList
+			, String noteForConnection) throws Exception {
+		for (Chunk chunk : chunkList) {
+			connectToChunk(c, chunk, noteForConnection);
+		}
+	}
+	
+	/**
 	 * Method which connects all chunks with code equal to c, to chunk.
 	 * @param c1 code where the connection originates.
 	 * @param c2 code where the connections is made to.
