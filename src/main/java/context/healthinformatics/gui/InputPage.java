@@ -400,7 +400,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 			parser.parse();
 			ArrayList<Integer> indexesOfSelectedFiles = xmlController.getIndexesOfSelectedFiles(
 					parser.getDocuments());
-			parser.createDatabase(indexesOfSelectedFiles);
+			parser.createTables(indexesOfSelectedFiles);
 		} catch (IOException e) {
 			JOptionPane.showMessageDialog(null,
 					"Something went wrong, please check all fields!");
