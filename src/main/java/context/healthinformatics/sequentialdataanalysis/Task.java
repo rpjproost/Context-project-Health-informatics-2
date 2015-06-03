@@ -39,7 +39,7 @@ public abstract class Task {
 	 * 
 	 * @return the chunks
 	 */
-	protected ArrayList<Chunk> getChunks() {
+	public ArrayList<Chunk> getChunks() {
 		return chunks;
 	}
 	

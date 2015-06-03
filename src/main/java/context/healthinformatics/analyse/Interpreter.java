@@ -35,8 +35,9 @@ public class Interpreter {
 	 * 
 	 * @param code
 	 *            code to interpret.
+	 * @throws Exception 
 	 */
-	public void interpret(String code) {
+	public void interpret(String code) throws Exception {
 		Scanner sc = new Scanner(code);
 		
 		while (sc.hasNextLine()) {
@@ -58,15 +59,15 @@ public class Interpreter {
 		if (key.equals("filter")) {
 			return new Constraints();
 		}
-		if (key.equals("code")) {
-			return new Codes();
-		}
-		if (key.equals("commment")) {
-			return new Comments();
-		}
-		if (key.equals("connect")) {
-			return new Connections();
-		}
+//		if (key.equals("code")) {
+//			return new Codes();
+//		}
+//		if (key.equals("commment")) {
+//			return new Comments();
+//		}
+//		if (key.equals("connect")) {
+//			return new Connections();
+//		}
 			
 		return null;
 	}
