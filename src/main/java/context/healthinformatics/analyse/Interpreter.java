@@ -78,7 +78,7 @@ public class Interpreter {
 	 */
 	public ArrayList<Chunk> getChunks() {
 		if (!tasks.isEmpty()) {
-			return tasks.peek().getChunks();
+			return tasks.peek().getResult();
 		}
 		else {
 			return firstList;
