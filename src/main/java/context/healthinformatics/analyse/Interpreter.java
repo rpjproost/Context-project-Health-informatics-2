@@ -81,8 +81,7 @@ public class Interpreter {
 			return tasks.peek().getChunks();
 		}
 		else {
-			//TODO first workspace.
-			return null;
+			return firstList;
 		}
 		
 	}
