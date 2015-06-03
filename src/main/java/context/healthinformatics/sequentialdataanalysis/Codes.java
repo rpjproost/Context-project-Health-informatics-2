@@ -48,7 +48,7 @@ public class Codes extends Tasks {
 	 */
 	public void setCodeOfLine(int line, String code) throws Exception {
 		try {
-			getChunk(line).setCode(code);
+			getChunkByLine(line).setCode(code);
 		} catch (Exception e) {
 			throw e;
 		}
@@ -58,18 +58,72 @@ public class Codes extends Tasks {
 	 * Set the code on the chunk at index in the chunks ArrayList with the
 	 * string code.
 	 * 
-	 * @param index
+	 * @param indexInChunks
 	 *            the index of the chunk in the ArrayList chunks
 	 * @param code
 	 *            the code to be set
 	 * @throws Exception
 	 */
-	public void setCodeOfChunks(int index, String code) {
+	public void setCodeOfChunks(int indexInChunks, String code) {
 		try {
-			Chunk c = chunks.get(index);
+			Chunk c = chunks.get(indexInChunks);
 			c.setCode(code);
 		} catch (Exception e) {
 			throw e;
+		}
+	}
+	
+	/**
+	 * Method which sets the code for every chunk in a list.
+	 * @param chunk List of chunks.
+	 * @param code code to be set.
+	 */
+	public void setCodeOfListOfChunks(ArrayList<Chunk> chunk, String code) {
+		for (Chunk c : chunk) {
+			c.setCode(code);
+		}
+	}
+	
+	/**
+	 * Method which sets the code of every chunk with the comment : comment, to code.
+	 * @param code c
+	 * @param comment c
+	 */
+	public void setCodeOnComment(String code, String comment) {
+		try {
+			for (Chunk c : chunks) {
+				if (c.getComment().equals(comment)) {
+					c.setCode(code);
+				}
+			}
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	
+	/**
+	 * Method which replaces the code of every chunk with the code : previousCode, to code.
+	 * @param code new code.
+	 * @param previousCode old code.
+	 */
+	public void setCodeOnCode(String code, String previousCode) {
+			for (Chunk c : chunks) {
+				if (c.getCode().equals(previousCode)) {
+					c.setCode(code);
+				}
+			}
+	}
+	
+	/**
+	 * Method which sets the code for all.
+	 * @param code to be set.
+	 * @param whereClause to be met.
+	 * @throws Exception e
+	 */
+	public void setCodeOnData(String code, String whereClause) throws Exception {
+		ArrayList<Integer> list = getLinesFromData(whereClause);
+		for (Integer i : list) {
+			setCodeOfLine(i, code);
 		}
 	}
 
@@ -82,7 +136,7 @@ public class Codes extends Tasks {
 	 * @throws Exception
 	 *             thrown if there is no Chunk with this line.
 	 */
-	public Chunk getChunk(int line) throws Exception {
+	public Chunk getChunkByLine(int line) throws Exception {
 		Chunk curChunk = null;
 		for (int i = 0; i < chunks.size(); i++) {
 			curChunk = chunks.get(i);

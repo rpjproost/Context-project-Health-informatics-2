@@ -22,9 +22,12 @@ public class CodesTest {
 	public void before() {
 		chunks = new ArrayList<Chunk>();
 		Chunk c1 = new Chunk();
+		c1.setComment("CommentA");
 		c1.setLine(1);
 		chunks.add(c1);
 		Chunk c2 = new Chunk();
+		c2.setCode("Code!");
+		c2.setComment("CommentB");
 		chunks.add(c2);
 	}
 
