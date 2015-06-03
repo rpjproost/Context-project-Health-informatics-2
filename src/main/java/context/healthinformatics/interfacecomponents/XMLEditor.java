@@ -15,7 +15,7 @@ import context.healthinformatics.gui.InterfaceHelper;
 import context.healthinformatics.writer.XMLDocument;
 
 /**
- * XMLEditor class makes a panel which is filled with a form to edit xml files.
+ * XMLEditor class makes a panel which is filled with a form to edit XML files.
  */
 public class XMLEditor extends InterfaceHelper implements ActionListener {
 
@@ -40,7 +40,7 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	 * Empty Constructor of the XMLEditor.
 	 * 
 	 * @param inputPage
-	 *            the input page with the xmleditorcontroller
+	 *            the input page with the XMLEditorController
 	 */
 	public XMLEditor(InputPage inputPage) {
 		this.inputPage = inputPage;
@@ -79,10 +79,10 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	}
 
 	/**
-	 * Add an XMLDocument object the containerpanel with the scrollbar.
+	 * Add an XMLDocument object the container panel with the scroll bar.
 	 * 
 	 * @param xmlDocument
-	 *            the xmldocument which is read
+	 *            the XMLDocument which is read
 	 */
 	public void addXMLDocumentToContainerScrollPanel(XMLDocument xmlDocument) {
 		documentFieldsContainers.add(new DocumentFieldsContainer(xmlDocument,
@@ -96,13 +96,13 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	}
 
 	/**
-	 * Create a panel for a xml document.
+	 * Create a panel for a XML document.
 	 * 
 	 * @param documentFieldContainer
-	 *            the container with the fields for the xml document
+	 *            the container with the fields for the XML document
 	 * @return the panel with the added components
 	 */
-	public JPanel createDocumentPanel(
+	private JPanel createDocumentPanel(
 			DocumentFieldsContainer documentFieldContainer) {
 		JPanel documentPanel = createEmptyWithGridBagLayoutPanel();
 		documentPanel.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -118,11 +118,11 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	 * Create the document setting fields with a delimiter or sheet row.
 	 * 
 	 * @param documentFieldContainer
-	 *            the container which contains all gui elements for the xml;
+	 *            the container which contains all GUI elements for the XML;
 	 *            containerPanel.add(dateTypePanel, setGrids(0, THREE));
-	 * @return the panel with de components
+	 * @return the panel with the components
 	 */
-	public JPanel createStandardDocumentSettingFields(
+	private JPanel createStandardDocumentSettingFields(
 			DocumentFieldsContainer documentFieldContainer) {
 		JPanel documentSettingsPanel = documentFieldContainer
 				.getDocumentFormPanel();
@@ -138,13 +138,13 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 
 	/**
 	 * Create a panel for a form row with a delimiter row or a sheet row
-	 * depending on doctype.
+	 * depending on document type.
 	 * 
 	 * @param documentFieldContainer
-	 *            the container containg the doctype
+	 *            the container containing the document type
 	 * @return the panel
 	 */
-	public JPanel createSpecificFormRow(
+	private JPanel createSpecificFormRow(
 			DocumentFieldsContainer documentFieldContainer) {
 		if (documentFieldContainer.getDocumentTypeValue().toLowerCase()
 				.equals("excel")) {
@@ -163,7 +163,7 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	 *            the container of the elements
 	 * @return a panel with the fields
 	 */
-	public JPanel createStandardSettingFields(
+	private JPanel createStandardSettingFields(
 			DocumentFieldsContainer documentFieldContainer) {
 		JPanel standardSettingsPanel = createEmptyWithGridBagLayoutPanel();
 		standardSettingsPanel.add(
@@ -186,13 +186,13 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	}
 
 	/**
-	 * Add al columns to the panel for the columns.
+	 * Add all columns to the panel for the columns.
 	 * 
 	 * @param documentFieldContainer
 	 *            the container
 	 * @return the panel with the columns
 	 */
-	public JPanel createColumnFormPanel(
+	private JPanel createColumnFormPanel(
 			DocumentFieldsContainer documentFieldContainer) {
 		JPanel columnFormPanel = documentFieldContainer.getColumnFormPanel();
 		ArrayList<ColumnFieldContainer> columnsOfDocument = documentFieldContainer
@@ -216,8 +216,7 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	 *            the container of all input elements for the current columns
 	 * @return the panel with all field for a column
 	 */
-
-	public JPanel createColumnForm(
+	protected JPanel createColumnForm(
 			ColumnFieldContainer currentColumnFieldContainer) {
 		JPanel containerPanel = createEmptyWithGridBagLayoutPanel();
 		currentColumnFieldContainer.setPanel(containerPanel);
@@ -253,7 +252,7 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	 *            the column field container
 	 * @return the panel with the fields
 	 */
-	public JPanel createStandardColumnSettingFields(
+	private JPanel createStandardColumnSettingFields(
 			ColumnFieldContainer currentColumnFieldContainer) {
 		JPanel containerPanel = createEmptyWithGridBagLayoutPanel();
 		containerPanel.add(
@@ -287,7 +286,7 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	/**
 	 * Saves an XML File.
 	 */
-	public void saveXMLFile() {
+	private void saveXMLFile() {
 		ArrayList<XMLDocument> xmlDocuments = getAllXMLDocuments();
 		inputPage.getXMLController().updateDocuments(inputPage, xmlDocuments);
 		inputPage.getXMLController().save();
@@ -296,7 +295,7 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	/**
 	 * Empties the editor.
 	 */
-	public void emptyEditor() {
+	protected void emptyEditor() {
 		while (documentFieldsContainers.size() > 0) {
 			documentFieldsContainers
 					.remove(documentFieldsContainers.size() - 1);

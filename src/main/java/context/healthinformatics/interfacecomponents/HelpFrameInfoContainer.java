@@ -1,7 +1,7 @@
 package context.healthinformatics.interfacecomponents;
 
 /**
- * Contain the info for explanation of a function in the program.
+ * Contains the info for explanation of a function in the program.
  */
 public class HelpFrameInfoContainer {
 	private String title;

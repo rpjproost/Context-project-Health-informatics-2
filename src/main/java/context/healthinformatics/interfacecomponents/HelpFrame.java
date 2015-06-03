@@ -72,7 +72,7 @@ public class HelpFrame extends InterfaceHelper {
 	}
 
 	/**
-	 * Init the main panel with given width.
+	 * Initialize the main panel with given width.
 	 */
 	private void initMainPanel() {
 		mainPanel = createEmptyWithGridBagLayoutPanel();
@@ -94,7 +94,7 @@ public class HelpFrame extends InterfaceHelper {
 	}
 
 	/**
-	 * Init the panels for the Tabs and the Info.
+	 * Initialize the panels for the Tabs and the Info.
 	 */
 	private void initTabAndInfoPanel() {
 		tabPanel = createEmptyWithGridBagLayoutPanel();
@@ -108,7 +108,7 @@ public class HelpFrame extends InterfaceHelper {
 	}
 
 	/**
-	 * Add the tab and info panel to the mainpanel.
+	 * Add the tab and info panel to the Main Panel.
 	 */
 	private void addTabAndInfoPanel() {
 		infoPanel.add(displayInfoTextArea, setGrids(0, 0));
@@ -133,7 +133,7 @@ public class HelpFrame extends InterfaceHelper {
 	}
 
 	/**
-	 * Add an actionlistener to the created button.
+	 * Add an ActionListener to the created button.
 	 * 
 	 * @param currentButton
 	 *            the created button
@@ -151,7 +151,7 @@ public class HelpFrame extends InterfaceHelper {
 	}
 
 	/**
-	 * Add the textarea to the infopanel.
+	 * Add the TextArea to the info panel.
 	 */
 	private void addTextAreaToInfo() {
 		displayInfoTextArea.setText(listOfHelpFrameInfo.get(0).getInfo());

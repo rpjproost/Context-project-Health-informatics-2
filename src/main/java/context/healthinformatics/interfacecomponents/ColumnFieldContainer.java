@@ -43,12 +43,12 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	}
 
 	/**
-	 * Init the textfield with the given values from the Column object.
+	 * Initialize the TextField with the given values from the Column object.
 	 * 
 	 * @param column
 	 *            the column object
 	 */
-	public void initTextFieldsWithValues(Column column) {
+	private void initTextFieldsWithValues(Column column) {
 		this.columnID = new JTextField(Integer.toString(column
 				.getColumnNumber()));
 		this.columnName = new JTextField(column.getColumnName());
@@ -62,20 +62,20 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	/**
 	 * Check if a column has a date type.
 	 * 
-	 * @return true if has datetype else false
+	 * @return true if has DateType else false
 	 */
 	public boolean hasDateType() {
 		return comboValue.toLowerCase().equals("date");
 	}
 
 	/**
-	 * Get the index of the combo box based on the given columntype.
+	 * Get the index of the combo box based on the given columnType.
 	 * 
 	 * @param columnType
-	 *            the columntype of the column
+	 *            the columnType of the column
 	 * @return the index of the combo box
 	 */
-	public int getComboBoxIndex(String columnType) {
+	private int getComboBoxIndex(String columnType) {
 		if (columnType.equals("DATE")) {
 			return 2;
 		} else if (columnType.equals("INT")) {
@@ -86,7 +86,7 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	}
 
 	/**
-	 * Build a column object from the textfield values.
+	 * Build a column object from the TextField values.
 	 * 
 	 * @return a Column Object
 	 */
@@ -128,7 +128,7 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	}
 
 	/**
-	 * Get the inputed value of the columnType combobox.
+	 * Get the inputed value of the columnType ComboBox.
 	 * 
 	 * @return the value
 	 */
@@ -150,36 +150,36 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	}
 
 	/**
-	 * Get the column id textfield.
+	 * Get the column id TextField.
 	 * 
-	 * @return the textfield
+	 * @return the TextField
 	 */
 	public JTextField getColumnID() {
 		return columnID;
 	}
 
 	/**
-	 * Get the columnName textfield.
+	 * Get the columnName TextField.
 	 * 
-	 * @return the textfield
+	 * @return the TextField
 	 */
 	public JTextField getColumnName() {
 		return columnName;
 	}
 
 	/**
-	 * Get the columnType combobox.
+	 * Get the columnType ComboBox.
 	 * 
-	 * @return the combobox
+	 * @return the ComboBox
 	 */
 	public JComboBox<String> getColumnType() {
 		return columnType;
 	}
 
 	/**
-	 * Get the date type textfield.
+	 * Get the date type TextField.
 	 * 
-	 * @return the textfield
+	 * @return the TextField
 	 */
 	public JTextField getDateType() {
 		return dateType;
@@ -236,7 +236,7 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	}
 
 	/**
-	 * Handle the actionlistener of the type drop down menu.
+	 * Handle the ActionListener of the type drop down menu.
 	 */
 	public void handleColumnTypeDrowDown() {
 		String selectedItem = columnType.getSelectedItem().toString();
@@ -255,7 +255,7 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	 * @param selectedItem
 	 *            the string of the selected item
 	 */
-	public void addTheDateTypeElement(String selectedItem) {
+	private void addTheDateTypeElement(String selectedItem) {
 		comboValue = selectedItem;
 		dateTypePanel = makeFormRowWithTextField("Specified datetype: ",
 				getDateType());
@@ -269,9 +269,7 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	 * @param selectedItem
 	 *            the string of the selected item
 	 */
-	public void removeTheDateTypeElement(String selectedItem) {
-		// TODO not sure if here is a bug but sometimes datetype field
-		// doesnt properly appear.
+	private void removeTheDateTypeElement(String selectedItem) {
 		comboValue = selectedItem;
 		dateTypePanel.setVisible(false);
 		panel.revalidate();

@@ -43,9 +43,9 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	 * Build a DocumentField container with a XMLDocument.
 	 * 
 	 * @param xmlDoc
-	 *            the xml document
+	 *            the XML document
 	 * @param xmledit
-	 *            the xml editor
+	 *            the XML editor
 	 */
 	public DocumentFieldsContainer(XMLDocument xmlDoc, XMLEditor xmledit) {
 		this.xmledit = xmledit;
@@ -58,9 +58,9 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	}
 
 	/**
-	 * Init the panels for the document fields.
+	 * Initialize the panels for the document fields.
 	 */
-	public void initPanels() {
+	private void initPanels() {
 		columnFormPanel = new JPanel();
 		columnFormPanel.setLayout(new GridBagLayout());
 		documentFormPanel = new JPanel();
@@ -70,19 +70,19 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	/**
 	 * Add all action listeners.
 	 */
-	public void addActionListeners() {
+	private void addActionListeners() {
 		addColumnButton.addActionListener(this);
 		removeColumnButton.addActionListener(this);
 		documentType.addActionListener(this);
 	}
 
 	/**
-	 * Init the JTextFields with the given values.
+	 * Initialize the JTextFields with the given values.
 	 * 
 	 * @param xmlDoc
 	 *            the document with the values
 	 */
-	public void initTextFieldsWithValues(XMLDocument xmlDoc) {
+	private void initTextFieldsWithValues(XMLDocument xmlDoc) {
 		this.documentName = new JTextField(xmlDoc.getDocName());
 		this.documentType = new JComboBox<>(doctypes);
 		this.documentType
@@ -92,14 +92,14 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	}
 
 	/**
-	 * Init one of the two textfields bases on the document type.
+	 * Initialize one of the two TextFields bases on the document type.
 	 * 
 	 * @param docType
 	 *            the type of the document
 	 * @param xmlDoc
-	 *            the xml document
+	 *            the XML document
 	 */
-	public void initSheetOrDelimiterField(String docType, XMLDocument xmlDoc) {
+	private void initSheetOrDelimiterField(String docType, XMLDocument xmlDoc) {
 		if (docType.toLowerCase().equals("excel")) {
 			this.sheet = new JTextField(Integer.toString(xmlDoc.getSheet()));
 			this.delimiter = new JTextField(",");
@@ -110,25 +110,26 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	}
 
 	/**
-	 * Init the columnfield containers for all the columns in the xmldocument.
+	 * Initialize the ColumnField containers for all the columns in the
+	 * XMLDocument.
 	 * 
 	 * @param cols
 	 *            the columns
 	 */
-	public void initColumns(ArrayList<Column> cols) {
+	private void initColumns(ArrayList<Column> cols) {
 		for (int i = 0; i < cols.size(); i++) {
 			columnFields.add(new ColumnFieldContainer(cols.get(i)));
 		}
 	}
 
 	/**
-	 * Get the index of the document type for the combobox.
+	 * Get the index of the document type for the ComboBox.
 	 * 
 	 * @param doctype
 	 *            the type of the document
 	 * @return the index
 	 */
-	public int getComboBoxIndex(String doctype) {
+	private int getComboBoxIndex(String doctype) {
 		if (doctype.toLowerCase().equals("excel")) {
 			return 0;
 		} else if (doctype.toLowerCase().equals("csv")) {
@@ -141,7 +142,7 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	/**
 	 * Build a new XMLDocument from the values of the input fields.
 	 * 
-	 * @return a xmldocument
+	 * @return a XMLDocument
 	 */
 	public XMLDocument getXMLDocument() {
 		ArrayList<Column> cols = new ArrayList<Column>();
@@ -159,7 +160,7 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	 *            the columns of the document
 	 * @return the XMLDocument object
 	 */
-	public XMLDocument getCorrect(ArrayList<Column> columns) {
+	private XMLDocument getCorrect(ArrayList<Column> columns) {
 		if (getDocumentTypeValue().toLowerCase().equals("excel")) {
 			return new XMLDocument(getDocumentTypeValue(),
 					getDocumentNameValue(), "", getDocumentPathValue(),
@@ -182,12 +183,12 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	}
 
 	/**
-	 * Add a columnfield to the documentcontainer.
+	 * Add a ColumnField to the DocumentContainer.
 	 * 
 	 * @param columnField
 	 *            a field with the values of a column
 	 */
-	public void addColumnField(ColumnFieldContainer columnField) {
+	private void addColumnField(ColumnFieldContainer columnField) {
 		columnFields.add(columnField);
 	}
 
@@ -353,21 +354,21 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	}
 
 	/**
-	 * Handle the actionlistener of the addColumnButton.
+	 * Handle the ActionListener of the addColumnButton.
 	 */
-	public void handleAddColumnButton() {
+	private void handleAddColumnButton() {
 		ColumnFieldContainer cfc = new ColumnFieldContainer(new Column(-1, "",
 				""));
-		columnFields.add(cfc);
+		addColumnField(cfc);
 		columnFormPanel.add(xmledit.createColumnForm(cfc),
 				setGrids(0, columnFields.size()));
 		columnFormPanel.revalidate();
 	}
 
 	/**
-	 * Handle the actionlistener of the removeColumnButton.
+	 * Handle the ActionListener of the removeColumnButton.
 	 */
-	public void handleRemoveColumnButton() {
+	private void handleRemoveColumnButton() {
 		if (columnFields.size() > 0) {
 			ColumnFieldContainer cfc = columnFields
 					.remove(columnFields.size() - 1);
@@ -376,9 +377,9 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	}
 
 	/**
-	 * Handle the actionlistener of the doctypebutton dropdown.
+	 * Handle the ActionListener of the DoctypeButton DropDown.
 	 */
-	public void handleDoctypeDropDown() {
+	private void handleDoctypeDropDown() {
 		String selectedItem = documentType.getSelectedItem().toString();
 		if (selectedItem.equals("Excel")) {
 			changeLastDocumentRow("Document sheet: ", getSheet());
@@ -395,7 +396,7 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	 * @param theTextField
 	 *            one of the two textfields
 	 */
-	public void changeLastDocumentRow(String labelName, JTextField theTextField) {
+	private void changeLastDocumentRow(String labelName, JTextField theTextField) {
 		panelForDocTypeSpecificInput.setVisible(false);
 		JPanel testPanel = makeFormRowWithTextField(labelName, theTextField);
 		documentFormPanel.add(testPanel, setGrids(0, 1));

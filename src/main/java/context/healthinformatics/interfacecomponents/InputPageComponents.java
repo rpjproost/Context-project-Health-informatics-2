@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 
 import context.healthinformatics.gui.InputPage;
 import context.healthinformatics.gui.MainFrame;
+import context.healthinformatics.parser.ReadHelpInfoFromTXTFile;
 import context.healthinformatics.writer.XMLDocument;
 
 /**
