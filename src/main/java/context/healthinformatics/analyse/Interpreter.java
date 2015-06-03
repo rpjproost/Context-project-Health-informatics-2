@@ -41,7 +41,7 @@ public class Interpreter {
 		Scanner sc = new Scanner(code);
 		
 		while (sc.hasNextLine()) {
-			String[] splittedLine = sc.nextLine().split(" ");
+			String[] splittedLine = sc.nextLine().toLowerCase().split(" ");
 			splittedLine = checkSplittedLineForUnwantedSpaces(splittedLine);
 			Task task = createTask(splittedLine[0]);
 			if (task != null) { //task == null if revert / undo was called
