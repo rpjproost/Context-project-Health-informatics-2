@@ -69,7 +69,8 @@ public class ChunkingOnDataTest {
 		MergeTable test = new MergeTable();
 		test.merge(clause);
 		ArrayList<Chunk> chunks = test.getChunks();
-		Chunking tests = new Chunking(chunks);
+		Chunking tests = new Chunking();
+		tests.setChunks(chunks);
 
 		ArrayList<Chunk> x = tests.constraintOnData("groep = 2");
 		assertTrue(x.size() == res);

@@ -21,17 +21,6 @@ public class Chunking extends Task {
 	}
 	
 	/**
-	 * Constructor Chunking.
-	 * 
-	 * @param chunks
-	 *            the list of chunks
-	 */
-	public Chunking(ArrayList<Chunk> chunks) {
-		setChunks(chunks);
-		chunks = getChunks();
-	}
-
-	/**
 	 * Create chunks on constraint data.
 	 * @param whereClause for sql query.
 	 * @return new Arraylist with chunked chunks.
