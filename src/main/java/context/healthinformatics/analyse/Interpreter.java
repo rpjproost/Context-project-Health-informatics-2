@@ -4,13 +4,15 @@ package context.healthinformatics.analyse;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Stack;
-
-import org.parboiled.Parboiled;
-import org.parboiled.parserunners.RecoveringParseRunner;
-import org.parboiled.support.ParsingResult;
+import java.util.regex.Pattern;
 
 import context.healthinformatics.database.MergeTable;
 import context.healthinformatics.sequentialdataanalysis.Chunk;
+import context.healthinformatics.sequentialdataanalysis.Chunking;
+import context.healthinformatics.sequentialdataanalysis.Codes;
+import context.healthinformatics.sequentialdataanalysis.Comments;
+import context.healthinformatics.sequentialdataanalysis.Connections;
+import context.healthinformatics.sequentialdataanalysis.Constraints;
 import context.healthinformatics.sequentialdataanalysis.Task;
 
 
@@ -20,7 +22,6 @@ import context.healthinformatics.sequentialdataanalysis.Task;
 public class Interpreter {
 	
 	private Stack<Task> tasks;
-	private UserInputParser parser;
 
 	/**
 	 * constructor for the Interpreter.
@@ -39,13 +40,37 @@ public class Interpreter {
 		Scanner sc = new Scanner(code);
 		
 		while (sc.hasNextLine()) {
-			String line = sc.nextLine();
-			task.run();
-			tasks.push(task);
+			String[] splittedLine = sc.nextLine().split(" ");
+			splittedLine = checkSplittedLineForUnwantedSpaces(splittedLine);
+			Task task = createTask(splittedLine[0]);
+			if (task != null) { //task == null if revert / undo was called
+				task.run(splittedLine);
+				tasks.push(task);
+			} 
 		}
 		sc.close();
 	}
 	
+	private Task createTask(String key) {
+		if (key.equals("chunk")) {
+			return new Chunking();
+		}
+		if (key.equals("filter")) {
+			return new Constraints();
+		}
+		if (key.equals("code")) {
+			return new Codes();
+		}
+		if (key.equals("commment")) {
+			return new Comments();
+		}
+		if (key.equals("connect")) {
+			return new Connections();
+		}
+			
+		return null;
+	}
+
 	/**
 	 * getter for the current chunkList.
 	 * @return the current chunkList
@@ -62,9 +87,13 @@ public class Interpreter {
 	}
 	
 	private String[] checkSplittedLineForUnwantedSpaces(String[] splittedLine) {
+		ArrayList<String> strings = new ArrayList<String>();
 		for (int i = 0; i < splittedLine.length; i++) {
-			
+			if (splittedLine[i].length() > 0) {
+				strings.add(splittedLine[i]);
+			}
 		}
+		return (String[]) strings.toArray();
 	}
 
 }
