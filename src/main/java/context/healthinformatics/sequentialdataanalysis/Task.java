@@ -19,7 +19,7 @@ public abstract class Task {
 	/**
 	 * List of chunks that every Class. 
 	 */
-	private ArrayList<Chunk> chunks;
+	protected ArrayList<Chunk> chunks;
 	
 	/**
 	 * 

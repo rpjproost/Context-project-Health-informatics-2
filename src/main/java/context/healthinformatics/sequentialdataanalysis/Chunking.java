@@ -3,6 +3,8 @@ package context.healthinformatics.sequentialdataanalysis;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import context.healthinformatics.analyse.SingletonInterpreter;
+
 /**
  * Class for chunking a list of chunks.
  *
@@ -11,6 +13,13 @@ public class Chunking extends Task {
 
 	private Chunk temp;
 
+	/**
+	 * Constructor for chunking.
+	 */
+	public Chunking() {
+		
+	}
+	
 	/**
 	 * Constructor Chunking.
 	 * 
@@ -200,6 +209,7 @@ public class Chunking extends Task {
 	 */
 	@Override
 	public void run(String[] query) throws Exception {
+		chunks = SingletonInterpreter.getInterpreter().getChunks();
 		StringBuilder q = new StringBuilder();
 		if (isData(query)) {
 			for (int i = 2; i < query.length; i++) {
