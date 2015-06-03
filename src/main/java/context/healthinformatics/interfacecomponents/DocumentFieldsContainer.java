@@ -29,7 +29,7 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	private JTextField sheet;
 	private JTextField delimiter;
 	private ArrayList<ColumnFieldContainer> columnFields;
-	private String[] doctypes = { "Excel", "Txt", "Csv" };
+	private String[] doctypes = { "Excel", "Text", "Csv" };
 
 	private JPanel columnFormPanel;
 	private JPanel documentFormPanel;

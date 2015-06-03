@@ -58,10 +58,51 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	public InputPage(MainFrame m) {
 		mf = m;
 		folder = new ArrayList<ArrayList<String>>();
-		ft = new FileTree(m, this);
-		ipc = new InputPageComponents(m, this);
 		xmledit = new XMLEditor(this);
 		xmlController = new XMLEditorController();
+		ipc = new InputPageComponents(mf, this);
+		checkOnFiles();	
+	}
+
+	private void checkOnFiles() {
+		File directory = new File("src/main/data/savedXML/");
+		File[] listOfFiles = directory.listFiles();
+		if (listOfFiles.length > 0) {
+			foundFiles(listOfFiles);
+		} else {
+			runClearedProject();
+		}
+	}
+	
+	private void foundFiles(File[] listOfFiles) {
+		for (int i = 0; i < listOfFiles.length; i++) {
+			String project = listOfFiles[i].getName().replace(".xml", "");
+			XMLParser parser = new XMLParser(listOfFiles[i].getPath());
+			try {
+				parser.parse();
+			} catch (IOException e) {
+				JOptionPane.showConfirmDialog(null, 
+						"Something went wrong with reading the files.", 
+						"Error!", JOptionPane.OK_OPTION);
+				runClearedProject();
+			}
+			runOldProject(project, parser.getDocuments());
+		}
+	}
+
+	private void runOldProject(String project, ArrayList<XMLDocument> docsOfFile) {
+		xmlController.setProject(project);
+		xmlController.setDocumentsInProject(docsOfFile);
+		folder.add(xmlController.breakDownXMLDocumentsIntoNames(docsOfFile));
+		ft = new FileTree(mf, this);
+		ipc.getComboBox().addItem(project);
+		ipc.getComboBox().setSelectedItem(project);
+		xmlController.loadProject(xmledit);
+		ft.expandTree();
+	}
+
+	private void runClearedProject() {
+		ft = new FileTree(mf, this);
 		xmlController.setProject("(default)");
 		addComboItem("(default)");
 	}
@@ -236,14 +277,6 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	public JFileChooser getSelecter() {
 		return selecter;
 	}
-
-//	/**
-//	 * @param f
-//	 *            a 2D array of projects and files.
-//	 */
-//	public void setFolder(ArrayList<ArrayList<String>> f) {
-//		folder = f;
-//	}
 	
 	/**
 	 * @return the XML editor.

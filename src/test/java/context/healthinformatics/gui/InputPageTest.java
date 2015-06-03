@@ -62,14 +62,6 @@ public class InputPageTest {
 	}
 	
 	/**
-	 * Checks if the folder getter works correctly.
-	 */
-	@Test
-	public void testgetFolder() {
-		assertEquals(ip.getFolder(), folder);
-	}
-	
-	/**
 	 * Checks if the method finds the correct project.
 	 */
 	@Test

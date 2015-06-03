@@ -54,7 +54,7 @@ public class XMLDocument {
 		this.sheet = 1;
 		this.docType = "";
 		this.docName = "";
-		this.path = "";
+		this.path = "path/file.txt";
 		this.delimiter = "";
 		Column c = new Column(0, "date", "Date");
 		c.setDateType("yyMMdd");
