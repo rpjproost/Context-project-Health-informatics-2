@@ -84,6 +84,7 @@ public class ChunkingOnDataTest {
 	public void testChunkingWithInterpreter() throws Exception {
 		xmlp = new XMLParser(path + "twoDocs.xml");
 		xmlp.parse();
+		final int res = 6;
 		String[] clause = new String[1];
 		clause[0] = "HospitalRecords.Groep = 2";
 		MergeTable test = new MergeTable();
@@ -94,10 +95,8 @@ public class ChunkingOnDataTest {
 		i.setIntialChunks(chunks);
 		i.interpret("chunk data where groep = 2");
 		ArrayList<Chunk> c = i.getChunks();
-		
-		for (Chunk x: c) {
-			System.out.println(x);
-		}
+		assertTrue(c.size() == res);
+
 		
 		test.dropView("workspace");
 		data.dropTable("result");
