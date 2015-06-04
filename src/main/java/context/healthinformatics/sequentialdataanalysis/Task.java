@@ -75,6 +75,7 @@ public abstract class Task {
 	 * @param whereClause Constrains String.
 	 * @return Result list of chunks.
 	 * @throws SQLException if sql query is incorrect.
+	 * @throws  if constraint is not found.
 	 */
 	protected abstract ArrayList<Chunk> constraintOnData(String whereClause) throws SQLException;
 	

@@ -17,16 +17,6 @@ public class Codes extends Task {
 	public Codes(String c) {
 		code = c;
 	}
-
-	/**
-	 * Constructor for codes.
-	 * 
-	 * @param chunks
-	 *            the chunks
-	 */
-	public Codes(ArrayList<Chunk> chunks) {
-		this.chunks = chunks;
-	}
 	
 	@Override
 	public ArrayList<Chunk> undo() {
@@ -44,14 +34,13 @@ public class Codes extends Task {
 	 * @throws Exception
 	 *             thrown if you couldn't set the code.
 	 */
-	public void setCodeOfLine(int line, String code) throws Exception {
-		try {
-			getChunkByLine(line, chunks).setCode(code);
-		} catch (Exception e) {
-			throw e;
+	public void setCodeOfLine(int line, String code) {
+		Chunk temp = getChunkByLine(line, getChunks());
+		if (temp != null) {
+			temp.setCode(code);
 		}
 	}
-	
+
 	/**
 	 * Set the code on the chunk at index in the chunks ArrayList with the
 	 * string code.
@@ -64,13 +53,13 @@ public class Codes extends Task {
 	 */
 	public void setCodeOfChunks(int indexInChunks, String code) {
 		try {
-			Chunk c = chunks.get(indexInChunks);
+			Chunk c = getChunks().get(indexInChunks);
 			c.setCode(code);
 		} catch (Exception e) {
 			throw e;
 		}
 	}
-	
+
 	/**
 	 * Method which sets the code for every chunk in a list.
 	 * @param list of chunks.
@@ -81,7 +70,7 @@ public class Codes extends Task {
 			c.setCode(code);
 		}
 	}
-	
+
 	/**
 	 * Method which sets the code of every chunk with the comment : comment, to code.
 	 * @param code c
@@ -89,7 +78,7 @@ public class Codes extends Task {
 	 */
 	public void setCodeOnComment(String code, String comment) {
 		try {
-			for (Chunk c : chunks) {
+			for (Chunk c : getChunks()) {
 				if (c.getComment().equals(comment)) {
 					c.setCode(code);
 				}
@@ -98,27 +87,26 @@ public class Codes extends Task {
 			throw e;
 		}
 	}
-	
+
 	/**
 	 * Method which replaces the code of every chunk with the code : previousCode, to code.
 	 * @param code new code.
 	 * @param previousCode old code.
 	 */
 	public void setCodeOnCode(String code, String previousCode) {
-			for (Chunk c : chunks) {
-				if (c.getCode().equals(previousCode)) {
-					c.setCode(code);
-				}
+		for (Chunk c : getChunks()) {
+			if (c.getCode().equals(previousCode)) {
+				c.setCode(code);
 			}
+		}
 	}
-	
+
 	/**
 	 * Method which sets the code for all.
-	 * @param code to be set.
 	 * @param whereClause to be met.
-	 * @throws Exception e
+	 * @throws SQLException If sql query is incorrect.
 	 */
-	public void setCodeOnData(String code, String whereClause) throws Exception {
+	public void setCodeOnData(String whereClause) throws SQLException {
 		ArrayList<Integer> list = getLinesFromData(whereClause);
 		for (Integer i : list) {
 			setCodeOfLine(i, code);
@@ -135,7 +123,7 @@ public class Codes extends Task {
 	 * @throws Exception e
 	 *             thrown if there is no Chunk with this line.
 	 */
-	public Chunk getChunkByLine(int line, ArrayList<Chunk> chunk) throws Exception {
+	public Chunk getChunkByLine(int line, ArrayList<Chunk> chunk) {
 		Chunk curChunk = null;
 		for (int i = 0; i < chunk.size(); i++) {
 			curChunk = chunk.get(i);
@@ -146,14 +134,13 @@ public class Codes extends Task {
 				return getChunkByLine(line, curChunk.getChunks());
 			}
 		}
-		throw new Exception();
+		return curChunk;
 	}
 
 	@Override
-	protected ArrayList<Chunk> constraintOnData(String whereClause)
-			throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+	protected ArrayList<Chunk> constraintOnData(String whereClause) throws SQLException {
+		setCodeOnData(whereClause);
+		return getChunks();
 	}
 
 	@Override

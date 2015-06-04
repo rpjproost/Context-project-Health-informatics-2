@@ -73,9 +73,10 @@ public class CodeOnDataTest {
 		MergeTable test = new MergeTable();
 		test.merge(clause);
 		ArrayList<Chunk> chunks = test.getChunks();
-		Codes tests = new Codes(chunks);
+		Codes tests = new Codes("test");
+		tests.setChunks(chunks);
 		
-		tests.setCodeOnData("test", "value = 209");
+		tests.setCodeOnData("value = 209");
 		assertEquals("test", chunks.get(1).getCode());
 
 		test.dropView("workspace");
