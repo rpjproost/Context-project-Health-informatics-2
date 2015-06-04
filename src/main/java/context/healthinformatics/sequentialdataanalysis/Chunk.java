@@ -145,10 +145,24 @@ public class Chunk {
 	public String toString() {
 		String res = "Chunk [code=" + code + ", pointer=" + pointer + ", comment="
 				+ comment + ", chunks=" + chunks + ", line=" + line + "]";
+		return res;
+	}
+	
+	/**
+	 * Returns array of chunk object.
+	 * @return Arraylist of strings.
+	 */
+	public ArrayList<String> toArray() {
+		ArrayList<String> res = new ArrayList<String>();
 		if (sum != Integer.MIN_VALUE) {
-			return sum + "";
+			res.add(sum + "");
+			return res;
 		}
 		else if (hasChild()) {
+			res.add("Chunk");
+			res.add("code = " + code);
+			res.add("comment = " + comment);
+			res.add("line = " + line);
 			return res;
 		}
 		else {
@@ -156,7 +170,7 @@ public class Chunk {
 			try {
 				this.rs = data.selectResultSet("result", "*", "resultid = " + line);
 				ResultSetMetaData rsmd = this.rs.getMetaData();
-				res = processResultSet(rsmd.getColumnCount()).toString();
+				processResultSet(rsmd.getColumnCount(), res);
 				rs.close();
 			} catch (SQLException e) {
 				System.out.println(e);
@@ -193,23 +207,13 @@ public class Chunk {
 	 * @throws SQLException
 	 *             the sql exception of the resultset
 	 */
-	public StringBuffer processResultSet(int numColumns) throws SQLException {
-		StringBuffer str = new StringBuffer();
+	private void processResultSet(int numColumns, ArrayList<String> res) throws SQLException {
 		while (rs.next()) {
 			for (int i = 1; i < numColumns; i++) {
-				if (i == numColumns - 1) {
-					str.append(rs.getObject(i + 1));
-				} else {
-					str.append(rs.getObject(i + 1) + " ");
-				}
+				res.add(rs.getObject(i + 1).toString());
 			}
-			str.append(System.lineSeparator());
-		}
-		if (str.length() > 2) {
-			str.setLength(str.length() - 2);
 		}
 		rs.close();
-		return str;
 	}
 
 }
