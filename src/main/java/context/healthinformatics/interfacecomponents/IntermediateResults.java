@@ -110,7 +110,7 @@ public class IntermediateResults extends InterfaceHelper {
 		ArrayList<Chunk> chunks = interpreter.getChunks();
 		StringBuilder buildString = new StringBuilder();
 		buildString.append("<html><body><h2>Number of chunks: " + chunks.size()
-				+ "</h2><table style='width:100%'>");
+				+ "</h2><table style='width:100%;'>");
 		buildString.append(loopThroughChunks(chunks));
 		buildString.append("</table></body></html>");
 		return buildString.toString();
