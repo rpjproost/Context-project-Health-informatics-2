@@ -123,12 +123,13 @@ public class IntermediateResults extends InterfaceHelper {
 
 	private String buildColumnsHTMLTableRow(ArrayList<Column> columns) {
 		StringBuilder buildString = new StringBuilder();
-		buildString.append("<tr><td><h2>Code:</h2></td><td><h2>Comment:</h2></td>");
+		buildString
+				.append("<tr><td><h2>Code:</h2></td><td><h2>Comment:</h2></td>");
 		for (int i = 0; i < columns.size(); i++) {
 			buildString.append("<td><h2>" + columns.get(i).getColumnName()
 					+ ":</h2></td>");
 		}
-		buildString.append("</td>");
+		buildString.append("</tr>");
 		return buildString.toString();
 	}
 
@@ -142,9 +143,9 @@ public class IntermediateResults extends InterfaceHelper {
 	private String getChildsOfChunk(Chunk chunk) {
 		ArrayList<Chunk> childChunks = chunk.getChunks();
 		StringBuilder buildString = new StringBuilder();
-		buildString.append("<table>");
+		// buildString.append("<table>");
 		buildString.append(loopThroughChunks(childChunks));
-		buildString.append("</table>");
+		// buildString.append("</table>");
 		return buildString.toString();
 	}
 
@@ -160,17 +161,22 @@ public class IntermediateResults extends InterfaceHelper {
 		for (int i = 0; i < chunks.size(); i++) {
 			Chunk currentChunk = chunks.get(i);
 			buildString.append("<tr>");
-			buildString.append("<td>" + currentChunk.getCode() + "</td>");
-			buildString.append("<td>" + currentChunk.getComment()
-					+ "</td>");
-			ArrayList<String> values = currentChunk.toArray();
-			for (int j = 0; j < values.size(); j++) {
-				buildString.append("<td>" + values.get(j) + "</td>");
+			if (currentChunk.hasChild()) {
+				buildString.append("<td>");
+				buildString.append(currentChunk.toArray());
+				buildString.append("</td>");
+				buildString.append(getChildsOfChunk(currentChunk));
+			} else {
+				buildString.append("<td>" + currentChunk.getCode() + "</td>");
+				buildString
+						.append("<td>" + currentChunk.getComment() + "</td>");
+				ArrayList<String> values = currentChunk.toArray();
+				for (int j = 0; j < values.size(); j++) {
+					buildString.append("<td>" + values.get(j) + "</td>");
+				}
 			}
 			buildString.append("</tr>");
-			if (currentChunk.hasChild()) {
-				buildString.append(getChildsOfChunk(currentChunk));
-			}
+
 		}
 		return buildString.toString();
 	}
