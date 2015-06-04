@@ -97,7 +97,7 @@ public class IntermediateResults extends InterfaceHelper {
 			this.displayHtmlPane.setCaretPosition(0);
 		} else {
 			this.displayHtmlPane
-					.setText("There is no intermediate result to display");
+					.setText("<h1>There is no intermediate result to display</h1>");
 		}
 	}
 
@@ -108,18 +108,11 @@ public class IntermediateResults extends InterfaceHelper {
 	 */
 	private String buildHtmlOfIntermediateResult() {
 		ArrayList<Chunk> chunks = interpreter.getChunks();
-		System.out.println(chunks.size());
 		StringBuilder buildString = new StringBuilder();
-		buildString.append("<html><body><b>Number of chunks: +" + chunks.size()
-				+ "</b><ul>");
-		for (int i = 0; i < chunks.size(); i++) {
-			Chunk currentChunk = chunks.get(i);
-			buildString.append("<li>" + currentChunk.toString() + "</li>");
-			if (currentChunk.hasChild()) {
-				buildString.append(getChildsOfChunk(currentChunk));
-			}
-		}
-		buildString.append("</ul></body></html>");
+		buildString.append("<html><body><h2>Number of chunks: " + chunks.size()
+				+ "</h2><table style='width:100%'>");
+		buildString.append(loopThroughChunks(chunks));
+		buildString.append("</table></body></html>");
 		return buildString.toString();
 	}
 
@@ -133,15 +126,26 @@ public class IntermediateResults extends InterfaceHelper {
 	private String getChildsOfChunk(Chunk chunk) {
 		ArrayList<Chunk> childChunks = chunk.getChunks();
 		StringBuilder buildString = new StringBuilder();
-		buildString.append("<ul>");
-		for (int i = 0; i < childChunks.size(); i++) {
-			Chunk currentChunk = childChunks.get(i);
-			buildString.append("<li>" + currentChunk.toString() + "</li>");
+		buildString.append("<table>");
+		buildString.append(loopThroughChunks(childChunks));
+		buildString.append("</table>");
+		return buildString.toString();
+	}
+
+	private String loopThroughChunks(ArrayList<Chunk> chunks) {
+		StringBuilder buildString = new StringBuilder();
+		for (int i = 0; i < chunks.size(); i++) {
+			Chunk currentChunk = chunks.get(i);
+			String[] values = currentChunk.toString().split(" ");
+			buildString.append("<tr>");
+			for (int j = 0; j < values.length; j++) {
+				buildString.append("<td>" + values[j] + "</td>");
+			}
+			buildString.append("</tr>");
 			if (currentChunk.hasChild()) {
 				buildString.append(getChildsOfChunk(currentChunk));
 			}
 		}
-		buildString.append("</ul>");
 		return buildString.toString();
 	}
 }
