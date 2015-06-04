@@ -27,7 +27,6 @@ Language
 		The string is the code or comment you want to set, and with connection it is the String you want to associate with the connection. The second sections specifies on which part of the data you want to use your operation. There are multiple options to specify the data : 
 	</p>
 	<ol>
-	  <li>ON line = ...</li>
 	  <li>code WHERE = ...</li>
 	  <li>code WHERE equals ...</li>
 	  <li>comment WHERE = ...</li>
