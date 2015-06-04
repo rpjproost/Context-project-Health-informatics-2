@@ -2,6 +2,8 @@ package context.healthinformatics.sequentialdataanalysis;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import context.healthinformatics.analyse.SingletonInterpreter;
 /**
  * class for computing.
  */
@@ -40,14 +42,19 @@ public class Computations extends Task {
 	
 	@Override
 	public void run(String[] args) {
+		ArrayList<Chunk> chunks = SingletonInterpreter.getInterpreter().getChunks();
+		setChunks(chunks);
 		ArrayList<Chunk> list = new ArrayList<Chunk>();
 		for (Chunk c : getChunks()) {
 			if (c.hasChild()) {
 				Chunk res = new Chunk();
 				int i = c.getChunks().size();
 				res.setSum(i);
+				list.add(res);
 			}
-			list.add(c);
+			else {
+				list.add(c);
+			}
 		}
 		setResult(list);
 	}

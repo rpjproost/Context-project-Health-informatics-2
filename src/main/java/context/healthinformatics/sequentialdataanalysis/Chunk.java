@@ -21,7 +21,7 @@ public class Chunk {
 	private String comment;
 	private ArrayList<Chunk> chunks;
 	private int line;
-	private int sum = Integer.MIN_VALUE;
+	private int sum;
 	private ResultSet rs;
 
 	/**
@@ -32,6 +32,7 @@ public class Chunk {
 		pointer = new HashMap<Chunk, String>();
 		comment = "";
 		code = "";
+		sum = Integer.MIN_VALUE;
 	}
 
 	/**
@@ -173,8 +174,9 @@ public class Chunk {
 			res.add(sum + "");
 			return res;
 		} else if (hasChild()) {
-			res.add("Chunk contains childs, code = " + code + " comment = " + comment);
-			return res;
+				res.add("Chunk contains childs, code = " + code + " comment = " + comment);
+				return res;
+
 		} else {
 			Db data = SingletonDb.getDb();
 			try {

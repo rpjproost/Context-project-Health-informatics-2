@@ -157,13 +157,15 @@ public class Interpreter {
 	 */
 	private String[] splitParameter(String line) {
 		ArrayList<String> strings = new ArrayList<String>();
-		String[] splittedLine = line.split("\\(");
-		strings.add(splittedLine[0]);
-		if (splittedLine.length > 1) { // if this line has a parameter:
-			String[] nextPart = splittedLine[1].split("\\)");
-			strings.add(nextPart[0]); //add parameter.
-			strings.add(nextPart[1]); //add rest of line.
+		int fp = findChar(line, "(");
+		int sp = findChar(line, ")");
+		if (fp == -1) { //geen haakjes
+			strings.add(line);
+			return buildStringArray(strings);
 		}
+		strings.add(line.substring(0, fp));
+		strings.add(line.substring(fp + 1, sp));
+		strings.add(line.substring(sp + 1, line.length()));
 		return buildStringArray(strings);
 	}
 	
@@ -211,6 +213,15 @@ public class Interpreter {
 		if (!tasks.isEmpty()) {
 			tasks.pop().undo();
 		}
+	}
+	
+	private int findChar(String string, String cha) {
+		for (int i = 0; i < string.length(); i++) {
+			if (string.charAt(i) == cha.charAt(0)) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 }
