@@ -110,30 +110,6 @@ public class Codes extends Task {
 		}
 	}
 
-	/**
-	 * Retrieves the Chunk out of the Arraylist with a specific line.
-	 * 
-	 * @param line
-	 *            the line that is needed.
-	 * @param chunk the list which will be searched.
-	 * @return the Chunk with the corresponding line.
-	 * @throws Exception e
-	 *             thrown if there is no Chunk with this line.
-	 */
-	public Chunk getChunkByLine(int line, ArrayList<Chunk> chunk) {
-		Chunk curChunk = null;
-		for (int i = 0; i < chunk.size(); i++) {
-			curChunk = chunk.get(i);
-			if (curChunk.getLine() == line) {
-				return curChunk;
-			}
-			else if (curChunk.hasChild()) {
-				return getChunkByLine(line, curChunk.getChunks());
-			}
-		}
-		return curChunk;
-	}
-
 	@Override
 	protected ArrayList<Chunk> constraintOnData(String whereClause) throws SQLException {
 		setCodeOnData(whereClause);

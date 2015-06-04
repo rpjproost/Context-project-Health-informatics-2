@@ -100,6 +100,30 @@ public abstract class Task {
 	 * @return Result list of chunks.
 	 */
 	protected abstract ArrayList<Chunk> constraintOnContainsComment(String comment);
+	
+	/**
+	 * Get the chunk at line line and add the comment.
+	 * 
+	 * @param line
+	 *            the line of the chunk
+	 * @param chunk
+	 *            the chunk
+	 * @return the chunk at line line
+	 * @throws Exception 
+	 */
+	public Chunk getChunkByLine(int line, ArrayList<Chunk> chunk) {
+		Chunk curChunk = null;
+		for (int i = 0; i < chunk.size(); i++) {
+			curChunk = chunk.get(i);
+			if (curChunk.getLine() == line) {
+				return curChunk;
+			}
+			else if (curChunk.hasChild()) {
+				return getChunkByLine(line, curChunk.getChunks());
+			}
+		}
+		return curChunk;
+	}
 
 	/**
 	 * Get line numbers of data which correspond to sql query.

@@ -176,7 +176,7 @@ public class Interpreter {
 	 */
 	public ArrayList<Chunk> copyChunks(ArrayList<Chunk> list) {
 		ArrayList<Chunk> ans = new ArrayList<Chunk>();
-		for(Chunk c : list) {
+		for (Chunk c : list) {
 			ans.add(c.copy());
 		}
 		return ans;

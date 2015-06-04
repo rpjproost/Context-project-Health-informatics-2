@@ -3,6 +3,7 @@ package context.healthinformatics.sequentialdataanalysis;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 /**
  * The Class Connections.
@@ -10,6 +11,8 @@ import java.util.HashMap;
 public class Connections extends Task {
 	
 	private String noteForConnection;
+	private ArrayList<Chunk> copyOfChunks;
+	private Logger log = Logger.getLogger(Comments.class.getName());
 	
 	/**
 	 * Constructor for Connections without an argument.
@@ -17,6 +20,7 @@ public class Connections extends Task {
 	 */
 	public Connections(String info) { 
 		noteForConnection = info;
+		copyOfChunks = copyChunks(getChunks());
 	}
 	
 	@Override
@@ -26,171 +30,155 @@ public class Connections extends Task {
 	}
 	
 	/**
-	 * Method which sets the pointers of a chunk and
-	 * a line-chunk to point to each other with an note associated to the connection.
-	 * @param chunk1 is one chunk of the connection.
-	 * @param chunk2 is the other chunk of the connection.
-	 * @throws Exception e
-	 */
-	public void connectToChunk(Chunk chunk1, Chunk chunk2) throws Exception {
-		if (getChunks().indexOf(chunk1) < getChunks().indexOf(chunk2)) {
-			HashMap<Chunk, String> pointer1 = chunk1.getPointer();
-			pointer1.put(chunk2, noteForConnection);
-			chunk1.setPointer(pointer1);
-		}
-	}
-	
-	/**
-	 * Method which sets the pointers of a chunk and
-	 * a line-chunk to point to each other with an note associated to the connection.
-	 * @param chunk is one chunk of the connection.
-	 * @param line line of the chunk at the other end of the connection.
-	 * @throws Exception e
-	 */
-	public void connectToLine(Chunk chunk, int line) throws Exception {
-		Chunk c = getChunkByLine(line, getChunks());
-		connectToChunk(chunk, c);
-	}
-	
-	/**
-	 * Method which connects every chunk in a list of chunks to a certain chunk.
-	 * @param chunkList list of chunks.
-	 * @param c chunk
-	 * @throws Exception e
-	 */
-	public void connectListOfChunksToChunk(ArrayList<Chunk> chunkList, Chunk c) throws Exception {
-		for (Chunk chunk : chunkList) {
-			connectToChunk(chunk, c);
-		}
-	}
-	
-	/**
-	 * Method which connects a certain chunk to every chunk in a list of chunks.
-	 * @param c chunk
-	 * @param chunkList list of chunks.
-	 * @throws Exception e
-	 */
-	public void connectChunkToListOfChunks(Chunk c, ArrayList<Chunk> chunkList) throws Exception {
-		for (Chunk chunk : chunkList) {
-			connectToChunk(c, chunk);
-		}
-	}
-	
-	/**
-	 * Method which connects all chunks with code equal to c, to chunk.
-	 * @param c1 code where the connection originates.
-	 * @param c2 code where the connections is made to.
-	 * @throws Exception 
-	 */
-	public void connectOnCode(String c1, String c2) throws Exception {
-		Chunk curChunk1 = null;
-		Chunk curChunk2 = null;
-		for (int i = 0; i < getChunks().size(); i++) {
-			curChunk1 = getChunks().get(i);
-			if (curChunk1.getCode().equals(c1)) {
-				for (int j = i + 1; j < getChunks().size(); j++) {
-					curChunk2 = getChunks().get(j);
-					if (curChunk2.getCode().equals(c2)) {
-						connectToChunk(curChunk1, curChunk2);
-					}
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Method which connects all chunks with comment equal to c, to chunk.
-	 * @param c1 comment where the connection originates.
-	 * @param c2 comment where the connections is made to.
-	 * @throws Exception 
-	 */
-	public void connectOnComment(String c1, String c2) throws Exception {
-		Chunk curChunk1 = null;
-		Chunk curChunk2 = null;
-		for (int i = 0; i < getChunks().size(); i++) {
-			curChunk1 = getChunks().get(i);
-			if (curChunk1.getComment().equals(c1)) {
-				for (int j = i + 1; j < getChunks().size(); j++) {
-					curChunk2 = getChunks().get(j);
-					if (curChunk2.getComment().equals(c2)) {
-						connectToChunk(curChunk1, curChunk2);
-					}
-				}
-			}
-		}
-	}
-	
-	/**
 	 * Method which connects on line numbers.
-	 * @param c1 the line where the connection originates.
-	 * @param c2 the line where the connections is made to.
+	 * @param index1 the line where the connection originates.
+	 * @param index2 the line where the connections is made to.
 	 * @throws Exception e
 	 */
-	public void connectOnLine(int c1, int c2) throws Exception {
-		Chunk curChunk1 = getChunkByLine(c1, getChunks());
-		Chunk curChunk2 = getChunkByLine(c2, getChunks());
-		connectToChunk(curChunk1, curChunk2);
+	public void connectOnLine(int index1, int index2) {
+		if (index1 < index2) {
+			HashMap<Chunk, String> pointer1 = copyOfChunks.get(index1).getPointer();
+			pointer1.put(getChunks().get(index2), noteForConnection);
+			copyOfChunks.get(index1).setPointer(pointer1);
+		}
+	}	
+
+	/**
+	 * Method which connects every chunk in list one, to every chunk in list two.
+	 * @param originChunkList one 
+	 * @param destinationChunkList two
+	 */
+	public void connectListsOfChunkIndices(ArrayList<Integer> originChunkList
+			, ArrayList<Integer> destinationChunkList) {
+		for (Integer i : originChunkList) {
+			for (Integer j : destinationChunkList) {
+				connectOnLine(i, j);
+			}
+		}
 	}
 	
 	/**
-	 * Method which connects a chunk to all chunks.
-	 * @param chunk which m connections.
-	 * @param whereClause condition to be met.
-	 * @throws Exception e
+	 * Method which gives a list of indices of all chunks which have code : code.
+	 * @param code the desired code.
+	 * @return list
 	 */
-	public void connectOnData(Chunk chunk, String whereClause) throws Exception {
-		ArrayList<Integer> list = getLinesFromData(whereClause);
-		for (Integer i : list) {
-			connectToLine(chunk, i);
+	public ArrayList<Integer> getListOnCode(String code) {
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		for (int i = 0; i < copyOfChunks.size(); i++) {
+			if (copyOfChunks.get(i).getCode().equals(code)) {
+				list.add(i);
+			}
 		}
+		return list;
 	}
 	
+
 	/**
-	 * Retrieves the Chunk out of the Arraylist with a specific line.
-	 * 
-	 * @param line
-	 *            the line that is needed.
-	 * @param chunk is the list of chunks.
-	 * @return the Chunk with the corresponding line.
-	 * @throws Exception
-	 *             thrown if there is no Chunk with this line.
+	 * Method which gives a list of indices of all chunks which have comment : comment.
+	 * @param comment to be had.
+	 * @return list
 	 */
-	public Chunk getChunkByLine(int line, ArrayList<Chunk> chunk) throws Exception {
-		Chunk curChunk = null;
-		for (int i = 0; i < chunk.size(); i++) {
-			curChunk = chunk.get(i);
-			if (curChunk.getLine() == line) {
-				return curChunk;
-			}
-			else if (curChunk.hasChild()) {
-				return getChunkByLine(line, curChunk.getChunks());
+	public ArrayList<Integer> getListOnComment(String comment) {
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		for (int i = 0; i < copyOfChunks.size(); i++) {
+			if (copyOfChunks.get(i).getComment().equals(comment)) {
+				list.add(i);
 			}
 		}
-		throw new Exception();
+		return list;
 	}
 
 	@Override
 	protected ArrayList<Chunk> constraintOnData(String whereClause)
 			throws SQLException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	protected ArrayList<Chunk> constraintOnCode(String code) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	protected ArrayList<Chunk> constraintOnEqualsComment(String comment) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	protected ArrayList<Chunk> constraintOnContainsComment(String comment) {
-		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	/**
+	 * Executes constraintOnData with query.
+	 * @param query interpreter query.
+	 * @throws SQLException iff sql query goes wrong.
+	 */
+	@Override
+	protected void runData(String[] query) throws SQLException {
+		StringBuilder q = new StringBuilder();
+		ArrayList<Integer> destinationList = new ArrayList<Integer>();
+		ArrayList<Integer> originList = new ArrayList<Integer>();
+		increment(2);
+		while (!isData(query) || !isComment(query) || !isCode(query)) {
+			q.append(query[getQueryPart()]);
+			q.append(" ");
+			inc();
+		}
+		originList = getLinesFromData(q.toString());
+		parseSecondCondition(query, originList, destinationList);
+	}
+	
+	/**
+	 * Executes constraintOnCode with query.
+	 * @param query interpreter query.
+	 */
+	@Override
+	protected void runCode(String[] query) {
+		increment(2);
+		ArrayList<Integer> originList = getListOnCode(query[getQueryPart()]);
+		ArrayList<Integer> destinationList = new ArrayList<Integer>();
+		parseSecondCondition(query, originList, destinationList);
+	}
+	
+	/**
+	 * Executes constraint on contains/equals comment.
+	 * @param query interpreter query.
+	 */
+	@Override
+	protected void runComment(String[] query) {
+		increment(2);
+		ArrayList<Integer> originList = getListOnComment(query[getQueryPart()]);
+		ArrayList<Integer> destinationList = new ArrayList<Integer>();
+		parseSecondCondition(query, originList, destinationList);
+	}
+	
+	private void parseSecondCondition(String[] query, ArrayList<Integer> originList,
+			ArrayList<Integer> destinationList) {
+		if (isComment(query)) {
+			increment(2);
+			destinationList = getListOnComment(query[getQueryPart()]);
+			connectListsOfChunkIndices(originList, destinationList);
+		}
+		if (isData(query)) {
+			StringBuilder q = new StringBuilder();
+			inc();
+			q = new StringBuilder();
+			for (int i = getQueryPart(); i < query.length; i++) {
+				q.append(query[i]);
+				q.append(" ");
+			}
+			try {
+				destinationList = getLinesFromData(q.toString());
+			} catch (SQLException e) {
+				log.info("Could not retrieve lines from database");
+			}
+			connectListsOfChunkIndices(originList, destinationList);
+		}
+		if (isCode(query)) {
+			increment(2);
+			destinationList = getListOnCode(query[getQueryPart()]);
+			connectListsOfChunkIndices(originList, destinationList);
+		}
 	}
 }
