@@ -91,12 +91,43 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	 * @return a Column Object
 	 */
 	public Column getColumn() {
-		Column col = new Column(Integer.parseInt(getColumnIDValue()),
-				getColumnNameValue(), getColumnTypeValue());
+		Column col = new Column(getColumnIDValue(), getColumnNameValue(),
+				getColumnTypeValue());
 		if (hasDateType()) {
 			col.setDateType(getColumnDateTypeValue());
 		}
 		return col;
+	}
+
+	/**
+	 * Check if all column fields are filled in correctly.
+	 * 
+	 * @return true if they are else false
+	 */
+	public boolean checkIfHasEmptyFields() {
+		if (hasDateType()) {
+			return checkIfDateColumnHasEmptyFields();
+		} else {
+			return checkIfColumnHasEmptyFields();
+		}
+	}
+
+	private boolean checkIfDateColumnHasEmptyFields() {
+		if (isColumnIDEmpty()) {
+			return true;
+		} else if (isColumnNameEmpty()) {
+			return true;
+		} else {
+			return isColumnDateTypeEmpty();
+		}
+	}
+
+	private boolean checkIfColumnHasEmptyFields() {
+		if (isColumnIDEmpty()) {
+			return true;
+		} else {
+			return isColumnNameEmpty();
+		}
 	}
 
 	/**
@@ -114,8 +145,12 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	 * 
 	 * @return the value
 	 */
-	public String getColumnIDValue() {
-		return columnID.getText();
+	public int getColumnIDValue() {
+		if (columnID.getText().equals("") || !isInteger(columnID.getText())) {
+			return -1;
+		} else {
+			return Integer.parseInt(columnID.getText());
+		}
 	}
 
 	/**
@@ -142,11 +177,8 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	 * @return the value
 	 */
 	public String getColumnDateTypeValue() {
-		if (hasDateType()) {
-			return dateType.getText();
-		} else {
-			return null;
-		}
+		System.out.println(dateType.getText());
+		return dateType.getText();
 	}
 
 	/**
@@ -186,7 +218,7 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	}
 
 	/**
-	 * Set the panel of this columnfields.
+	 * Set the panel of this column fields.
 	 * 
 	 * @param panel
 	 *            the panel
@@ -196,7 +228,7 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	}
 
 	/**
-	 * Check if columnfield has a panel.
+	 * Check if column field has a panel.
 	 * 
 	 * @return true if panel is set
 	 */
@@ -226,6 +258,37 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	 */
 	public void setDateTypePanel(JPanel dateTypePanel) {
 		this.dateTypePanel = dateTypePanel;
+	}
+
+	/**
+	 * Check if the column id field is empty.
+	 * 
+	 * @return true if it is.
+	 */
+	public boolean isColumnIDEmpty() {
+		return getColumnIDValue() == -1;
+	}
+
+	/**
+	 * Check if the column name field is empty.
+	 * 
+	 * @return true if it is.
+	 */
+	public boolean isColumnNameEmpty() {
+		return getColumnNameValue().equals("");
+	}
+
+	/**
+	 * Check if the date type field is empty.
+	 * 
+	 * @return true if it is.
+	 */
+	public boolean isColumnDateTypeEmpty() {
+		if (hasDateType()) {
+			return getColumnDateTypeValue().equals("");
+		} else {
+			return false;
+		}
 	}
 
 	@Override
@@ -261,6 +324,17 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 				getDateType());
 		panel.add(dateTypePanel, setGrids(0, THREE));
 		panel.revalidate();
+	}
+
+	private boolean isInteger(String s) {
+		try {
+			Integer.parseInt(s);
+		} catch (NumberFormatException e) {
+			return false;
+		} catch (NullPointerException e) {
+			return false;
+		}
+		return true;
 	}
 
 	/**

@@ -150,7 +150,55 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 			cols.add(columnFields.get(i).getColumn());
 		}
 		return getCorrect(cols);
+	}
 
+	/**
+	 * Check if all fields are filled in correctly.
+	 * 
+	 * @return true if they are else false
+	 */
+	public boolean checkIfHasEmptyFields() {
+		if (getDocumentTypeValue().toLowerCase().equals("excel")) {
+			return checkIfExcelDocHasEmptyFields() || checkEmptyColumns();
+		} else {
+			return checkIfTXTDocHasEmptyFields() || checkEmptyColumns();
+		}
+	}
+
+	private boolean checkEmptyColumns() {
+		boolean emptyColumns = false;
+		for (int i = 0; i < columnFields.size(); i++) {
+			if (emptyColumns) {
+				return emptyColumns;
+			} else {
+				emptyColumns = columnFields.get(i).checkIfHasEmptyFields();
+			}
+		}
+		return emptyColumns;
+	}
+
+	private boolean checkIfExcelDocHasEmptyFields() {
+		if (isDocumentNameEmpty()) {
+			return true;
+		} else if (isDocumentNameEmpty()) {
+			return true;
+		} else if (isDocumentStartLineEmpty()) {
+			return true;
+		} else {
+			return isSheetEmpty();
+		}
+	}
+
+	private boolean checkIfTXTDocHasEmptyFields() {
+		if (isDocumentNameEmpty()) {
+			return true;
+		} else if (isDocumentNameEmpty()) {
+			return true;
+		} else if (isDocumentStartLineEmpty()) {
+			return true;
+		} else {
+			return isDelimiterEmpty();
+		}
 	}
 
 	/**
@@ -225,7 +273,11 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	 * @return the start line value
 	 */
 	public int getDocumentStartLineValue() {
-		return Integer.parseInt(startLine.getText());
+		if (startLine.getText().equals("") || !isInteger(startLine.getText())) {
+			return -1;
+		} else {
+			return Integer.parseInt(startLine.getText());
+		}
 	}
 
 	/**
@@ -234,7 +286,11 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	 * @return the sheet value
 	 */
 	public int getSheetValue() {
-		return Integer.parseInt(sheet.getText());
+		if (sheet.getText().equals("") || !isInteger(sheet.getText())) {
+			return -1;
+		} else {
+			return Integer.parseInt(sheet.getText());
+		}
 	}
 
 	/**
@@ -332,6 +388,59 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	}
 
 	/**
+	 * Check if the document name field is empty.
+	 * 
+	 * @return true if it is.
+	 */
+	public boolean isDocumentNameEmpty() {
+		return getDocumentName().equals("");
+	}
+
+	/**
+	 * Check if the document path field is empty.
+	 * 
+	 * @return true if it is.
+	 */
+	public boolean isDocumentPathEmpty() {
+		return getDocumentPathValue().equals("");
+	}
+
+	/**
+	 * Check if the document startLine field is empty.
+	 * 
+	 * @return true if it is.
+	 */
+	public boolean isDocumentStartLineEmpty() {
+		return getDocumentStartLineValue() == -1;
+	}
+
+	/**
+	 * Check if the sheet field is empty.
+	 * 
+	 * @return true if it is.
+	 */
+	public boolean isSheetEmpty() {
+		if (getDocumentTypeValue().toLowerCase().equals("excel")) {
+			return getSheetValue() == -1;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Check if the delimiter field is empty.
+	 * 
+	 * @return true if it is.
+	 */
+	public boolean isDelimiterEmpty() {
+		if (getDocumentTypeValue().toLowerCase().equals("excel")) {
+			return false;
+		} else {
+			return getDelimiterValue().equals("");
+		}
+	}
+
+	/**
 	 * Set the panel for the delimiter or sheet.
 	 * 
 	 * @param panelForDocTypeSpecificInput
@@ -374,6 +483,17 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 					.remove(columnFields.size() - 1);
 			cfc.getPanel().setVisible(false);
 		}
+	}
+
+	private boolean isInteger(String s) {
+		try {
+			Integer.parseInt(s);
+		} catch (NumberFormatException e) {
+			return false;
+		} catch (NullPointerException e) {
+			return false;
+		}
+		return true;
 	}
 
 	/**

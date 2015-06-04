@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
@@ -278,7 +279,15 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	public ArrayList<XMLDocument> getAllXMLDocuments() {
 		ArrayList<XMLDocument> xmlDocuments = new ArrayList<XMLDocument>();
 		for (int i = 0; i < documentFieldsContainers.size(); i++) {
-			xmlDocuments.add(documentFieldsContainers.get(i).getXMLDocument());
+			if (!documentFieldsContainers.get(i).checkIfHasEmptyFields()) {
+				xmlDocuments.add(documentFieldsContainers.get(i)
+						.getXMLDocument());
+			} else {
+				JOptionPane.showMessageDialog(null,
+						"Not all fields are filled in correctly. Check the XML Editor!",
+						"Save Error", JOptionPane.WARNING_MESSAGE);
+				return null;
+			}
 		}
 		return xmlDocuments;
 	}
@@ -288,8 +297,11 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	 */
 	private void saveXMLFile() {
 		ArrayList<XMLDocument> xmlDocuments = getAllXMLDocuments();
-		inputPage.getXMLController().updateDocuments(inputPage, xmlDocuments);
-		inputPage.getXMLController().save();
+		if (xmlDocuments != null) {
+			inputPage.getXMLController().updateDocuments(inputPage,
+					xmlDocuments);
+			inputPage.getXMLController().save();
+		}
 	}
 
 	/**
