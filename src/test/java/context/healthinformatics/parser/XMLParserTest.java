@@ -56,6 +56,7 @@ public class XMLParserTest {
 		try {
 			xmlp.setFileName(path + "goodXML.xml");
 			xmlp.parse();
+			xmlp.createDatabase();
 			TXTParser txtp = (TXTParser) xmlp.getParsers().get(0);
 			assertEquals("," , txtp.getDelimiter());
 			assertEquals("stat", txtp.getDocName());
@@ -86,7 +87,9 @@ public class XMLParserTest {
 	public void emptyFieldTest() throws IOException {
 		xmlp.setFileName(path + "emptyField.xml");
 		try {
-			xmlp.parse(); }
+			xmlp.parse(); 
+			xmlp.createDatabase();
+		}
 		catch (FileNotFoundException e) {
 			assertEquals("The Table could not be created.", e.getMessage());
 		}
@@ -97,10 +100,11 @@ public class XMLParserTest {
 	 * throw a nullPointer.
 	 * @throws IOException Should not throw this exception
 	 */
-	@Test(expected = FileNotFoundException.class)
+	@Test
 	public void noDelimiterTest() throws IOException {
 		xmlp.setFileName(path + "noDelimiter.xml");
 		xmlp.parse();
+		xmlp.createDatabase();
 		try {
 			data.dropTable("StatSensor");
 		} catch (Exception e) {
@@ -117,6 +121,7 @@ public class XMLParserTest {
 	public void noIDsTest() throws IOException {
 		xmlp.setFileName(path + "noIDs.xml");
 		xmlp.parse();
+		xmlp.createDatabase();
 	}
 
 	/**
@@ -129,11 +134,11 @@ public class XMLParserTest {
 		xmlp.setFileName(path + "noPath.xml");
 		xmlp.parse();
 		assertEquals(null, xmlp.getParsers().get(0).getFileName());
-		try {
-			data.dropTable("StatSensor");
-		} catch (Exception e) {
-			fail("something went wrong, the table was not created: "  + e.getMessage());
-		}
+//		try {
+//			data.dropTable("StatSensor");
+//		} catch (Exception e) {
+//			fail("something went wrong, the table was not created: "  + e.getMessage());
+//		}
 	}
 
 	/**
@@ -166,6 +171,7 @@ public class XMLParserTest {
 	public void twoDocsTest() throws IOException {
 		xmlp.setFileName(path + "twoDocs.xml");
 		xmlp.parse();
+		xmlp.createDatabase();
 		ArrayList<Parser> parsers = xmlp.getParsers();
 		assertEquals(2, parsers.size());
 		assertEquals("src/test/data/xml/inputTXT.txt", parsers.get(0).getFileName());
@@ -188,6 +194,7 @@ public class XMLParserTest {
 	public void csvTest() throws IOException {
 		xmlp.setFileName(path + "csv.xml");
 		xmlp.parse();
+		xmlp.createDatabase();
 		TXTParser txtp = (TXTParser) xmlp.getParsers().get(0);
 		assertEquals("csv", txtp.getDocName());
 		assertEquals("src/test/data/xml/inputCSV.csv", txtp.getFileName());
