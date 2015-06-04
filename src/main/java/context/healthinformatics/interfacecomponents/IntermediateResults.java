@@ -78,11 +78,10 @@ public class IntermediateResults extends InterfaceHelper {
 		scroll.setPreferredSize(new Dimension(intermediateResultWidth,
 				HEIGHT_SCROLLPANE));
 		scroll.getVerticalScrollBar().setValue(0);
-
 	}
 
 	/**
-	 * Add the title and the display pane to the parentpanel.
+	 * Add the title and the display pane to the parent panel.
 	 */
 	private void addEverythingToMainPanel() {
 		interMediateResultParentPanel.add(
