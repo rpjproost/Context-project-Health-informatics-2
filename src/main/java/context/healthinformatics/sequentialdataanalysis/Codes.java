@@ -9,11 +9,14 @@ import java.util.ArrayList;
 public class Codes extends Task {
 
 	private ArrayList<Chunk> chunks;
-	
+	private String code;
 	/**
 	 * Constructor for codes without an argument.
+	 * @param c Code what is going to be set.
 	 */
-	public Codes() { }
+	public Codes(String c) {
+		code = c;
+	}
 
 	/**
 	 * Constructor for codes.
