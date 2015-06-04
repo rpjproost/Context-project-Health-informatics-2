@@ -1,12 +1,13 @@
 package context.healthinformatics.sequentialdataanalysis;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
  * The Class Connections.
  */
-public class Connections extends Tasks {
+public class Connections extends Task {
 
 	private ArrayList<Chunk> chunks;
 	
@@ -29,12 +30,6 @@ public class Connections extends Tasks {
 	public ArrayList<Chunk> undo() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	/**
@@ -193,5 +188,30 @@ public class Connections extends Tasks {
 			}
 		}
 		throw new Exception();
+	}
+
+	@Override
+	protected ArrayList<Chunk> constraintOnData(String whereClause)
+			throws SQLException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected ArrayList<Chunk> constraintOnCode(String code) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected ArrayList<Chunk> constraintOnEqualsComment(String comment) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected ArrayList<Chunk> constraintOnContainsComment(String comment) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
