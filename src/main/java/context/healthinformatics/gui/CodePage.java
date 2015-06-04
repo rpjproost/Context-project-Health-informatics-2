@@ -17,6 +17,7 @@ import javax.swing.JTextArea;
 
 import context.healthinformatics.analyse.Interpreter;
 import context.healthinformatics.analyse.SingletonInterpreter;
+import context.healthinformatics.database.Db;
 import context.healthinformatics.database.MergeTable;
 import context.healthinformatics.database.SingletonDb;
 import context.healthinformatics.interfacecomponents.HelpFrame;
@@ -74,7 +75,8 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	}
 	
 	private void mergeTables() {
-		if (SingletonDb.getDb().getTables().size() > 0) {
+		Db db = SingletonDb.getDb();
+		if (db.getTables().size() > 0 && !db.getTables().containsKey("result")) {
 			MergeTable mergeTables = new MergeTable();
 			String[] clause = new String[1];
 			clause[0] = "meeting.createdby = 'admire2'";
