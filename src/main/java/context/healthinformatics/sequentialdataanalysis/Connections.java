@@ -87,30 +87,6 @@ public class Connections extends Task {
 		}
 		return list;
 	}
-	
-	/**
-	 * Retrieves the Chunk out of the Arraylist with a specific line.
-	 * 
-	 * @param line
-	 *            the line that is needed.
-	 * @param chunk is the list of chunks.
-	 * @return the Chunk with the corresponding line.
-	 * @throws Exception
-	 *             thrown if there is no Chunk with this line.
-	 */
-	public Chunk getChunkByLine(int line, ArrayList<Chunk> chunk) throws Exception {
-		Chunk curChunk = null;
-		for (int i = 0; i < chunk.size(); i++) {
-			curChunk = chunk.get(i);
-			if (curChunk.getLine() == line) {
-				return curChunk;
-			}
-			else if (curChunk.hasChild()) {
-				return getChunkByLine(line, curChunk.getChunks());
-			}
-		}
-		throw new Exception();
-	}
 
 	@Override
 	protected ArrayList<Chunk> constraintOnData(String whereClause)
