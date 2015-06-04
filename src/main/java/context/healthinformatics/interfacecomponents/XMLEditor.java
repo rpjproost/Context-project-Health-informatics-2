@@ -279,25 +279,36 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	public ArrayList<XMLDocument> getAllXMLDocuments() {
 		ArrayList<XMLDocument> xmlDocuments = new ArrayList<XMLDocument>();
 		for (int i = 0; i < documentFieldsContainers.size(); i++) {
-			if (!documentFieldsContainers.get(i).checkIfHasEmptyFields()) {
-				xmlDocuments.add(documentFieldsContainers.get(i)
-						.getXMLDocument());
-			} else {
-				JOptionPane.showMessageDialog(null,
-						"Not all fields are filled in correctly. Check the XML Editor!",
-						"Save Error", JOptionPane.WARNING_MESSAGE);
-				return null;
-			}
+			xmlDocuments.add(documentFieldsContainers.get(i).getXMLDocument());
 		}
 		return xmlDocuments;
+	}
+
+	/**
+	 * Check if there is wrong input in the XMLEditor.
+	 * 
+	 * @return true if there is
+	 */
+	public boolean checkAllXMLDocumentsOnError() {
+		for (int i = 0; i < documentFieldsContainers.size(); i++) {
+			if (documentFieldsContainers.get(i).checkIfHasEmptyFields()) {
+				JOptionPane
+						.showMessageDialog(
+								null,
+								"Not all fields are filled in correctly. Check the XML Editor!",
+								"Save Error", JOptionPane.WARNING_MESSAGE);
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
 	 * Saves an XML File.
 	 */
 	private void saveXMLFile() {
-		ArrayList<XMLDocument> xmlDocuments = getAllXMLDocuments();
-		if (xmlDocuments != null) {
+		if (!checkAllXMLDocumentsOnError()) {
+			ArrayList<XMLDocument> xmlDocuments = getAllXMLDocuments();
 			inputPage.getXMLController().updateDocuments(inputPage,
 					xmlDocuments);
 			inputPage.getXMLController().save();
