@@ -9,6 +9,7 @@ import context.healthinformatics.sequentialdataanalysis.Chunk;
 import context.healthinformatics.sequentialdataanalysis.Chunking;
 import context.healthinformatics.sequentialdataanalysis.Codes;
 import context.healthinformatics.sequentialdataanalysis.Comments;
+import context.healthinformatics.sequentialdataanalysis.Computations;
 import context.healthinformatics.sequentialdataanalysis.Connections;
 import context.healthinformatics.sequentialdataanalysis.Constraints;
 import context.healthinformatics.sequentialdataanalysis.Task;
@@ -85,7 +86,7 @@ public class Interpreter {
 		String[] keys = k.split("\\(");
 		String key = keys[0];
 		if (key.equals("chunk")) {
-			return new Chunking();
+			return new Chunking(parameter);
 		}
 		if (key.equals("filter")) {
 			return new Constraints();
@@ -99,6 +100,10 @@ public class Interpreter {
 		if (key.equals("connect")) {
 			return new Connections(parameter);
 		}
+		if (key.equals("compute")) {
+			return new Computations();
+		}
+			
 			
 		return null;
 	}

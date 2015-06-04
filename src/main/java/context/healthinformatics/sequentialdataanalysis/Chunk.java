@@ -107,6 +107,14 @@ public class Chunk {
 	}
 
 	/**
+	 * setter for sum.
+	 * @param i sum to set.
+	 */
+	public void setSum(int i) {
+		sum = i;
+	}
+
+	/**
 	 * Set childs of this chunk.
 	 * 
 	 * @param c
