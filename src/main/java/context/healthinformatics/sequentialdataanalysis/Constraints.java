@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import context.healthinformatics.analyse.SingletonInterpreter;
 import context.healthinformatics.database.Db;
 import context.healthinformatics.database.SingletonDb;
 
@@ -194,11 +195,10 @@ public class Constraints extends Task {
 	/**
 	 * Checks current arraylist on constraint on data.
 	 * @param whereClause sql clause over data.
-	 * @param tableName table where data is stored.
 	 * @return filtered arraylist.
 	 * @throws SQLException iff sql could not be executed.
 	 */
-	public ArrayList<Chunk> constraintOnData(String whereClause, String tableName) 
+	public ArrayList<Chunk> constraintOnData(String whereClause) 
 			throws SQLException {
 		ArrayList<Chunk> res = new ArrayList<Chunk>();
 		ArrayList<Chunk> chunks = getChunks();
@@ -336,8 +336,69 @@ public class Constraints extends Task {
 		
 	}
 
+	/**
+	 * method that is called to calculate the new changes.
+	 * This method is overwritten at runtime to have the correct methods in it.
+	 * @throws Exception query input can be wrong.
+	 */
 	@Override
-	public void run(String[] query) {
-
+	public void run(String[] query) throws Exception {
+		ArrayList<Chunk> c = SingletonInterpreter.getInterpreter().getChunks();
+		setChunks(c);
+		if (isData(query)) {
+			runData(query);
+		}
+		else if (isCode(query)) {
+			runCode(query);
+		}
+		else if (isComment(query)) {
+			runComment(query);
+		}
+		else {
+			throw new Exception("query input is wrong at: " + query[getQueryPart()]);
+		}
+	}
+	
+	/**
+	 * Executes constraintOnData with query.
+	 * @param query interpreter query.
+	 * @throws SQLException iff sql query goes wrong.
+	 */
+	private void runData(String[] query) throws SQLException {
+		StringBuilder q = new StringBuilder();
+		increment(2);
+		for (int i = getQueryPart(); i < query.length; i++) {
+			q.append(query[i]);
+			q.append(" ");
+		}
+		setResult(constraintOnData(q.toString()));
+	}
+	
+	/**
+	 * Executes constraintOnCode with query.
+	 * @param query interpreter query.
+	 */
+	private void runCode(String[] query) {
+		increment(2);
+		if (isEquals(query[getQueryPart()])) {
+			inc();
+			//setResult(constraintOnCode(query[getQueryPart()]));
+		}
+	}
+	
+	/**
+	 * Executes constraint on contains/equals comment.
+	 * @param query interpreter query.
+	 */
+	private void runComment(String[] query) {
+		increment(2);
+		if (isEquals(query[getQueryPart()])) {
+			inc();
+			//constraintOnEqualsComment(query[getQueryPart()]);
+		}
+		if (isContains(query[getQueryPart()])) {
+			inc();
+			//constraintOnContainsComment(query[getQueryPart()]);
+		}
 	}
 }
