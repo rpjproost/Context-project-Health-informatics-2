@@ -177,7 +177,6 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	 * @return the value
 	 */
 	public String getColumnDateTypeValue() {
-		System.out.println(dateType.getText());
 		return dateType.getText();
 	}
 
