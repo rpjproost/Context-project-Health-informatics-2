@@ -268,7 +268,9 @@ public class ExcelParser extends Parser {
 	 * @return if not a double then -1 else the cell
 	 */
 	private String formatInt(Cell curCell) {
-		if (isDouble(curCell.toString())) {
+		if (curCell == null) {
+			return "NULL";
+		} else if (isDouble(curCell.toString())) {
 			return curCell.toString();
 		} else {
 			return "NULL";
