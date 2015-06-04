@@ -143,9 +143,7 @@ public class IntermediateResults extends InterfaceHelper {
 	private String getChildsOfChunk(Chunk chunk) {
 		ArrayList<Chunk> childChunks = chunk.getChunks();
 		StringBuilder buildString = new StringBuilder();
-		// buildString.append("<table>");
 		buildString.append(loopThroughChunks(childChunks));
-		// buildString.append("</table>");
 		return buildString.toString();
 	}
 
@@ -162,10 +160,11 @@ public class IntermediateResults extends InterfaceHelper {
 			Chunk currentChunk = chunks.get(i);
 			buildString.append("<tr>");
 			if (currentChunk.hasChild()) {
-				buildString.append("<td>");
+				buildString.append("<td><h2>");
 				buildString.append(currentChunk.toArray());
-				buildString.append("</td>");
+				buildString.append("</h2></td>");
 				buildString.append(getChildsOfChunk(currentChunk));
+				buildString.append("<td>[End Of Chunk]</td>");
 			} else {
 				buildString.append("<td>" + currentChunk.getCode() + "</td>");
 				buildString
