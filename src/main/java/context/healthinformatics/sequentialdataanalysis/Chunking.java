@@ -3,8 +3,6 @@ package context.healthinformatics.sequentialdataanalysis;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import context.healthinformatics.analyse.SingletonInterpreter;
-
 /**
  * Class for chunking a list of chunks.
  *
