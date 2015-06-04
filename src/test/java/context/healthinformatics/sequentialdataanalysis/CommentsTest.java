@@ -45,7 +45,8 @@ public class CommentsTest {
 		cList2 = new ArrayList<Chunk>();
 		cList2.add(c3);
 		cList2.add(c4);
-		c = new Comments(cList2);
+		c = new Comments("test");
+		c.setChunks(cList2);
 	}
 
 	/**

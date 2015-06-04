@@ -10,21 +10,13 @@ import java.util.logging.Logger;
 public class Comments extends Task {
 
 	private Logger log = Logger.getLogger(Comments.class.getName());
-	private ArrayList<Chunk> chunks;
+	private String comment;
 
 	/**
 	 * Constructor for comments without arguments.
 	 */
-	public Comments() {	}
-	
-	/**
-	 * Constructor for comments.
-	 * 
-	 * @param chunks
-	 *            the chunks
-	 */
-	public Comments(ArrayList<Chunk> chunks) {
-		this.chunks = chunks;
+	public Comments(String c) {
+		comment = c;
 	}
 	
 	@Override
@@ -43,7 +35,7 @@ public class Comments extends Task {
 	 * @throws Exception 
 	 */
 	public void setCommentByLine(int line, String comment) {
-		Chunk c = getChunkByLine(line, this.chunks);
+		Chunk c = getChunkByLine(line, getChunks());
 		if (c != null) {
 			c.setComment(comment);
 		} else {
@@ -69,7 +61,7 @@ public class Comments extends Task {
 	 * @param code to be set, if the condition is met.
 	 */
 	public void setCommentOnCode(String comment, String code) {
-		for (Chunk c : chunks) {
+		for (Chunk c : getChunks()) {
 			if (c.getCode().equals(code)) {
 				c.setComment(comment);
 			}
@@ -82,7 +74,7 @@ public class Comments extends Task {
 	 * @param newComment to be set, if the condition is met.
 	 */
 	public void setCommentOnComment(String newComment, String previousComment) {
-		for (Chunk c : chunks) {
+		for (Chunk c : getChunks()) {
 			if (c.getComment().equals(previousComment)) {
 				c.setComment(newComment);
 			}
@@ -92,11 +84,10 @@ public class Comments extends Task {
 	/**
 	 * Method that sets the comment for all chunks which
 	 * Fulfill the conditions of the whereClause.
-	 * @param comment to be set.
 	 * @param whereClause is condition to be met.
-	 * @throws Exception e.
+	 * @throws SQLException e.
 	 */
-	public void setCommentOnData(String comment, String whereClause) throws Exception {
+	public void setCommentOnData(String whereClause) throws SQLException {
 		ArrayList<Integer> list = getLinesFromData(whereClause);
 		for (Integer i : list) {
 			setCommentByLine(i, comment);
@@ -130,8 +121,8 @@ public class Comments extends Task {
 	@Override
 	protected ArrayList<Chunk> constraintOnData(String whereClause)
 			throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		setCommentOnData(whereClause);
+		return getChunks();
 	}
 
 	@Override
