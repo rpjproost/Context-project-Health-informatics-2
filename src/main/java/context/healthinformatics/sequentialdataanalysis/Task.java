@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import context.healthinformatics.analyse.SingletonInterpreter;
 import context.healthinformatics.database.Db;
 import context.healthinformatics.database.SingletonDb;
 
@@ -35,7 +36,22 @@ public abstract class Task {
 	 * @param query An array of query words.
 	 * @throws Exception query input can be wrong.
 	 */
-	public abstract void run(String[] query) throws Exception;
+	public void run(String[] query) throws Exception {
+		ArrayList<Chunk> c = SingletonInterpreter.getInterpreter().getChunks();
+		setChunks(c);
+		if (isData(query)) {
+			runData(query);
+		}
+		else if (isCode(query)) {
+			runCode(query);
+		}
+		else if (isComment(query)) {
+			runComment(query);
+		}
+		else {
+			throw new Exception("query input is wrong at: " + query[getQueryPart()]);
+		}
+	}
 
 	/**
 	 * Return the chunks from the constructor.
@@ -68,6 +84,20 @@ public abstract class Task {
 	 * @return Result list of chunks.
 	 */
 	protected abstract ArrayList<Chunk> constraintOnCode(String code);
+	
+	/**
+	 * Returns constraintOnEquals comment in C classes.
+	 * @param comment Constraint String.
+	 * @return Result list of chunks.
+	 */
+	protected abstract ArrayList<Chunk> constraintOnEqualsComment(String comment);
+	
+	/**
+	 * Returns constraintOnContains comment.
+	 * @param comment Constraint String.
+	 * @return Result list of chunks.
+	 */
+	protected abstract ArrayList<Chunk> constraintOnContainsComment(String comment);
 
 	/**
 	 * Get line numbers of data which correspond to sql query.
@@ -208,11 +238,11 @@ public abstract class Task {
 		increment(2);
 		if (isEquals(query[getQueryPart()])) {
 			inc();
-			//constraintOnEqualsComment(query[getQueryPart()]);
+			constraintOnEqualsComment(query[getQueryPart()]);
 		}
 		if (isContains(query[getQueryPart()])) {
 			inc();
-			//constraintOnContainsComment(query[getQueryPart()]);
+			constraintOnContainsComment(query[getQueryPart()]);
 		}
 	}
 

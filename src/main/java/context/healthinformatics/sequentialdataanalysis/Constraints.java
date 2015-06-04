@@ -337,32 +337,18 @@ public class Constraints extends Task {
 		
 	}
 
-	/**
-	 * method that is called to calculate the new changes.
-	 * This method is overwritten at runtime to have the correct methods in it.
-	 * @throws Exception query input can be wrong.
-	 */
 	@Override
-	public void run(String[] query) throws Exception {
-		ArrayList<Chunk> c = SingletonInterpreter.getInterpreter().getChunks();
-		setChunks(c);
-		if (isData(query)) {
-			runData(query);
-		}
-		else if (isCode(query)) {
-			runCode(query);
-		}
-		else if (isComment(query)) {
-			runComment(query);
-		}
-		else {
-			throw new Exception("query input is wrong at: " + query[getQueryPart()]);
-		}
+	protected ArrayList<Chunk> constraintOnCode(String code) {
+		return hasCode(code, getChunks(), new ArrayList<Chunk>());
 	}
 
 	@Override
-	protected ArrayList<Chunk> constraintOnCode(String whereClause) {
-		// TODO Auto-generated method stub
-		return null;
+	protected ArrayList<Chunk> constraintOnEqualsComment(String comment) {
+		return equalsComment(comment, getChunks(), new ArrayList<Chunk>());
+	}
+
+	@Override
+	protected ArrayList<Chunk> constraintOnContainsComment(String comment) {
+		return containsComment(comment, getChunks(), new ArrayList<Chunk>());
 	}
 }

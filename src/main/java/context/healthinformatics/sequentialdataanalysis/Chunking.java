@@ -97,6 +97,7 @@ public class Chunking extends Task {
 	 * @param comment String for comment.
 	 * @return new ArrayList<Chunk> chunked on constraint.
 	 */
+	@Override
 	public ArrayList<Chunk> constraintOnContainsComment(String comment) {
 		ArrayList<Chunk> res = new ArrayList<Chunk>();
 		ArrayList<Chunk> chunks = getChunks();
@@ -132,6 +133,7 @@ public class Chunking extends Task {
 	 * @param comment String for comment.
 	 * @return new ArrayList<Chunk> chunked on constraint.
 	 */
+	@Override
 	public ArrayList<Chunk> constraintOnEqualsComment(String comment) {
 		ArrayList<Chunk> res = new ArrayList<Chunk>();
 		ArrayList<Chunk> chunks = getChunks();
@@ -191,28 +193,5 @@ public class Chunking extends Task {
 	public ArrayList<Chunk> undo() {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	/**
-	 * method that is called to calculate the new changes.
-	 * This method is overwritten at runtime to have the correct methods in it.
-	 * @throws Exception query input can be wrong.
-	 */
-	@Override
-	public void run(String[] query) throws Exception {
-		ArrayList<Chunk> c = SingletonInterpreter.getInterpreter().getChunks();
-		setChunks(c);
-		if (isData(query)) {
-			runData(query);
-		}
-		else if (isCode(query)) {
-			runCode(query);
-		}
-		else if (isComment(query)) {
-			runComment(query);
-		}
-		else {
-			throw new Exception("query input is wrong at: " + query[getQueryPart()]);
-		}
 	}
 }
