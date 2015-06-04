@@ -39,13 +39,25 @@ public class MergeTable {
 	}
 	
 	/**
-	 * creates the view ordered by date of the workspace.
+	 * @param clause clause the tables merge.
+	 * @param sortingString String to with the order of columns to sort on.
+	 * @throws SQLException if tables are not able to merge.
 	 */
-	public void mergeTablesView() {
+	public void merge(String[] clause, String sortingString) throws SQLException {
+		mergeTables(clause);
+		mergeTablesView(sortingString);
+	}
+	
+	/**
+	 * creates the view ordered by date of the workspace.
+	 * @param sortingString String with the the columns to sort on.
+	 */
+	protected void mergeTablesView(String sortingString) {
 		//TODO make sure this works with 1 date column.
 		StringBuilder sql = new StringBuilder();
 		sql.append("CREATE VIEW workspace AS SELECT * FROM  " + mergeTable + " ORDER BY ");
-		sql.append("date");
+		sql.append("date ");
+		sql.append(sortingString);
 		try {
 			data.executeUpdate(sql.toString());
 		} catch (SQLException e) {
@@ -54,11 +66,18 @@ public class MergeTable {
 	}
 	
 	/**
+	 * creates the view ordered by date of the workspace.
+	 */
+	protected void mergeTablesView() {
+		mergeTablesView("");
+	}
+	
+	/**
 	 * Method for merging the different files into 1 workspace.
 	 * @param clause String array of clauses per table.
 	 * @throws SQLException Throws an SQLException if inserting goes wrong.
 	 */
-	public void mergeTables(String[] clause) throws SQLException {
+	protected void mergeTables(String[] clause) throws SQLException {
 		HashMap<String, ArrayList<Column>> tables = data.getTables();
 		ArrayList<Column> columns = new ArrayList<Column>();
 		Set<String> allTables = new TreeSet<String>();
@@ -80,7 +99,7 @@ public class MergeTable {
 	 * @param tableNames set containing all tables to add.
 	 * @param clause all clauses for these tables.
 	 */
-	public void insertTables(Set<String> tableNames, String[] clause) {
+	protected void insertTables(Set<String> tableNames, String[] clause) {
 		for (String key : tableNames) {
 			String tableClause = "";
 			for (int i = 0; i < clause.length; i++) {
@@ -99,7 +118,7 @@ public class MergeTable {
 	 * @param clause filter for the records in sql. If an empty string or
 	 * 				<code>null</code> is inserted no clause is used.
 	 */
-	public void insertTable(String key, ArrayList<Column> cols, String clause) {
+	protected void insertTable(String key, ArrayList<Column> cols, String clause) {
 		StringBuilder sql = new StringBuilder();
 		sql.append("INSERT INTO ");
 		sql.append(mergeTable);
@@ -123,7 +142,7 @@ public class MergeTable {
 	 * @param columns ArrayList of columns to append.
 	 * @param sql StringBuilder with the preceding sql query.
 	 */
-	public void appendColumns(ArrayList<Column> columns, StringBuilder sql) {
+	protected void appendColumns(ArrayList<Column> columns, StringBuilder sql) {
 		String prefix = "";
 		for (int i = 0; i < columns.size(); i++) {
 			sql.append(prefix);
@@ -139,7 +158,7 @@ public class MergeTable {
 	 * @param tables tables to insert.
 	 * @param sql StringBuilder with the preceding sql query.
 	 */
-	public void appendTables(Set<String> tables, StringBuilder sql) {
+	protected void appendTables(Set<String> tables, StringBuilder sql) {
 		String prefix = "";
 		for (String key : tables) {
 			sql.append(prefix);
