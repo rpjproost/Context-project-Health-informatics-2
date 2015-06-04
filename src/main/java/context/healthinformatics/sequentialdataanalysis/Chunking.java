@@ -10,7 +10,7 @@ import java.util.ArrayList;
 public class Chunking extends Task {
 
 	private Chunk temp;
-	private String code;
+	private String code = "";
 	/**
 	 * Constructor for chunking.
 	 */
