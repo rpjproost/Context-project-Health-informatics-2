@@ -8,7 +8,6 @@ import java.util.ArrayList;
  */
 public class Codes extends Task {
 
-	private ArrayList<Chunk> chunks;
 	private String code;
 	/**
 	 * Constructor for codes without an argument.
@@ -73,10 +72,9 @@ public class Codes extends Task {
 
 	/**
 	 * Method which sets the code of every chunk with the comment : comment, to code.
-	 * @param code c
 	 * @param comment c
 	 */
-	public void setCodeOnComment(String code, String comment) {
+	public void setCodeOnComment(String comment) {
 		try {
 			for (Chunk c : getChunks()) {
 				if (c.getComment().equals(comment)) {
@@ -90,10 +88,9 @@ public class Codes extends Task {
 
 	/**
 	 * Method which replaces the code of every chunk with the code : previousCode, to code.
-	 * @param code new code.
 	 * @param previousCode old code.
 	 */
-	public void setCodeOnCode(String code, String previousCode) {
+	public void setCodeOnCode(String previousCode) {
 		for (Chunk c : getChunks()) {
 			if (c.getCode().equals(previousCode)) {
 				c.setCode(code);
@@ -145,19 +142,18 @@ public class Codes extends Task {
 
 	@Override
 	protected ArrayList<Chunk> constraintOnCode(String code) {
-		// TODO Auto-generated method stub
-		return null;
+		setCodeOnCode(code);
+		return getChunks();
 	}
 
 	@Override
 	protected ArrayList<Chunk> constraintOnEqualsComment(String comment) {
-		// TODO Auto-generated method stub
-		return null;
+		setCodeOnComment(comment);
+		return getChunks();
 	}
 
 	@Override
 	protected ArrayList<Chunk> constraintOnContainsComment(String comment) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }

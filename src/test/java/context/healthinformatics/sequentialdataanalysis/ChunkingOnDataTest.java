@@ -102,7 +102,6 @@ public class ChunkingOnDataTest {
 		ArrayList<Chunk> c = i.getChunks();
 		
 		assertTrue(c.size() == res);
-
 		
 		test.dropView("workspace");
 		data.dropTable("result");

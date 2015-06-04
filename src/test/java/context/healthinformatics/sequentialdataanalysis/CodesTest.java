@@ -93,7 +93,7 @@ public class CodesTest {
 	public void testSetCodeOnComment() {
 		Codes codes = new Codes("test");
 		codes.setChunks(chunks);
-		codes.setCodeOnComment("test", "CommentB");
+		codes.setCodeOnComment("CommentB");
 		assertEquals("", chunks.get(0).getCode());
 		assertEquals("test", chunks.get(1).getCode());
 	}
@@ -105,7 +105,7 @@ public class CodesTest {
 	public void testSetCodeOnCode() {
 		Codes codes = new Codes("new");
 		codes.setChunks(chunks);
-		codes.setCodeOnCode("new", "old");
+		codes.setCodeOnCode("old");
 		assertEquals("new", chunks.get(2).getCode());
 	}
 	
