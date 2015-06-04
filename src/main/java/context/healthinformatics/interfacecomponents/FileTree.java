@@ -1,6 +1,5 @@
 package context.healthinformatics.interfacecomponents;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -59,7 +58,7 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	 * @return The tree folder structure Panel.
 	 */
 	public JPanel loadFolder() {
-		folderPanel = MainFrame.createPanel(Color.decode(InputPage.COLOR),
+		folderPanel = MainFrame.createPanel(MainFrame.INPUTTABCOLOR,
 				mf.getScreenWidth(), FOLDERSECTIONHEIGHT);
 		folderPanel.setLayout(new  GridBagLayout());
 		loadFileSelectionTitle(folderPanel);

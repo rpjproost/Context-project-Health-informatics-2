@@ -1,6 +1,5 @@
 package context.healthinformatics.interfacecomponents;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -93,7 +92,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 	 */
 	public JPanel loadProjectSelection() {
 		JPanel projectSelectionPanel = MainFrame.createPanel(
-				Color.decode(InputPage.COLOR), screenWidth,
+				MainFrame.INPUTTABCOLOR, screenWidth,
 				PROJECTSELECTIONPANELHEIGHT);
 		loadProjectTitle(projectSelectionPanel);
 		addProjectLabel(projectSelectionPanel);
@@ -149,7 +148,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 	 */
 	public JPanel loadButtonSection() {
 		JPanel buttonSection = MainFrame
-				.createPanel(Color.decode(InputPage.COLOR), screenWidth,
+				.createPanel(MainFrame.INPUTTABCOLOR, screenWidth,
 						FOLDERSECTIONHEIGHT);
 		addHelpButton(buttonSection);
 		addOpenFileButton(buttonSection);
@@ -193,7 +192,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 	 */
 	public JPanel loadAnalyzeButtonSection() {
 		JPanel analyseButton = MainFrame
-				.createPanel(Color.decode(InputPage.COLOR), screenWidth,
+				.createPanel(MainFrame.INPUTTABCOLOR, screenWidth,
 						FOLDERSECTIONHEIGHT);
 		addAnalyseButton(analyseButton);
 		return analyseButton;
@@ -204,7 +203,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 	 *            to which the addAnalyseButton will be added.
 	 */
 	public void addAnalyseButton(JPanel panel) {
-		analyseButton = ip.createButton("Save & Load", HELPBUTTONWIDTH,
+		analyseButton = ip.createButton("Save & Go to Analyse", HELPBUTTONWIDTH,
 				HELPBUTTONHEIGHT);
 		analyseButton.addActionListener(this);
 		GridBagConstraints c = ip.setGrids(0, 0);
@@ -276,12 +275,11 @@ public class InputPageComponents implements Serializable, ActionListener {
 		if (e.getSource() == getHelpButton()) {
 			handleHelpButton();
 		}
-		if (e.getSource() == getAnalyseButton()) {
-			if (ip.getXMLController().getSelectedDocs() != null) {
-				ip.loadDatabase();
-				mf.setState(mf.getCodePage());
-				mf.reloadStatePanel();
-			}
+		if (e.getSource() == getAnalyseButton() 
+				&& ip.getXMLController().getSelectedDocs() != null) {
+			ip.loadDatabase();
+			mf.setState(mf.getCodePage());
+			mf.reloadStatePanel();
 		}
 		if (e.getSource() == box) {
 			updateProject();

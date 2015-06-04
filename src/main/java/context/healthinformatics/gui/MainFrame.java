@@ -20,6 +20,10 @@ public class MainFrame extends InterfaceHelper {
 	private PanelState codeState = new CodePage(this);
 	private PanelState outputState = new OutputPage(this);
 	
+	public static final Color INPUTTABCOLOR = null;
+	public static final Color CODETABCOLOR = Color.decode("#DAE3E6");
+	public static final Color OUTPUTTABCOLOR = Color.decode("#BDD1DE");
+	
 	public static final int NMBROFTABS = 3;
 	public static final int BORDERSIZE = 10;
 	
@@ -101,7 +105,7 @@ public class MainFrame extends InterfaceHelper {
 		mainPanel = new JPanel(new GridBagLayout());
 		setTabX(getScreenWidth() / NMBROFTABS);
 		
-		JPanel tabs = createPanel(Color.gray, getScreenWidth(), getTabsY());
+		JPanel tabs = createPanel(null, getScreenWidth(), getTabsY());
 		tabs.setLayout(new GridBagLayout());
 		
 		createTabs(tabs);
@@ -113,23 +117,22 @@ public class MainFrame extends InterfaceHelper {
 		c = setGrids(0, 1);
 		mainPanel.add(varPanel, c);
 		
-		mainPanel.setBackground(Color.gray);
 		f.add(mainPanel);
 		f.setVisible(true);
 	}
 	
 	private void createTabs(JPanel tabs) {
-		inputTab = createTab("Input", Color.decode("#81DAF5"));
+		inputTab = createTab("Input", INPUTTABCOLOR);
 		inputTab.addMouseListener(new MouseHandler());
 		c = setGrids(0, 0);
 		tabs.add(inputTab, c);
 		
-		codeTab = createTab("Analyse", Color.decode("#01A9DB"));
+		codeTab = createTab("Analyse", CODETABCOLOR);
 		codeTab.addMouseListener(new MouseHandler());
 		c = setGrids(1, 0);
 		tabs.add(codeTab, c);
 		
-		outputTab = createTab("Output", Color.decode("#086A87"));
+		outputTab = createTab("Output", OUTPUTTABCOLOR);
 		outputTab.addMouseListener(new MouseHandler());
 		c = setGrids(2, 0);
 		tabs.add(outputTab, c);	

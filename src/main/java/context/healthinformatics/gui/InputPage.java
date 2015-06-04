@@ -1,6 +1,5 @@
 package context.healthinformatics.gui;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.io.File;
@@ -40,7 +39,6 @@ public class InputPage extends InterfaceHelper implements PanelState,
 
 	public static final int BUTTONFONTSIZE = 15;
 	public static final int THREE = 3;
-	public static final String COLOR = "#81DAF5";
 
 	private static final int SELECTERHEIGHT = 500;
 	private static final int SELECTERWIDTH = 600;
@@ -125,7 +123,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 * @return Panel of the InputPage state.
 	 */
 	public JPanel loadPanel() {
-		JPanel containerPanel = createPanel(Color.decode(COLOR),
+		JPanel containerPanel = createPanel(MainFrame.INPUTTABCOLOR,
 				mf.getScreenWidth(), mf.getStatePanelSize());
 		leftPanel = createLeftPanel();
 		JPanel rightPanel = createRightPanel();
@@ -140,7 +138,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 * @return the left panel
 	 */
 	public JPanel createLeftPanel() {
-		JPanel leftPanel = createPanel(Color.decode(COLOR),
+		JPanel leftPanel = createPanel(MainFrame.INPUTTABCOLOR,
 				mf.getScreenWidth() / 2, mf.getStatePanelSize());
 		leftPanel.add(ipc.loadProjectSelection(), setGrids(0, 0));
 		leftPanel.add(ft.loadFolder(), setGrids(0, 1));
@@ -157,7 +155,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 * @return the right panel
 	 */
 	public JPanel createRightPanel() {
-		JPanel rightPanel = createPanel(Color.decode(COLOR),
+		JPanel rightPanel = createPanel(MainFrame.INPUTTABCOLOR,
 				mf.getScreenWidth() / 2, mf.getStatePanelSize());
 		rightPanel.add(xmledit.loadPanel(), setGrids(0, 0));
 
@@ -393,19 +391,21 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 */
 	public void loadDatabase() {
 		ArrayList<XMLDocument> xmlDocuments = xmledit.getAllXMLDocuments();
-		xmlController.setDocumentsInProject(xmlDocuments);
-		xmlController.save();
-		XMLParser parser = new XMLParser(xmlController.getFileLocation());
-		try {
-			parser.parse();
-			ArrayList<Integer> indexesOfSelectedFiles = xmlController.getIndexesOfSelectedFiles(
-					parser.getDocuments());
-			parser.createDatabase(indexesOfSelectedFiles);
-		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null,
-					"Something went wrong, please check all fields!");
+		if (xmlDocuments != null) {
+			xmlController.setDocumentsInProject(xmlDocuments);
+			xmlController.save();
+			XMLParser parser = new XMLParser(xmlController.getFileLocation());
+			try {
+				parser.parse();
+				ArrayList<Integer> indexesOfSelectedFiles = xmlController
+						.getIndexesOfSelectedFiles(parser.getDocuments());
+				parser.createTables(indexesOfSelectedFiles);
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(null,
+						"Something went wrong, please check all fields!");
+			}
+			xmlController.updateDocuments(this, xmlDocuments);
 		}
-		xmlController.updateDocuments(this, xmlDocuments);	
 	}
 	
 	
