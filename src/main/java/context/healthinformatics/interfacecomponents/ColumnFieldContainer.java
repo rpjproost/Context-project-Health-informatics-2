@@ -78,7 +78,7 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	private int getComboBoxIndex(String columnType) {
 		if (columnType.equals("DATE")) {
 			return 2;
-		} else if (columnType.equals("INT")) {
+		} else if (columnType.equals("Int")) {
 			return 1;
 		} else {
 			return 0;
@@ -93,6 +93,7 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	public Column getColumn() {
 		Column col = new Column(getColumnIDValue(), getColumnNameValue(),
 				getColumnTypeValue());
+		System.out.println(col.getColumnType());
 		if (hasDateType()) {
 			col.setDateType(getColumnDateTypeValue());
 		}
