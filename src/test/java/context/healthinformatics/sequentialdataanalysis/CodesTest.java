@@ -111,7 +111,7 @@ public class CodesTest {
 	@Test
 	public void testGetChunkByLine() throws Exception {
 		Codes codes = new Codes(chunks);
-		assertEquals("CommentA", codes.getChunkByLine(1).getComment());
+		assertEquals("CommentA", codes.getChunkByLine(1, chunks).getComment());
 	}
 
 	/**

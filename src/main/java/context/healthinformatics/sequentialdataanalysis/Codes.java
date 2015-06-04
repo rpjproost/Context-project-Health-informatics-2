@@ -48,7 +48,7 @@ public class Codes extends Tasks {
 	 */
 	public void setCodeOfLine(int line, String code) throws Exception {
 		try {
-			getChunkByLine(line).setCode(code);
+			getChunkByLine(line, chunks).setCode(code);
 		} catch (Exception e) {
 			throw e;
 		}
@@ -132,16 +132,20 @@ public class Codes extends Tasks {
 	 * 
 	 * @param line
 	 *            the line that is needed.
+	 * @param chunk the list which will be searched.
 	 * @return the Chunk with the corresponding line.
-	 * @throws Exception
+	 * @throws Exception e
 	 *             thrown if there is no Chunk with this line.
 	 */
-	public Chunk getChunkByLine(int line) throws Exception {
+	public Chunk getChunkByLine(int line, ArrayList<Chunk> chunk) throws Exception {
 		Chunk curChunk = null;
-		for (int i = 0; i < chunks.size(); i++) {
-			curChunk = chunks.get(i);
+		for (int i = 0; i < chunk.size(); i++) {
+			curChunk = chunk.get(i);
 			if (curChunk.getLine() == line) {
 				return curChunk;
+			}
+			else if (curChunk.hasChild()) {
+				return getChunkByLine(line, curChunk.getChunks());
 			}
 		}
 		throw new Exception();
