@@ -75,7 +75,7 @@ public class Interpreter {
 			return new Codes(parameter);
 		}
 		if (key.equals("commment")) {
-			return new Comments(parameter);
+		//	return new Comments(parameter);
 		}
 		if (key.equals("connect")) {
 			return new Connections();
