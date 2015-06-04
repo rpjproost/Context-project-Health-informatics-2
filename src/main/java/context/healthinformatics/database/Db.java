@@ -26,6 +26,7 @@ public class Db {
 	private Statement stmt = null;
 	private HashMap<String, ArrayList<Column>> tables;
 	private String mergeTable = "result";
+	private ArrayList<Column> columns;
 
 	/**
 	 * Constructor, sets variables and calls setupConn.
@@ -346,5 +347,21 @@ public class Db {
 	 */
 	public void setMergeTable(String mt) {
 		mergeTable = mt;
+	}
+	
+	/**
+	 * Sets all columns in result table.
+	 * @param col column list.
+	 */
+	public void setColumns(ArrayList<Column> col) {
+		columns = col;
+	}
+	
+	/**
+	 * Get all columns in result table.
+	 * @return list with columns.
+	 */
+	public ArrayList<Column> getColumns() {
+		return columns;
 	}
 }

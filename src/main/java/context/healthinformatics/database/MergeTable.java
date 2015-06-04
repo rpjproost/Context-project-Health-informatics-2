@@ -94,6 +94,7 @@ public class MergeTable {
 				}
 			}
 		}
+		data.setColumns(columns);
 		data.createTable(mergeTable, columns);
 		insertTables(allTables, clause);
 	}
