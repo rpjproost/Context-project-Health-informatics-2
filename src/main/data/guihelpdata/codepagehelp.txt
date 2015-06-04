@@ -34,7 +34,7 @@ Language
 	  <li>data ...</li>
 	</ol>
 	<p>
-		After data you can write an SQL query, in which you can name the columns of the table from the input tab. The Connections method needs both ends of a connections, so you can specify the third section in the same way as the second section. If you want to select on a column where the row you want is empty, you can select on NULL which is the same as an empty field.
+		After data you can write an SQL query, in which you can name the columns of the table from the input tab. The Connections method needs both ends of a connections, so you can specify the third section in the same way as the second section. If you want to select on a column where the row you want is empty, you can select on NULL which is the same as an empty field.When comparing with NULL you have to use the keyword "IS".
 	</p>
 	</body>
 </html>
