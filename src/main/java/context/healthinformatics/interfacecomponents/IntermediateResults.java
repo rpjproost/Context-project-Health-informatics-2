@@ -58,7 +58,7 @@ public class IntermediateResults extends InterfaceHelper {
 		this.displayHtmlPane.setEditable(false);
 		this.displayHtmlPane.setContentType("text/html");
 		this.displayHtmlPane.setCaretPosition(0);
-		this.displayHtmlPane.setText("Test value can't read chunks yet");
+		this.displayHtmlPane.setText(buildHtmlOfIntermediateResult());
 	}
 
 	private void initScrollPane() {
@@ -94,13 +94,14 @@ public class IntermediateResults extends InterfaceHelper {
 	 */
 	public String buildHtmlOfIntermediateResult() {
 		ArrayList<Chunk> chunks = interpreter.getChunks();
+		System.out.println(chunks.size());
 		StringBuilder buildString = new StringBuilder();
 		buildString.append("<html><body>");
 		for (int i = 0; i < chunks.size(); i++) {
-			System.out.println(chunks.get(i).toString());
+			buildString.append(chunks.get(i).toString());
 			// TODO something to get all innerchunks
 		}
 		buildString.append("</body></html>");
-		return null;
+		return buildString.toString();
 	}
 }
