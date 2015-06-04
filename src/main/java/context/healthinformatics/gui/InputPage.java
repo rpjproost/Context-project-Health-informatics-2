@@ -315,10 +315,6 @@ public class InputPage extends InterfaceHelper implements PanelState,
 				&& !folder.get(project).contains(path)) {
 			folder.get(project).add(path);
 			ft.addFileToTree(project, path);
-		} else {
-			JOptionPane.showMessageDialog(null,
-					"No project created yet, or no file specified, "
-							+ "or file already in project!");
 		}
 	}
 
@@ -336,6 +332,10 @@ public class InputPage extends InterfaceHelper implements PanelState,
 				if (xmlController.getDocument(path) == null) {
 					addDocumentAndShowInEditor(currentDoc);
 					addFile(files[i].getName());
+				} else {
+					JOptionPane.showMessageDialog(null,
+							"No project created yet, or no file specified, "
+									+ "or file already in project!");
 				}
 			} else {
 				addXmlFile(path);
@@ -358,9 +358,15 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		}
 		ArrayList<XMLDocument> internDocs = parser.getDocuments();
 		for (int i = 0; i < internDocs.size(); i++) {
-			XMLDocument current = internDocs.get(i);
-			addDocumentAndShowInEditor(current);
-			addFile(xmlController.obtainFileName(current.getPath()));
+			if (xmlController.getDocument(internDocs.get(i).getPath()) == null) {
+				XMLDocument current = internDocs.get(i);
+				addDocumentAndShowInEditor(current);
+				addFile(xmlController.obtainFileName(current.getPath()));
+			} else {
+				JOptionPane.showMessageDialog(null,
+						"No project created yet, or no file specified, "
+								+ "or file already in project!");
+			}
 		}
 	}
 
