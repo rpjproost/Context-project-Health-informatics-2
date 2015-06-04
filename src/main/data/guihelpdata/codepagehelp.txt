@@ -1,0 +1,15 @@
+%%
+Add Project
+<html>
+	<body>
+	<h2>To add a project follow the following steps:</h2>
+	<ol>
+	  <li>You have to click on the button with the text "ADD new Project". This is in the left corner of the screen.</li>
+	  <li>A pop-up will appear</li>
+	  <li>Fill in the name of your new project in the text field of the pop-up.</li>
+	  <li>Click on "OK" if you filled in your project name.</li>
+	  <li>A new Project will appear in the File Selection area!</li>
+	</ol>  
+	</body>
+</html>
+%%

@@ -49,7 +49,8 @@ public abstract class Task {
 			runComment(query);
 		}
 		else {
-			throw new Exception("query input is wrong at: " + query[getQueryPart()]);
+			throw new Exception("query input is wrong at: " + query[getQueryPart()]
+					+ "Expected: (data/comment/code");
 		}
 	}
 
@@ -75,6 +76,7 @@ public abstract class Task {
 	 * @param whereClause Constrains String.
 	 * @return Result list of chunks.
 	 * @throws SQLException if sql query is incorrect.
+	 * @throws  if constraint is not found.
 	 */
 	protected abstract ArrayList<Chunk> constraintOnData(String whereClause) throws SQLException;
 	
@@ -244,6 +246,14 @@ public abstract class Task {
 			inc();
 			constraintOnContainsComment(query[getQueryPart()]);
 		}
+	}
+	/**
+	 * deepcopys the list of chunks.
+	 * @param list list to copy.
+	 * @return returns the copy.
+	 */
+	protected ArrayList<Chunk> copyChunks(ArrayList<Chunk> list) {
+		return SingletonInterpreter.getInterpreter().copyChunks(list);
 	}
 
 }

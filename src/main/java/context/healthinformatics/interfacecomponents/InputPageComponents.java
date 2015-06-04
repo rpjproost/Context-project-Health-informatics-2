@@ -259,12 +259,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 			ip.createProject();
 		}
 		if (e.getSource() == removeProjectButton && ip.getFolder().size() > 1) {
-			int reply = JOptionPane.showConfirmDialog(null,
-					"Are you sure you want to remove the project?",
-					"Remove Project", JOptionPane.YES_NO_OPTION);
-			if (reply == JOptionPane.YES_OPTION) {
-				remove();
-			}
+			handleRemoveProjectButton();
 		}
 		if (e.getSource() == getOpenFileButton()
 				&& ip.openFileChooser() == JFileChooser.APPROVE_OPTION) {
@@ -273,16 +268,34 @@ public class InputPageComponents implements Serializable, ActionListener {
 		if (e.getSource() == getHelpButton()) {
 			handleHelpButton();
 		}
-		if (e.getSource() == getAnalyseButton()
-				&& ip.getXMLController().getSelectedDocs() != null) {
-			handleAnalyseButton();
+		if (e.getSource() == getAnalyseButton()) {
+			handleAnalystButton();
 		}
 		if (e.getSource() == box) {
 			updateProject();
 		}
 	}
 
-	private void handleAnalyseButton() {
+	private void handleRemoveProjectButton() {
+		int reply = JOptionPane.showConfirmDialog(null,
+				"Are you sure you want to remove the project?",
+				"Remove Project", JOptionPane.YES_NO_OPTION);
+		if (reply == JOptionPane.YES_OPTION) {
+			remove();
+		}
+	}
+
+	private void handleAnalystButton() {
+		if (ip.getXMLController().getSelectedDocs() != null) {
+			analyseIfXMLIsCorrect();
+		} else {
+			JOptionPane.showMessageDialog(null,
+					"You have no file selected to analyse!!", "Analyse Error",
+					JOptionPane.WARNING_MESSAGE);
+		}
+	}
+
+	private void analyseIfXMLIsCorrect() {
 		if (!ip.getEditor().checkAllXMLDocumentsOnError()) {
 			ip.loadDatabase();
 			mf.setState(mf.getCodePage());

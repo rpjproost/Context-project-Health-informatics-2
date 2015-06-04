@@ -73,9 +73,10 @@ public class CommentOnDataTest {
 		MergeTable test = new MergeTable();
 		test.merge(clause);
 		ArrayList<Chunk> chunks = test.getChunks();
-		Comments tests = new Comments(chunks);
+		Comments tests = new Comments("testComment");
+		tests.setChunks(chunks);
 
-		tests.setCommentOnData("testComment", "value = 209");
+		tests.setCommentOnData("value = 209");
 		assertEquals("testComment", chunks.get(1).getComment());
 
 		test.dropView("workspace");

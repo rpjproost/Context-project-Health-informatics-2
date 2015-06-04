@@ -29,14 +29,13 @@ public class HelpFrame extends InterfaceHelper {
 
 	private static final int FRAME_WIDTH = 600;
 	private static final int FRAME_HEIGHT = 500;
-	private static final int TEXTAREA_WIDTH = 375;
-	private static final int TEXTARE_HEIGHT = 480;
+	private static final int TEXTAREA_WIDTH = 20;
+	private static final int TEXTARE_HEIGHT = 20;
 	private static final int BUTTON_WIDTH = 180;
 	private static final int BUTTON_HEIGHT = 30;
-	private static final int TABPANEL_WIDTH = 200;
-	private static final int INFOPANEL_WIDTH = 400;
 	private static final float FONT_SIZE = 15.0f;
 	private static final int MARGINTOP = 10;
+	private static final int THREE = 3;
 
 	private JFrame helpMainFrame;
 
@@ -44,6 +43,9 @@ public class HelpFrame extends InterfaceHelper {
 	private JPanel tabPanel;
 	private JPanel infoPanel;
 	private JScrollPane scroll;
+	private int width;
+	private int height;
+	private int textareawidth;
 
 	private JEditorPane displayHtmlPane = new JEditorPane();
 
@@ -64,12 +66,39 @@ public class HelpFrame extends InterfaceHelper {
 	public HelpFrame(String titleFrame,
 			ArrayList<HelpFrameInfoContainer> listOfHelpFrameInfo,
 			InputPageComponents inputPageComponents) {
-		this.listOfHelpFrameInfo = listOfHelpFrameInfo;
+		width = FRAME_WIDTH;
+		height = FRAME_HEIGHT;
+		textareawidth = (width * 2) / THREE;
+		setUpHelpFrame(titleFrame, listOfHelpFrameInfo);
 		this.inputPageComponents = inputPageComponents;
+		setWindowListener();
+		initMainPanel();
+	}
+
+	/**
+	  * Constructor of the HelpFrame class.
+	 * 
+	 * @param titleFrame
+	 *            the title of the frame
+	 * @param listOfHelpFrameInfo
+	 *            the list with info for the help frame
+	 * @param width the width of where it will be loaded in.
+	 * @param height the height of where it will be loaded in.
+	 */
+	public HelpFrame(String titleFrame, 
+			ArrayList<HelpFrameInfoContainer> listOfHelpFrameInfo, int width, int height) {
+		this.width = width;
+		this.height = height;
+		textareawidth = (width * 2) / THREE;
+		setUpHelpFrame(titleFrame, listOfHelpFrameInfo);
+		initMainPanelNoPopUp();
+	}
+
+	private void setUpHelpFrame(String titleFrame, 
+			ArrayList<HelpFrameInfoContainer> listOfHelpFrameInfo) {
+		this.listOfHelpFrameInfo = listOfHelpFrameInfo;
 		helpMainFrame = new JFrame(titleFrame);
 		setTextAreaSettings();
-		initMainPanel();
-		setWindowListener();
 		addHyperLinkListener();
 	}
 
@@ -92,8 +121,8 @@ public class HelpFrame extends InterfaceHelper {
 	private void setTextAreaSettings() {
 		this.displayHtmlPane.setEditable(false);
 		displayHtmlPane.setContentType("text/html");
-		this.displayHtmlPane.setPreferredSize(new Dimension(TEXTAREA_WIDTH,
-				TEXTARE_HEIGHT));
+		this.displayHtmlPane.setPreferredSize(new Dimension(textareawidth - TEXTAREA_WIDTH,
+				height - TEXTARE_HEIGHT));
 		this.displayHtmlPane.setFont(displayHtmlPane.getFont().deriveFont(
 				FONT_SIZE));
 		this.displayHtmlPane.setCaretPosition(0);
@@ -106,7 +135,8 @@ public class HelpFrame extends InterfaceHelper {
 	private void initScrollPane() {
 		scroll = new JScrollPane(displayHtmlPane);
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-		scroll.setPreferredSize(new Dimension(TEXTAREA_WIDTH, TEXTARE_HEIGHT));
+		scroll.setPreferredSize(new Dimension(textareawidth - TEXTAREA_WIDTH, 
+				height - TEXTARE_HEIGHT));
 		scroll.getVerticalScrollBar().setValue(0);
 	}
 
@@ -115,8 +145,14 @@ public class HelpFrame extends InterfaceHelper {
 	 */
 	private void initMainPanel() {
 		mainPanel = createEmptyWithGridBagLayoutPanel();
-		mainPanel.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
+		mainPanel.setPreferredSize(new Dimension(width, height));
 		initHelpMainFrame();
+	}
+	
+	private void initMainPanelNoPopUp() {
+		mainPanel = createEmptyWithGridBagLayoutPanel();
+		mainPanel.setPreferredSize(new Dimension(width, height));
+		initTabAndInfoPanel();
 	}
 
 	/**
@@ -137,11 +173,11 @@ public class HelpFrame extends InterfaceHelper {
 	 */
 	private void initTabAndInfoPanel() {
 		tabPanel = createEmptyWithGridBagLayoutPanel();
-		tabPanel.setPreferredSize(new Dimension(TABPANEL_WIDTH, FRAME_HEIGHT));
+		tabPanel.setPreferredSize(new Dimension(width / THREE, height));
 		tabPanel.setBackground(Color.WHITE);
 		infoPanel = createEmptyWithGridBagLayoutPanel();
 		infoPanel
-				.setPreferredSize(new Dimension(INFOPANEL_WIDTH, FRAME_HEIGHT));
+				.setPreferredSize(new Dimension(textareawidth, height));
 		infoPanel.setBackground(Color.WHITE);
 		addTabAndInfoPanel();
 	}
@@ -188,6 +224,13 @@ public class HelpFrame extends InterfaceHelper {
 				displayHtmlPane.setCaretPosition(0);
 			}
 		});
+	}
+	
+	/**
+	 * @return the help panel where everything will be showed.
+	 */
+	public JPanel getJPanel() {
+		return mainPanel;
 	}
 
 	/**
