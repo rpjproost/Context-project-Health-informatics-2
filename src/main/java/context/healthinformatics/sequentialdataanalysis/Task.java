@@ -187,7 +187,7 @@ public abstract class Task {
 	 * @return true/false.
 	 */
 	protected boolean isEquals(String query) {
-		return query.equals("equals");
+		return (query.equals("equals") || query.equals("="));
 	}
 
 	/**
