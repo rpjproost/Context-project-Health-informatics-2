@@ -40,7 +40,6 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	private static final int FOUR = 4;
 	private MainFrame mf;
 	private JTextArea codeTextArea;
-	private JTextArea intermediateResult;
 	private Interpreter interpreter = SingletonInterpreter.getInterpreter();
 	private JPanel codePageParentpanel;
 	private JPanel leftPanel;
@@ -113,7 +112,7 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	 * Sets the code input area.
 	 */
 	private void setCodeInputArea() {
-		codeTextArea = createTextField(((mf.getScreenWidth() / 2) - (2 * INSETS)),
+		codeTextArea = createTextField(mf.getScreenWidth() / 2 - 2 * INSETS,
 				mf.getStatePanelSize() / 2 - FIELDCORRECTION);
 		GridBagConstraints c = setGrids(0, 1);
 		c.insets = new Insets(0, INSETS, INSETS, INSETS);
@@ -145,7 +144,7 @@ public class CodePage extends InterfaceHelper implements PanelState,
 		ArrayList<HelpFrameInfoContainer> listOfHelpFrameInfo = test
 				.getHelpFrameInfoContainer();
 		HelpFrame helpFrame = new HelpFrame("Input Page Help", 
-				listOfHelpFrameInfo, ((mf.getScreenWidth() / 2) - (2 * INSETS)),
+				listOfHelpFrameInfo, mf.getScreenWidth() / 2 - 2 * INSETS,
 				mf.getStatePanelSize() / 2 - FIELDCORRECTION);
 		leftPanel.add(helpFrame.getJPanel(), setGrids(0, THREE));
 	}
@@ -181,7 +180,7 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	 */
 	private void setEmptyPanel(JPanel panel) {
 		JPanel emptyPanel = createPanel(MainFrame.CODETABCOLOR, 
-				(mf.getScreenWidth() / 2) - (2 * ANALYZEBUTTONWIDTH) - (2 * INSETS), 
+				mf.getScreenWidth() / 2 - 2 * ANALYZEBUTTONWIDTH - 2 * INSETS, 
 				FIELDCORRECTION);
 		panel.add(emptyPanel, setGrids(1, 0));
 	}
@@ -206,23 +205,6 @@ public class CodePage extends InterfaceHelper implements PanelState,
 		IntermediateResults imr = new IntermediateResults(mf);
 		rightPanel.add(imr.loadPanel(), setGrids(0, 0));
 		codePageParentpanel.add(rightPanel, setGrids(1, 0));
-	}
-
-	/**
-	 * Appends result Strings to intermediate result textfield.
-	 * 
-	 * @param res
-	 *            String to be appended in textfield.
-	 */
-	public void setResult(String res) {
-		intermediateResult.append(res);
-	}
-
-	/**
-	 * Clears textfield of intermediate result.
-	 */
-	public void emptyResult() {
-		intermediateResult.setText("");
 	}
 
 	/**
