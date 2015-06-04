@@ -86,8 +86,8 @@ public class ConnectionsTest {
 	@Test
 	public void testGetChunks() throws Exception {
 		Connections c = new Connections(chunks);
-		assertEquals(c.getChunkByLine(1), c1);
-		assertEquals(c.getChunkByLine(2), c3);
+		assertEquals(c.getChunkByLine(1, chunks), c1);
+		assertEquals(c.getChunkByLine(2, chunks), c3);
 	}
 	
 	/**
@@ -97,7 +97,7 @@ public class ConnectionsTest {
 	@Test(expected = Exception.class)
 	public void testGetChunkCodeByLineException() throws Exception {
 		Connections c = new Connections(chunks);
-		c.getChunkByLine(-1);
+		c.getChunkByLine(-1, chunks);
 	}
 	
 	/**

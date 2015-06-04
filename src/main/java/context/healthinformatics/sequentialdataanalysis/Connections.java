@@ -64,7 +64,7 @@ public class Connections extends Tasks {
 	 * @throws Exception e
 	 */
 	public void connectToLine(Chunk chunk, int line, String noteForConnection) throws Exception {
-		Chunk c = getChunkByLine(line);
+		Chunk c = getChunkByLine(line, chunks);
 		connectToChunk(chunk, c, noteForConnection);
 	}
 	
@@ -150,8 +150,8 @@ public class Connections extends Tasks {
 	 * @throws Exception e
 	 */
 	public void connectOnLine(int c1, int c2, String noteForConnection) throws Exception {
-		Chunk curChunk1 = getChunkByLine(c1);
-		Chunk curChunk2 = getChunkByLine(c2);
+		Chunk curChunk1 = getChunkByLine(c1, chunks);
+		Chunk curChunk2 = getChunkByLine(c2, chunks);
 		connectToChunk(curChunk1, curChunk2, noteForConnection);
 	}
 	
@@ -176,16 +176,20 @@ public class Connections extends Tasks {
 	 * 
 	 * @param line
 	 *            the line that is needed.
+	 * @param chunk is the list of chunks.
 	 * @return the Chunk with the corresponding line.
 	 * @throws Exception
 	 *             thrown if there is no Chunk with this line.
 	 */
-	public Chunk getChunkByLine(int line) throws Exception {
+	public Chunk getChunkByLine(int line, ArrayList<Chunk> chunk) throws Exception {
 		Chunk curChunk = null;
-		for (int i = 0; i < chunks.size(); i++) {
-			curChunk = chunks.get(i);
+		for (int i = 0; i < chunk.size(); i++) {
+			curChunk = chunk.get(i);
 			if (curChunk.getLine() == line) {
 				return curChunk;
+			}
+			else if (curChunk.hasChild()) {
+				return getChunkByLine(line, curChunk.getChunks());
 			}
 		}
 		throw new Exception();
