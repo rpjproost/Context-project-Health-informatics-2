@@ -15,6 +15,7 @@ import org.junit.Test;
 public class ChunkingTest {
 	
 	private ArrayList<Chunk> test = new ArrayList<Chunk>();
+	private Chunking testChunking;
 	
 	/**
 	 * Sets up a few chunks for testing purposes.
@@ -43,6 +44,8 @@ public class ChunkingTest {
 		test.add(d);
 		test.add(e);
 		test.add(f);
+		testChunking = new Chunking();
+		testChunking.setChunks(test);
 	}
 	
 	/**
@@ -50,7 +53,6 @@ public class ChunkingTest {
 	 */
 	@Test
 	public void testChunkOnConstraintCode() {
-		Chunking testChunking = new Chunking(test);
 		ArrayList<Chunk> res = testChunking.constraintOnCode("A");
 		final int three = 3;
 		assertEquals(three, res.size());
@@ -65,7 +67,6 @@ public class ChunkingTest {
 	 */
 	@Test
 	public void testChunkOnContainsComment() {
-		Chunking testChunking = new Chunking(test);
 		ArrayList<Chunk> res = testChunking.constraintOnContainsComment("E");
 		final int size = 4;
 		assertEquals(size, res.size());
@@ -77,7 +78,6 @@ public class ChunkingTest {
 	 */
 	@Test
 	public void testChunkOnEqualsComment() {
-		Chunking testChunking = new Chunking(test);
 		ArrayList<Chunk> res = testChunking.constraintOnEqualsComment("Deze heeft code E");
 		final int size = 4;
 		assertEquals(size, res.size());
@@ -89,7 +89,6 @@ public class ChunkingTest {
 	 */
 	@Test
 	public void testGetChunks() {
-		Chunking testChunking = new Chunking(test);
 		assertEquals(testChunking.getChunks(), test);
 	}
 

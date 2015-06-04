@@ -10,19 +10,23 @@ import context.healthinformatics.database.SingletonDb;
 /**
  * Class Constraints.
  */
-public class Constraints {
-	private ArrayList<Chunk> chunks;
+public class Constraints extends Task {
 	private String columnName;
 
+	private ArrayList<Chunk> oldList;
 	/**
 	 * Constructor Constraints.
-	 * 
 	 * @param chunks
 	 *            the list of chunks
 	 */
 	public Constraints(ArrayList<Chunk> chunks) {
-		this.chunks = chunks;
+		setChunks(chunks);
 	}
+
+	/**
+	 * Constructor Constraints without workspace previously set.
+	 */
+	public Constraints() { }
 
 	/**
 	 * Constructor Constraints.
@@ -33,7 +37,7 @@ public class Constraints {
 	 *            the list of chunks
 	 */
 	public Constraints(ArrayList<Chunk> chunks, String columnName) {
-		this.chunks = chunks;
+		setChunks(chunks);
 		this.columnName = columnName;
 	}
 
@@ -134,15 +138,6 @@ public class Constraints {
 	}
 
 	/**
-	 * Return the chunks the constraint must apply to.
-	 * 
-	 * @return the chunks
-	 */
-	public ArrayList<Chunk> getChunks() {
-		return chunks;
-	}
-
-	/**
 	 * Get the column name.
 	 * 
 	 * @return the name of the column
@@ -197,6 +192,69 @@ public class Constraints {
 	}
 
 	/**
+	 * Checks current arraylist on constraint on data.
+	 * @param whereClause sql clause over data.
+	 * @return filtered arraylist.
+	 * @throws SQLException iff sql could not be executed.
+	 */
+	@Override
+	public ArrayList<Chunk> constraintOnData(String whereClause) 
+			throws SQLException {
+		ArrayList<Chunk> res = new ArrayList<Chunk>();
+		ArrayList<Chunk> chunks = getChunks();
+		ArrayList<Integer> ints = getLinesFromData(whereClause);
+		for (int i = 0; i < chunks.size(); i++) {
+			Chunk curChunk = chunks.get(i);
+			checkConstraintOnData(curChunk, ints, res);
+		}
+		return res;
+	}
+
+	/**
+	 * Checks if chunk passes constraint.
+	 * @param curChunk Chunk to be checked.
+	 * @param ints list of ints of chunks that should pass.
+	 * @param res arrayList to return.
+	 */
+	public void checkConstraintOnData(Chunk curChunk, ArrayList<Integer> ints, 
+			ArrayList<Chunk> res) {
+		if (ints.contains(curChunk.getLine())) {
+			res.add(curChunk);
+		}
+		else {
+			if (curChunk.hasChild()) {
+				checkChildsOnData(curChunk, curChunk.getChunks(), ints, res);
+			}	
+		}
+	}
+
+	/**
+	 * Remove childs from resul arraylist if they do not pass constraint.
+	 * @param curChunk Chunk that has to be added to res if it passes constraint.
+	 * @param childs childs of currentChunk that are being checked.
+	 * @param ints list of ints of Chunks that should pass constraint.
+	 * @param res result arrayList to be returned.
+	 */
+	public void checkChildsOnData(Chunk curChunk, ArrayList<Chunk> childs,
+			ArrayList<Integer> ints, ArrayList<Chunk> res) {
+		for (int i = 0; i < childs.size(); i++) {
+			if (ints.contains(childs.get(i).getLine())) {
+				if (!res.contains(curChunk)) {
+					res.add(curChunk);
+				}
+			}
+			else {
+				if (childs.get(i).hasChild()) {
+					checkChildsOnData(curChunk, childs.get(i).getChunks(), ints, res);
+				}
+				else {
+					childs.remove(i);
+				}
+			}
+		}
+	}
+
+	/**
 	 * Constraint on a data value string.
 	 * 
 	 * @param value
@@ -211,7 +269,7 @@ public class Constraints {
 	 */
 	public ArrayList<Chunk> constraint(String value, String operator,
 			String tableName) throws SQLException {
-		String rowClause = getAllChunkLines(chunks, new StringBuilder(),
+		String rowClause = getAllChunkLines(getChunks(), new StringBuilder(),
 				tableName);
 		rowClause = "(" + rowClause.substring(2, rowClause.length()) + ")";
 		String constraint = columnName + " " + operator + " ";
@@ -221,8 +279,8 @@ public class Constraints {
 			constraint += "'" + value + "' ";
 		}
 		String whereClause = constraint + " AND " + rowClause;
-		removeChunks(getRemainingIDs(tableName, whereClause), this.chunks);
-		return this.chunks;
+		removeChunks(getRemainingIDs(tableName, whereClause), getChunks());
+		return getChunks();
 	}
 
 	/**
@@ -264,5 +322,32 @@ public class Constraints {
 			return false;
 		}
 		return true;
+	}
+	
+	@Override
+	protected void setChunks(ArrayList<Chunk> c) {
+		super.setChunks(c);
+		oldList = c;
+	}
+
+	@Override
+	public ArrayList<Chunk> undo() {
+		return oldList;
+		
+	}
+
+	@Override
+	protected ArrayList<Chunk> constraintOnCode(String code) {
+		return hasCode(code, getChunks(), new ArrayList<Chunk>());
+	}
+
+	@Override
+	protected ArrayList<Chunk> constraintOnEqualsComment(String comment) {
+		return equalsComment(comment, getChunks(), new ArrayList<Chunk>());
+	}
+
+	@Override
+	protected ArrayList<Chunk> constraintOnContainsComment(String comment) {
+		return containsComment(comment, getChunks(), new ArrayList<Chunk>());
 	}
 }

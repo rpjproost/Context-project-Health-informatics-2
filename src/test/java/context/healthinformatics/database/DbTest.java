@@ -310,6 +310,7 @@ public class DbTest {
 		assertEquals("result", data.getMergeTable());
 		data.setMergeTable("result2");
 		assertEquals("result2", data.getMergeTable());
+		data.setMergeTable("result");
 	}
 
 }

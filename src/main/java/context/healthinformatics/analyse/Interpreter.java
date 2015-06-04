@@ -1,39 +1,31 @@
 package context.healthinformatics.analyse;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
 
-import context.healthinformatics.database.Db;
-import context.healthinformatics.database.MergeTable;
-import context.healthinformatics.database.SingletonDb;
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.Stack;
+
 import context.healthinformatics.sequentialdataanalysis.Chunk;
+import context.healthinformatics.sequentialdataanalysis.Chunking;
+import context.healthinformatics.sequentialdataanalysis.Codes;
+import context.healthinformatics.sequentialdataanalysis.Comments;
+import context.healthinformatics.sequentialdataanalysis.Connections;
 import context.healthinformatics.sequentialdataanalysis.Constraints;
+import context.healthinformatics.sequentialdataanalysis.Task;
+
 
 /**
- * class handeling the interpreting of the user input.
+ * class handling the interpreting of the user input.
  */
-// TODO needs to be cleaned!
 public class Interpreter {
-
-	private ArrayList<Chunk> chunks;
-	private static final int THREE = 3;
-	private static final int FOUR = 4;
-	private static final int FIVE = 5;
-
+	
+	private Stack<Task> tasks;
+	private ArrayList<Chunk> firstList;
 	/**
 	 * constructor for the Interpreter.
 	 */
-	public Interpreter() {
-		MergeTable mt = new MergeTable();
-		try {
-			String[] clause = new String[1];
-			clause[0] = "Hospital.admire = 2";
-			mt.merge(clause);
-			chunks = mt.getChunks();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} // TODO add clause
+	protected Interpreter() {
+		tasks = new Stack<Task>();
 	}
 
 	/**
@@ -41,35 +33,77 @@ public class Interpreter {
 	 * 
 	 * @param code
 	 *            code to interpret.
+	 * @throws Exception 
 	 */
-	public void interpret(String code) {
-		String[] methods = code.split(";");
-		for (int i = 0; i < methods.length; i++) {
-			if (methods[i].contains("filter")) {
-				String[] split = methods[i].split(" ");
-				Constraints c = new Constraints(chunks, "date");
-				try {
-					ArrayList<Chunk> list = c.constraint(split[THREE],
-							split[FOUR], split[FIVE]);
-					Db data = SingletonDb.getDb();
-					for (Chunk chunk : list) {
-						ResultSet rs = data.selectAllWithWhereClause(
-								"result", "resultid = " + chunk.getLine());
-						while (rs.next()) {
-							System.out.print("Hospital: ");
-							System.out.print(rs.getString("omschrijving"));
-							System.out.print("; Date: ");
-							System.out.print(rs.getDate("date"));
-							System.out.print("; Creatine: ");
-							System.out.print(rs.getInt("value"));
-							System.out.println();
-						}
-					}
-				} catch (Exception e) {
-					System.out.println(e); // TODO catch this exception.
-				}
+	public void interpret(String code) throws Exception {
+		Scanner sc = new Scanner(code);
+		
+		while (sc.hasNextLine()) {
+			String[] splittedLine = sc.nextLine().toLowerCase().split(" ");
+			splittedLine = checkSplittedLineForUnwantedSpaces(splittedLine);
+			Task task = createTask(splittedLine[0]);
+			if (task != null) { //task == null if revert / undo was called
+				task.run(splittedLine);
+				tasks.push(task);
+			} 
+		}
+		sc.close();
+	}
+	
+	private Task createTask(String key) {
+		if (key.equals("chunk")) {
+			return new Chunking();
+		}
+		if (key.equals("filter")) {
+			return new Constraints();
+		}
+//		if (key.equals("code")) {
+//			return new Codes();
+//		}
+//		if (key.equals("commment")) {
+//			return new Comments();
+//		}
+//		if (key.equals("connect")) {
+//			return new Connections();
+//		}
+			
+		return null;
+	}
+
+	/**
+	 * getter for the current chunkList.
+	 * @return the current chunkList
+	 */
+	public ArrayList<Chunk> getChunks() {
+		if (!tasks.isEmpty()) {
+			return tasks.peek().getResult();
+		}
+		else {
+			return firstList;
+		}
+		
+	}
+	
+	private String[] checkSplittedLineForUnwantedSpaces(String[] splittedLine) {
+		ArrayList<String> strings = new ArrayList<String>();
+		for (int i = 0; i < splittedLine.length; i++) {
+			if (splittedLine[i].length() > 0) {
+				strings.add(splittedLine[i]);
 			}
 		}
+		String[] ans  = new String[strings.size()];
+		for (int i = 0; i < strings.size(); i++) {
+			ans[i] = strings.get(i);
+		}
+		return ans;
+	}
+	
+	/**
+	 * setter for the initial list of chunks.
+	 * @param list list to set
+	 */
+	public void setIntialChunks(ArrayList<Chunk> list) {
+		firstList = list;
 	}
 
 }

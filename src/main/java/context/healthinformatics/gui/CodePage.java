@@ -78,9 +78,9 @@ public class CodePage extends InterfaceHelper implements PanelState, Serializabl
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			String text = code.getText();
-			Interpreter interp = new Interpreter();
-			interp.interpret(text);
+			//String text = code.getText();
+			//Interpreter interp = new Interpreter();
+			//interp.interpret(text);
 		}
 	}
 }

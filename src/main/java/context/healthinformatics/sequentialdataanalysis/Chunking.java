@@ -7,27 +7,24 @@ import java.util.ArrayList;
  * Class for chunking a list of chunks.
  *
  */
-public class Chunking extends Tasks {
+public class Chunking extends Task {
 
 	private Chunk temp;
 
 	/**
-	 * Constructor Chunking.
-	 * 
-	 * @param chunks
-	 *            the list of chunks
+	 * Constructor for chunking.
 	 */
-	public Chunking(ArrayList<Chunk> chunks) {
-		setChunks(chunks);
-		chunks = getChunks();
+	public Chunking() {
+		
 	}
-
+	
 	/**
 	 * Create chunks on constraint data.
 	 * @param whereClause for sql query.
 	 * @return new Arraylist with chunked chunks.
 	 * @throws SQLException if whereclause was not correct.
 	 */
+	@Override
 	public ArrayList<Chunk> constraintOnData(String whereClause) throws SQLException {
 		ArrayList<Chunk> res = new ArrayList<Chunk>();
 		ArrayList<Chunk> chunks = getChunks();
@@ -40,7 +37,7 @@ public class Chunking extends Tasks {
 		addLastElementToChunks(res);
 		return res;
 	}
-	
+
 	/**
 	 * Add chunks with data to new chunks if constraint on data passes.
 	 * @param ints the arraylist with integers with correct data.
@@ -53,20 +50,21 @@ public class Chunking extends Tasks {
 			temp.setChunk(curChunk);
 		}
 		else {
-			addChunkToChunk(res, curChunk);
+			addChunkToRes(res, curChunk);
 			this.temp = new Chunk();
 		}
 	}
-	
+
 	/**
 	 * Chunking chunks on a code constraint.
 	 * @param code Code constraint for a chunk.
 	 * @return New ArrayList<Chunk> chunked on code.
 	 */
+	@Override
 	public ArrayList<Chunk> constraintOnCode(String code) {
 		ArrayList<Chunk> res = new ArrayList<Chunk>();
 		ArrayList<Chunk> chunks = getChunks();
- 		temp  = new Chunk();
+		temp  = new Chunk();
 		for (int i = 0; i < chunks.size(); i++) {
 			Chunk curChunk = chunks.get(i);
 			addChunkOnEqualsCode(curChunk, code, res);
@@ -74,7 +72,7 @@ public class Chunking extends Tasks {
 		addLastElementToChunks(res);
 		return res;
 	}
-	
+
 	/**
 	 * Add chunk to new Chunk in new ArrayList if it equals code.
 	 * @param curChunk Chunk to be checked on constraint.
@@ -87,7 +85,7 @@ public class Chunking extends Tasks {
 			temp.setChunk(curChunk);
 		}
 		else {
-			addChunkToChunk(res, curChunk);
+			addChunkToRes(res, curChunk);
 			this.temp  = new Chunk();
 		}
 	}
@@ -97,6 +95,7 @@ public class Chunking extends Tasks {
 	 * @param comment String for comment.
 	 * @return new ArrayList<Chunk> chunked on constraint.
 	 */
+	@Override
 	public ArrayList<Chunk> constraintOnContainsComment(String comment) {
 		ArrayList<Chunk> res = new ArrayList<Chunk>();
 		ArrayList<Chunk> chunks = getChunks();
@@ -104,23 +103,6 @@ public class Chunking extends Tasks {
 		for (int i = 0; i < chunks.size(); i++) {
 			Chunk curChunk = chunks.get(i);
 			addChunkOnContainsComment(curChunk, comment, res);
-		}
-		addLastElementToChunks(res);
-		return res;
-	}
-	
-	/**
-	 * Chunking chunks on a comment equals constraint.
-	 * @param comment String for comment.
-	 * @return new ArrayList<Chunk> chunked on constraint.
-	 */
-	public ArrayList<Chunk> constraintOnEqualsComment(String comment) {
-		ArrayList<Chunk> res = new ArrayList<Chunk>();
-		ArrayList<Chunk> chunks = getChunks();
-		temp  = new Chunk();
-		for (int i = 0; i < chunks.size(); i++) {
-			Chunk curChunk = chunks.get(i);
-			addChunkOnEqualsComment(curChunk, comment, res);
 		}
 		addLastElementToChunks(res);
 		return res;
@@ -139,11 +121,29 @@ public class Chunking extends Tasks {
 			temp.setChunk(curChunk);
 		}
 		else {
-			addChunkToChunk(res, curChunk);
+			addChunkToRes(res, curChunk);
 			temp  = new Chunk();
 		}
 	}
-	
+
+	/**
+	 * Chunking chunks on a comment equals constraint.
+	 * @param comment String for comment.
+	 * @return new ArrayList<Chunk> chunked on constraint.
+	 */
+	@Override
+	public ArrayList<Chunk> constraintOnEqualsComment(String comment) {
+		ArrayList<Chunk> res = new ArrayList<Chunk>();
+		ArrayList<Chunk> chunks = getChunks();
+		temp  = new Chunk();
+		for (int i = 0; i < chunks.size(); i++) {
+			Chunk curChunk = chunks.get(i);
+			addChunkOnEqualsComment(curChunk, comment, res);
+		}
+		addLastElementToChunks(res);
+		return res;
+	}
+
 	/**
 	 * Add chunk to new Chunk in new ArrayList if it equals comment.
 	 * @param curChunk Chunk to be checked on constraint.
@@ -157,17 +157,17 @@ public class Chunking extends Tasks {
 			temp.setChunk(curChunk);
 		}
 		else {
-			addChunkToChunk(res, curChunk);
+			addChunkToRes(res, curChunk);
 			temp  = new Chunk();
 		}
 	}
-	
+
 	/**
 	 * Adds a Chunk to a new chunk if it is part of the Chunk.
 	 * @param temp The new Chunk.
 	 * @param res The new ArrayList<Chunk> to be returned after chunking.
 	 */
-	private void addChunkToChunk(ArrayList<Chunk> res, Chunk curChunk) {
+	private void addChunkToRes(ArrayList<Chunk> res, Chunk curChunk) {
 		if (temp.hasChild()) {
 			res.add(temp);
 			res.add(curChunk);
@@ -176,7 +176,7 @@ public class Chunking extends Tasks {
 			res.add(curChunk);
 		}
 	}
-	
+
 	/**
 	 * Adds last chunked chunk to result ArrayList.
 	 * @param res ArrayList to be returned.
@@ -192,10 +192,4 @@ public class Chunking extends Tasks {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-	}
-
 }

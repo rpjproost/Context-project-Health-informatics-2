@@ -10,6 +10,8 @@ import java.util.TreeSet;
 
 import org.junit.Test;
 
+import context.healthinformatics.analyse.Interpreter;
+import context.healthinformatics.analyse.SingletonInterpreter;
 import context.healthinformatics.database.Db;
 import context.healthinformatics.database.MergeTable;
 import context.healthinformatics.database.SingletonDb;
@@ -67,8 +69,9 @@ public class ChunkingOnDataTest {
 		MergeTable test = new MergeTable();
 		test.merge(clause);
 		ArrayList<Chunk> chunks = test.getChunks();
-		Chunking tests = new Chunking(chunks);
-		
+		Chunking tests = new Chunking();
+		tests.setChunks(chunks);
+
 		ArrayList<Chunk> x = tests.constraintOnData("groep = 2");
 		assertTrue(x.size() == res);
 
@@ -77,5 +80,33 @@ public class ChunkingOnDataTest {
 		data.dropTable("HospitalRecords");
 		data.dropTable("StatSensor");
 	}
+	
+	/**
+	 * Test for chunking with interpretor.
+	 * @throws Exception if query is wrong.
+	 */
+	@Test
+	public void testChunkingWithInterpreter() throws Exception {
+		xmlp = new XMLParser(path + "twoDocs.xml");
+		xmlp.parse();
+		final int res = 6;
+		String[] clause = new String[1];
+		clause[0] = "HospitalRecords.Groep = 2";
+		MergeTable test = new MergeTable();
+		test.merge(clause);
+		ArrayList<Chunk> chunks = test.getChunks();
+		
+		Interpreter i = SingletonInterpreter.getInterpreter();
+		i.setIntialChunks(chunks);
+		i.interpret("chunk data where groep = 2");
+		ArrayList<Chunk> c = i.getChunks();
+		
+		assertTrue(c.size() == res);
 
+		
+		test.dropView("workspace");
+		data.dropTable("result");
+		data.dropTable("HospitalRecords");
+		data.dropTable("StatSensor");
+	}
 }
