@@ -5,9 +5,14 @@ import java.util.ArrayList;
 /**
  * The Class Codes.
  */
-public class Codes {
+public class Codes extends Tasks {
 
 	private ArrayList<Chunk> chunks;
+	
+	/**
+	 * Constructor for codes without an argument.
+	 */
+	public Codes() { }
 
 	/**
 	 * Constructor for codes.
@@ -17,6 +22,18 @@ public class Codes {
 	 */
 	public Codes(ArrayList<Chunk> chunks) {
 		this.chunks = chunks;
+	}
+	
+	@Override
+	public ArrayList<Chunk> undo() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	/**
@@ -31,9 +48,82 @@ public class Codes {
 	 */
 	public void setCodeOfLine(int line, String code) throws Exception {
 		try {
-			getChunk(line).setCode(code);
+			getChunkByLine(line, chunks).setCode(code);
 		} catch (Exception e) {
 			throw e;
+		}
+	}
+	
+	/**
+	 * Set the code on the chunk at index in the chunks ArrayList with the
+	 * string code.
+	 * 
+	 * @param indexInChunks
+	 *            the index of the chunk in the ArrayList chunks
+	 * @param code
+	 *            the code to be set
+	 * @throws Exception
+	 */
+	public void setCodeOfChunks(int indexInChunks, String code) {
+		try {
+			Chunk c = chunks.get(indexInChunks);
+			c.setCode(code);
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	
+	/**
+	 * Method which sets the code for every chunk in a list.
+	 * @param list of chunks.
+	 * @param code code to be set.
+	 */
+	public void setCodeOfListOfChunks(ArrayList<Chunk> list, String code) {
+		for (Chunk c : list) {
+			c.setCode(code);
+		}
+	}
+	
+	/**
+	 * Method which sets the code of every chunk with the comment : comment, to code.
+	 * @param code c
+	 * @param comment c
+	 */
+	public void setCodeOnComment(String code, String comment) {
+		try {
+			for (Chunk c : chunks) {
+				if (c.getComment().equals(comment)) {
+					c.setCode(code);
+				}
+			}
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	
+	/**
+	 * Method which replaces the code of every chunk with the code : previousCode, to code.
+	 * @param code new code.
+	 * @param previousCode old code.
+	 */
+	public void setCodeOnCode(String code, String previousCode) {
+			for (Chunk c : chunks) {
+				if (c.getCode().equals(previousCode)) {
+					c.setCode(code);
+				}
+			}
+	}
+	
+	/**
+	 * Method which sets the code for all.
+	 * @param code to be set.
+	 * @param whereClause to be met.
+	 * @throws Exception e
+	 */
+	public void setCodeOnData(String code, String whereClause) throws Exception {
+		ArrayList<Integer> list = getLinesFromData(whereClause);
+		for (Integer i : list) {
+			setCodeOfLine(i, code);
 		}
 	}
 
@@ -42,38 +132,22 @@ public class Codes {
 	 * 
 	 * @param line
 	 *            the line that is needed.
+	 * @param chunk the list which will be searched.
 	 * @return the Chunk with the corresponding line.
-	 * @throws Exception
+	 * @throws Exception e
 	 *             thrown if there is no Chunk with this line.
 	 */
-	public Chunk getChunk(int line) throws Exception {
+	public Chunk getChunkByLine(int line, ArrayList<Chunk> chunk) throws Exception {
 		Chunk curChunk = null;
-		for (int i = 0; i < chunks.size(); i++) {
-			curChunk = chunks.get(i);
+		for (int i = 0; i < chunk.size(); i++) {
+			curChunk = chunk.get(i);
 			if (curChunk.getLine() == line) {
 				return curChunk;
+			}
+			else if (curChunk.hasChild()) {
+				return getChunkByLine(line, curChunk.getChunks());
 			}
 		}
 		throw new Exception();
 	}
-
-	/**
-	 * Set the code on the chunk at index in the chunks ArrayList with the
-	 * string code.
-	 * 
-	 * @param index
-	 *            the index of the chunk in the ArrayList chunks
-	 * @param code
-	 *            the code to be set
-	 * @throws Exception
-	 */
-	public void setCodeOfChunks(int index, String code) {
-		try {
-			Chunk c = chunks.get(index);
-			c.setCode(code);
-		} catch (Exception e) {
-			throw e;
-		}
-	}
-
 }

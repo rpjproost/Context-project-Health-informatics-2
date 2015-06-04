@@ -13,7 +13,6 @@ import org.junit.Test;
 public class CodesTest {
 
 	private ArrayList<Chunk> chunks;
-	private String code = "A";
 
 	/**
 	 * Before each method create a arraylist with chunks already.
@@ -22,10 +21,15 @@ public class CodesTest {
 	public void before() {
 		chunks = new ArrayList<Chunk>();
 		Chunk c1 = new Chunk();
+		c1.setComment("CommentA");
 		c1.setLine(1);
 		chunks.add(c1);
 		Chunk c2 = new Chunk();
+		c2.setComment("CommentB");
 		chunks.add(c2);
+		Chunk c3 = new Chunk();
+		c3.setCode("old");
+		chunks.add(c3);
 	}
 
 	/**
@@ -37,8 +41,8 @@ public class CodesTest {
 	@Test
 	public void testSetCodeOfLine() throws Exception {
 		Codes codes = new Codes(chunks);
-		codes.setCodeOfLine(1, code);
-		assertEquals(code, chunks.get(0).getCode());
+		codes.setCodeOfLine(1, "A");
+		assertEquals("A", chunks.get(0).getCode());
 	}
 
 	/**
@@ -50,11 +54,11 @@ public class CodesTest {
 	@Test(expected = Exception.class)
 	public void testSetCodeOfLineException() throws Exception {
 		Codes codes = new Codes(chunks);
-		codes.setCodeOfLine(-1, code);
+		codes.setCodeOfLine(-1, "test");
 	}
 
 	/**
-	 * Test if you can set code on a chunk of chunks.
+	 * Test if you can set the codes on a chunk of chunks.
 	 */
 	@Test
 	public void testSetCodeOfChunks() {
@@ -64,8 +68,50 @@ public class CodesTest {
 		combined.add(combi);
 
 		Codes codes = new Codes(combined);
-		codes.setCodeOfChunks(0, code);
-		assertEquals(code, combined.get(0).getCode());
+		codes.setCodeOfChunks(0, "A");
+		assertEquals("A", combined.get(0).getCode());
+	}
+	
+	/**
+	 * Test if you can set the codes on every chunk in a list of chunks.
+	 */
+	@Test
+	public void testSetCodeOfListOfChunks() {
+		Codes codes = new Codes(chunks);
+		codes.setCodeOfListOfChunks(chunks, "test");
+		assertEquals("test", chunks.get(0).getCode());
+		assertEquals("test", chunks.get(1).getCode());
+	}
+	
+	/**
+	 * Test if the chunk with comment "CommentB" will have its code set to the correct code.
+	 */
+	@Test
+	public void testSetCodeOnComment() {
+		Codes codes = new Codes(chunks);
+		codes.setCodeOnComment("test", "CommentB");
+		assertEquals("", chunks.get(0).getCode());
+		assertEquals("test", chunks.get(1).getCode());
+	}
+	
+	/**
+	 * Test if the chunk with code "old" will have its code set to the "new" code.
+	 */
+	@Test
+	public void testSetCodeOnCode() {
+		Codes codes = new Codes(chunks);
+		codes.setCodeOnCode("new", "old");
+		assertEquals("new", chunks.get(2).getCode());
+	}
+	
+	/**
+	 * Test if the correct chunk is returned by line number.
+	 * @throws Exception e
+	 */
+	@Test
+	public void testGetChunkByLine() throws Exception {
+		Codes codes = new Codes(chunks);
+		assertEquals("CommentA", codes.getChunkByLine(1, chunks).getComment());
 	}
 
 	/**
@@ -75,6 +121,6 @@ public class CodesTest {
 	public void testSetCodeOfChunksException() {
 		ArrayList<Chunk> combined = new ArrayList<Chunk>();
 		Codes codes = new Codes(combined);
-		codes.setCodeOfChunks(0, code);
+		codes.setCodeOfChunks(0, "test");
 	}
 }
