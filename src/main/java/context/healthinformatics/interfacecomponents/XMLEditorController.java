@@ -251,8 +251,10 @@ public class XMLEditorController {
 	 */
 	public void removeProject(String project) {
 		File file = new File(getFileLocation());
-		file.delete();
-		allDocs.remove(project);
+		boolean deleted = file.delete();
+		if (deleted) {
+			allDocs.remove(project);
+		}
 	}
 
 	/**
