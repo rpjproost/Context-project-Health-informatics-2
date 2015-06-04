@@ -22,7 +22,7 @@ import context.healthinformatics.sequentialdataanalysis.Chunk;
  */
 public class IntermediateResults extends InterfaceHelper {
 	private static final long serialVersionUID = 1L;
-	private static final int HEIGHT_SCROLLPANE = 500;
+	private static final int FIELDCORRECTION = 130;
 	private static final int HUNDRED_PERCENT = 100;
 	private int intermediateResultWidth;
 	private Db database = SingletonDb.getDb();
@@ -31,6 +31,7 @@ public class IntermediateResults extends InterfaceHelper {
 	private JEditorPane displayHtmlPane = new JEditorPane();
 	private JScrollPane scroll;
 	private Interpreter interpreter = SingletonInterpreter.getInterpreter();
+	private MainFrame mf;
 
 	/**
 	 * Constructor of the IntermediateResults class.
@@ -39,6 +40,7 @@ public class IntermediateResults extends InterfaceHelper {
 	 *            the mainframe to get screen width
 	 */
 	public IntermediateResults(MainFrame mf) {
+		this.mf = mf;
 		intermediateResultWidth = (mf.getScreenWidth() / 2)
 				- (mf.getScreenWidth() / HUNDRED_PERCENT) * 2;
 		interMediateResultParentPanel = createEmptyWithGridBagLayoutPanel(MainFrame.CODETABCOLOR);
@@ -61,7 +63,7 @@ public class IntermediateResults extends InterfaceHelper {
 	 */
 	private void initDisplayHTMLPane() {
 		this.displayHtmlPane.setPreferredSize(new Dimension(
-				intermediateResultWidth, HEIGHT_SCROLLPANE));
+				intermediateResultWidth, mf.getStatePanelSize() / 2 - FIELDCORRECTION));
 		this.displayHtmlPane.setEditable(false);
 		this.displayHtmlPane.setContentType("text/html");
 		updateIntermediateResult();
@@ -76,7 +78,7 @@ public class IntermediateResults extends InterfaceHelper {
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scroll.setPreferredSize(new Dimension(intermediateResultWidth,
-				HEIGHT_SCROLLPANE));
+				mf.getStatePanelSize() / 2 - FIELDCORRECTION));
 		scroll.getVerticalScrollBar().setValue(0);
 	}
 
