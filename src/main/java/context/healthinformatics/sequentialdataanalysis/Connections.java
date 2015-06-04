@@ -8,22 +8,15 @@ import java.util.HashMap;
  * The Class Connections.
  */
 public class Connections extends Task {
-
-	private ArrayList<Chunk> chunks;
+	
+	private String noteForConnection;
 	
 	/**
 	 * Constructor for Connections without an argument.
+	 * @param info String that contains info about the connection.
 	 */
-	public Connections() { }
-
-	/**
-	 * Constructor for connections.
-	 * 
-	 * @param chunks
-	 *            the chunks
-	 */
-	public Connections(ArrayList<Chunk> chunks) {
-		this.chunks = chunks;
+	public Connections(String info) { 
+		noteForConnection = info;
 	}
 	
 	@Override
@@ -37,13 +30,10 @@ public class Connections extends Task {
 	 * a line-chunk to point to each other with an note associated to the connection.
 	 * @param chunk1 is one chunk of the connection.
 	 * @param chunk2 is the other chunk of the connection.
-	 * @param noteForConnection string which is associated with the connection.
 	 * @throws Exception e
 	 */
-	public void connectToChunk(Chunk chunk1, Chunk chunk2
-			, String noteForConnection) throws Exception {
-		
-		if (chunks.indexOf(chunk1) < chunks.indexOf(chunk2)) {
+	public void connectToChunk(Chunk chunk1, Chunk chunk2) throws Exception {
+		if (getChunks().indexOf(chunk1) < getChunks().indexOf(chunk2)) {
 			HashMap<Chunk, String> pointer1 = chunk1.getPointer();
 			pointer1.put(chunk2, noteForConnection);
 			chunk1.setPointer(pointer1);
@@ -55,25 +45,22 @@ public class Connections extends Task {
 	 * a line-chunk to point to each other with an note associated to the connection.
 	 * @param chunk is one chunk of the connection.
 	 * @param line line of the chunk at the other end of the connection.
-	 * @param noteForConnection string which is associated with the connection.
 	 * @throws Exception e
 	 */
-	public void connectToLine(Chunk chunk, int line, String noteForConnection) throws Exception {
-		Chunk c = getChunkByLine(line, chunks);
-		connectToChunk(chunk, c, noteForConnection);
+	public void connectToLine(Chunk chunk, int line) throws Exception {
+		Chunk c = getChunkByLine(line, getChunks());
+		connectToChunk(chunk, c);
 	}
 	
 	/**
 	 * Method which connects every chunk in a list of chunks to a certain chunk.
 	 * @param chunkList list of chunks.
 	 * @param c chunk
-	 * @param noteForConnection String associated with the connection.
 	 * @throws Exception e
 	 */
-	public void connectListOfChunksToChunk(ArrayList<Chunk> chunkList, Chunk c
-			, String noteForConnection) throws Exception {
+	public void connectListOfChunksToChunk(ArrayList<Chunk> chunkList, Chunk c) throws Exception {
 		for (Chunk chunk : chunkList) {
-			connectToChunk(chunk, c, noteForConnection);
+			connectToChunk(chunk, c);
 		}
 	}
 	
@@ -81,13 +68,11 @@ public class Connections extends Task {
 	 * Method which connects a certain chunk to every chunk in a list of chunks.
 	 * @param c chunk
 	 * @param chunkList list of chunks.
-	 * @param noteForConnection String associated with the connection.
 	 * @throws Exception e
 	 */
-	public void connectChunkToListOfChunks(Chunk c, ArrayList<Chunk> chunkList
-			, String noteForConnection) throws Exception {
+	public void connectChunkToListOfChunks(Chunk c, ArrayList<Chunk> chunkList) throws Exception {
 		for (Chunk chunk : chunkList) {
-			connectToChunk(c, chunk, noteForConnection);
+			connectToChunk(c, chunk);
 		}
 	}
 	
@@ -95,19 +80,18 @@ public class Connections extends Task {
 	 * Method which connects all chunks with code equal to c, to chunk.
 	 * @param c1 code where the connection originates.
 	 * @param c2 code where the connections is made to.
-	 * @param noteForConnection string along the connection
 	 * @throws Exception 
 	 */
-	public void connectOnCode(String c1, String c2, String noteForConnection) throws Exception {
+	public void connectOnCode(String c1, String c2) throws Exception {
 		Chunk curChunk1 = null;
 		Chunk curChunk2 = null;
-		for (int i = 0; i < chunks.size(); i++) {
-			curChunk1 = chunks.get(i);
+		for (int i = 0; i < getChunks().size(); i++) {
+			curChunk1 = getChunks().get(i);
 			if (curChunk1.getCode().equals(c1)) {
-				for (int j = i + 1; j < chunks.size(); j++) {
-					curChunk2 = chunks.get(j);
+				for (int j = i + 1; j < getChunks().size(); j++) {
+					curChunk2 = getChunks().get(j);
 					if (curChunk2.getCode().equals(c2)) {
-						connectToChunk(curChunk1, curChunk2, noteForConnection);
+						connectToChunk(curChunk1, curChunk2);
 					}
 				}
 			}
@@ -118,19 +102,18 @@ public class Connections extends Task {
 	 * Method which connects all chunks with comment equal to c, to chunk.
 	 * @param c1 comment where the connection originates.
 	 * @param c2 comment where the connections is made to.
-	 * @param noteForConnection string along the connection.
 	 * @throws Exception 
 	 */
-	public void connectOnComment(String c1, String c2, String noteForConnection) throws Exception {
+	public void connectOnComment(String c1, String c2) throws Exception {
 		Chunk curChunk1 = null;
 		Chunk curChunk2 = null;
-		for (int i = 0; i < chunks.size(); i++) {
-			curChunk1 = chunks.get(i);
+		for (int i = 0; i < getChunks().size(); i++) {
+			curChunk1 = getChunks().get(i);
 			if (curChunk1.getComment().equals(c1)) {
-				for (int j = i + 1; j < chunks.size(); j++) {
-					curChunk2 = chunks.get(j);
+				for (int j = i + 1; j < getChunks().size(); j++) {
+					curChunk2 = getChunks().get(j);
 					if (curChunk2.getComment().equals(c2)) {
-						connectToChunk(curChunk1, curChunk2, noteForConnection);
+						connectToChunk(curChunk1, curChunk2);
 					}
 				}
 			}
@@ -141,28 +124,24 @@ public class Connections extends Task {
 	 * Method which connects on line numbers.
 	 * @param c1 the line where the connection originates.
 	 * @param c2 the line where the connections is made to.
-	 * @param noteForConnection string along the connection.
 	 * @throws Exception e
 	 */
-	public void connectOnLine(int c1, int c2, String noteForConnection) throws Exception {
-		Chunk curChunk1 = getChunkByLine(c1, chunks);
-		Chunk curChunk2 = getChunkByLine(c2, chunks);
-		connectToChunk(curChunk1, curChunk2, noteForConnection);
+	public void connectOnLine(int c1, int c2) throws Exception {
+		Chunk curChunk1 = getChunkByLine(c1, getChunks());
+		Chunk curChunk2 = getChunkByLine(c2, getChunks());
+		connectToChunk(curChunk1, curChunk2);
 	}
 	
 	/**
-	 * MEthod which connects a chunk to all chunks.
+	 * Method which connects a chunk to all chunks.
 	 * @param chunk which m connections.
 	 * @param whereClause condition to be met.
-	 * @param noteForConnection String associated with the connetion.
 	 * @throws Exception e
 	 */
-	public void connectOnData(Chunk chunk, String whereClause
-			, String noteForConnection) throws Exception {
-		
+	public void connectOnData(Chunk chunk, String whereClause) throws Exception {
 		ArrayList<Integer> list = getLinesFromData(whereClause);
 		for (Integer i : list) {
-			connectToLine(chunk, i, noteForConnection);
+			connectToLine(chunk, i);
 		}
 	}
 	

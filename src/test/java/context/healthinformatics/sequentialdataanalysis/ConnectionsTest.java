@@ -46,10 +46,11 @@ public class ConnectionsTest {
 	 */
 	@Test
 	public void testUpwardConnection() throws Exception {
-		Connections c = new Connections(chunks);
-		c.connectToLine(c3, 1, note);
+		Connections c = new Connections(note);
+		c.setChunks(chunks);
+		c.connectToLine(c3, 1);
 		assertEquals(c1.getPointer().get(c1), null);
-		c.connectToChunk(c3, c2, note);
+		c.connectToChunk(c3, c2);
 		assertEquals(c3.getPointer().get(c2), null);
 	}
 	
@@ -61,8 +62,9 @@ public class ConnectionsTest {
 	 */
 	@Test
 	public void testConnectToLine() throws Exception {
-		Connections c = new Connections(chunks);
-		c.connectToLine(c1, 2, note);
+		Connections c = new Connections(note);
+		c.setChunks(chunks);
+		c.connectToLine(c1, 2);
 		assertEquals(c1.getPointer().get(c3), "test");
 	}
 	
@@ -74,8 +76,9 @@ public class ConnectionsTest {
 	 */
 	@Test
 	public void testConnectToChunk() throws Exception {
-		Connections c = new Connections(chunks);
-		c.connectToChunk(c1, c2, note);
+		Connections c = new Connections(note);
+		c.setChunks(chunks);
+		c.connectToChunk(c1, c2);
 		assertEquals(c1.getPointer().get(c2), "test");
 	}
 	
@@ -85,7 +88,8 @@ public class ConnectionsTest {
 	 */
 	@Test
 	public void testGetChunks() throws Exception {
-		Connections c = new Connections(chunks);
+		Connections c = new Connections(note);
+		c.setChunks(chunks);
 		assertEquals(c.getChunkByLine(1, chunks), c1);
 		assertEquals(c.getChunkByLine(2, chunks), c3);
 	}
@@ -96,7 +100,8 @@ public class ConnectionsTest {
 	 */
 	@Test(expected = Exception.class)
 	public void testGetChunkCodeByLineException() throws Exception {
-		Connections c = new Connections(chunks);
+		Connections c = new Connections(note);
+		c.setChunks(chunks);
 		c.getChunkByLine(-1, chunks);
 	}
 	
@@ -107,8 +112,9 @@ public class ConnectionsTest {
 	 */
 	@Test
 	public void testConnectOnCode() throws Exception {
-		Connections c = new Connections(chunks);
-		c.connectOnCode("CodeA", "CodeB", note);
+		Connections c = new Connections(note);
+		c.setChunks(chunks);
+		c.connectOnCode("CodeA", "CodeB");
 		assertEquals(c1.getPointer().get(c3), "test");
 	}
 	
@@ -119,8 +125,9 @@ public class ConnectionsTest {
 	 */
 	@Test
 	public void testConnectOnLine() throws Exception {
-		Connections c = new Connections(chunks);
-		c.connectOnLine(1, 2, note);
+		Connections c = new Connections(note);
+		c.setChunks(chunks);
+		c.connectOnLine(1, 2);
 		assertEquals(c1.getPointer().get(c3), "test");
 	}
 	
@@ -131,8 +138,9 @@ public class ConnectionsTest {
 	 */
 	@Test
 	public void testConnectOnCmment() throws Exception {
-		Connections c = new Connections(chunks);
-		c.connectOnComment("CommentA", "CommentB", note);
+		Connections c = new Connections(note);
+		c.setChunks(chunks);
+		c.connectOnComment("CommentA", "CommentB");
 		assertEquals(c1.getPointer().get(c2), "test");
 	}
 }

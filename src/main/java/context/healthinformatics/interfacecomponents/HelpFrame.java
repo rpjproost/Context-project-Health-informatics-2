@@ -64,12 +64,22 @@ public class HelpFrame extends InterfaceHelper {
 	public HelpFrame(String titleFrame,
 			ArrayList<HelpFrameInfoContainer> listOfHelpFrameInfo,
 			InputPageComponents inputPageComponents) {
-		this.listOfHelpFrameInfo = listOfHelpFrameInfo;
+		setUpHelpFrame(titleFrame, listOfHelpFrameInfo);
 		this.inputPageComponents = inputPageComponents;
+		setWindowListener();
+	}
+
+	public HelpFrame(String titleFrame, 
+			ArrayList<HelpFrameInfoContainer> listOfHelpFrameInfo) {
+		setUpHelpFrame(titleFrame, listOfHelpFrameInfo);
+	}
+	
+	private void setUpHelpFrame(String titleFrame, 
+			ArrayList<HelpFrameInfoContainer> listOfHelpFrameInfo) {
+		this.listOfHelpFrameInfo = listOfHelpFrameInfo;
 		helpMainFrame = new JFrame(titleFrame);
 		setTextAreaSettings();
 		initMainPanel();
-		setWindowListener();
 		addHyperLinkListener();
 	}
 
@@ -188,6 +198,10 @@ public class HelpFrame extends InterfaceHelper {
 				displayHtmlPane.setCaretPosition(0);
 			}
 		});
+	}
+	
+	public JPanel getJPanel() {
+		return mainPanel;
 	}
 
 	/**

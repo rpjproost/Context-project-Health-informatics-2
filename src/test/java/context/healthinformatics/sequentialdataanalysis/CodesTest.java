@@ -40,7 +40,8 @@ public class CodesTest {
 	 */
 	@Test
 	public void testSetCodeOfLine() throws Exception {
-		Codes codes = new Codes(chunks);
+		Codes codes = new Codes("A");
+		codes.setChunks(chunks);
 		codes.setCodeOfLine(1, "A");
 		assertEquals("A", chunks.get(0).getCode());
 	}
@@ -48,12 +49,11 @@ public class CodesTest {
 	/**
 	 * Test if the exception will be thrown if the line doesn't exists.
 	 * 
-	 * @throws Exception
-	 *             the one that must be thrown.
 	 */
-	@Test(expected = Exception.class)
-	public void testSetCodeOfLineException() throws Exception {
-		Codes codes = new Codes(chunks);
+	@Test
+	public void testSetCodeOfLineException() {
+		Codes codes = new Codes("test");
+		codes.setChunks(chunks);
 		codes.setCodeOfLine(-1, "test");
 	}
 
@@ -67,7 +67,8 @@ public class CodesTest {
 		combi.setChunks(chunks);
 		combined.add(combi);
 
-		Codes codes = new Codes(combined);
+		Codes codes = new Codes("A");
+		codes.setChunks(combined);
 		codes.setCodeOfChunks(0, "A");
 		assertEquals("A", combined.get(0).getCode());
 	}
@@ -77,7 +78,8 @@ public class CodesTest {
 	 */
 	@Test
 	public void testSetCodeOfListOfChunks() {
-		Codes codes = new Codes(chunks);
+		Codes codes = new Codes("test");
+		codes.setChunks(chunks);
 		codes.setCodeOfListOfChunks(chunks, "test");
 		assertEquals("test", chunks.get(0).getCode());
 		assertEquals("test", chunks.get(1).getCode());
@@ -88,8 +90,9 @@ public class CodesTest {
 	 */
 	@Test
 	public void testSetCodeOnComment() {
-		Codes codes = new Codes(chunks);
-		codes.setCodeOnComment("test", "CommentB");
+		Codes codes = new Codes("test");
+		codes.setChunks(chunks);
+		codes.setCodeOnComment("CommentB");
 		assertEquals("", chunks.get(0).getCode());
 		assertEquals("test", chunks.get(1).getCode());
 	}
@@ -99,8 +102,9 @@ public class CodesTest {
 	 */
 	@Test
 	public void testSetCodeOnCode() {
-		Codes codes = new Codes(chunks);
-		codes.setCodeOnCode("new", "old");
+		Codes codes = new Codes("new");
+		codes.setChunks(chunks);
+		codes.setCodeOnCode("old");
 		assertEquals("new", chunks.get(2).getCode());
 	}
 	
@@ -110,7 +114,8 @@ public class CodesTest {
 	 */
 	@Test
 	public void testGetChunkByLine() throws Exception {
-		Codes codes = new Codes(chunks);
+		Codes codes = new Codes("CommentA");
+		codes.setChunks(chunks);
 		assertEquals("CommentA", codes.getChunkByLine(1, chunks).getComment());
 	}
 
@@ -120,7 +125,8 @@ public class CodesTest {
 	@Test(expected = Exception.class)
 	public void testSetCodeOfChunksException() {
 		ArrayList<Chunk> combined = new ArrayList<Chunk>();
-		Codes codes = new Codes(combined);
+		Codes codes = new Codes("test");
+		codes.setChunks(combined);
 		codes.setCodeOfChunks(0, "test");
 	}
 }
