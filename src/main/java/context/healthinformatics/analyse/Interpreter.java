@@ -52,7 +52,7 @@ public class Interpreter {
 				sc.close();
 				throw new Exception(e.getMessage());
 			}
-			strings = checkSplittedLineForUnwantedSpaces(strings, new ArrayList<String>());
+			strings = checkSplittedLineForUnwantedSpaces(strings);
 			Task task = createTask(strings.get(0), parameter);
 			if (task != null) { //task == null if revert / undo was called
 				task.run(buildStringArray(strings));
@@ -62,6 +62,12 @@ public class Interpreter {
 		sc.close();
 	}
 	
+	/**
+	 * method to create the correct task.
+	 * @param k key to check witch task to create.
+	 * @param parameter parameter for the task.
+	 * @return the newly created task.
+	 */
 	private Task createTask(String k, String parameter) {
 		String[] keys = k.split("\\(");
 		String key = keys[0];
@@ -75,7 +81,7 @@ public class Interpreter {
 			return new Codes(parameter);
 		}
 		if (key.equals("commment")) {
-		//	return new Comments(parameter);
+			return new Comments(parameter);
 		}
 		if (key.equals("connect")) {
 			return new Connections();
@@ -98,8 +104,14 @@ public class Interpreter {
 		
 	}
 	
-	private ArrayList<String> checkSplittedLineForUnwantedSpaces(ArrayList<String> splittedLine,
-			ArrayList<String> strings) {
+	/**
+	 * checks the splitted line for empty strings in case of dubble " ".
+	 * @param splittedLine ArrayList of strings with the splitted line.
+	 * @param 
+	 * @return
+	 */
+	private ArrayList<String> checkSplittedLineForUnwantedSpaces(ArrayList<String> splittedLine) {
+		ArrayList<String> strings = new ArrayList<String>();
 		for (String split : splittedLine) {
 			if (split.length() > 0) {
 				strings.add(split);
@@ -116,6 +128,11 @@ public class Interpreter {
 		firstList = list;
 	}
 	
+	/**
+	 * split the line to get the parameter out.
+	 * @param line line to split
+	 * @return the splitted line;
+	 */
 	private String[] splitParameter(String line) {
 		ArrayList<String> strings = new ArrayList<String>();
 		String[] splittedLine = line.split("\\(");
@@ -128,6 +145,11 @@ public class Interpreter {
 		return buildStringArray(strings);
 	}
 	
+	/**
+	 * builds an array from strings from an ArrayList of Strings.
+	 * @param strings arrayList to build from.
+	 * @return the created String array.
+	 */
 	private String[] buildStringArray(ArrayList<String> strings) {
 		String[] ans  = new String[strings.size()];
 		for (int i = 0; i < strings.size(); i++) {
@@ -136,6 +158,11 @@ public class Interpreter {
 		return ans;
 	}
 	
+	/**
+	 * adds all strings from the string array to the list.
+	 * @param array array of strings to add
+	 * @param list list to add the strings to.
+	 */
 	private void addStrings(String[] array, ArrayList<String> list) {
 		for (int i = 0; i < array.length; i++) {
 			list.add(array[i]);
