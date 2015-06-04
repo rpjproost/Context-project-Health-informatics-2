@@ -84,7 +84,7 @@ public class Interpreter {
 			return new Comments(parameter);
 		}
 		if (key.equals("connect")) {
-			return new Connections();
+			return new Connections(parameter);
 		}
 			
 		return null;
