@@ -1,6 +1,5 @@
 package context.healthinformatics.gui;
 
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -42,7 +41,7 @@ public class OutputPage extends InterfaceHelper implements PanelState, Serializa
 	 */
 	@Override
 	public JPanel loadPanel() {
-		JPanel panel = MainFrame.createPanel(Color.decode("#086A87"),
+		JPanel panel = MainFrame.createPanel(MainFrame.OUTPUTTABCOLOR,
 				mf.getScreenWidth(), mf.getStatePanelSize());
 		panel.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
