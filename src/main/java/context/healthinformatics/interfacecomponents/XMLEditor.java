@@ -292,7 +292,6 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	public boolean checkAllXMLDocumentsOnError() {
 		for (int i = 0; i < documentFieldsContainers.size(); i++) {
 			if (documentFieldsContainers.get(i).checkIfHasEmptyFields()) {
-				System.out.println("hoe vaak kom ik hier");
 				JOptionPane
 						.showMessageDialog(
 								null,
