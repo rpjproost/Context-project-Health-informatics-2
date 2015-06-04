@@ -39,27 +39,40 @@ public class Interpreter {
 		Scanner sc = new Scanner(code);
 		
 		while (sc.hasNextLine()) {
-			String[] splittedParameterLine = splitParameter(sc.nextLine());
-			String parameter = null;
 			ArrayList<String> strings = new ArrayList<String>();
-			addStrings(splittedParameterLine[0].split(" "), strings);
-			try {
-				if (splittedParameterLine.length > 1) {
-					addStrings(splittedParameterLine[2].split(" "), strings);
-					parameter = splittedParameterLine[1];
-				}
-			} catch (Exception e) {
-				sc.close();
-				throw new Exception(e.getMessage());
-			}
+			String parameter = splitLine(strings, sc);
 			strings = checkSplittedLineForUnwantedSpaces(strings);
 			Task task = createTask(strings.get(0), parameter);
 			if (task != null) { //task == null if revert / undo was called
 				task.run(buildStringArray(strings));
 				tasks.push(task);
-			} 
+			} else if (strings.get(0).equals("undo") || strings.get(0).equals("revert")) {
+				undo();
+			}
 		}
 		sc.close();
+	}
+	
+	/**
+	 * Method to handle the splitting of the line.
+	 * @param a new list for the splitted strings.
+	 * @return the parameter found.
+	 * @throws Exception 
+	 */
+	private String splitLine(ArrayList<String> strings, Scanner sc) throws Exception {
+		String[] splittedParameterLine = splitParameter(sc.nextLine());
+		String parameter = null;
+		addStrings(splittedParameterLine[0].split(" "), strings);
+		try {
+			if (splittedParameterLine.length > 1) {
+				addStrings(splittedParameterLine[2].split(" "), strings);
+				parameter = splittedParameterLine[1];
+			}
+		} catch (Exception e) {
+			sc.close();
+			throw new Exception(e.getMessage());
+		}
+		return parameter;
 	}
 	
 	/**
@@ -180,6 +193,15 @@ public class Interpreter {
 			ans.add(c.copy());
 		}
 		return ans;
+	}
+	
+	/**
+	 * undo last task.
+	 */
+	private void undo() {
+		if (!tasks.isEmpty()) {
+			tasks.pop().undo();
+		}
 	}
 
 }
