@@ -10,8 +10,11 @@ import javax.swing.ScrollPaneConstants;
 
 import context.healthinformatics.analyse.Interpreter;
 import context.healthinformatics.analyse.SingletonInterpreter;
+import context.healthinformatics.database.Db;
+import context.healthinformatics.database.SingletonDb;
 import context.healthinformatics.gui.InterfaceHelper;
 import context.healthinformatics.gui.MainFrame;
+import context.healthinformatics.parser.Column;
 import context.healthinformatics.sequentialdataanalysis.Chunk;
 
 /**
@@ -22,6 +25,7 @@ public class IntermediateResults extends InterfaceHelper {
 	private static final int HEIGHT_SCROLLPANE = 500;
 	private static final int HUNDRED_PERCENT = 100;
 	private int intermediateResultWidth;
+	private Db database = SingletonDb.getDb();
 
 	private JPanel interMediateResultParentPanel;
 	private JEditorPane displayHtmlPane = new JEditorPane();
@@ -70,6 +74,7 @@ public class IntermediateResults extends InterfaceHelper {
 	private void initScrollPane() {
 		scroll = new JScrollPane(displayHtmlPane);
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+		scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scroll.setPreferredSize(new Dimension(intermediateResultWidth,
 				HEIGHT_SCROLLPANE));
 		scroll.getVerticalScrollBar().setValue(0);
@@ -111,8 +116,20 @@ public class IntermediateResults extends InterfaceHelper {
 		StringBuilder buildString = new StringBuilder();
 		buildString.append("<html><body><h2>Number of chunks: " + chunks.size()
 				+ "</h2><table style='width:100%;'>");
+		buildString.append(buildColumnsHTMLTableRow(database.getColumns()));
 		buildString.append(loopThroughChunks(chunks));
 		buildString.append("</table></body></html>");
+		return buildString.toString();
+	}
+
+	private String buildColumnsHTMLTableRow(ArrayList<Column> columns) {
+		StringBuilder buildString = new StringBuilder();
+		buildString.append("<tr><td><h2>Code:</h2></td><td><h2>Comment:</h2></td>");
+		for (int i = 0; i < columns.size(); i++) {
+			buildString.append("<td><h2>" + columns.get(i).getColumnName()
+					+ ":</h2></td>");
+		}
+		buildString.append("</td>");
 		return buildString.toString();
 	}
 
@@ -144,8 +161,9 @@ public class IntermediateResults extends InterfaceHelper {
 		for (int i = 0; i < chunks.size(); i++) {
 			Chunk currentChunk = chunks.get(i);
 			buildString.append("<tr>");
-			buildString.append("<td>Code: " + currentChunk.getCode() + "</td>");
-			buildString.append("<td>Comment: " + currentChunk.getComment() + "</td>");
+			buildString.append("<td>" + currentChunk.getCode() + "</td>");
+			buildString.append("<td>" + currentChunk.getComment()
+					+ "</td>");
 			ArrayList<String> values = currentChunk.toArray();
 			for (int j = 0; j < values.size(); j++) {
 				buildString.append("<td>" + values.get(j) + "</td>");

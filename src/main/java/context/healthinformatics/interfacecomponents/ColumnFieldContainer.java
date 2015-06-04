@@ -93,7 +93,6 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	public Column getColumn() {
 		Column col = new Column(getColumnIDValue(), getColumnNameValue(),
 				getColumnTypeValue());
-		System.out.println(col.getColumnType());
 		if (hasDateType()) {
 			col.setDateType(getColumnDateTypeValue());
 		}
