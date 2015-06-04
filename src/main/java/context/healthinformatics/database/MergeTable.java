@@ -9,6 +9,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Logger;
 
+import context.healthinformatics.analyse.Interpreter;
+import context.healthinformatics.analyse.SingletonInterpreter;
 import context.healthinformatics.parser.Column;
 import context.healthinformatics.sequentialdataanalysis.Chunk;
 
@@ -36,6 +38,8 @@ public class MergeTable {
 	public void merge(String[] clause) throws SQLException {
 		mergeTables(clause);
 		mergeTablesView();
+		Interpreter interpreter = SingletonInterpreter.getInterpreter();
+		interpreter.setIntialChunks(getChunks());
 	}
 	
 	/**
