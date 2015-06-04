@@ -49,6 +49,7 @@ public class Computations extends Task {
 			}
 			list.add(c);
 		}
+		setResult(list);
 	}
 
 }

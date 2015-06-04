@@ -173,10 +173,7 @@ public class Chunk {
 			res.add(sum + "");
 			return res;
 		} else if (hasChild()) {
-			res.add("Chunk");
-			res.add("code = " + code);
-			res.add("comment = " + comment);
-			res.add("line = " + line);
+			res.add("Chunk contains childs, code = " + code + " comment = " + comment);
 			return res;
 		} else {
 			Db data = SingletonDb.getDb();
