@@ -22,6 +22,7 @@ public class CommentsTest {
 	private Chunk c4;
 	private static final int THREE = 3;
 	private static final int FOUR = 4;
+	private ArrayList<Chunk> chunks;
 
 	/**
 	 * Setup a list of chunks.
@@ -45,6 +46,7 @@ public class CommentsTest {
 		cList2 = new ArrayList<Chunk>();
 		cList2.add(c3);
 		cList2.add(c4);
+		chunks = cList2;
 		c = new Comments("test");
 		c.setChunks(cList2);
 	}
@@ -75,7 +77,7 @@ public class CommentsTest {
 	 */
 	@Test
 	public void testsetCommentOnCode() {
-		c.setCommentOnCode("test", "A");
+		c.setCommentOnCode("A");
 		assertEquals(c4.getComment(), "test");
 	}
 	
@@ -84,7 +86,9 @@ public class CommentsTest {
 	 */
 	@Test
 	public void testsetCommentOnComment() {
-		c.setCommentOnComment("B", "A");
+		Comments c = new Comments("B");
+		c.setChunks(chunks);
+		c.setCommentOnComment("A");
 		assertEquals(c3.getComment(), "B");
 	}
 

@@ -14,6 +14,7 @@ public class Comments extends Task {
 
 	/**
 	 * Constructor for comments without arguments.
+	 * @param c Comment to be set.
 	 */
 	public Comments(String c) {
 		comment = c;
@@ -57,10 +58,9 @@ public class Comments extends Task {
 	
 	/**
 	 * Method which sets the comment for all chunks which have a certain comment.
-	 * @param comment the chunk has to have.
 	 * @param code to be set, if the condition is met.
 	 */
-	public void setCommentOnCode(String comment, String code) {
+	public void setCommentOnCode(String code) {
 		for (Chunk c : getChunks()) {
 			if (c.getCode().equals(code)) {
 				c.setComment(comment);
@@ -71,12 +71,11 @@ public class Comments extends Task {
 	/**
 	 * Method which replaces the comment for all chunks which have a certain comment.
 	 * @param previousComment the chunk has to have.
-	 * @param newComment to be set, if the condition is met.
 	 */
-	public void setCommentOnComment(String newComment, String previousComment) {
+	public void setCommentOnComment(String previousComment) {
 		for (Chunk c : getChunks()) {
 			if (c.getComment().equals(previousComment)) {
-				c.setComment(newComment);
+				c.setComment(comment);
 			}
 		}
 	}
@@ -127,19 +126,18 @@ public class Comments extends Task {
 
 	@Override
 	protected ArrayList<Chunk> constraintOnCode(String code) {
-		// TODO Auto-generated method stub
-		return null;
+		setCommentOnCode(code);
+		return getChunks();
 	}
 
 	@Override
 	protected ArrayList<Chunk> constraintOnEqualsComment(String comment) {
-		// TODO Auto-generated method stub
-		return null;
+		setCommentOnComment(comment);
+		return getChunks();
 	}
 
 	@Override
 	protected ArrayList<Chunk> constraintOnContainsComment(String comment) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 }
