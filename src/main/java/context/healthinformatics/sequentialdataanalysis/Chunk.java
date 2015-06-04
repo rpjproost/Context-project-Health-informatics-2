@@ -220,7 +220,15 @@ public class Chunk {
 		while (rs.next()) {
 			for (int i = 1; i < numColumns; i++) {
 				if (rs.getObject(i + 1) != null) {
-					res.add(rs.getObject(i + 1).toString());
+					String temp = rs.getObject(i + 1).toString();
+					int compare = Integer.MIN_VALUE;
+					String comp = Integer.toString(compare);
+					if (temp.equals(comp)) {
+						res.add("");
+					}
+					else {
+						res.add(temp);	
+					}
 				} else {
 					res.add("");
 				}
