@@ -154,6 +154,6 @@ public class Codes extends Task {
 
 	@Override
 	protected ArrayList<Chunk> constraintOnContainsComment(String comment) {
-		return null;
+		return getChunks();
 	}
 }

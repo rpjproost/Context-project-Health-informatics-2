@@ -3,6 +3,8 @@ package context.healthinformatics.sequentialdataanalysis;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import context.healthinformatics.analyse.SingletonInterpreter;
+
 /**
  * 
  * Class chunk.
@@ -136,6 +138,24 @@ public class Chunk {
 	public String toString() {
 		return "Chunk [code=" + code + ", pointer=" + pointer + ", comment="
 				+ comment + ", chunks=" + chunks + ", line=" + line + "]";
+	}
+
+	/**
+	 * returns a deep copy of the current chunk.
+	 * @return copy of the chunk.
+	 */
+	public Chunk copy() {
+		Chunk c = new Chunk();
+		c.setCode(this.getCode());
+		c.setChunks(SingletonInterpreter.getInterpreter().copyChunks(getChunks()));
+		c.setComment(getComment());
+		c.setLine(c.getLine());
+		Object o = this.getPointer().clone();
+		if (o instanceof HashMap<?, ?> ) {
+			HashMap<Chunk, String> map = (HashMap<Chunk, String>) o;
+			c.setPointer(map);
+		}
+		return c;
 	}
 
 }

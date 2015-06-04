@@ -168,5 +168,18 @@ public class Interpreter {
 			list.add(array[i]);
 		}
 	}
+	
+	/**
+	 * deep coppy a list of chunks.
+	 * @param list list to copy.
+	 * @return the copy.
+	 */
+	public ArrayList<Chunk> copyChunks(ArrayList<Chunk> list) {
+		ArrayList<Chunk> ans = new ArrayList<Chunk>();
+		for(Chunk c : list) {
+			ans.add(c.copy());
+		}
+		return ans;
+	}
 
 }
