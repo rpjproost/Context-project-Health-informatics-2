@@ -244,19 +244,19 @@ public class ExcelParser extends Parser {
 	 * @return the right formatted cell
 	 */
 	private String processCellXLSX(Cell curCell, int c) {
-		if (columns.get(c).getColumnType().equals("Int")) {
+		if (curCell == null) {
+			return "";
+		} else if (columns.get(c).getColumnType().equals("Int")) {
 			return formatInt(curCell);
 		} else if (columns.get(c).getColumnType().equals("DATE")
 				&& !curCell.toString().equals("")) {
 			return new SimpleDateFormat(columns.get(c).getDateType())
 					.format(curCell.getDateCellValue());
 		} else if (columns.get(c).getColumnType().equals("DATE")) {
-			log.info("this cell could not be parsed to a date: '" + "' in column: " + c
-					+ " in file: " + docName);
+			log.info("this cell could not be parsed to a date: '"
+					+ "' in column: " + c + " in file: " + docName);
 			return new SimpleDateFormat(columns.get(c).getDateType())
-			.format(new Date());
-		} else if (curCell == null) {
-			return "";
+					.format(new Date());
 		} else {
 			return curCell.toString();
 		}
@@ -292,7 +292,8 @@ public class ExcelParser extends Parser {
 			date = new SimpleDateFormat(columns.get(c).getDateType())
 					.parse(curCell.toString());
 		} catch (ParseException e) {
-			return new SimpleDateFormat(columns.get(c).getDateType()).format(new Date());
+			return new SimpleDateFormat(columns.get(c).getDateType())
+					.format(new Date());
 		}
 		return new SimpleDateFormat(columns.get(c).getDateType()).format(date);
 	}

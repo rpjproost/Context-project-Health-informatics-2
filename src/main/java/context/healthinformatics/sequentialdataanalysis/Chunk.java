@@ -98,7 +98,9 @@ public class Chunk {
 
 	/**
 	 * Set completely new arraylist.
-	 * @param chunks arraylist of chunks.
+	 * 
+	 * @param chunks
+	 *            arraylist of chunks.
 	 */
 	public void setChunks(ArrayList<Chunk> chunks) {
 		this.chunks = chunks;
@@ -125,9 +127,11 @@ public class Chunk {
 		return true;
 	}
 
-	/** Set id for chunk.
+	/**
+	 * Set id for chunk.
 	 * 
-	 * @param i id for chunk.
+	 * @param i
+	 *            id for chunk.
 	 */
 	public void setLine(int i) {
 		line = i;
@@ -135,6 +139,7 @@ public class Chunk {
 
 	/**
 	 * get Id of this chunk.
+	 * 
 	 * @return id.
 	 */
 	public int getLine() {
@@ -143,13 +148,15 @@ public class Chunk {
 
 	@Override
 	public String toString() {
-		String res = "Chunk [code=" + code + ", pointer=" + pointer + ", comment="
-				+ comment + ", chunks=" + chunks + ", line=" + line + "]";
+		String res = "Chunk [code=" + code + ", pointer=" + pointer
+				+ ", comment=" + comment + ", chunks=" + chunks + ", line="
+				+ line + "]";
 		return res;
 	}
-	
+
 	/**
 	 * Returns array of chunk object.
+	 * 
 	 * @return Arraylist of strings.
 	 */
 	public ArrayList<String> toArray() {
@@ -157,18 +164,17 @@ public class Chunk {
 		if (sum != Integer.MIN_VALUE) {
 			res.add(sum + "");
 			return res;
-		}
-		else if (hasChild()) {
+		} else if (hasChild()) {
 			res.add("Chunk");
 			res.add("code = " + code);
 			res.add("comment = " + comment);
 			res.add("line = " + line);
 			return res;
-		}
-		else {
+		} else {
 			Db data = SingletonDb.getDb();
 			try {
-				this.rs = data.selectResultSet("result", "*", "resultid = " + line);
+				this.rs = data.selectResultSet("result", "*", "resultid = "
+						+ line);
 				ResultSetMetaData rsmd = this.rs.getMetaData();
 				processResultSet(rsmd.getColumnCount(), res);
 				rs.close();
@@ -182,12 +188,14 @@ public class Chunk {
 
 	/**
 	 * returns a deep copy of the current chunk.
+	 * 
 	 * @return copy of the chunk.
 	 */
 	public Chunk copy() {
 		Chunk c = new Chunk();
 		c.setCode(this.getCode());
-		c.setChunks(SingletonInterpreter.getInterpreter().copyChunks(getChunks()));
+		c.setChunks(SingletonInterpreter.getInterpreter().copyChunks(
+				getChunks()));
 		c.setComment(getComment());
 		c.setLine(c.getLine());
 		Object o = this.getPointer().clone();
@@ -207,10 +215,15 @@ public class Chunk {
 	 * @throws SQLException
 	 *             the sql exception of the resultset
 	 */
-	private void processResultSet(int numColumns, ArrayList<String> res) throws SQLException {
+	private void processResultSet(int numColumns, ArrayList<String> res)
+			throws SQLException {
 		while (rs.next()) {
 			for (int i = 1; i < numColumns; i++) {
-				res.add(rs.getObject(i + 1).toString());
+				if (rs.getObject(i + 1) != null) {
+					res.add(rs.getObject(i + 1).toString());
+				} else {
+					res.add("");
+				}
 			}
 		}
 		rs.close();

@@ -132,14 +132,23 @@ public class IntermediateResults extends InterfaceHelper {
 		return buildString.toString();
 	}
 
+	/**
+	 * Build a table row for the chunk values.
+	 * 
+	 * @param chunks
+	 *            the list of chunks
+	 * @return a string of html formatted for a table.
+	 */
 	private String loopThroughChunks(ArrayList<Chunk> chunks) {
 		StringBuilder buildString = new StringBuilder();
 		for (int i = 0; i < chunks.size(); i++) {
 			Chunk currentChunk = chunks.get(i);
-			String[] values = currentChunk.toString().split(" ");
 			buildString.append("<tr>");
-			for (int j = 0; j < values.length; j++) {
-				buildString.append("<td>" + values[j] + "</td>");
+			buildString.append("<td>Code: " + currentChunk.getCode() + "</td>");
+			buildString.append("<td>Comment: " + currentChunk.getComment() + "</td>");
+			ArrayList<String> values = currentChunk.toArray();
+			for (int j = 0; j < values.size(); j++) {
+				buildString.append("<td>" + values.get(j) + "</td>");
 			}
 			buildString.append("</tr>");
 			if (currentChunk.hasChild()) {

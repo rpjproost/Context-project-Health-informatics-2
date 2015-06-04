@@ -273,9 +273,16 @@ public class InputPageComponents implements Serializable, ActionListener {
 		if (e.getSource() == getHelpButton()) {
 			handleHelpButton();
 		}
-		if (e.getSource() == getAnalyseButton()
-				&& ip.getXMLController().getSelectedDocs() != null) {
-			handleAnalyseButton();
+		if (e.getSource() == getAnalyseButton()) {
+			if (ip.getXMLController().getSelectedDocs() != null) {
+				handleAnalyseButton();
+			} else {
+				JOptionPane
+				.showMessageDialog(
+						null,
+						"You have no file selected to analyse!!",
+						"Analyse Error", JOptionPane.WARNING_MESSAGE);
+			}
 		}
 		if (e.getSource() == box) {
 			updateProject();

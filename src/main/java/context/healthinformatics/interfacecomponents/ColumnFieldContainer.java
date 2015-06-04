@@ -305,7 +305,7 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 		if (selectedItem.equals("Date")
 				&& !comboValue.toLowerCase().equals("date")) {
 			addTheDateTypeElement(selectedItem);
-		} else if (selectedItem.equals("Int") || selectedItem.equals("String")
+		} else if ((selectedItem.equals("Int") || selectedItem.equals("String"))
 				&& comboValue.toLowerCase().equals("date")) {
 			removeTheDateTypeElement(selectedItem);
 		}
