@@ -86,7 +86,11 @@ public class Interpreter {
 		String[] keys = k.split("\\(");
 		String key = keys[0];
 		if (key.equals("chunk")) {
-			return new Chunking(parameter);
+			if (parameter != null) {
+				return new Chunking(parameter);
+			} else {
+				return new Chunking();
+			}
 		}
 		if (key.equals("filter")) {
 			return new Constraints();
