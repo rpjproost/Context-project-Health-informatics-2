@@ -1,7 +1,14 @@
 package context.healthinformatics.sequentialdataanalysis;
 
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import context.healthinformatics.analyse.SingletonInterpreter;
+import context.healthinformatics.database.Db;
+import context.healthinformatics.database.SingletonDb;
 
 /**
  * 
@@ -14,6 +21,8 @@ public class Chunk {
 	private String comment;
 	private ArrayList<Chunk> chunks;
 	private int line;
+	private int sum = Integer.MIN_VALUE;
+	private ResultSet rs;
 
 	/**
 	 * 
@@ -86,7 +95,7 @@ public class Chunk {
 	public ArrayList<Chunk> getChunks() {
 		return chunks;
 	}
-	
+
 	/**
 	 * Set completely new arraylist.
 	 * @param chunks arraylist of chunks.
@@ -115,7 +124,7 @@ public class Chunk {
 		}
 		return true;
 	}
-	
+
 	/** Set id for chunk.
 	 * 
 	 * @param i id for chunk.
@@ -123,7 +132,7 @@ public class Chunk {
 	public void setLine(int i) {
 		line = i;
 	}
-	
+
 	/**
 	 * get Id of this chunk.
 	 * @return id.
@@ -134,8 +143,72 @@ public class Chunk {
 
 	@Override
 	public String toString() {
-		return "Chunk [code=" + code + ", pointer=" + pointer + ", comment="
+		String res = "Chunk [code=" + code + ", pointer=" + pointer + ", comment="
 				+ comment + ", chunks=" + chunks + ", line=" + line + "]";
+		if (sum != Integer.MIN_VALUE) {
+			return sum + "";
+		}
+		else if (hasChild()) {
+			return res;
+		}
+		else {
+			Db data = SingletonDb.getDb();
+			try {
+				this.rs = data.selectResultSet("result", "*", "resultid = " + line);
+				ResultSetMetaData rsmd = this.rs.getMetaData();
+				res = processResultSet(rsmd.getColumnCount()).toString();
+				rs.close();
+			} catch (SQLException e) {
+				return res;
+			}
+			return res;
+		}
+	}
+
+	/**
+	 * returns a deep copy of the current chunk.
+	 * @return copy of the chunk.
+	 */
+	public Chunk copy() {
+		Chunk c = new Chunk();
+		c.setCode(this.getCode());
+		c.setChunks(SingletonInterpreter.getInterpreter().copyChunks(getChunks()));
+		c.setComment(getComment());
+		c.setLine(c.getLine());
+		Object o = this.getPointer().clone();
+		if (o instanceof HashMap<?, ?>) {
+			HashMap<Chunk, String> map = (HashMap<Chunk, String>) o;
+			c.setPointer(map);
+		}
+		return c;
+	}
+
+	/**
+	 * Process the result set.
+	 * 
+	 * @param numColumns
+	 *            the number of columns in the resultset
+	 * @return a stringbuffer with the right formatted resultset
+	 * @throws SQLException
+	 *             the sql exception of the resultset
+	 */
+	public StringBuffer processResultSet(int numColumns) throws SQLException {
+		StringBuffer str = new StringBuffer();
+
+		for (int i = 1; i < numColumns; i++) {
+			if (i == numColumns - 1) {
+				str.append(rs.getObject(i + 1));
+			} else {
+				str.append(rs.getObject(i + 1) + " ");
+			}
+		}
+		str.append(System.lineSeparator());
+
+		if (str.length() > 2) {
+			str.setLength(str.length() - 2);
+		}
+		rs.close();
+		return str;
 	}
 
 }

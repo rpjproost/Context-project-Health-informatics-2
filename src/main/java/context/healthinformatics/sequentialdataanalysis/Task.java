@@ -247,5 +247,13 @@ public abstract class Task {
 			constraintOnContainsComment(query[getQueryPart()]);
 		}
 	}
+	/**
+	 * deepcopys the list of chunks.
+	 * @param list list to copy.
+	 * @return returns the copy.
+	 */
+	protected ArrayList<Chunk> copyChunks(ArrayList<Chunk> list) {
+		return SingletonInterpreter.getInterpreter().copyChunks(list);
+	}
 
 }
