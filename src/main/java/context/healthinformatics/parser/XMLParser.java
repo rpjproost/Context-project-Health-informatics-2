@@ -13,6 +13,7 @@ import org.xml.sax.SAXException;
 
 import context.healthinformatics.database.Db;
 import context.healthinformatics.database.SingletonDb;
+import context.healthinformatics.writer.XMLDocument;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -27,11 +28,15 @@ public class XMLParser extends Parser {
 
 	private Document doc;
 	private String docName;
+	private String docType;
 	private String delimiter;
 	private String path;
 	private int startLine;
 	private int sheet;
 	private ArrayList<Column> columns;
+
+	private ArrayList<XMLDocument> documents;
+	private ArrayList<Parser> parsers;
 
 	/**
 	 * Creates a parser for the data in the file.
@@ -42,6 +47,8 @@ public class XMLParser extends Parser {
 	public XMLParser(String fileName) {
 		super(fileName);
 		columns = new ArrayList<Column>();
+		documents = new ArrayList<XMLDocument>();
+		parsers = new ArrayList<Parser>();
 		startLine = 1;
 	}
 
@@ -68,8 +75,7 @@ public class XMLParser extends Parser {
 					clear();
 				}
 			}
-		} catch (ParserConfigurationException | InvalidFormatException
-				| SQLException e) {
+		} catch (ParserConfigurationException | InvalidFormatException e) {
 			throw new FileNotFoundException(e.getMessage());
 		} catch (SAXException e) {
 			throw new FileNotFoundException(
@@ -103,12 +109,9 @@ public class XMLParser extends Parser {
 	 * 
 	 * @param n
 	 *            the document node.
-	 * @throws IOException
 	 * @throws InvalidFormatException
-	 * @throws SQLException
 	 */
-	private void parseDocument(Node n) throws IOException,
-			InvalidFormatException, SQLException {
+	private void parseDocument(Node n) throws InvalidFormatException {
 		Element e = (Element) n;
 		setDocName(e.getAttribute("docname"));
 		setPath(getString(e, "path"));
@@ -117,8 +120,57 @@ public class XMLParser extends Parser {
 		parseColumns(columnList);
 		setDelimiter(getString(e, "delimiter"));
 		setSheet(getInt(e, getString(e, "sheet")));
-		createTableDb();
-		getParser(getString(e, "doctype")).parse();
+		setDocType(getString(e, "doctype"));
+		Parser parser = getParser(getDocType());
+		if (parser != null) {
+			parsers.add(parser);
+			addDocument();
+		}
+	}
+
+	/**
+	 * Creates a database a parse all documents into it.
+	 */
+	public void createDatabase() {
+		try {
+			for (int i = 0; i < parsers.size(); i++) {
+				createTableDb(documents.get(i));
+				parsers.get(i).parse();
+			}
+		} catch (SQLException | IOException e) {
+			System.out.println("One of the parsers failed!"); // TODO exception
+		}
+	}
+	
+	/**
+	 * Creates a database on specific parsers.
+	 * @param indexesForParsers is a list of integers 
+	 * which refers to the correct parser in the list of parsers.
+	 */
+	public void createTables(ArrayList<Integer> indexesForParsers) {
+		ArrayList<XMLDocument> currentData = new ArrayList<XMLDocument>();
+		try {
+			for (int i = 0; i < indexesForParsers.size(); i++) {
+				int index = indexesForParsers.get(i);
+				createTableDb(documents.get(index));
+				parsers.get(index).parse();
+				currentData.add(documents.get(index));
+			}
+			dropOldTables(currentData);
+		} catch (SQLException | IOException e) {
+			System.out.println("One of the parsers failed!"); // TODO exception
+		}
+	}
+
+	/**
+	 * Creates a xml Document object from the data and adds it to a list of all
+	 * of the entire document.
+	 */
+	private void addDocument() {
+		XMLDocument current = new XMLDocument(getDocType(), getDocName(),
+				getDelimiter(), getPath(), getStartLine(), getSheet(),
+				getColumns());
+		documents.add(current);
 	}
 
 	/**
@@ -143,33 +195,74 @@ public class XMLParser extends Parser {
 	 * @return The Parser with all settings.
 	 */
 	protected Parser getParser(String label) {
-		switch (label.toLowerCase()) {
-		case "text":
-			return new TXTParser(getPath(), getStartLine(), getDelimiter(),
-					getColumns(), getDocName());
-		case "excel":
-			return new ExcelParser(getPath(), getStartLine(), getColumns(),
-					getSheet(), getDocName());
-		case "csv":
-			return new TXTParser(getPath(), getStartLine(), ";", getColumns(),
-					getDocName());
-		default:
-			return null;
-		}
+		if (label != null) {
+			switch (label.toLowerCase()) {
+			case "text":
+				return new TXTParser(getPath(), getStartLine(), getDelimiter(),
+						getColumns(), getDocName());
+			case "excel":
+				return new ExcelParser(getPath(), getStartLine(), getColumns(),
+						getSheet(), getDocName());
+			case "csv":
+				return new TXTParser(getPath(), getStartLine(), ";",
+						getColumns(), getDocName());
+			default:
+				return null;
+			}
+		} return null;
 	}
 
 	/**
 	 * creates a table in the database for the file to parse.
-	 * @throws SQLException throws this if the table could not be created.
-	 * This probably is due to the fact that the table already exists.
+	 * @param xmlDocument 
+	 * 
+	 * @throws SQLException
+	 *             throws this if the table could not be created. This probably
+	 *             is due to the fact that the table already exists.
 	 */
-	private void createTableDb() throws SQLException {
+	private void createTableDb(XMLDocument xmlDocument) throws SQLException {
 		Db data = SingletonDb.getDb();
 		try {
-			data.createTable(docName, columns);
+			if (!data.getTables().containsKey(xmlDocument.getDocName())) {
+				data.createTable(xmlDocument.getDocName(), xmlDocument.getColumns());
+			}
 		} catch (SQLException e) {
 			throw new SQLException("The Table could not be created.");
 		}
+	}
+	
+	/**
+	 * Drops older tables that aren't selected anymore.
+	 * @param currentData the data which now is used.
+	 * @throws SQLException will be thrown if it couldn't drop the table.
+	 */
+	private void dropOldTables(ArrayList<XMLDocument> currentData) throws SQLException {
+		Db data = SingletonDb.getDb();
+		ArrayList<String> tables = new ArrayList<String>(data.getTables().keySet());
+		try {
+			for (int i = 0; i < tables.size(); i++) {
+				if (!checkDataOnKeys(currentData, tables.get(i))) {
+					data.dropTable(tables.get(i));
+				}
+			}
+		} catch (SQLException e) {
+			throw new SQLException("Couldn't drop the table.");
+		}
+	}
+
+	/**
+	 * Checks the data on a specific string, if the name of the xml document exists return true.
+	 * @param currentData the data that will be used to check of the string will be in there.
+	 * @param string the one that must be in the data.
+	 * @return boolean if true than exists else false.
+	 */
+	private boolean checkDataOnKeys(ArrayList<XMLDocument> currentData, String string) {
+		for (int i = 0; i < currentData.size(); i++) {
+			if (currentData.get(i).getDocName().equals(string)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -315,6 +408,27 @@ public class XMLParser extends Parser {
 		this.sheet = sheet;
 	}
 
+	/**
+	 * @return the documents
+	 */
+	public ArrayList<XMLDocument> getDocuments() {
+		return documents;
+	}
+
+	/**
+	 * @return the docType
+	 */
+	public String getDocType() {
+		return docType;
+	}
+
+	/**
+	 * @param docType
+	 *            the docType to set
+	 */
+	public void setDocType(String docType) {
+		this.docType = docType;
+	}
 }
 
 /**

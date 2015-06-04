@@ -63,6 +63,7 @@ public class ChunkingOnDataTest {
 	public void testChunkingOnData() throws IOException, SQLException {
 		xmlp = new XMLParser(path + "twoDocs.xml");
 		xmlp.parse();
+		xmlp.createDatabase();
 		final int res = 6;
 		String[] clause = new String[1];
 		clause[0] = "HospitalRecords.Groep = 2";
@@ -89,6 +90,7 @@ public class ChunkingOnDataTest {
 	public void testChunkingWithInterpreter() throws Exception {
 		xmlp = new XMLParser(path + "twoDocs.xml");
 		xmlp.parse();
+		xmlp.createDatabase();
 		final int res = 6;
 		String[] clause = new String[1];
 		clause[0] = "HospitalRecords.Groep = 2";

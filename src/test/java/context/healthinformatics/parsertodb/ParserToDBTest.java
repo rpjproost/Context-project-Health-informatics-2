@@ -61,6 +61,7 @@ public class ParserToDBTest {
 	public void textParsertoDBTest() throws IOException, SQLException {
 		xmlp = new XMLParser(path + "textxml.xml");
 		xmlp.parse();
+		xmlp.createDatabase();
 		String table = "stat";
 		tables.add(table);
 		assertNotNull(getResult(table, "date"));
@@ -81,6 +82,7 @@ public class ParserToDBTest {
 	public void excelParsertoDBXLSXTest() throws IOException, SQLException {
 		xmlp = new XMLParser(path + "excelxml.xml");
 		xmlp.parse();
+		xmlp.createDatabase();
 		String table = "exceltest";
 		tables.add(table);
 		assertNotNull(getResult(table, "date"));
@@ -102,6 +104,7 @@ public class ParserToDBTest {
 	public void excelParsertoDBXLSTest() throws IOException, SQLException {
 		xmlp = new XMLParser(path + "excelxlsxml.xml");
 		xmlp.parse();
+		xmlp.createDatabase();
 		String table = "exceltest";
 		tables.add(table);
 		assertNotNull(getResult(table, "admnr"));
@@ -124,6 +127,7 @@ public class ParserToDBTest {
 	public void csvParsertoDBTest() throws IOException, SQLException {
 		xmlp = new XMLParser(path + "csvxml.xml");
 		xmlp.parse();
+		xmlp.createDatabase();
 		String table = "csvtest";
 		assertNotNull(getResult(table, "num1"));
 		assertNotNull(getResult(table, "num2"));

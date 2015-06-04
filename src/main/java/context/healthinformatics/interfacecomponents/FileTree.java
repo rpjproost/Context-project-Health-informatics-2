@@ -1,14 +1,12 @@
-package context.healthinformatics.gui;
+package context.healthinformatics.interfacecomponents;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.io.Serializable;
-import java.util.ArrayList;
 
-import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -19,6 +17,10 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 
+import context.healthinformatics.gui.InputPage;
+import context.healthinformatics.gui.MainFrame;
+import context.healthinformatics.writer.XMLDocument;
+
 /**
  * Class which represents the FileTree on the InputPage.
  */
@@ -28,15 +30,16 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	
 	private MainFrame mf;
 	private InputPage ip;
+	private JPanel folderPanel;
 	private JTree tree;
+	private JScrollPane treePane;
 	private DefaultMutableTreeNode root;
 	private DefaultTreeModel model;
-	private ArrayList<String> xmlList;
-	private ArrayList<String> selectedFiles;
 	
 	public static final int FOLDERSECTIONHEIGHT = 400;
 	public static final int TREEPANEWIDTH = 700;
 	public static final int TREEPANEHEIGHT = 300;
+	public static final int BUTTONINSETS = 10;
 	public static final int FLAGLENGTH = 13;
 	public static final int EIGHT = 8;
 	
@@ -48,30 +51,32 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	public FileTree(MainFrame m, InputPage p) {
 		mf = m;
 		ip = p;
-		selectedFiles = new ArrayList<String>();
-		xmlList = new ArrayList<String>();
-		initXmlList();
-	}
-	
-	/**
-	 * Method which initialises the XML list.
-	 */
-	public void initXmlList() {
-		for (int i = 0; i < ip.getFolder().size(); i++) {
-			xmlList.add(null);
-		}
+		initTree();
 	}
 
 	/**
 	 * @return The tree folder structure Panel.
 	 */
 	public JPanel loadFolder() {
-		JPanel section3 = MainFrame.createPanel(Color.decode(InputPage.COLOR),
+		folderPanel = MainFrame.createPanel(MainFrame.INPUTTABCOLOR,
 				mf.getScreenWidth(), FOLDERSECTIONHEIGHT);
-		section3.setLayout(new  GridBagLayout());
-		initTree();
-		addTreePane(section3);
-		return section3;
+		folderPanel.setLayout(new  GridBagLayout());
+		loadFileSelectionTitle(folderPanel);
+		addTreePane(folderPanel);
+		return folderPanel;
+	}
+	
+	/**
+	 * Loads a title for the file selection part.
+	 * @param titlePanel where the title for file selection must come.
+	 */
+	public void loadFileSelectionTitle(JPanel titlePanel) {
+		JLabel title = ip.createTitle("File Selection:");
+		GridBagConstraints c = ip.setGrids(0, 0);
+		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS,
+				BUTTONINSETS);
+		c.anchor = GridBagConstraints.LAST_LINE_START;
+		titlePanel.add(title, c);
 	}
 	
 	/**
@@ -95,43 +100,13 @@ public class FileTree implements TreeSelectionListener, Serializable {
 		DefaultMutableTreeNode project = null;
 		DefaultMutableTreeNode file = null;
 		for (int i = 0; i < ip.getFolder().size(); i++) {
-			project = new DefaultMutableTreeNode(ip.getFolder().get(i).get(0) + isXmlSet(i));
+			project = new DefaultMutableTreeNode(ip.getFolder().get(i).get(0));
 			for (int j = 1; j < ip.getFolder().get(i).size(); j++) {
 				String node = ip.getFolder().get(i).get(j);
-				file = new DefaultMutableTreeNode(node + isSelected(node));
+				file = new DefaultMutableTreeNode(node);
 				project.add(file);
 			}
-			DefaultMutableTreeNode xml = new DefaultMutableTreeNode("SET XML FILE");
-			project.add(xml);
 			root.add(project);
-		}
-	}
-	
-	/**
-	 * Method which checks if the SML file for this project is set.
-	 * @param i is the index of the project.
-	 * @return empty String if the XML is not yet set, and return "   [SET]" otherwise.
-	 */
-	private String isXmlSet(int i) {
-		if (getXmlList().get(i) == null) {
-			return "";
-		}
-		else {
-			return "   [SET]";
-		}
-	}
-	
-	/**
-	 * Method which checks if the TreeNode is selected.
-	 * @param node is the current node.
-	 * @return empty String if the Node is not selcted, and return "   [SELECTED]" otherwise.
-	 */
-	private String isSelected(String node) {
-		if (getSelectedFiles().contains(node)) {
-			return "   [SELECTED]";
-		}
-		else {
-			return "";
 		}
 	}
 	
@@ -139,9 +114,9 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	 * @param panel to which the treePane will be added.
 	 */
 	private void addTreePane(JPanel panel) {
-		JScrollPane treePane = new JScrollPane(tree);
+		treePane = new JScrollPane(tree);
         treePane.setPreferredSize(new Dimension(TREEPANEWIDTH, TREEPANEHEIGHT));
-        GridBagConstraints c = ip.setGrids(0, 0);
+        GridBagConstraints c = ip.setGrids(0, 1);
         c.weightx = 1;
         c.insets = new Insets(InputPageComponents.BUTTONINSETS, InputPageComponents.BUTTONINSETS
         		, InputPageComponents.BUTTONINSETS, InputPageComponents.BUTTONINSETS);
@@ -156,78 +131,14 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	public void valueChanged(TreeSelectionEvent e) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree
 				.getLastSelectedPathComponent();
-		if (node != null && node.isLeaf()
-				&& !node.getUserObject().toString().equals("PROJECTS :")) {
+		if (node != null && node.isLeaf() && !node.equals(getRoot())
+				&& !node.getParent().equals(getRoot())) {
 			String selected = node.getUserObject().toString();
-			useSelectedTreeNode(selected, node);
-		}
-	}
-	
-	/**
-	 * Do something with the selected TreeNode.
-	 * @param selected is the string of the selected TreeNode.
-	 * @param node is the selected TreeNode.
-	 */
-	private void useSelectedTreeNode(String selected, DefaultMutableTreeNode node) {
-		if (selected.equals("SET XML FILE")) {
-			addXmlFile(node);
-		} else {
 			selectNode(selected, node);
-		}
-	}
-	
-	/**
-	 * Method which asks the user for an xml file and updates the tree.
-	 * @param node is the selected treeNode.
-	 */
-	public void addXmlFile(DefaultMutableTreeNode node) {
-		askUserForXml(node);
-		model.nodeStructureChanged(node.getParent());
-	}
-	
-	/**
-	 * Method which asks the user.
-	 * @param node is the node that is selected.
-	 */
-	private void askUserForXml(DefaultMutableTreeNode node) {
-		if (ip.openFileChooser() == JFileChooser.APPROVE_OPTION) {
-		    String path = ip.getFileSelecter().getSelectedFile().toString();
-			if (!path.equals("")) {
-				setProjectNodeToSelected(path, node);
-			}
-		}
-		ip.getFileSelecter().setVisible(false);
-	}
-	
-	/**
-	 * Set the selected projectNode to Set.
-	 * @param path is the entered XML file path.
-	 * @param node is the selected TreeNode.
-	 */
-	private void setProjectNodeToSelected(String path, DefaultMutableTreeNode node) {
-		DefaultMutableTreeNode projectNode = (DefaultMutableTreeNode) node
-	    		.getParent();
-		String temp = projectNode.getUserObject().toString();
-		String project = checkProjectNodeString(temp);
-	    int c = ip.findFolderProject(project);
-		if (getXmlList().get(c) == null) {
-			projectNode.setUserObject(projectNode.getUserObject()
-					.toString() + "   [SET]");
-		}
-		getXmlList().set(c, path);
-	}
-	
-	/**
-	 * Check the string of the projectNode.
-	 * @param string is the string of the selected TreeNode.
-	 * @return the string of the projectNode.
-	 */
-	private String checkProjectNodeString(String string) {
-		if (string.length() > EIGHT && string.substring(
-				string.length() - EIGHT).equals("   [SET]")) {
-			return string.substring(0, string.length() - EIGHT);
-		} else {
-			return string;
+		} else if (node != null && !node.equals(getRoot())
+				&& node.getParent().equals(getRoot())) {
+			String selected = node.getUserObject().toString();
+			ip.getInputPageComponent().getComboBox().setSelectedItem(selected);
 		}
 	}
 	
@@ -264,10 +175,13 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	 * @param node is the selected TreeNode.
 	 */
 	private void setNodeToSelected(String selected, DefaultMutableTreeNode node) {
-		getSelectedFiles().add(selected);
-		node.setUserObject(node.getUserObject().toString()
-				+ "   [SELECTED]");
-		model.nodeStructureChanged(node.getParent());
+		XMLDocument doc = ip.getXMLController().getDocumentWithPartofPath(selected);
+		if (doc != null) {
+			ip.getXMLController().selectDocument(doc.getPath());
+			node.setUserObject(node.getUserObject().toString()
+					+ "   [SELECTED]");
+			model.nodeStructureChanged(node.getParent());
+		}
 	}
 	
 	/**
@@ -276,10 +190,13 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	 * @param node is the selected TreeNode.
 	 */
 	private void setNodeToNotSelected(String selected, DefaultMutableTreeNode node) {
-		getSelectedFiles().remove(selected);
-		String s = node.getUserObject().toString();
-		node.setUserObject(s.substring(0, s.length() - FLAGLENGTH));
-		model.nodeStructureChanged(node.getParent());
+		String origin = selected.substring(0, selected.length() - FLAGLENGTH);
+		XMLDocument doc = ip.getXMLController().getDocumentWithPartofPath(origin);
+		if (doc != null) {
+			ip.getXMLController().deselectDocument(doc.getPath());
+			node.setUserObject(origin);
+			model.nodeStructureChanged(node.getParent());
+		}
 	}
 	
 	/**
@@ -292,6 +209,7 @@ public class FileTree implements TreeSelectionListener, Serializable {
 		model.insertNodeInto(newNode,
 				(MutableTreeNode) root.getChildAt(project)
 				, root.getChildAt(project).getChildCount());
+		expandTree();
 	}
 	
 	/**
@@ -300,26 +218,34 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	 */
 	public void addProjectToTree(String project) {
 		DefaultMutableTreeNode node = new DefaultMutableTreeNode(project);
-		DefaultMutableTreeNode xml = new DefaultMutableTreeNode("SET XML FILE");
-		node.add(xml);
 		model.insertNodeInto(node, root, root.getChildCount());
-		xmlList.add(null);
+		expandTree();
+	}
+	
+	/**
+	 * Method which remove the project selected in the combobox from the tree.
+	 */
+	public void reloadProjects() {
+		folderPanel.remove(treePane);
+		initTree();
+		addTreePane(folderPanel);
+		folderPanel.revalidate();
+		expandTree();
+	}
+	
+	/**
+	 * Expand all paths of the tree.
+	 */
+	public void expandTree() {
 		tree.expandRow(0);
-		tree.expandRow(root.getChildCount() + root.getLeafCount() - 1);
-	}
-	
-	/**
-	 * @return Arraylist of slected files.
-	 */
-	public ArrayList<String> getSelectedFiles() {
-		return selectedFiles;
-	}
-	
-	/**
-	 * @return the xmlList.
-	 */
-	public ArrayList<String> getXmlList() {
-		return xmlList;
+		int count = 1;
+		for (int i = 0; i < ip.getFolder().size(); i++) {
+			tree.expandRow(count);
+			count++;
+			for (int j = 1; j < ip.getFolder().get(i).size(); j++) {
+				count++;
+			}
+		}
 	}
 	
 	/**

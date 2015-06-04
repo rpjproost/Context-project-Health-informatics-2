@@ -40,7 +40,7 @@ public class WriterTest {
 		xmlp = new XMLParser(path + "textxml.xml");
 		
 		xmlp.parse();
-
+		xmlp.createDatabase();
 		ResultSet rs = data.selectResultSet("stat", "*", "");
 		WriteToTXT wtxt = new WriteToTXT("test.txt", "src/test/data/writerfiles/");
 		wtxt.writeToFile(rs);

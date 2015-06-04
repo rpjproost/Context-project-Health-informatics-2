@@ -1,13 +1,24 @@
 package context.healthinformatics.gui;
 
-import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import javax.swing.Action;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
+import context.healthinformatics.interfacecomponents.FileTree;
+import context.healthinformatics.interfacecomponents.InputPageComponents;
+import context.healthinformatics.interfacecomponents.XMLEditor;
+import context.healthinformatics.interfacecomponents.XMLEditorController;
+import context.healthinformatics.parser.XMLParser;
+import context.healthinformatics.writer.XMLDocument;
 
 /**
  * Class which represents one of the states for the variabel panel in the
@@ -28,30 +39,96 @@ public class InputPage extends InterfaceHelper implements PanelState,
 
 	public static final int BUTTONFONTSIZE = 15;
 	public static final int THREE = 3;
-	public static final String COLOR = "#81DAF5";
+
+	private static final int SELECTERHEIGHT = 500;
+	private static final int SELECTERWIDTH = 600;
 
 	private XMLEditor xmledit;
+	private XMLEditorController xmlController;
 
 	/**
 	 * Constructor.
 	 * 
 	 * @param m
 	 *            is the mainframe object
-	 * @throws IOException 
 	 */
 	public InputPage(MainFrame m) {
 		mf = m;
 		folder = new ArrayList<ArrayList<String>>();
-		ft = new FileTree(m, this);
-		ipc = new InputPageComponents(m, this);
-		xmledit = new XMLEditor();
+		xmledit = new XMLEditor(this);
+		xmlController = new XMLEditorController();
+		ipc = new InputPageComponents(mf, this);
+		checkOnFiles();
+	}
+
+	/**
+	 * 
+	 */
+	private void checkOnFiles() {
+		File directory = new File("src/main/data/savedXML/");
+		File[] listOfFiles = directory.listFiles();
+		if (listOfFiles.length > 0) {
+			foundFiles(listOfFiles);
+		} else {
+			runClearedProject();
+		}
+	}
+
+	/**
+	 * Founded files will be parsed and will be added to the interface.
+	 * 
+	 * @param listOfFiles
+	 *            list of files that are found by java.
+	 */
+	private void foundFiles(File[] listOfFiles) {
+		for (int i = 0; i < listOfFiles.length; i++) {
+			String project = listOfFiles[i].getName().replace(".xml", "");
+			XMLParser parser = new XMLParser(listOfFiles[i].getPath());
+			try {
+				parser.parse();
+			} catch (IOException e) {
+				JOptionPane.showConfirmDialog(null,
+						"Something went wrong with reading the files.",
+						"Error!", JOptionPane.OK_OPTION);
+				runClearedProject();
+			}
+			runOldProject(project, parser.getDocuments());
+		}
+	}
+
+	/**
+	 * Sets all saved values in all components that are involved.
+	 * 
+	 * @param project
+	 *            the project which should be added.
+	 * @param docsOfFile
+	 *            all files that are belongs to the project.
+	 */
+	private void runOldProject(String project, ArrayList<XMLDocument> docsOfFile) {
+		xmlController.setProject(project);
+		xmlController.setDocumentsInProject(docsOfFile);
+		folder.add(xmlController.breakDownXMLDocumentsIntoNames(docsOfFile));
+		ft = new FileTree(mf, this);
+		ipc.getComboBox().addItem(project);
+		ipc.getComboBox().setSelectedItem(project);
+		xmlController.loadProject(xmledit);
+		ft.expandTree();
+	}
+
+	/**
+	 * Creates a clear project with a standard project default.
+	 */
+	private void runClearedProject() {
+		ft = new FileTree(mf, this);
+		xmlController.setProject("(default)");
+		addComboItem("(default)");
 	}
 
 	/**
 	 * @return Panel of the InputPage state.
 	 */
 	public JPanel loadPanel() {
-		JPanel containerPanel = createPanel(Color.decode(COLOR),
+		JPanel containerPanel = createPanel(MainFrame.INPUTTABCOLOR,
 				mf.getScreenWidth(), mf.getStatePanelSize());
 		leftPanel = createLeftPanel();
 		JPanel rightPanel = createRightPanel();
@@ -66,16 +143,14 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 * @return the left panel
 	 */
 	public JPanel createLeftPanel() {
-		JPanel leftPanel = createPanel(Color.decode(COLOR),
+		JPanel leftPanel = createPanel(MainFrame.INPUTTABCOLOR,
 				mf.getScreenWidth() / 2, mf.getStatePanelSize());
 		leftPanel.add(ipc.loadProjectSelection(), setGrids(0, 0));
-		leftPanel.add(ipc.loadFileSelection(), setGrids(0, 1));
-		leftPanel.add(ft.loadFolder(), setGrids(0, 2));
-		GridBagConstraints c = setGrids(1, 0);
-		c = setGrids(0, THREE);
+		leftPanel.add(ft.loadFolder(), setGrids(0, 1));
+		GridBagConstraints c = setGrids(0, 2);
 		c.weighty = 1;
 		c.anchor = GridBagConstraints.FIRST_LINE_START;
-		leftPanel.add(ipc.loadHelpButtonSection(), c);
+		leftPanel.add(ipc.loadButtonSection(), c);
 		return leftPanel;
 	}
 
@@ -85,7 +160,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 * @return the right panel
 	 */
 	public JPanel createRightPanel() {
-		JPanel rightPanel = createPanel(Color.decode(COLOR),
+		JPanel rightPanel = createPanel(MainFrame.INPUTTABCOLOR,
 				mf.getScreenWidth() / 2, mf.getStatePanelSize());
 		rightPanel.add(xmledit.loadPanel(), setGrids(0, 0));
 
@@ -117,10 +192,8 @@ public class InputPage extends InterfaceHelper implements PanelState,
 			JOptionPane.showMessageDialog(null, "Project name already exists!");
 			return;
 		}
-		if (newProject != null) {
+		if (newProject != null && !newProject.isEmpty()) {
 			addComboItem(newProject);
-		} else {
-			JOptionPane.showMessageDialog(null, "No projects specified");
 		}
 	}
 
@@ -136,6 +209,8 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		list.add(project);
 		folder.add(list);
 		ipc.getComboBox().addItem(project);
+		ipc.getComboBox().setSelectedItem(project);
+		xmlController.setProject(project);
 		ft.addProjectToTree(project);
 	}
 
@@ -144,8 +219,15 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 */
 	public int openFileChooser() {
 		selecter = new JFileChooser();
-		selecter.setDialogType(JFileChooser.SAVE_DIALOG);
-		return selecter.showSaveDialog(leftPanel);
+		selecter.setMultiSelectionEnabled(true);
+		FileNameExtensionFilter filter = new FileNameExtensionFilter(
+				"Only txt, excel and xml", "txt", "csv", "xlsx", "xls", "xml");
+		selecter.setFileFilter(filter);
+		selecter.setPreferredSize(new Dimension(SELECTERWIDTH, SELECTERHEIGHT));
+		selecter.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		Action details = selecter.getActionMap().get("viewTypeDetails");
+		details.actionPerformed(null);
+		return selecter.showOpenDialog(leftPanel);
 	}
 
 	/**
@@ -172,6 +254,13 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	}
 
 	/**
+	 * @return the left panel.
+	 */
+	public JPanel getLeftPanel() {
+		return leftPanel;
+	}
+
+	/**
 	 * @return the InputPageComponents object.
 	 */
 	public InputPageComponents getInputPageComponent() {
@@ -183,6 +272,13 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 */
 	public JFileChooser getFileSelecter() {
 		return selecter;
+	}
+
+	/**
+	 * @return the xml editor controller.
+	 */
+	public XMLEditorController getXMLController() {
+		return xmlController;
 	}
 
 	/**
@@ -200,33 +296,137 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	}
 
 	/**
-	 * @param f
-	 *            a 2D array of projects and files.
+	 * @return the XML editor.
 	 */
-	public void setFolder(ArrayList<ArrayList<String>> f) {
-		folder = f;
+	public XMLEditor getEditor() {
+		return xmledit;
 	}
 
 	/**
 	 * Method which adds a project to the folder and FileTree.
+	 * 
+	 * @param path
+	 *            is the path of the added file.
 	 */
-	public void addFile() {
-		if (folder.size() != 0 && !ipc.getTextArea().getText().equals("")) {
-			String text = ipc.getTextArea().getText();
-			int project = findFolderProject((String) ipc.getComboBox()
-					.getSelectedItem());
-			folder.get(project).add(text);
-			ft.addFileToTree(project, text);
-		} else {
-			JOptionPane.showMessageDialog(null,
-					"No project created yet, or no file specified!");
+	public void addFile(String path) {
+		int project = findFolderProject((String) ipc.getComboBox()
+				.getSelectedItem());
+		if (folder.size() > 0 && project >= 0 && !path.equals("")
+				&& !folder.get(project).contains(path)) {
+			folder.get(project).add(path);
+			ft.addFileToTree(project, path);
+		}
+	}
+
+	/**
+	 * Open files and adds them to the tree.
+	 * 
+	 * @param files
+	 *            all files that should be added.
+	 */
+	public void openFiles(File[] files) {
+		for (int i = 0; i < files.length; i++) {
+			String path = files[i].getPath();
+			XMLDocument currentDoc = makeDocument(path);
+			if (!path.endsWith("xml")) {
+				if (xmlController.getDocument(path) == null) {
+					addDocumentAndShowInEditor(currentDoc);
+					addFile(files[i].getName());
+				} else {
+					JOptionPane.showMessageDialog(null,
+							"No project created yet, or no file specified, "
+									+ "or file already in project!");
+				}
+			} else {
+				addXmlFile(path);
+			}
+		}
+	}
+
+	/**
+	 * Adds a xml file to the file tree and to the editor.
+	 * 
+	 * @param path
+	 *            the source of the xml file.
+	 */
+	private void addXmlFile(String path) {
+		XMLParser parser = new XMLParser(path);
+		try {
+			parser.parse();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		ArrayList<XMLDocument> internDocs = parser.getDocuments();
+		for (int i = 0; i < internDocs.size(); i++) {
+			if (xmlController.getDocument(internDocs.get(i).getPath()) == null) {
+				XMLDocument current = internDocs.get(i);
+				addDocumentAndShowInEditor(current);
+				addFile(xmlController.obtainFileName(current.getPath()));
+			} else {
+				JOptionPane.showMessageDialog(null,
+						"No project created yet, or no file specified, "
+								+ "or file already in project!");
+			}
+		}
+	}
+
+	/**
+	 * Adds the file with a path to all documents.
+	 * 
+	 * @param path
+	 *            the path to a file.
+	 * @return
+	 */
+	private XMLDocument makeDocument(String path) {
+		XMLDocument current = new XMLDocument();
+		current.setPath(path);
+		return current;
+	}
+
+	/**
+	 * Adds document to all documents and show it, if it isn't already loaded.
+	 * 
+	 * @param doc
+	 *            the xml document to be added.
+	 */
+	private void addDocumentAndShowInEditor(XMLDocument doc) {
+		xmlController.addDocument(doc);
+		xmledit.addXMLDocumentToContainerScrollPanel(doc);
+	}
+
+	/**
+	 * Removes a project from all devices.
+	 * 
+	 * @param project
+	 *            the project that must be removed.
+	 */
+	public void removeProject(String project) {
+		int index = findFolderProject(project);
+		if (index != -1) {
+			folder.remove(index);
+			ft.reloadProjects();
+			xmlController.removeProject(project);
 		}
 	}
 
 	/**
 	 * Load the database.
 	 */
-	protected void loadDatabase() {
-		
+	public void loadDatabase() {
+		ArrayList<XMLDocument> xmlDocuments = xmledit.getAllXMLDocuments();
+		xmlController.setDocumentsInProject(xmlDocuments);
+		xmlController.save();
+		XMLParser parser = new XMLParser(xmlController.getFileLocation());
+		try {
+			parser.parse();
+			ArrayList<Integer> indexesOfSelectedFiles = xmlController
+					.getIndexesOfSelectedFiles(parser.getDocuments());
+			parser.createTables(indexesOfSelectedFiles);
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null,
+					"Something went wrong, please check all fields!");
+		}
+		xmlController.updateDocuments(this, xmlDocuments);
 	}
+
 }

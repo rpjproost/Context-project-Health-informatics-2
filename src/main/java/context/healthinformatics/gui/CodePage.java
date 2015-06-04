@@ -1,6 +1,5 @@
 package context.healthinformatics.gui;
 
-import java.awt.Color;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,7 +35,7 @@ public class CodePage extends InterfaceHelper implements PanelState, Serializabl
 
 	@Override
 	public JPanel loadPanel() {
-		JPanel panel = MainFrame.createPanel(Color.decode("#01A9DB"),
+		JPanel panel = MainFrame.createPanel(MainFrame.CODETABCOLOR,
 				mf.getScreenWidth(), mf.getStatePanelSize());
 		panel.setLayout(new GridBagLayout());
 		code = createTextField(mf.getScreenWidth() / 2, 
