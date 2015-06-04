@@ -311,4 +311,18 @@ public class InterfaceHelper extends JPanel {
 		panel.setLayout(new GridBagLayout());
 		return panel;
 	}
+
+	/**
+	 * Create a panel with GridBagLayout and a color.
+	 * 
+	 * @param color
+	 *            the color of the background
+	 * @return the panel
+	 */
+	public JPanel createEmptyWithGridBagLayoutPanel(Color color) {
+		JPanel panel = new JPanel();
+		panel.setLayout(new GridBagLayout());
+		panel.setBackground(color);
+		return panel;
+	}
 }
