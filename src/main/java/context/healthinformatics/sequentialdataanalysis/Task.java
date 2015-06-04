@@ -49,7 +49,8 @@ public abstract class Task {
 			runComment(query);
 		}
 		else {
-			throw new Exception("query input is wrong at: " + query[getQueryPart()]);
+			throw new Exception("query input is wrong at: " + query[getQueryPart()]
+					+ "Expected: (data/comment/code");
 		}
 	}
 

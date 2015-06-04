@@ -80,7 +80,7 @@ public class Interpreter {
 		if (key.equals("code")) {
 			return new Codes(parameter);
 		}
-		if (key.equals("commment")) {
+		if (key.equals("comment")) {
 			return new Comments(parameter);
 		}
 		if (key.equals("connect")) {
