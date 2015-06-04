@@ -1,5 +1,7 @@
 package context.healthinformatics.gui;
 
+import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -10,10 +12,12 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.border.Border;
 
 import context.healthinformatics.analyse.Interpreter;
 import context.healthinformatics.analyse.SingletonInterpreter;
@@ -36,7 +40,7 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	private static final int FIELDCORRECTION = 130;
 	private static final int ANALYZEBUTTONWIDTH = 220;
 	private static final int ANALYZEBUTTONHEIGHT = 80;
-	private static final int INSETS = 10;
+	public static final int INSETS = 10;
 	private static final int THREE = 3;
 	private static final int FOUR = 4;
 	private MainFrame mf;
@@ -48,6 +52,8 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	private JButton analyseButton;
 	private JButton goBackButton;
 	private IntermediateResults imr;
+	private JTextArea oldCodeArea;
+	private JButton goToOutputPageButton;
 
 	/**
 	 * Constructor.
@@ -67,7 +73,7 @@ public class CodePage extends InterfaceHelper implements PanelState,
 		codePageParentpanel = createPanel(MainFrame.CODETABCOLOR,
 				mf.getScreenWidth(), mf.getStatePanelSize());
 		codePageParentpanel.setLayout(new GridBagLayout());
-
+		leftPanel.setPreferredSize(new Dimension(mf.getScreenWidth() / 2, mf.getStatePanelSize()));
 		setLeftPanelWithCodeField();
 		setRightPanelWithIntermediateResult();
 
@@ -205,9 +211,58 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	 * Sets the right side of the interface with specific panels.
 	 */
 	private void setRightPanelWithIntermediateResult() {
+		setOldCodeAreaTitle();
+		setOldCodeArea();
 		imr = new IntermediateResults(mf);
-		rightPanel.add(imr.loadPanel(), setGrids(0, 0));
+		rightPanel.add(imr.loadPanel(), setGrids(0, 2));
 		codePageParentpanel.add(rightPanel, setGrids(1, 0));
+		setGoToOutputPageButton();
+	}
+
+	/**
+	 * Sets a title for the used code to analyze the data.
+	 */
+	private void setOldCodeAreaTitle() {
+		JLabel oldCodeTitle = createTitle("Used Code:");
+		GridBagConstraints c = setGrids(0, 0);
+		c.anchor = GridBagConstraints.LINE_START;
+		c.insets = new Insets(0, INSETS, 0, 0);
+		rightPanel.add(oldCodeTitle, c);
+	}
+
+	/**
+	 * Sets a area to shown whoch codes the users used.
+	 */
+	private void setOldCodeArea() {
+		int panelWidth = mf.getScreenWidth() / 2 - 2 * INSETS;
+		int panelHeight = mf.getStatePanelSize() / 2 - FIELDCORRECTION;
+		JPanel oldCodePanel = createPanel(Color.WHITE, panelWidth, panelHeight);
+		oldCodeArea = createTextField(panelWidth - INSETS, panelHeight - INSETS);
+		oldCodeArea.setEditable(false);
+		Border border = BorderFactory.createLineBorder(Color.GRAY, 1);
+		oldCodeArea.setBorder(border);
+		oldCodePanel.add(oldCodeArea);
+		GridBagConstraints c = setGrids(0, 1);
+		c.insets = new Insets(0, INSETS, INSETS, INSETS);
+		rightPanel.add(oldCodePanel, c);
+	}
+	
+	/**
+	 * Sets the button for go to output page.
+	 */
+	private void setGoToOutputPageButton() {
+		JPanel buttonArea = createPanel(MainFrame.CODETABCOLOR, 
+				mf.getScreenWidth() / 2, FIELDCORRECTION);
+		JPanel emptyPanel = createPanel(MainFrame.CODETABCOLOR, 
+				mf.getScreenWidth() / 2 - ANALYZEBUTTONWIDTH - 2 * INSETS, FIELDCORRECTION);
+		buttonArea.add(emptyPanel, setGrids(0, 0));
+		goToOutputPageButton = createButton("Go To Output", ANALYZEBUTTONWIDTH,
+				ANALYZEBUTTONHEIGHT);
+		goToOutputPageButton.addActionListener(new ActionHandler());
+		GridBagConstraints c = setGrids(1, 0);
+		c.insets = new Insets(INSETS, 0, INSETS, INSETS);
+		buttonArea.add(goToOutputPageButton, c);
+		rightPanel.add(buttonArea, setGrids(0, FOUR));
 	}
 
 	/**
@@ -226,6 +281,7 @@ public class CodePage extends InterfaceHelper implements PanelState,
 					interpreter.interpret(code);
 					imr.updateIntermediateResult();
 					codeTextArea.setText("");
+					oldCodeArea.setText(oldCodeArea.getText() + code);
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -234,9 +290,6 @@ public class CodePage extends InterfaceHelper implements PanelState,
 			if (e.getSource() == goBackButton) {
 				System.out.println("go back");
 			}
-			// String text = code.getText();
-			// Interpreter interp = new Interpreter();
-			// interp.interpret(text);
 		}
 	}
 }
