@@ -56,9 +56,19 @@ Examples
 Intermediate Result
 <html>
 	<body>
-	<h2>What is the intermediate result text field</h2>
+	<h2>What is the intermediate result textfield</h2>
 	<p>
 		After filling in queries in the code area and the user presses the ANALYSE button, the intermediate result area shows the data after the the queries have been excecuted on the current data set. Before the first query this area will contain all data available after the file selection in the InputPage tab. After every time the ANALYSE button is pressed, the  intermediate data field will contain the resulting data after the queries.
+	</p>
+	</body>
+</html>
+%%
+Used Code
+<html>
+	<body>
+	<h2>What is the used code textfield</h2>
+	<p>
+		All previously excecuted queries will be displayed in the used code textarea. This way you can easily keep track of what you have done and what the state of the data is.
 	</p>
 	</body>
 </html>
