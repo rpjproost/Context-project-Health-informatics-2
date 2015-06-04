@@ -100,6 +100,7 @@ public class ChunkingOnDataTest {
 		i.setIntialChunks(chunks);
 		i.interpret("chunk data where groep = 2");
 		ArrayList<Chunk> c = i.getChunks();
+		
 		assertTrue(c.size() == res);
 
 		
