@@ -39,33 +39,47 @@ public class Interpreter {
 		Scanner sc = new Scanner(code);
 		
 		while (sc.hasNextLine()) {
-			String[] splittedLine = sc.nextLine().toLowerCase().split(" ");
-			splittedLine = checkSplittedLineForUnwantedSpaces(splittedLine);
-			Task task = createTask(splittedLine[0]);
+			String[] splittedParameterLine = splitParameter(sc.nextLine());
+			String parameter = null;
+			ArrayList<String> strings = new ArrayList<String>();
+			addStrings(splittedParameterLine[0].split(" "), strings);
+			try {
+				if (splittedParameterLine.length > 1) {
+					addStrings(splittedParameterLine[2].split(" "), strings);
+					parameter = splittedParameterLine[1];
+				}
+			} catch (Exception e) {
+				sc.close();
+				throw new Exception(e.getMessage());
+			}
+			strings = checkSplittedLineForUnwantedSpaces(strings, new ArrayList<String>());
+			Task task = createTask(strings.get(0), parameter);
 			if (task != null) { //task == null if revert / undo was called
-				task.run(splittedLine);
+				task.run(buildStringArray(strings));
 				tasks.push(task);
 			} 
 		}
 		sc.close();
 	}
 	
-	private Task createTask(String key) {
+	private Task createTask(String k, String parameter) {
+		String[] keys = k.split("\\(");
+		String key = keys[0];
 		if (key.equals("chunk")) {
 			return new Chunking();
 		}
 		if (key.equals("filter")) {
 			return new Constraints();
 		}
-//		if (key.equals("code")) {
-//			return new Codes();
-//		}
-//		if (key.equals("commment")) {
-//			return new Comments();
-//		}
-//		if (key.equals("connect")) {
-//			return new Connections();
-//		}
+		if (key.equals("code")) {
+			return new Codes(parameter);
+		}
+		if (key.equals("commment")) {
+			return new Comments(parameter);
+		}
+		if (key.equals("connect")) {
+			return new Connections();
+		}
 			
 		return null;
 	}
@@ -84,18 +98,14 @@ public class Interpreter {
 		
 	}
 	
-	private String[] checkSplittedLineForUnwantedSpaces(String[] splittedLine) {
-		ArrayList<String> strings = new ArrayList<String>();
-		for (int i = 0; i < splittedLine.length; i++) {
-			if (splittedLine[i].length() > 0) {
-				strings.add(splittedLine[i]);
+	private ArrayList<String> checkSplittedLineForUnwantedSpaces(ArrayList<String> splittedLine,
+			ArrayList<String> strings) {
+		for (String split : splittedLine) {
+			if (split.length() > 0) {
+				strings.add(split);
 			}
 		}
-		String[] ans  = new String[strings.size()];
-		for (int i = 0; i < strings.size(); i++) {
-			ans[i] = strings.get(i);
-		}
-		return ans;
+		return strings;
 	}
 	
 	/**
@@ -104,6 +114,32 @@ public class Interpreter {
 	 */
 	public void setIntialChunks(ArrayList<Chunk> list) {
 		firstList = list;
+	}
+	
+	private String[] splitParameter(String line) {
+		ArrayList<String> strings = new ArrayList<String>();
+		String[] splittedLine = line.split("\\(");
+		strings.add(splittedLine[0]);
+		if (splittedLine.length > 1) { // if this line has a parameter:
+			String[] nextPart = splittedLine[1].split("\\)");
+			strings.add(nextPart[0]); //add parameter.
+			strings.add(nextPart[1]); //add rest of line.
+		}
+		return buildStringArray(strings);
+	}
+	
+	private String[] buildStringArray(ArrayList<String> strings) {
+		String[] ans  = new String[strings.size()];
+		for (int i = 0; i < strings.size(); i++) {
+			ans[i] = strings.get(i);
+		}
+		return ans;
+	}
+	
+	private void addStrings(String[] array, ArrayList<String> list) {
+		for (int i = 0; i < array.length; i++) {
+			list.add(array[i]);
+		}
 	}
 
 }
