@@ -21,7 +21,7 @@ public class Chunk {
 	private String comment;
 	private ArrayList<Chunk> chunks;
 	private int line;
-	private int sum = Integer.MIN_VALUE;
+	private int sum;
 	private ResultSet rs;
 
 	/**
@@ -32,6 +32,7 @@ public class Chunk {
 		pointer = new HashMap<Chunk, String>();
 		comment = "";
 		code = "";
+		sum = Integer.MIN_VALUE;
 	}
 
 	/**
@@ -107,6 +108,14 @@ public class Chunk {
 	}
 
 	/**
+	 * setter for sum.
+	 * @param i sum to set.
+	 */
+	public void setSum(int i) {
+		sum = i;
+	}
+
+	/**
 	 * Set childs of this chunk.
 	 * 
 	 * @param c
@@ -165,11 +174,9 @@ public class Chunk {
 			res.add(sum + "");
 			return res;
 		} else if (hasChild()) {
-			res.add("Chunk");
-			res.add("code = " + code);
-			res.add("comment = " + comment);
-			res.add("line = " + line);
-			return res;
+				res.add("Chunk contains childs, code = " + code + " comment = " + comment);
+				return res;
+
 		} else {
 			Db data = SingletonDb.getDb();
 			try {
@@ -220,7 +227,15 @@ public class Chunk {
 		while (rs.next()) {
 			for (int i = 1; i < numColumns; i++) {
 				if (rs.getObject(i + 1) != null) {
-					res.add(rs.getObject(i + 1).toString());
+					String temp = rs.getObject(i + 1).toString();
+					int compare = Integer.MIN_VALUE;
+					String comp = Integer.toString(compare);
+					if (temp.equals(comp)) {
+						res.add("");
+					}
+					else {
+						res.add(temp);	
+					}
 				} else {
 					res.add("");
 				}

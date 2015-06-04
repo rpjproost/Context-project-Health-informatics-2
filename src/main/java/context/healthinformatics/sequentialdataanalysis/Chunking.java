@@ -10,12 +10,18 @@ import java.util.ArrayList;
 public class Chunking extends Task {
 
 	private Chunk temp;
-
+	private String code = "";
 	/**
 	 * Constructor for chunking.
 	 */
-	public Chunking() {
-		
+	public Chunking() {	}
+	
+	/**
+	 * Chunking with parameter.
+	 * @param parameter code for new chunks.
+	 */
+	public Chunking(String parameter) {
+		code = parameter;
 	}
 	
 	/**
@@ -170,6 +176,7 @@ public class Chunking extends Task {
 	private void addChunkToRes(ArrayList<Chunk> res, Chunk curChunk) {
 		if (temp.hasChild()) {
 			res.add(temp);
+			temp.setCode(code);
 			res.add(curChunk);
 		}
 		else {

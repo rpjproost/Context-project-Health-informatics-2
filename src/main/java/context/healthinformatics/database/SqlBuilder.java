@@ -215,7 +215,7 @@ public final class SqlBuilder {
 		try {
 			value = Double.parseDouble(values[i]);
 		} catch (Exception e) {
-			throw new SQLException(e);
+			value = Integer.MIN_VALUE;
 		}
 		p.setDouble(i + 1, value);
 	}

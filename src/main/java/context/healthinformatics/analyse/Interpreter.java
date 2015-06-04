@@ -9,6 +9,7 @@ import context.healthinformatics.sequentialdataanalysis.Chunk;
 import context.healthinformatics.sequentialdataanalysis.Chunking;
 import context.healthinformatics.sequentialdataanalysis.Codes;
 import context.healthinformatics.sequentialdataanalysis.Comments;
+import context.healthinformatics.sequentialdataanalysis.Computations;
 import context.healthinformatics.sequentialdataanalysis.Connections;
 import context.healthinformatics.sequentialdataanalysis.Constraints;
 import context.healthinformatics.sequentialdataanalysis.Task;
@@ -39,27 +40,40 @@ public class Interpreter {
 		Scanner sc = new Scanner(code);
 		
 		while (sc.hasNextLine()) {
-			String[] splittedParameterLine = splitParameter(sc.nextLine());
-			String parameter = null;
 			ArrayList<String> strings = new ArrayList<String>();
-			addStrings(splittedParameterLine[0].split(" "), strings);
-			try {
-				if (splittedParameterLine.length > 1) {
-					addStrings(splittedParameterLine[2].split(" "), strings);
-					parameter = splittedParameterLine[1];
-				}
-			} catch (Exception e) {
-				sc.close();
-				throw new Exception(e.getMessage());
-			}
+			String parameter = splitLine(strings, sc);
 			strings = checkSplittedLineForUnwantedSpaces(strings);
 			Task task = createTask(strings.get(0), parameter);
 			if (task != null) { //task == null if revert / undo was called
 				task.run(buildStringArray(strings));
 				tasks.push(task);
-			} 
+			} else if (strings.get(0).equals("undo") || strings.get(0).equals("revert")) {
+				undo();
+			}
 		}
 		sc.close();
+	}
+	
+	/**
+	 * Method to handle the splitting of the line.
+	 * @param a new list for the splitted strings.
+	 * @return the parameter found.
+	 * @throws Exception 
+	 */
+	private String splitLine(ArrayList<String> strings, Scanner sc) throws Exception {
+		String[] splittedParameterLine = splitParameter(sc.nextLine());
+		String parameter = null;
+		addStrings(splittedParameterLine[0].split(" "), strings);
+		try {
+			if (splittedParameterLine.length > 1) {
+				addStrings(splittedParameterLine[2].split(" "), strings);
+				parameter = splittedParameterLine[1];
+			}
+		} catch (Exception e) {
+			sc.close();
+			throw new Exception(e.getMessage());
+		}
+		return parameter;
 	}
 	
 	/**
@@ -72,7 +86,11 @@ public class Interpreter {
 		String[] keys = k.split("\\(");
 		String key = keys[0];
 		if (key.equals("chunk")) {
-			return new Chunking();
+			if (parameter != null) {
+				return new Chunking(parameter);
+			} else {
+				return new Chunking();
+			}
 		}
 		if (key.equals("filter")) {
 			return new Constraints();
@@ -86,6 +104,10 @@ public class Interpreter {
 		if (key.equals("connect")) {
 			return new Connections(parameter);
 		}
+		if (key.equals("compute")) {
+			return new Computations();
+		}
+			
 			
 		return null;
 	}
@@ -135,13 +157,15 @@ public class Interpreter {
 	 */
 	private String[] splitParameter(String line) {
 		ArrayList<String> strings = new ArrayList<String>();
-		String[] splittedLine = line.split("\\(");
-		strings.add(splittedLine[0]);
-		if (splittedLine.length > 1) { // if this line has a parameter:
-			String[] nextPart = splittedLine[1].split("\\)");
-			strings.add(nextPart[0]); //add parameter.
-			strings.add(nextPart[1]); //add rest of line.
+		int fp = findChar(line, "(");
+		int sp = findChar(line, ")");
+		if (fp == -1) { //geen haakjes
+			strings.add(line);
+			return buildStringArray(strings);
 		}
+		strings.add(line.substring(0, fp));
+		strings.add(line.substring(fp + 1, sp));
+		strings.add(line.substring(sp + 1, line.length()));
 		return buildStringArray(strings);
 	}
 	
@@ -180,6 +204,24 @@ public class Interpreter {
 			ans.add(c.copy());
 		}
 		return ans;
+	}
+	
+	/**
+	 * undo last task.
+	 */
+	private void undo() {
+		if (!tasks.isEmpty()) {
+			tasks.pop().undo();
+		}
+	}
+	
+	private int findChar(String string, String cha) {
+		for (int i = 0; i < string.length(); i++) {
+			if (string.charAt(i) == cha.charAt(0)) {
+				return i;
+			}
+		}
+		return -1;
 	}
 
 }

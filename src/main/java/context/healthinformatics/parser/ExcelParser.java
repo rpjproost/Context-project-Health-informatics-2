@@ -244,9 +244,7 @@ public class ExcelParser extends Parser {
 	 * @return the right formatted cell
 	 */
 	private String processCellXLSX(Cell curCell, int c) {
-		if (curCell == null) {
-			return "";
-		} else if (columns.get(c).getColumnType().equals("Int")) {
+		if (columns.get(c).getColumnType().equals("Int")) {
 			return formatInt(curCell);
 		} else if (columns.get(c).getColumnType().equals("DATE")
 				&& !curCell.toString().equals("")) {
@@ -270,10 +268,12 @@ public class ExcelParser extends Parser {
 	 * @return if not a double then -1 else the cell
 	 */
 	private String formatInt(Cell curCell) {
-		if (isDouble(curCell.toString())) {
+		if (curCell == null) {
+			return "NULL";
+		} else if (isDouble(curCell.toString())) {
 			return curCell.toString();
 		} else {
-			return "-1";
+			return "NULL";
 		}
 	}
 
