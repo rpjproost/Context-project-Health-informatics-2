@@ -271,7 +271,7 @@ public class ExcelParser extends Parser {
 		if (isDouble(curCell.toString())) {
 			return curCell.toString();
 		} else {
-			return "null";
+			return "NULL";
 		}
 	}
 
