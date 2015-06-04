@@ -58,7 +58,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		xmledit = new XMLEditor(this);
 		xmlController = new XMLEditorController();
 		ipc = new InputPageComponents(mf, this);
-		checkOnFiles();	
+		checkOnFiles();
 	}
 
 	/**
@@ -73,10 +73,12 @@ public class InputPage extends InterfaceHelper implements PanelState,
 			runClearedProject();
 		}
 	}
-	
+
 	/**
 	 * Founded files will be parsed and will be added to the interface.
-	 * @param listOfFiles list of files that are found by java.
+	 * 
+	 * @param listOfFiles
+	 *            list of files that are found by java.
 	 */
 	private void foundFiles(File[] listOfFiles) {
 		for (int i = 0; i < listOfFiles.length; i++) {
@@ -85,8 +87,8 @@ public class InputPage extends InterfaceHelper implements PanelState,
 			try {
 				parser.parse();
 			} catch (IOException e) {
-				JOptionPane.showConfirmDialog(null, 
-						"Something went wrong with reading the files.", 
+				JOptionPane.showConfirmDialog(null,
+						"Something went wrong with reading the files.",
 						"Error!", JOptionPane.OK_OPTION);
 				runClearedProject();
 			}
@@ -96,8 +98,11 @@ public class InputPage extends InterfaceHelper implements PanelState,
 
 	/**
 	 * Sets all saved values in all components that are involved.
-	 * @param project the project which should be added.
-	 * @param docsOfFile all files that are belongs to the project.
+	 * 
+	 * @param project
+	 *            the project which should be added.
+	 * @param docsOfFile
+	 *            all files that are belongs to the project.
 	 */
 	private void runOldProject(String project, ArrayList<XMLDocument> docsOfFile) {
 		xmlController.setProject(project);
@@ -215,8 +220,8 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	public int openFileChooser() {
 		selecter = new JFileChooser();
 		selecter.setMultiSelectionEnabled(true);
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("Only txt, excel and xml"
-				, "txt", "csv", "xlsx", "xls", "xml");
+		FileNameExtensionFilter filter = new FileNameExtensionFilter(
+				"Only txt, excel and xml", "txt", "csv", "xlsx", "xls", "xml");
 		selecter.setFileFilter(filter);
 		selecter.setPreferredSize(new Dimension(SELECTERWIDTH, SELECTERHEIGHT));
 		selecter.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -247,7 +252,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	public FileTree getFileTree() {
 		return ft;
 	}
-	
+
 	/**
 	 * @return the left panel.
 	 */
@@ -268,7 +273,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	public JFileChooser getFileSelecter() {
 		return selecter;
 	}
-	
+
 	/**
 	 * @return the xml editor controller.
 	 */
@@ -289,7 +294,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	public JFileChooser getSelecter() {
 		return selecter;
 	}
-	
+
 	/**
 	 * @return the XML editor.
 	 */
@@ -299,7 +304,9 @@ public class InputPage extends InterfaceHelper implements PanelState,
 
 	/**
 	 * Method which adds a project to the folder and FileTree.
-	 * @param path is the path of the added file.
+	 * 
+	 * @param path
+	 *            is the path of the added file.
 	 */
 	public void addFile(String path) {
 		int project = findFolderProject((String) ipc.getComboBox()
@@ -308,15 +315,14 @@ public class InputPage extends InterfaceHelper implements PanelState,
 				&& !folder.get(project).contains(path)) {
 			folder.get(project).add(path);
 			ft.addFileToTree(project, path);
-		} else {
-			JOptionPane.showMessageDialog(null,
-					"No project created yet, or no file specified, or file already in project!");
 		}
 	}
-	
+
 	/**
 	 * Open files and adds them to the tree.
-	 * @param files all files that should be added.
+	 * 
+	 * @param files
+	 *            all files that should be added.
 	 */
 	public void openFiles(File[] files) {
 		for (int i = 0; i < files.length; i++) {
@@ -326,16 +332,22 @@ public class InputPage extends InterfaceHelper implements PanelState,
 				if (xmlController.getDocument(path) == null) {
 					addDocumentAndShowInEditor(currentDoc);
 					addFile(files[i].getName());
+				} else {
+					JOptionPane.showMessageDialog(null,
+							"No project created yet, or no file specified, "
+									+ "or file already in project!");
 				}
 			} else {
 				addXmlFile(path);
 			}
 		}
 	}
-	
+
 	/**
 	 * Adds a xml file to the file tree and to the editor.
-	 * @param path the source of the xml file.
+	 * 
+	 * @param path
+	 *            the source of the xml file.
 	 */
 	private void addXmlFile(String path) {
 		XMLParser parser = new XMLParser(path);
@@ -346,36 +358,47 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		}
 		ArrayList<XMLDocument> internDocs = parser.getDocuments();
 		for (int i = 0; i < internDocs.size(); i++) {
-			XMLDocument current = internDocs.get(i);
-			addDocumentAndShowInEditor(current);
-			addFile(xmlController.obtainFileName(current.getPath()));
+			if (xmlController.getDocument(internDocs.get(i).getPath()) == null) {
+				XMLDocument current = internDocs.get(i);
+				addDocumentAndShowInEditor(current);
+				addFile(xmlController.obtainFileName(current.getPath()));
+			} else {
+				JOptionPane.showMessageDialog(null,
+						"No project created yet, or no file specified, "
+								+ "or file already in project!");
+			}
 		}
 	}
 
 	/**
 	 * Adds the file with a path to all documents.
-	 * @param path the path to a file.
-	 * @return 
+	 * 
+	 * @param path
+	 *            the path to a file.
+	 * @return
 	 */
 	private XMLDocument makeDocument(String path) {
 		XMLDocument current = new XMLDocument();
 		current.setPath(path);
 		return current;
 	}
-	
+
 	/**
-	 * Adds document to all documents and show it,
-	 * if it isn't already loaded.
-	 * @param doc the xml document to be added.
+	 * Adds document to all documents and show it, if it isn't already loaded.
+	 * 
+	 * @param doc
+	 *            the xml document to be added.
 	 */
 	private void addDocumentAndShowInEditor(XMLDocument doc) {
 		xmlController.addDocument(doc);
 		xmledit.addXMLDocumentToContainerScrollPanel(doc);
 	}
-	
+
 	/**
 	 * Removes a project from all devices.
-	 * @param project the project that must be removed.
+	 * 
+	 * @param project
+	 *            the project that must be removed.
 	 */
 	public void removeProject(String project) {
 		int index = findFolderProject(project);
@@ -391,22 +414,19 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 */
 	public void loadDatabase() {
 		ArrayList<XMLDocument> xmlDocuments = xmledit.getAllXMLDocuments();
-		if (xmlDocuments != null) {
-			xmlController.setDocumentsInProject(xmlDocuments);
-			xmlController.save();
-			XMLParser parser = new XMLParser(xmlController.getFileLocation());
-			try {
-				parser.parse();
-				ArrayList<Integer> indexesOfSelectedFiles = xmlController
-						.getIndexesOfSelectedFiles(parser.getDocuments());
-				parser.createTables(indexesOfSelectedFiles);
-			} catch (IOException e) {
-				JOptionPane.showMessageDialog(null,
-						"Something went wrong, please check all fields!");
-			}
-			xmlController.updateDocuments(this, xmlDocuments);
+		xmlController.setDocumentsInProject(xmlDocuments);
+		xmlController.save();
+		XMLParser parser = new XMLParser(xmlController.getFileLocation());
+		try {
+			parser.parse();
+			ArrayList<Integer> indexesOfSelectedFiles = xmlController
+					.getIndexesOfSelectedFiles(parser.getDocuments());
+			parser.createTables(indexesOfSelectedFiles);
+		} catch (IOException e) {
+			JOptionPane.showMessageDialog(null,
+					"Something went wrong, please check all fields!");
 		}
+		xmlController.updateDocuments(this, xmlDocuments);
 	}
-	
-	
+
 }

@@ -147,9 +147,8 @@ public class InputPageComponents implements Serializable, ActionListener {
 	 * @return Button Panel.
 	 */
 	public JPanel loadButtonSection() {
-		JPanel buttonSection = MainFrame
-				.createPanel(MainFrame.INPUTTABCOLOR, screenWidth,
-						FOLDERSECTIONHEIGHT);
+		JPanel buttonSection = MainFrame.createPanel(MainFrame.INPUTTABCOLOR,
+				screenWidth, FOLDERSECTIONHEIGHT);
 		addHelpButton(buttonSection);
 		addOpenFileButton(buttonSection);
 		return buttonSection;
@@ -191,9 +190,8 @@ public class InputPageComponents implements Serializable, ActionListener {
 	 * @return the analyze button
 	 */
 	public JPanel loadAnalyzeButtonSection() {
-		JPanel analyseButton = MainFrame
-				.createPanel(MainFrame.INPUTTABCOLOR, screenWidth,
-						FOLDERSECTIONHEIGHT);
+		JPanel analyseButton = MainFrame.createPanel(MainFrame.INPUTTABCOLOR,
+				screenWidth, FOLDERSECTIONHEIGHT);
 		addAnalyseButton(analyseButton);
 		return analyseButton;
 	}
@@ -203,8 +201,8 @@ public class InputPageComponents implements Serializable, ActionListener {
 	 *            to which the addAnalyseButton will be added.
 	 */
 	public void addAnalyseButton(JPanel panel) {
-		analyseButton = ip.createButton("Save & Go to Analyse", HELPBUTTONWIDTH,
-				HELPBUTTONHEIGHT);
+		analyseButton = ip.createButton("Save & Go to Analyse",
+				HELPBUTTONWIDTH, HELPBUTTONHEIGHT);
 		analyseButton.addActionListener(this);
 		GridBagConstraints c = ip.setGrids(0, 0);
 		c.weightx = 1;
@@ -275,14 +273,20 @@ public class InputPageComponents implements Serializable, ActionListener {
 		if (e.getSource() == getHelpButton()) {
 			handleHelpButton();
 		}
-		if (e.getSource() == getAnalyseButton() 
+		if (e.getSource() == getAnalyseButton()
 				&& ip.getXMLController().getSelectedDocs() != null) {
-			ip.loadDatabase();
-			mf.setState(mf.getCodePage());
-			mf.reloadStatePanel();
+			handleAnalyseButton();
 		}
 		if (e.getSource() == box) {
 			updateProject();
+		}
+	}
+
+	private void handleAnalyseButton() {
+		if (!ip.getEditor().checkAllXMLDocumentsOnError()) {
+			ip.loadDatabase();
+			mf.setState(mf.getCodePage());
+			mf.reloadStatePanel();
 		}
 	}
 

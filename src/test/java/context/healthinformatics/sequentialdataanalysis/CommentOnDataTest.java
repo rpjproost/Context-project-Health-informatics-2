@@ -67,6 +67,7 @@ public class CommentOnDataTest {
 	public void testChunkingOnData() throws Exception {
 		xmlp = new XMLParser(path + "twoDocs.xml");
 		xmlp.parse();
+		xmlp.createDatabase();
 		String[] clause = new String[1];
 		clause[0] = "HospitalRecords.Groep = 2";
 		MergeTable test = new MergeTable();
