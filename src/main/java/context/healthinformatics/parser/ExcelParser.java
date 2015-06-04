@@ -255,8 +255,9 @@ public class ExcelParser extends Parser {
 					+ " in file: " + docName);
 			return new SimpleDateFormat(columns.get(c).getDateType())
 			.format(new Date());
-		}
-		else {
+		} else if (curCell == null) {
+			return "";
+		} else {
 			return curCell.toString();
 		}
 	}
