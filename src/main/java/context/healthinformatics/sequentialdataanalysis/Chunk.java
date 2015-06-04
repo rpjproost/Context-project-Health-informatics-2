@@ -159,6 +159,7 @@ public class Chunk {
 				res = processResultSet(rsmd.getColumnCount()).toString();
 				rs.close();
 			} catch (SQLException e) {
+				System.out.println(e);
 				return res;
 			}
 			return res;
@@ -194,16 +195,16 @@ public class Chunk {
 	 */
 	public StringBuffer processResultSet(int numColumns) throws SQLException {
 		StringBuffer str = new StringBuffer();
-
-		for (int i = 1; i < numColumns; i++) {
-			if (i == numColumns - 1) {
-				str.append(rs.getObject(i + 1));
-			} else {
-				str.append(rs.getObject(i + 1) + " ");
+		while (rs.next()) {
+			for (int i = 1; i < numColumns; i++) {
+				if (i == numColumns - 1) {
+					str.append(rs.getObject(i + 1));
+				} else {
+					str.append(rs.getObject(i + 1) + " ");
+				}
 			}
+			str.append(System.lineSeparator());
 		}
-		str.append(System.lineSeparator());
-
 		if (str.length() > 2) {
 			str.setLength(str.length() - 2);
 		}
