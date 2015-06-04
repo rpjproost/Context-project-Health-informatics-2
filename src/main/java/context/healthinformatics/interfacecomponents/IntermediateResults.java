@@ -60,7 +60,7 @@ public class IntermediateResults extends InterfaceHelper {
 				intermediateResultWidth, HEIGHT_SCROLLPANE));
 		this.displayHtmlPane.setEditable(false);
 		this.displayHtmlPane.setContentType("text/html");
-		this.displayHtmlPane.setText(buildHtmlOfIntermediateResult());
+		updateIntermediateResult();
 		this.displayHtmlPane.setCaretPosition(0);
 	}
 
@@ -92,8 +92,13 @@ public class IntermediateResults extends InterfaceHelper {
 	 * @param
 	 */
 	public void updateIntermediateResult() {
-		this.displayHtmlPane.setText(buildHtmlOfIntermediateResult());
-		this.displayHtmlPane.setCaretPosition(0);
+		if (interpreter.getChunks() != null) {
+			this.displayHtmlPane.setText(buildHtmlOfIntermediateResult());
+			this.displayHtmlPane.setCaretPosition(0);
+		} else {
+			this.displayHtmlPane
+					.setText("There is no intermediate result to display");
+		}
 	}
 
 	/**
@@ -105,7 +110,8 @@ public class IntermediateResults extends InterfaceHelper {
 		ArrayList<Chunk> chunks = interpreter.getChunks();
 		System.out.println(chunks.size());
 		StringBuilder buildString = new StringBuilder();
-		buildString.append("<html><body><ul>");
+		buildString.append("<html><body><b>Number of chunks: +" + chunks.size()
+				+ "</b><ul>");
 		for (int i = 0; i < chunks.size(); i++) {
 			Chunk currentChunk = chunks.get(i);
 			buildString.append("<li>" + currentChunk.toString() + "</li>");
