@@ -74,10 +74,11 @@ public class ConnectionOnDataTest {
 		MergeTable test = new MergeTable();
 		test.merge(clause);
 		ArrayList<Chunk> chunks = test.getChunks();
-		Connections tests = new Connections(chunks);
+		Connections tests = new Connections("test");
+		tests.setChunks(chunks);
 		
 		assertEquals(0, c1.getPointer().size());
-		tests.connectOnData(c1, "value = 209", "test");
+		tests.connectOnData(c1, "value = 209");
 		assertEquals(1, c1.getPointer().size());
 
 		test.dropView("workspace");
