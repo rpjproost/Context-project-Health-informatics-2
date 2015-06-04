@@ -53,6 +53,21 @@ public abstract class Task {
 	protected void setChunks(ArrayList<Chunk> c) {
 		chunks = c;
 	}
+	
+	/**
+	 * Runs constraintOnData in C classes.
+	 * @param whereClause Constrains String.
+	 * @return Result list of chunks.
+	 * @throws SQLException if sql query is incorrect.
+	 */
+	protected abstract ArrayList<Chunk> constraintOnData(String whereClause) throws SQLException;
+	
+	/**
+	 * Runs constraintOnCode in C classes.
+	 * @param code Constraint String.
+	 * @return Result list of chunks.
+	 */
+	protected abstract ArrayList<Chunk> constraintOnCode(String code);
 
 	/**
 	 * Get line numbers of data which correspond to sql query.
@@ -156,6 +171,49 @@ public abstract class Task {
 	 */
 	protected int getQueryPart() {
 		return querypart;
+	}
+	
+	/**
+	 * Executes constraintOnData with query.
+	 * @param query interpreter query.
+	 * @throws SQLException iff sql query goes wrong.
+	 */
+	protected void runData(String[] query) throws SQLException {
+		StringBuilder q = new StringBuilder();
+		increment(2);
+		for (int i = getQueryPart(); i < query.length; i++) {
+			q.append(query[i]);
+			q.append(" ");
+		}
+		setResult(constraintOnData(q.toString()));
+	}
+	
+	/**
+	 * Executes constraintOnCode with query.
+	 * @param query interpreter query.
+	 */
+	protected void runCode(String[] query) {
+		increment(2);
+		if (isEquals(query[getQueryPart()])) {
+			inc();
+			setResult(constraintOnCode(query[getQueryPart()]));
+		}
+	}
+	
+	/**
+	 * Executes constraint on contains/equals comment.
+	 * @param query interpreter query.
+	 */
+	protected void runComment(String[] query) {
+		increment(2);
+		if (isEquals(query[getQueryPart()])) {
+			inc();
+			//constraintOnEqualsComment(query[getQueryPart()]);
+		}
+		if (isContains(query[getQueryPart()])) {
+			inc();
+			//constraintOnContainsComment(query[getQueryPart()]);
+		}
 	}
 
 }

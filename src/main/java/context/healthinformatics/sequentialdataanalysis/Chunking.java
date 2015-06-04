@@ -26,6 +26,7 @@ public class Chunking extends Task {
 	 * @return new Arraylist with chunked chunks.
 	 * @throws SQLException if whereclause was not correct.
 	 */
+	@Override
 	public ArrayList<Chunk> constraintOnData(String whereClause) throws SQLException {
 		ArrayList<Chunk> res = new ArrayList<Chunk>();
 		ArrayList<Chunk> chunks = getChunks();
@@ -61,6 +62,7 @@ public class Chunking extends Task {
 	 * @param code Code constraint for a chunk.
 	 * @return New ArrayList<Chunk> chunked on code.
 	 */
+	@Override
 	public ArrayList<Chunk> constraintOnCode(String code) {
 		ArrayList<Chunk> res = new ArrayList<Chunk>();
 		ArrayList<Chunk> chunks = getChunks();
@@ -213,48 +215,4 @@ public class Chunking extends Task {
 			throw new Exception("query input is wrong at: " + query[getQueryPart()]);
 		}
 	}
-	
-	/**
-	 * Executes constraintOnData with query.
-	 * @param query interpreter query.
-	 * @throws SQLException iff sql query goes wrong.
-	 */
-	private void runData(String[] query) throws SQLException {
-		StringBuilder q = new StringBuilder();
-		increment(2);
-		for (int i = getQueryPart(); i < query.length; i++) {
-			q.append(query[i]);
-			q.append(" ");
-		}
-		setResult(constraintOnData(q.toString()));
-	}
-	
-	/**
-	 * Executes constraintOnCode with query.
-	 * @param query interpreter query.
-	 */
-	private void runCode(String[] query) {
-		increment(2);
-		if (isEquals(query[getQueryPart()])) {
-			inc();
-			setResult(constraintOnCode(query[getQueryPart()]));
-		}
-	}
-	
-	/**
-	 * Executes constraint on contains/equals comment.
-	 * @param query interpreter query.
-	 */
-	private void runComment(String[] query) {
-		increment(2);
-		if (isEquals(query[getQueryPart()])) {
-			inc();
-			constraintOnEqualsComment(query[getQueryPart()]);
-		}
-		if (isContains(query[getQueryPart()])) {
-			inc();
-			constraintOnContainsComment(query[getQueryPart()]);
-		}
-	}
-
 }

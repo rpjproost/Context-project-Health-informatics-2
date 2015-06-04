@@ -198,6 +198,7 @@ public class Constraints extends Task {
 	 * @return filtered arraylist.
 	 * @throws SQLException iff sql could not be executed.
 	 */
+	@Override
 	public ArrayList<Chunk> constraintOnData(String whereClause) 
 			throws SQLException {
 		ArrayList<Chunk> res = new ArrayList<Chunk>();
@@ -358,47 +359,10 @@ public class Constraints extends Task {
 			throw new Exception("query input is wrong at: " + query[getQueryPart()]);
 		}
 	}
-	
-	/**
-	 * Executes constraintOnData with query.
-	 * @param query interpreter query.
-	 * @throws SQLException iff sql query goes wrong.
-	 */
-	private void runData(String[] query) throws SQLException {
-		StringBuilder q = new StringBuilder();
-		increment(2);
-		for (int i = getQueryPart(); i < query.length; i++) {
-			q.append(query[i]);
-			q.append(" ");
-		}
-		setResult(constraintOnData(q.toString()));
-	}
-	
-	/**
-	 * Executes constraintOnCode with query.
-	 * @param query interpreter query.
-	 */
-	private void runCode(String[] query) {
-		increment(2);
-		if (isEquals(query[getQueryPart()])) {
-			inc();
-			//setResult(constraintOnCode(query[getQueryPart()]));
-		}
-	}
-	
-	/**
-	 * Executes constraint on contains/equals comment.
-	 * @param query interpreter query.
-	 */
-	private void runComment(String[] query) {
-		increment(2);
-		if (isEquals(query[getQueryPart()])) {
-			inc();
-			//constraintOnEqualsComment(query[getQueryPart()]);
-		}
-		if (isContains(query[getQueryPart()])) {
-			inc();
-			//constraintOnContainsComment(query[getQueryPart()]);
-		}
+
+	@Override
+	protected ArrayList<Chunk> constraintOnCode(String whereClause) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
