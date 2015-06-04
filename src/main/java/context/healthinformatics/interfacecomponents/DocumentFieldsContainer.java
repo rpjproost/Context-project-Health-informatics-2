@@ -393,7 +393,7 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	 * @return true if it is.
 	 */
 	public boolean isDocumentNameEmpty() {
-		return getDocumentName().equals("");
+		return getDocumentNameValue().equals("");
 	}
 
 	/**
