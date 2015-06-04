@@ -67,19 +67,20 @@ public class HelpFrame extends InterfaceHelper {
 		setUpHelpFrame(titleFrame, listOfHelpFrameInfo);
 		this.inputPageComponents = inputPageComponents;
 		setWindowListener();
+		initMainPanel();
 	}
 
 	public HelpFrame(String titleFrame, 
 			ArrayList<HelpFrameInfoContainer> listOfHelpFrameInfo) {
 		setUpHelpFrame(titleFrame, listOfHelpFrameInfo);
+		initMainPanelNoPopUp();
 	}
-	
+
 	private void setUpHelpFrame(String titleFrame, 
 			ArrayList<HelpFrameInfoContainer> listOfHelpFrameInfo) {
 		this.listOfHelpFrameInfo = listOfHelpFrameInfo;
 		helpMainFrame = new JFrame(titleFrame);
 		setTextAreaSettings();
-		initMainPanel();
 		addHyperLinkListener();
 	}
 
@@ -127,6 +128,12 @@ public class HelpFrame extends InterfaceHelper {
 		mainPanel = createEmptyWithGridBagLayoutPanel();
 		mainPanel.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
 		initHelpMainFrame();
+	}
+	
+	private void initMainPanelNoPopUp() {
+		mainPanel = createEmptyWithGridBagLayoutPanel();
+		mainPanel.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
+		initTabAndInfoPanel();
 	}
 
 	/**
