@@ -17,14 +17,14 @@ Language
 		The language has a certain form which consist of 2 or 3 sections. The first word is always the kind of operation you want to use. Some of these operations are followed by parenthesis filled with a string to use as additional input of the operation. The options are:
 	</p>
 	<ol>
-	  <li>Chunk</li>
+	  <li>Chunk(String)</li>
 	  <li>Code(String)</li>
 	  <li>Comment(String)</li>
 	  <li>Filter</li>
 	  <li>Connection(String)</li>
 	</ol>
 	<p>
-		The string is the code or comment you want to set, and with connection it is the String you want to associate with the connection. The second sections specifies on which part of the data you want to use your operation. There are multiple options to specify the data : 
+		The string is the code or comment you want to set, and with connection it is the String you want to associate with the connection. The string behind chunk will be the code automaticly assigned to that chunk. The second sections specifies on which part of the data you want to use your operation. There are multiple options to specify the data : 
 	</p>
 	<ol>
 	  <li>code WHERE = ...</li>
