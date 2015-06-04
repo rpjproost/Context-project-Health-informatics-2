@@ -17,6 +17,7 @@ import javax.swing.JTextArea;
 
 import context.healthinformatics.analyse.Interpreter;
 import context.healthinformatics.analyse.SingletonInterpreter;
+import context.healthinformatics.database.Db;
 import context.healthinformatics.database.MergeTable;
 import context.healthinformatics.database.SingletonDb;
 import context.healthinformatics.interfacecomponents.HelpFrame;
@@ -46,6 +47,7 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	private JPanel rightPanel;
 	private JButton analyseButton;
 	private JButton goBackButton;
+	private IntermediateResults imr;
 
 	/**
 	 * Constructor.
@@ -73,7 +75,8 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	}
 	
 	private void mergeTables() {
-		if (SingletonDb.getDb().getTables().size() > 0) {
+		Db db = SingletonDb.getDb();
+		if (db.getTables().size() > 0 && !db.getTables().containsKey("result")) {
 			MergeTable mergeTables = new MergeTable();
 			String[] clause = new String[1];
 			clause[0] = "meeting.createdby = 'admire2'";
@@ -202,7 +205,7 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	 * Sets the right side of the interface with specific panels.
 	 */
 	private void setRightPanelWithIntermediateResult() {
-		IntermediateResults imr = new IntermediateResults(mf);
+		imr = new IntermediateResults(mf);
 		rightPanel.add(imr.loadPanel(), setGrids(0, 0));
 		codePageParentpanel.add(rightPanel, setGrids(1, 0));
 	}
@@ -217,6 +220,20 @@ public class CodePage extends InterfaceHelper implements PanelState,
 		 */
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			if (e.getSource() == analyseButton) {
+				try {
+					String code = codeTextArea.getText();
+					interpreter.interpret(code);
+					imr.updateIntermediateResult();
+					codeTextArea.setText("");
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			if (e.getSource() == goBackButton) {
+				System.out.println("go back");
+			}
 			// String text = code.getText();
 			// Interpreter interp = new Interpreter();
 			// interp.interpret(text);
