@@ -1,15 +1,85 @@
 %%
-Add Project
+The input code Area
 <html>
 	<body>
-	<h2>To add a project follow the following steps:</h2>
+	<h2>What is the input code area?</h2>
+	<p>
+		The input code area is an textfield in which you can enter queries. These queries have to be specified in a language which is described at the next help button.You can enter one or multiple queries on one or multiple lines. These will be excecuted in sequential order, which means that the second queries will be excecuted on the resulting data of the first query.<br/><br/> When you are done specifying the queries you can hit the ANALYSE button to make the program procces the queries.
+	</p>
+	</body>
+</html>
+%%
+Language
+<html>
+	<body>
+	<h2>How does the language work</h2>
+	<p>
+		The language has a certain form which consist of 2 or 3 sections. The first word is always the kind of operation you want to use. Some of these operations are followed by parenthesis filled with a string to use as additional input of the operation. The options are:
+	</p>
 	<ol>
-	  <li>You have to click on the button with the text "ADD new Project". This is in the left corner of the screen.</li>
-	  <li>A pop-up will appear</li>
-	  <li>Fill in the name of your new project in the text field of the pop-up.</li>
-	  <li>Click on "OK" if you filled in your project name.</li>
-	  <li>A new Project will appear in the File Selection area!</li>
+	  <li>Chunk(String)</li>
+	  <li>Code(String)</li>
+	  <li>Comment(String)</li>
+	  <li>Filter</li>
+	  <li>Connection(String)</li>
+	</ol>
+	<p>
+		The string is the code or comment you want to set, and with connection it is the String you want to associate with the connection. The string behind chunk will be the code automaticly assigned to that chunk. The second sections specifies on which part of the data you want to use your operation. There are multiple options to specify the data : 
+	</p>
+	<ol>
+	  <li>code WHERE = ...</li>
+	  <li>code WHERE equals ...</li>
+	  <li>comment WHERE = ...</li>
+	  <li>comment WHERE equals ...</li>
+	  <li>data ...</li>
+	</ol>
+	<p>
+		After data you can write an SQL query, in which you can name the columns of the table from the input tab. The Connections method needs both ends of a connections, so you can specify the third section in the same way as the second section. If you want to select on a column where the row you want is empty, you can select on NULL which is the same as an empty field.When comparing with NULL you have to use the keyword "IS".
+	</p>
+	</body>
+</html>
+%%
+Examples
+<html>
+	<body>
+	<h2>Examples of queries</h2>
+	<ol>
+	  <li>Comment("important") code WHERE = "abc"</li>
+	  <li>Filter comment WHERE equals "unimportant"</li>
+	  <li>Chunk code WHERE equals "group1"</li>
+	  <li>Connect("A to Z") comment WHERE = "A" comment WHERE = "Z"</li>
+	  <li>Code("123") data WHERE value = 209</li>
 	</ol>  
+	</body>
+</html>
+%%
+Intermediate Result
+<html>
+	<body>
+	<h2>What is the intermediate result textfield</h2>
+	<p>
+		After filling in queries in the code area and the user presses the ANALYSE button, the intermediate result area shows the data after the the queries have been excecuted on the current data set. Before the first query this area will contain all data available after the file selection in the InputPage tab. After every time the ANALYSE button is pressed, the  intermediate data field will contain the resulting data after the queries.
+	</p>
+	</body>
+</html>
+%%
+Used Code
+<html>
+	<body>
+	<h2>What is the used code textfield</h2>
+	<p>
+		All previously excecuted queries will be displayed in the used code textarea. This way you can easily keep track of what you have done and what the state of the data is.
+	</p>
+	</body>
+</html>
+%%
+Undo
+<html>
+	<body>
+	<h2>How to go back to your previous data set.</h2>
+	<p>
+		If you have altered the data in an unintended way, you can always go back to your previois data set by entering "undo" or "revert" into the code area and pressing the ANALYSE button. Now you have the result of the previous queries back. You can go all the way back to your initial data set.
+	</p>
 	</body>
 </html>
 %%
