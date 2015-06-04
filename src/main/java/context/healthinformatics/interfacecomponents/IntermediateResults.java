@@ -52,15 +52,21 @@ public class IntermediateResults extends InterfaceHelper {
 		return interMediateResultParentPanel;
 	}
 
+	/**
+	 * Initialize the pane to display the HTML.
+	 */
 	private void initDisplayHTMLPane() {
 		this.displayHtmlPane.setPreferredSize(new Dimension(
 				intermediateResultWidth, HEIGHT_SCROLLPANE));
 		this.displayHtmlPane.setEditable(false);
 		this.displayHtmlPane.setContentType("text/html");
-		this.displayHtmlPane.setCaretPosition(0);
 		this.displayHtmlPane.setText(buildHtmlOfIntermediateResult());
+		this.displayHtmlPane.setCaretPosition(0);
 	}
 
+	/**
+	 * Initialize the scroll pane.
+	 */
 	private void initScrollPane() {
 		scroll = new JScrollPane(displayHtmlPane);
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -70,6 +76,9 @@ public class IntermediateResults extends InterfaceHelper {
 
 	}
 
+	/**
+	 * Add the title and the display pane to the parentpanel.
+	 */
 	private void addEverythingToMainPanel() {
 		interMediateResultParentPanel.add(
 				createTitle("The intermediate Result:"), setGrids(0, 0));
@@ -83,8 +92,8 @@ public class IntermediateResults extends InterfaceHelper {
 	 * @param
 	 */
 	public void updateIntermediateResult() {
-		String emptytest = "";
-		this.displayHtmlPane.setText(emptytest);
+		this.displayHtmlPane.setText(buildHtmlOfIntermediateResult());
+		this.displayHtmlPane.setCaretPosition(0);
 	}
 
 	/**
@@ -92,16 +101,41 @@ public class IntermediateResults extends InterfaceHelper {
 	 * 
 	 * @return the string with the HTML
 	 */
-	public String buildHtmlOfIntermediateResult() {
+	private String buildHtmlOfIntermediateResult() {
 		ArrayList<Chunk> chunks = interpreter.getChunks();
 		System.out.println(chunks.size());
 		StringBuilder buildString = new StringBuilder();
-		buildString.append("<html><body>");
+		buildString.append("<html><body><ul>");
 		for (int i = 0; i < chunks.size(); i++) {
-			buildString.append(chunks.get(i).toString());
-			// TODO something to get all innerchunks
+			Chunk currentChunk = chunks.get(i);
+			buildString.append("<li>" + currentChunk.toString() + "</li>");
+			if (currentChunk.hasChild()) {
+				buildString.append(getChildsOfChunk(currentChunk));
+			}
 		}
-		buildString.append("</body></html>");
+		buildString.append("</ul></body></html>");
+		return buildString.toString();
+	}
+
+	/**
+	 * Create new HTML list for the children of a chunk.
+	 * 
+	 * @param the
+	 *            chunk with children
+	 * @return HTML list with the children
+	 */
+	private String getChildsOfChunk(Chunk chunk) {
+		ArrayList<Chunk> childChunks = chunk.getChunks();
+		StringBuilder buildString = new StringBuilder();
+		buildString.append("<ul>");
+		for (int i = 0; i < childChunks.size(); i++) {
+			Chunk currentChunk = childChunks.get(i);
+			buildString.append("<li>" + currentChunk.toString() + "</li>");
+			if (currentChunk.hasChild()) {
+				buildString.append(getChildsOfChunk(currentChunk));
+			}
+		}
+		buildString.append("</ul>");
 		return buildString.toString();
 	}
 }
