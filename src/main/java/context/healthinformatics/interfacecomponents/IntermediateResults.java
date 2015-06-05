@@ -43,7 +43,7 @@ public class IntermediateResults extends InterfaceHelper {
 	 */
 	public IntermediateResults(MainFrame mf) {
 		this.mf = mf;
-		intermediateResultWidth = (mf.getScreenWidth() / 2)
+		intermediateResultWidth = mf.getScreenWidth() / 2
 				- (mf.getScreenWidth() / HUNDRED_PERCENT) * 2;
 		interMediateResultParentPanel = createEmptyWithGridBagLayoutPanel(MainFrame.CODETABCOLOR);
 		initDisplayHTMLPane();

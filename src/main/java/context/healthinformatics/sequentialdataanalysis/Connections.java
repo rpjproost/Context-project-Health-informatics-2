@@ -118,14 +118,13 @@ public class Connections extends Task {
 	protected void runData(String[] query) throws SQLException {
 		StringBuilder q = new StringBuilder();
 		ArrayList<Integer> destinationList = new ArrayList<Integer>();
-		ArrayList<Integer> originList = new ArrayList<Integer>();
 		increment(2);
 		while (!isData(query) || !isComment(query) || !isCode(query)) {
 			q.append(query[getQueryPart()]);
 			q.append(" ");
 			inc();
 		}
-		originList = getLinesFromData(q.toString());
+		ArrayList<Integer> originList = getLinesFromData(q.toString());
 		parseSecondCondition(query, originList, destinationList);
 	}
 	
@@ -163,7 +162,6 @@ public class Connections extends Task {
 		if (isData(query)) {
 			StringBuilder q = new StringBuilder();
 			inc();
-			q = new StringBuilder();
 			for (int i = getQueryPart(); i < query.length; i++) {
 				q.append(query[i]);
 				q.append(" ");
