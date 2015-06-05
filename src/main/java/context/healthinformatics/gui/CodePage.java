@@ -14,6 +14,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.Border;
 
@@ -62,7 +63,8 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	public CodePage(MainFrame m) {
 		leftPanel = createEmptyWithGridBagLayoutPanel(MainFrame.CODETABCOLOR);
 		rightPanel = createEmptyWithGridBagLayoutPanel(MainFrame.CODETABCOLOR);
-		helpController = new HelpController("src/main/data/guihelpdata/codepagehelp.txt");
+		helpController = new HelpController(
+				"src/main/data/guihelpdata/codepagehelp.txt");
 		mf = m;
 	}
 
@@ -121,13 +123,15 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	 * Sets the code input area.
 	 */
 	private void setCodeInputArea() {
-		codeTextArea = createTextField(mf.getScreenWidth() / 2 - 2 * INSETS,
-				mf.getStatePanelSize() / 2 - FIELDCORRECTION);
+		codeTextArea = createTextField();
 		GridBagConstraints c = setGrids(0, 1);
 		c.insets = new Insets(0, INSETS, INSETS, INSETS);
-		leftPanel.add(codeTextArea, c);
+		JScrollPane scrollWithTextArea = makeScrollPaneForTextArea(
+				codeTextArea, mf.getScreenWidth() / 2 - 2 * INSETS,
+				mf.getStatePanelSize() / 2 - FIELDCORRECTION);
+		leftPanel.add(scrollWithTextArea, c);
 	}
-	
+
 	/**
 	 * Sets a title for the used code to analyze the data.
 	 */
@@ -146,13 +150,16 @@ public class CodePage extends InterfaceHelper implements PanelState,
 		int panelWidth = mf.getScreenWidth() / 2 - 2 * INSETS;
 		int panelHeight = mf.getStatePanelSize() / 2 - FIELDCORRECTION;
 		JPanel oldCodePanel = createPanel(Color.WHITE, panelWidth, panelHeight);
-		oldCodeArea = createTextField(panelWidth - INSETS, panelHeight - INSETS);
+		oldCodeArea = createTextField();
 		oldCodeArea.setEditable(false);
 		Border border = BorderFactory.createLineBorder(Color.GRAY, 1);
+		JScrollPane scrollBarForOldCodeArea = makeScrollPaneForTextArea(
+				oldCodeArea, panelWidth, panelHeight);
 		oldCodeArea.setBorder(border);
-		oldCodePanel.add(oldCodeArea);
+		oldCodePanel.add(scrollBarForOldCodeArea);
 		GridBagConstraints c = setGrids(0, THREE);
 		c.insets = new Insets(0, INSETS, INSETS, INSETS);
+
 		leftPanel.add(oldCodePanel, c);
 	}
 
@@ -237,7 +244,7 @@ public class CodePage extends InterfaceHelper implements PanelState,
 		goToOutputPageButton = createButton("Go To Output", ANALYZEBUTTONWIDTH,
 				ANALYZEBUTTONHEIGHT);
 		goToOutputPageButton.addActionListener(new ActionHandler());
-		 c = setGrids(THREE, 0);
+		c = setGrids(THREE, 0);
 		c.insets = new Insets(INSETS, 0, INSETS, INSETS);
 		buttonArea.add(goToOutputPageButton, c);
 		rightPanel.add(buttonArea, setGrids(0, FOUR));
