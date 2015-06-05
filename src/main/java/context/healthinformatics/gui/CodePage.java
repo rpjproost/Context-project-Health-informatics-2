@@ -78,7 +78,6 @@ public class CodePage extends InterfaceHelper implements PanelState,
 				.getStatePanelSize()));
 		setLeftPanelWithCodeField();
 		setRightPanelWithIntermediateResult();
-
 		return codePageParentpanel;
 	}
 

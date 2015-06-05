@@ -35,6 +35,8 @@ public class IntermediateResults extends InterfaceHelper {
 	private Interpreter interpreter = SingletonInterpreter.getInterpreter();
 	private MainFrame mf;
 
+	private int globalChunkCounter = 1;
+
 	/**
 	 * Constructor of the IntermediateResults class.
 	 * 
@@ -65,7 +67,8 @@ public class IntermediateResults extends InterfaceHelper {
 	 */
 	private void initDisplayHTMLPane() {
 		this.displayHtmlPane.setPreferredSize(new Dimension(
-				intermediateResultWidth, mf.getStatePanelSize() / TEN * NINE - FIELDCORRECTION));
+				intermediateResultWidth, mf.getStatePanelSize() / TEN * NINE
+						- FIELDCORRECTION));
 		this.displayHtmlPane.setEditable(false);
 		this.displayHtmlPane.setContentType("text/html");
 		updateIntermediateResult();
@@ -79,8 +82,8 @@ public class IntermediateResults extends InterfaceHelper {
 		scroll = new JScrollPane(displayHtmlPane);
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scroll.setPreferredSize(new Dimension(intermediateResultWidth,
-				mf.getStatePanelSize() / TEN * NINE - FIELDCORRECTION));
+		scroll.setPreferredSize(new Dimension(intermediateResultWidth, mf
+				.getStatePanelSize() / TEN * NINE - FIELDCORRECTION));
 		scroll.getVerticalScrollBar().setValue(0);
 	}
 
@@ -101,6 +104,7 @@ public class IntermediateResults extends InterfaceHelper {
 	 */
 	public void updateIntermediateResult() {
 		if (interpreter.getChunks() != null) {
+			globalChunkCounter = 1;
 			this.displayHtmlPane.setText(buildHtmlOfIntermediateResult());
 			this.displayHtmlPane.setCaretPosition(0);
 		} else {
@@ -117,18 +121,31 @@ public class IntermediateResults extends InterfaceHelper {
 	private String buildHtmlOfIntermediateResult() {
 		ArrayList<Chunk> chunks = interpreter.getChunks();
 		StringBuilder buildString = new StringBuilder();
-		buildString.append("<html><body><h2>Number of chunks: " + chunks.size()
-				+ "</h2><table style='width:100%;'>");
-		buildString.append(buildColumnsHTMLTableRow(database.getColumns()));
-		buildString.append(loopThroughChunks(chunks));
+
+		String htmlOfColumnTableRow = buildColumnsHTMLTableRow(database.getColumns());
+		String htmlOfTableContent = loopThroughChunks(chunks);
+
+		buildString.append("<html><body><h2>Number of chunks: "
+				+ globalChunkCounter + "</h2><table style='width:100%;'>");
+		buildString.append(htmlOfColumnTableRow);
+		buildString.append(htmlOfTableContent);
+
 		buildString.append("</table></body></html>");
 		return buildString.toString();
 	}
 
+	/**
+	 * Make HTML table row for the columns of the results.
+	 * 
+	 * @param columns
+	 *            the columns
+	 * @return HTML table row string
+	 */
 	private String buildColumnsHTMLTableRow(ArrayList<Column> columns) {
 		StringBuilder buildString = new StringBuilder();
 		buildString
-				.append("<tr><td><h2>Code:</h2></td><td><h2>Comment:</h2></td>");
+				.append("<tr><td><h2>Line:</h2></td><td><h2>Code:</h2></td>");
+		buildString.append("<td><h2>Comment:</h2></td>");
 		for (int i = 0; i < columns.size(); i++) {
 			buildString.append("<td><h2>" + columns.get(i).getColumnName()
 					+ ":</h2></td>");
@@ -162,25 +179,50 @@ public class IntermediateResults extends InterfaceHelper {
 		StringBuilder buildString = new StringBuilder();
 		for (int i = 0; i < chunks.size(); i++) {
 			Chunk currentChunk = chunks.get(i);
-			buildString.append("<tr>");
+			buildString.append("<tr><td>" + globalChunkCounter + "</td>");
+			globalChunkCounter++;
 			if (currentChunk.hasChild()) {
-				buildString.append("<td><h2>");
-				buildString.append(currentChunk.toArray());
-				buildString.append("</h2></td>");
-				buildString.append(getChildsOfChunk(currentChunk));
-				buildString.append("<td>[End Of Chunk]</td>");
+				buildString.append(processChunkWithChilds(currentChunk));
 			} else {
-				buildString.append("<td>" + currentChunk.getCode() + "</td>");
-				buildString
-						.append("<td>" + currentChunk.getComment() + "</td>");
-				ArrayList<String> values = currentChunk.toArray();
-				for (int j = 0; j < values.size(); j++) {
-					buildString.append("<td>" + values.get(j) + "</td>");
-				}
+				buildString.append(processChunk(currentChunk));
 			}
 			buildString.append("</tr>");
-
 		}
+		return buildString.toString();
+	}
+
+	/**
+	 * Build html table content of a chunk.
+	 * 
+	 * @param currentChunk
+	 *            the currentChunk
+	 * @return HTML string with table row
+	 */
+	private String processChunk(Chunk currentChunk) {
+		StringBuilder buildString = new StringBuilder();
+		buildString.append("<td>" + currentChunk.getCode() + "</td>");
+		buildString.append("<td>" + currentChunk.getComment() + "</td>");
+		ArrayList<String> values = currentChunk.toArray();
+		for (int j = 0; j < values.size(); j++) {
+			buildString.append("<td>" + values.get(j) + "</td>");
+		}
+		return buildString.toString();
+	}
+
+	/**
+	 * Build HTML table content of a chunk with childs.
+	 * 
+	 * @param currentChunk
+	 *            the current chunk with childs.
+	 * @return HTML string with table rows for every child and the chunk itself
+	 */
+	private String processChunkWithChilds(Chunk currentChunk) {
+		StringBuilder buildString = new StringBuilder();
+		buildString.append("<td><h2>");
+		buildString.append(currentChunk.toArray());
+		buildString.append("</h2></td>");
+		buildString.append(getChildsOfChunk(currentChunk));
+		buildString.append("<td>[End Of Chunk]</td>");
 		return buildString.toString();
 	}
 }
