@@ -290,6 +290,27 @@ public class InterfaceHelper extends JPanel {
 	}
 
 	/**
+	 * Make a scrollPanefor the container.
+	 * 
+	 * @param containerPanel
+	 *            the panel for which the scrollpane is made
+	 * @param width
+	 *            the width of the scrollPane
+	 * @param height
+	 *            the height of the scrollPane
+	 * @return the scrollPane
+	 */
+	public JScrollPane makeScrollPaneForContainerPanel(
+			JTextArea containerPanel, int width, int height) {
+		JScrollPane scrollPane = new JScrollPane(containerPanel,
+				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scrollPane.setPreferredSize(new Dimension(width, height));
+		return scrollPane;
+	}
+
+
+	/**
 	 * Create a container panel for the document of xml files to container.
 	 * 
 	 * @return the panel to container the documents
