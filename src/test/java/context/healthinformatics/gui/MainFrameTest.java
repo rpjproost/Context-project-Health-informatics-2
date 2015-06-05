@@ -86,7 +86,7 @@ public class MainFrameTest {
 	@Test
 	public void checkMouseClickEventCodePage() {
 		MouseEvent me = new MouseEvent(mf.getCodeTab(), 0, 0, 0, 0, 0, 0, false);
-		ml.mouseClicked(me);
+		ml.mousePressed(me);
 		assertEquals(mf.getPanelState(), mf.getCodePage());
 	}
 	
@@ -96,7 +96,7 @@ public class MainFrameTest {
 	@Test
 	public void checkMouseClickEventOutputPage() {
 		MouseEvent me = new MouseEvent(mf.getOutputTab(), 0, 0, 0, 0, 0, 0, false);
-		ml.mouseClicked(me);
+		ml.mousePressed(me);
 		assertEquals(mf.getPanelState(), mf.getOutputPage());
 	}
 	
