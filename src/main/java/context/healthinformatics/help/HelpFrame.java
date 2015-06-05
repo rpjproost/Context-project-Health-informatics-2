@@ -131,6 +131,7 @@ public class HelpFrame extends InterfaceHelper {
 	private void initHelpMainFrame() {
 		helpMainFrame.getContentPane().add(mainPanel);
 		helpMainFrame.pack();
+		helpMainFrame.setResizable(false);
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		helpMainFrame.setLocation(dim.width / 2 - helpMainFrame.getSize().width
 				/ 2, dim.height / 2 - helpMainFrame.getSize().height / 2);
