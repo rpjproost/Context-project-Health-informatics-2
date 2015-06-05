@@ -264,11 +264,18 @@ public abstract class Task {
 		increment(2);
 		if (isEquals(query[getQueryPart()])) {
 			inc();
-			constraintOnEqualsComment(query[getQueryPart()]);
+			StringBuilder q = new StringBuilder();
+			String prefix = "";
+			for (int i = getQueryPart(); i < query.length; i++) {
+				q.append(prefix);
+				q.append(query[i]);
+				prefix = " ";
+			}
+			setResult(constraintOnEqualsComment(q.toString()));
 		}
 		if (isContains(query[getQueryPart()])) {
 			inc();
-			constraintOnContainsComment(query[getQueryPart()]);
+			setResult(constraintOnContainsComment(query[getQueryPart()]));
 		}
 	}
 	/**
