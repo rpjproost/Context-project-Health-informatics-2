@@ -6,7 +6,6 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -19,8 +18,8 @@ import javax.swing.JPanel;
 
 import context.healthinformatics.gui.InputPage;
 import context.healthinformatics.gui.MainFrame;
-import context.healthinformatics.parser.ReadHelpInfoFromTXTFile;
 import context.healthinformatics.writer.XMLDocument;
+import context.healthinformatics.help.HelpController;
 
 /**
  * Class which can load components of the InputPage.
@@ -53,8 +52,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 	public static final int HELPBUTTONHEIGHT = 100;
 	public static final int HELPBUTTONWIDTH = 300;
 	public static final int FOLDERSECTIONHEIGHT = 100;
-
-	private boolean helpFrameOpen = false;
+	private HelpController helpController;
 
 	/**
 	 * Constructor.
@@ -69,6 +67,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 		ip = p;
 		screenWidth = mf.getScreenWidth() / 2;
 		box = new JComboBox<String>(ip.getProjects());
+		helpController = new HelpController("src/main/data/guihelpdata/inputpagehelp.txt");
 	}
 
 	/**
@@ -266,7 +265,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 			ip.openFiles(ip.getFileSelecter().getSelectedFiles());
 		}
 		if (e.getSource() == getHelpButton()) {
-			handleHelpButton();
+			helpController.handleHelpButton();
 		}
 		if (e.getSource() == getAnalyseButton()) {
 			handleAnalystButton();
@@ -325,32 +324,32 @@ public class InputPageComponents implements Serializable, ActionListener {
 		controller.loadProject(ip.getEditor());
 	}
 
-	/**
-	 * Set if the help frame is open or not.
-	 * 
-	 * @param helpFrameNew
-	 *            the boolean value
-	 */
-	public void setHelpFrameOpen(boolean helpFrameNew) {
-		this.helpFrameOpen = helpFrameNew;
-	}
-
-	/**
-	 * Handle the help button.
-	 */
-	private void handleHelpButton() {
-		if (!helpFrameOpen) {
-			setHelpFrameOpen(true);
-			ReadHelpInfoFromTXTFile test = new ReadHelpInfoFromTXTFile(
-					"src/main/data/guihelpdata/inputpagehelp.txt");
-			try {
-				test.parse();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			ArrayList<HelpFrameInfoContainer> listOfHelpFrameInfo = test
-					.getHelpFrameInfoContainer();
-			new HelpFrame("Input Page Help", listOfHelpFrameInfo, this);
-		}
-	}
+//	/**
+//	 * Set if the help frame is open or not.
+//	 * 
+//	 * @param helpFrameNew
+//	 *            the boolean value
+//	 */
+//	public void setHelpFrameOpen(boolean helpFrameNew) {
+//		this.helpFrameOpen = helpFrameNew;
+//	}
+//
+//	/**
+//	 * Handle the help button.
+//	 */
+//	private void handleHelpButton() {
+//		if (!helpFrameOpen) {
+//			setHelpFrameOpen(true);
+//			ReadHelpInfoFromTXTFile test = new ReadHelpInfoFromTXTFile(
+//					"src/main/data/guihelpdata/inputpagehelp.txt");
+//			try {
+//				test.parse();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//			ArrayList<HelpFrameInfoContainer> listOfHelpFrameInfo = test
+//					.getHelpFrameInfoContainer();
+//			new HelpFrame("Input Page Help", listOfHelpFrameInfo, this);
+//		}
+//	}
 }

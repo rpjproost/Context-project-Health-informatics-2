@@ -7,15 +7,14 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.border.Border;
 
@@ -24,10 +23,8 @@ import context.healthinformatics.analyse.SingletonInterpreter;
 import context.healthinformatics.database.Db;
 import context.healthinformatics.database.MergeTable;
 import context.healthinformatics.database.SingletonDb;
-import context.healthinformatics.interfacecomponents.HelpFrame;
-import context.healthinformatics.interfacecomponents.HelpFrameInfoContainer;
+import context.healthinformatics.help.HelpController;
 import context.healthinformatics.interfacecomponents.IntermediateResults;
-import context.healthinformatics.parser.ReadHelpInfoFromTXTFile;
 
 /**
  * Class which represents one of the states for the variabel panel in the
@@ -54,6 +51,8 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	private IntermediateResults imr;
 	private JTextArea oldCodeArea;
 	private JButton goToOutputPageButton;
+	private JButton helpButton;
+	private HelpController helpController;
 
 	/**
 	 * Constructor.
@@ -64,6 +63,8 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	public CodePage(MainFrame m) {
 		leftPanel = createEmptyWithGridBagLayoutPanel(MainFrame.CODETABCOLOR);
 		rightPanel = createEmptyWithGridBagLayoutPanel(MainFrame.CODETABCOLOR);
+		helpController = new HelpController(
+				"src/main/data/guihelpdata/codepagehelp.txt");
 		mf = m;
 	}
 
@@ -101,8 +102,8 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	private void setLeftPanelWithCodeField() {
 		setCodeInputAreaTitle();
 		setCodeInputArea();
-		setHelpAreaTitle();
-		setHelpArea();
+		setOldCodeAreaTitle();
+		setOldCodeArea();
 		setButtonArea();
 		codePageParentpanel.add(leftPanel, setGrids(0, 0));
 	}
@@ -122,41 +123,44 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	 * Sets the code input area.
 	 */
 	private void setCodeInputArea() {
-		codeTextArea = createTextField(mf.getScreenWidth() / 2 - 2 * INSETS,
-				mf.getStatePanelSize() / 2 - FIELDCORRECTION);
+		codeTextArea = createTextField();
 		GridBagConstraints c = setGrids(0, 1);
 		c.insets = new Insets(0, INSETS, INSETS, INSETS);
-		leftPanel.add(codeTextArea, c);
+		JScrollPane scrollWithTextArea = makeScrollPaneForTextArea(
+				codeTextArea, mf.getScreenWidth() / 2 - 2 * INSETS,
+				mf.getStatePanelSize() / 2 - FIELDCORRECTION);
+		leftPanel.add(scrollWithTextArea, c);
 	}
 
 	/**
-	 * Sets the help area title.
+	 * Sets a title for the used code to analyze the data.
 	 */
-	private void setHelpAreaTitle() {
-		JLabel helpAreaTitle = createTitle("Help");
+	private void setOldCodeAreaTitle() {
+		JLabel oldCodeTitle = createTitle("Used Code:");
 		GridBagConstraints c = setGrids(0, 2);
 		c.anchor = GridBagConstraints.LINE_START;
 		c.insets = new Insets(0, INSETS, 0, 0);
-		leftPanel.add(helpAreaTitle, c);
+		leftPanel.add(oldCodeTitle, c);
 	}
 
 	/**
-	 * Sets the help area.
+	 * Sets a area to shown whoch codes the users used.
 	 */
-	private void setHelpArea() {
-		ReadHelpInfoFromTXTFile test = new ReadHelpInfoFromTXTFile(
-				"src/main/data/guihelpdata/codepagehelp.txt");
-		try {
-			test.parse();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		ArrayList<HelpFrameInfoContainer> listOfHelpFrameInfo = test
-				.getHelpFrameInfoContainer();
-		HelpFrame helpFrame = new HelpFrame("Input Page Help",
-				listOfHelpFrameInfo, mf.getScreenWidth() / 2 - 2 * INSETS,
-				mf.getStatePanelSize() / 2 - FIELDCORRECTION);
-		leftPanel.add(helpFrame.getJPanel(), setGrids(0, THREE));
+	private void setOldCodeArea() {
+		int panelWidth = mf.getScreenWidth() / 2 - 2 * INSETS;
+		int panelHeight = mf.getStatePanelSize() / 2 - FIELDCORRECTION;
+		JPanel oldCodePanel = createPanel(Color.WHITE, panelWidth, panelHeight);
+		oldCodeArea = createTextField();
+		oldCodeArea.setEditable(false);
+		Border border = BorderFactory.createLineBorder(Color.GRAY, 1);
+		JScrollPane scrollBarForOldCodeArea = makeScrollPaneForTextArea(
+				oldCodeArea, panelWidth, panelHeight);
+		oldCodeArea.setBorder(border);
+		oldCodePanel.add(scrollBarForOldCodeArea);
+		GridBagConstraints c = setGrids(0, THREE);
+		c.insets = new Insets(0, INSETS, INSETS, INSETS);
+
+		leftPanel.add(oldCodePanel, c);
 	}
 
 	/**
@@ -218,40 +222,10 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	 * Sets the right side of the interface with specific panels.
 	 */
 	private void setRightPanelWithIntermediateResult() {
-		setOldCodeAreaTitle();
-		setOldCodeArea();
 		imr = new IntermediateResults(mf);
 		rightPanel.add(imr.loadPanel(), setGrids(0, 2));
 		codePageParentpanel.add(rightPanel, setGrids(1, 0));
 		setGoToOutputPageButton();
-	}
-
-	/**
-	 * Sets a title for the used code to analyze the data.
-	 */
-	private void setOldCodeAreaTitle() {
-		JLabel oldCodeTitle = createTitle("Used Code:");
-		GridBagConstraints c = setGrids(0, 0);
-		c.anchor = GridBagConstraints.LINE_START;
-		c.insets = new Insets(0, INSETS, 0, 0);
-		rightPanel.add(oldCodeTitle, c);
-	}
-
-	/**
-	 * Sets a area to shown whoch codes the users used.
-	 */
-	private void setOldCodeArea() {
-		int panelWidth = mf.getScreenWidth() / 2 - 2 * INSETS;
-		int panelHeight = mf.getStatePanelSize() / 2 - FIELDCORRECTION;
-		JPanel oldCodePanel = createPanel(Color.WHITE, panelWidth, panelHeight);
-		oldCodeArea = createTextField(panelWidth - INSETS, panelHeight - INSETS);
-		oldCodeArea.setEditable(false);
-		Border border = BorderFactory.createLineBorder(Color.GRAY, 1);
-		oldCodeArea.setBorder(border);
-		oldCodePanel.add(oldCodeArea);
-		GridBagConstraints c = setGrids(0, 1);
-		c.insets = new Insets(0, INSETS, INSETS, INSETS);
-		rightPanel.add(oldCodePanel, c);
 	}
 
 	/**
@@ -260,14 +234,17 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	private void setGoToOutputPageButton() {
 		JPanel buttonArea = createPanel(MainFrame.CODETABCOLOR,
 				mf.getScreenWidth() / 2, FIELDCORRECTION);
-		JPanel emptyPanel = createPanel(MainFrame.CODETABCOLOR,
-				mf.getScreenWidth() / 2 - ANALYZEBUTTONWIDTH - 2 * INSETS,
-				FIELDCORRECTION);
-		buttonArea.add(emptyPanel, setGrids(0, 0));
+		helpButton = createButton("Help", ANALYZEBUTTONWIDTH,
+				ANALYZEBUTTONHEIGHT);
+		helpButton.addActionListener(new ActionHandler());
+		GridBagConstraints c = setGrids(0, 0);
+		c.insets = new Insets(INSETS, INSETS, INSETS, 0);
+		buttonArea.add(helpButton, c);
+		setEmptyPanel(buttonArea);
 		goToOutputPageButton = createButton("Go To Output", ANALYZEBUTTONWIDTH,
 				ANALYZEBUTTONHEIGHT);
 		goToOutputPageButton.addActionListener(new ActionHandler());
-		GridBagConstraints c = setGrids(1, 0);
+		c = setGrids(THREE, 0);
 		c.insets = new Insets(INSETS, 0, INSETS, INSETS);
 		buttonArea.add(goToOutputPageButton, c);
 		rightPanel.add(buttonArea, setGrids(0, FOUR));
@@ -290,14 +267,18 @@ public class CodePage extends InterfaceHelper implements PanelState,
 					imr.updateIntermediateResult();
 					codeTextArea.setText("");
 					oldCodeArea.append(code + "\n");
-					// setText(oldCodeArea.getText() + code);
 				} catch (Exception e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 			}
 			if (e.getSource() == goBackButton) {
 				System.out.println("go back");
+			}
+			if (e.getSource() == goToOutputPageButton) {
+				System.out.println("go to output");
+			}
+			if (e.getSource() == helpButton) {
+				helpController.handleHelpButton();
 			}
 		}
 	}

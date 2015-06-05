@@ -125,6 +125,17 @@ public class InterfaceHelper extends JPanel {
 	}
 
 	/**
+	 * Create a text field with given font.
+	 * 
+	 * @return the text area
+	 */
+	protected JTextArea createTextField() {
+		JTextArea area = new JTextArea();
+		area.setFont(new Font("Arial", Font.PLAIN, TEXTSIZE));
+		return area;
+	}
+
+	/**
 	 * Creates a button width a specified name width and height. Default font is
 	 * Arial with letter size 20.
 	 * 
@@ -286,6 +297,26 @@ public class InterfaceHelper extends JPanel {
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		scrollPane.setPreferredSize(new Dimension(PARENTWIDTH, PARENTHEIGHT));
+		return scrollPane;
+	}
+
+	/**
+	 * Make a scrollPanefor the TextArea.
+	 * 
+	 * @param textAreaWithScollPane
+	 *            the TextArea for which the Scroll Pane is made
+	 * @param width
+	 *            the width of the scrollPane
+	 * @param height
+	 *            the height of the scrollPane
+	 * @return the scrollPane
+	 */
+	public JScrollPane makeScrollPaneForTextArea(
+			JTextArea textAreaWithScollPane, int width, int height) {
+		JScrollPane scrollPane = new JScrollPane(textAreaWithScollPane,
+				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scrollPane.setPreferredSize(new Dimension(width, height));
 		return scrollPane;
 	}
 

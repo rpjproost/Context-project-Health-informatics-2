@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import context.healthinformatics.interfacecomponents.HelpFrameInfoContainer;
+import context.healthinformatics.help.HelpFrameInfoContainer;
 
 /**
  * Class which reads a text file and makes a list of HelpFrameInfoContainers.
