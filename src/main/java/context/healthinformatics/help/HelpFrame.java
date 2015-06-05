@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
@@ -29,13 +30,13 @@ public class HelpFrame extends InterfaceHelper {
 
 	private static final int FRAME_WIDTH = 600;
 	private static final int FRAME_HEIGHT = 500;
-	private static final int TEXTAREA_WIDTH = 20;
-	private static final int TEXTARE_HEIGHT = 20;
+	private static final int TEXTAREA_WIDTH = 400;
+	private static final int TEXTARE_HEIGHT = 500;
 	private static final int BUTTON_WIDTH = 180;
 	private static final int BUTTON_HEIGHT = 30;
 	private static final float FONT_SIZE = 15.0f;
 	private static final int MARGINTOP = 10;
-	private static final int THREE = 3;
+	private static final int TAB_PANEL_WIDTH = 200;
 
 	private JFrame helpMainFrame;
 
@@ -43,9 +44,6 @@ public class HelpFrame extends InterfaceHelper {
 	private JPanel tabPanel;
 	private JPanel infoPanel;
 	private JScrollPane scroll;
-	private int width;
-	private int height;
-	private int textareawidth;
 
 	private JEditorPane displayHtmlPane = new JEditorPane();
 
@@ -66,35 +64,13 @@ public class HelpFrame extends InterfaceHelper {
 	public HelpFrame(String titleFrame,
 			ArrayList<HelpFrameInfoContainer> listOfHelpFrameInfo,
 			HelpController helpController) {
-		width = FRAME_WIDTH;
-		height = FRAME_HEIGHT;
-		textareawidth = (width * 2) / THREE;
 		setUpHelpFrame(titleFrame, listOfHelpFrameInfo);
 		this.helpController = helpController;
 		setWindowListener();
 		initMainPanel();
 	}
 
-	/**
-	  * Constructor of the HelpFrame class.
-	 * 
-	 * @param titleFrame
-	 *            the title of the frame
-	 * @param listOfHelpFrameInfo
-	 *            the list with info for the help frame
-	 * @param width the width of where it will be loaded in.
-	 * @param height the height of where it will be loaded in.
-	 */
-	public HelpFrame(String titleFrame, 
-			ArrayList<HelpFrameInfoContainer> listOfHelpFrameInfo, int width, int height) {
-		this.width = width;
-		this.height = height;
-		textareawidth = (width * 2) / THREE;
-		setUpHelpFrame(titleFrame, listOfHelpFrameInfo);
-		initMainPanelNoPopUp();
-	}
-
-	private void setUpHelpFrame(String titleFrame, 
+	private void setUpHelpFrame(String titleFrame,
 			ArrayList<HelpFrameInfoContainer> listOfHelpFrameInfo) {
 		this.listOfHelpFrameInfo = listOfHelpFrameInfo;
 		helpMainFrame = new JFrame(titleFrame);
@@ -121,8 +97,8 @@ public class HelpFrame extends InterfaceHelper {
 	private void setTextAreaSettings() {
 		this.displayHtmlPane.setEditable(false);
 		displayHtmlPane.setContentType("text/html");
-		this.displayHtmlPane.setPreferredSize(new Dimension(textareawidth - TEXTAREA_WIDTH,
-				height - TEXTARE_HEIGHT));
+		this.displayHtmlPane.setPreferredSize(new Dimension(TEXTAREA_WIDTH,
+				FRAME_HEIGHT));
 		this.displayHtmlPane.setFont(displayHtmlPane.getFont().deriveFont(
 				FONT_SIZE));
 		this.displayHtmlPane.setCaretPosition(0);
@@ -135,8 +111,7 @@ public class HelpFrame extends InterfaceHelper {
 	private void initScrollPane() {
 		scroll = new JScrollPane(displayHtmlPane);
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-		scroll.setPreferredSize(new Dimension(textareawidth - TEXTAREA_WIDTH, 
-				height - TEXTARE_HEIGHT));
+		scroll.setPreferredSize(new Dimension(TEXTAREA_WIDTH, TEXTARE_HEIGHT));
 		scroll.getVerticalScrollBar().setValue(0);
 	}
 
@@ -145,14 +120,8 @@ public class HelpFrame extends InterfaceHelper {
 	 */
 	private void initMainPanel() {
 		mainPanel = createEmptyWithGridBagLayoutPanel();
-		mainPanel.setPreferredSize(new Dimension(width, height));
+		mainPanel.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT));
 		initHelpMainFrame();
-	}
-	
-	private void initMainPanelNoPopUp() {
-		mainPanel = createEmptyWithGridBagLayoutPanel();
-		mainPanel.setPreferredSize(new Dimension(width, height));
-		initTabAndInfoPanel();
 	}
 
 	/**
@@ -173,11 +142,10 @@ public class HelpFrame extends InterfaceHelper {
 	 */
 	private void initTabAndInfoPanel() {
 		tabPanel = createEmptyWithGridBagLayoutPanel();
-		tabPanel.setPreferredSize(new Dimension(width / THREE, height));
+		tabPanel.setPreferredSize(new Dimension(TAB_PANEL_WIDTH, FRAME_HEIGHT));
 		tabPanel.setBackground(Color.WHITE);
 		infoPanel = createEmptyWithGridBagLayoutPanel();
-		infoPanel
-				.setPreferredSize(new Dimension(textareawidth, height));
+		infoPanel.setPreferredSize(new Dimension(TEXTAREA_WIDTH, FRAME_HEIGHT));
 		infoPanel.setBackground(Color.WHITE);
 		addTabAndInfoPanel();
 	}
@@ -191,6 +159,14 @@ public class HelpFrame extends InterfaceHelper {
 		mainPanel.add(infoPanel, setGrids(1, 0));
 		addButtonsToTabPanel();
 		adddisplayHtmlPaneToInfo();
+	}
+
+	/**
+	 * Add the HtmlPane to the info panel.
+	 */
+	private void adddisplayHtmlPaneToInfo() {
+		displayHtmlPane.setText(listOfHelpFrameInfo.get(0).getInfo());
+		displayHtmlPane.setCaretPosition(0);
 	}
 
 	/**
@@ -225,24 +201,9 @@ public class HelpFrame extends InterfaceHelper {
 			}
 		});
 	}
-	
-	/**
-	 * @return the help panel where everything will be showed.
-	 */
-	public JPanel getJPanel() {
-		return mainPanel;
-	}
 
 	/**
-	 * Add the HtmlPane to the info panel.
-	 */
-	private void adddisplayHtmlPaneToInfo() {
-		displayHtmlPane.setText(listOfHelpFrameInfo.get(0).getInfo());
-		displayHtmlPane.setCaretPosition(0);
-	}
-
-	/**
-	 * Create action listener for a link in the html documents.
+	 * Create action listener for a link in the HTML documents.
 	 */
 	private void addHyperLinkListener() {
 		this.displayHtmlPane.addHyperlinkListener(new HyperlinkListener() {
@@ -252,10 +213,12 @@ public class HelpFrame extends InterfaceHelper {
 						&& Desktop.isDesktopSupported()) {
 					try {
 						Desktop.getDesktop().browse(e.getURL().toURI());
-					} catch (IOException e1) {
-						e1.printStackTrace();
-					} catch (URISyntaxException e1) {
-						e1.printStackTrace();
+					} catch (IOException | URISyntaxException e1) {
+						JOptionPane
+								.showMessageDialog(null,
+										"We could not open this link for you!",
+										"Open Link Error!",
+										JOptionPane.WARNING_MESSAGE);
 					}
 
 				}
