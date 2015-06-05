@@ -27,7 +27,6 @@ public class IntermediateResults extends InterfaceHelper {
 	private static final int TEN = 100;
 	private static final int NINE = 98;
 	private int intermediateResultWidth;
-	private Db database = SingletonDb.getDb();
 
 	private JPanel interMediateResultParentPanel;
 	private JEditorPane displayHtmlPane = new JEditorPane();
@@ -107,6 +106,7 @@ public class IntermediateResults extends InterfaceHelper {
 			globalChunkCounter = 1;
 			this.displayHtmlPane.setText(buildHtmlOfIntermediateResult());
 			this.displayHtmlPane.setCaretPosition(0);
+			this.displayHtmlPane.revalidate();
 		} else {
 			this.displayHtmlPane
 					.setText("<h1>There is no intermediate result to display</h1>");
@@ -121,12 +121,12 @@ public class IntermediateResults extends InterfaceHelper {
 	private String buildHtmlOfIntermediateResult() {
 		ArrayList<Chunk> chunks = interpreter.getChunks();
 		StringBuilder buildString = new StringBuilder();
-
-		String htmlOfColumnTableRow = buildColumnsHTMLTableRow(database.getColumns());
+		Db database = SingletonDb.getDb();
+		String htmlOfColumnTableRow = buildColumnsHTMLTableRow(database
+				.getColumns());
 		String htmlOfTableContent = loopThroughChunks(chunks);
-
 		buildString.append("<html><body><h2>Number of chunks: "
-				+ globalChunkCounter + "</h2><table style='width:100%;'>");
+				+ (globalChunkCounter - 1) + "</h2><table style='width:100%;'>");
 		buildString.append(htmlOfColumnTableRow);
 		buildString.append(htmlOfTableContent);
 

@@ -104,5 +104,4 @@ public class OutputPage extends InterfaceHelper implements PanelState, Serializa
 			} 
 		}
 	}
-
 }

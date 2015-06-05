@@ -8,7 +8,6 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serializable;
-import java.sql.SQLException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -20,9 +19,6 @@ import javax.swing.border.Border;
 
 import context.healthinformatics.analyse.Interpreter;
 import context.healthinformatics.analyse.SingletonInterpreter;
-import context.healthinformatics.database.Db;
-import context.healthinformatics.database.MergeTable;
-import context.healthinformatics.database.SingletonDb;
 import context.healthinformatics.help.HelpController;
 import context.healthinformatics.interfacecomponents.IntermediateResults;
 
@@ -37,12 +33,12 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	private static final int FIELDCORRECTION = 130;
 	private static final int ANALYZEBUTTONWIDTH = 220;
 	private static final int ANALYZEBUTTONHEIGHT = 80;
-	public static final int INSETS = 10;
+	private static final int INSETS = 10;
 	private static final int THREE = 3;
 	private static final int FOUR = 4;
 	private MainFrame mf;
 	private JTextArea codeTextArea;
-	private Interpreter interpreter = SingletonInterpreter.getInterpreter();
+	private Interpreter interpreter;
 	private JPanel codePageParentpanel;
 	private JPanel leftPanel;
 	private JPanel rightPanel;
@@ -53,6 +49,8 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	private JButton goToOutputPageButton;
 	private JButton helpButton;
 	private HelpController helpController;
+	private JScrollPane scrollWithTextArea;
+	private JScrollPane scrollBarForOldCodeArea;
 
 	/**
 	 * Constructor.
@@ -66,33 +64,66 @@ public class CodePage extends InterfaceHelper implements PanelState,
 		helpController = new HelpController(
 				"src/main/data/guihelpdata/codepagehelp.txt");
 		mf = m;
+		initButtons();
+		initActionListeners();
+		initTextFields();
+		initAll();
 	}
 
-	@Override
+	/**
+	 * Load the panel of the code page.
+	 * 
+	 * @return the panel of the code page
+	 */
 	public JPanel loadPanel() {
-		mergeTables();
+		imr.updateIntermediateResult();
+		JPanel panel = createPanel(MainFrame.CODETABCOLOR, mf.getScreenWidth(),
+				mf.getStatePanelSize());
+		panel.add(codePageParentpanel);
+		return panel;
+	}
+
+	private void initTextFields() {
+		int panelWidth = mf.getScreenWidth() / 2 - 2 * INSETS;
+		int panelHeight = mf.getStatePanelSize() / 2 - FIELDCORRECTION;
+		codeTextArea = createTextField();
+		scrollWithTextArea = makeScrollPaneForTextArea(codeTextArea,
+				mf.getScreenWidth() / 2 - 2 * INSETS, mf.getStatePanelSize()
+						/ 2 - FIELDCORRECTION);
+		oldCodeArea = createTextField();
+		oldCodeArea.setEditable(false);
+		Border border = BorderFactory.createLineBorder(Color.GRAY, 1);
+		scrollBarForOldCodeArea = makeScrollPaneForTextArea(oldCodeArea,
+				panelWidth, panelHeight);
+		oldCodeArea.setBorder(border);
+	}
+
+	private void initButtons() {
+		goBackButton = createButton("Go Back", ANALYZEBUTTONWIDTH,
+				ANALYZEBUTTONHEIGHT);
+		analyseButton = createButton("Analyse", ANALYZEBUTTONWIDTH,
+				ANALYZEBUTTONHEIGHT);
+		goToOutputPageButton = createButton("Go to Output", ANALYZEBUTTONWIDTH,
+				ANALYZEBUTTONHEIGHT);
+		helpButton = createButton("Help", ANALYZEBUTTONWIDTH,
+				ANALYZEBUTTONHEIGHT);
+	}
+
+	private void initActionListeners() {
+		goBackButton.addActionListener(new ActionHandler());
+		analyseButton.addActionListener(new ActionHandler());
+		goToOutputPageButton.addActionListener(new ActionHandler());
+		helpButton.addActionListener(new ActionHandler());
+	}
+
+	private void initAll() {
 		codePageParentpanel = createPanel(MainFrame.CODETABCOLOR,
 				mf.getScreenWidth(), mf.getStatePanelSize());
 		codePageParentpanel.setLayout(new GridBagLayout());
 		leftPanel.setPreferredSize(new Dimension(mf.getScreenWidth() / 2, mf
 				.getStatePanelSize()));
 		setLeftPanelWithCodeField();
-		setRightPanelWithIntermediateResult();
-		return codePageParentpanel;
-	}
-
-	private void mergeTables() {
-		Db db = SingletonDb.getDb();
-		if (db.getTables().size() > 0 && !db.getTables().containsKey("result")) {
-			MergeTable mergeTables = new MergeTable();
-			String[] clause = new String[1];
-			clause[0] = "meeting.createdby = 'admire2'";
-			try {
-				mergeTables.merge(clause);
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
+		setRightPanelWithOldIntermediateResult();
 	}
 
 	/**
@@ -111,23 +142,18 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	 * Sets a title to the code input area panel.
 	 */
 	private void setCodeInputAreaTitle() {
-		JLabel codeTextTitleLabel = createTitle("Code input area:");
 		GridBagConstraints c = setGrids(0, 0);
 		c.anchor = GridBagConstraints.LINE_START;
 		c.insets = new Insets(0, INSETS, 0, 0);
-		leftPanel.add(codeTextTitleLabel, c);
+		leftPanel.add(createTitle("Code input area:"), c);
 	}
 
 	/**
 	 * Sets the code input area.
 	 */
 	private void setCodeInputArea() {
-		codeTextArea = createTextField();
 		GridBagConstraints c = setGrids(0, 1);
 		c.insets = new Insets(0, INSETS, INSETS, INSETS);
-		JScrollPane scrollWithTextArea = makeScrollPaneForTextArea(
-				codeTextArea, mf.getScreenWidth() / 2 - 2 * INSETS,
-				mf.getStatePanelSize() / 2 - FIELDCORRECTION);
 		leftPanel.add(scrollWithTextArea, c);
 	}
 
@@ -149,12 +175,7 @@ public class CodePage extends InterfaceHelper implements PanelState,
 		int panelWidth = mf.getScreenWidth() / 2 - 2 * INSETS;
 		int panelHeight = mf.getStatePanelSize() / 2 - FIELDCORRECTION;
 		JPanel oldCodePanel = createPanel(Color.WHITE, panelWidth, panelHeight);
-		oldCodeArea = createTextField();
-		oldCodeArea.setEditable(false);
-		Border border = BorderFactory.createLineBorder(Color.GRAY, 1);
-		JScrollPane scrollBarForOldCodeArea = makeScrollPaneForTextArea(
-				oldCodeArea, panelWidth, panelHeight);
-		oldCodeArea.setBorder(border);
+
 		oldCodePanel.add(scrollBarForOldCodeArea);
 		GridBagConstraints c = setGrids(0, THREE);
 		c.insets = new Insets(0, INSETS, INSETS, INSETS);
@@ -181,12 +202,8 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	 *            the panel which the go back button will added to.
 	 */
 	private void setGoBackButton(JPanel panel) {
-		goBackButton = createButton("Go Back", ANALYZEBUTTONWIDTH,
-				ANALYZEBUTTONHEIGHT);
-		goBackButton.addActionListener(new ActionHandler());
-		GridBagConstraints c = setGrids(0, 0);
-		c.insets = new Insets(INSETS, INSETS, INSETS, 0);
-		panel.add(goBackButton, c);
+		panel.add(goBackButton,
+				setGrids(0, 0, new Insets(INSETS, INSETS, INSETS, 0)));
 	}
 
 	/**
@@ -209,18 +226,12 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	 *            which the analyze button will be added to.
 	 */
 	private void setAnalyseButton(JPanel panel) {
-		analyseButton = createButton("Analyse", ANALYZEBUTTONWIDTH,
-				ANALYZEBUTTONHEIGHT);
-		analyseButton.addActionListener(new ActionHandler());
 		GridBagConstraints c = setGrids(2, 0);
 		c.insets = new Insets(INSETS, 0, INSETS, INSETS);
 		panel.add(analyseButton, c);
 	}
 
-	/**
-	 * Sets the right side of the interface with specific panels.
-	 */
-	private void setRightPanelWithIntermediateResult() {
+	private void setRightPanelWithOldIntermediateResult() {
 		imr = new IntermediateResults(mf);
 		rightPanel.add(imr.loadPanel(), setGrids(0, 2));
 		codePageParentpanel.add(rightPanel, setGrids(1, 0));
@@ -233,16 +244,10 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	private void setGoToOutputPageButton() {
 		JPanel buttonArea = createPanel(MainFrame.CODETABCOLOR,
 				mf.getScreenWidth() / 2, FIELDCORRECTION);
-		helpButton = createButton("Help", ANALYZEBUTTONWIDTH,
-				ANALYZEBUTTONHEIGHT);
-		helpButton.addActionListener(new ActionHandler());
 		GridBagConstraints c = setGrids(0, 0);
 		c.insets = new Insets(INSETS, INSETS, INSETS, 0);
 		buttonArea.add(helpButton, c);
 		setEmptyPanel(buttonArea);
-		goToOutputPageButton = createButton("Go To Output", ANALYZEBUTTONWIDTH,
-				ANALYZEBUTTONHEIGHT);
-		goToOutputPageButton.addActionListener(new ActionHandler());
 		c = setGrids(THREE, 0);
 		c.insets = new Insets(INSETS, 0, INSETS, INSETS);
 		buttonArea.add(goToOutputPageButton, c);
@@ -260,6 +265,7 @@ public class CodePage extends InterfaceHelper implements PanelState,
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (e.getSource() == analyseButton) {
+				interpreter = SingletonInterpreter.getInterpreter();
 				try {
 					String code = codeTextArea.getText();
 					interpreter.interpret(code);
@@ -271,10 +277,12 @@ public class CodePage extends InterfaceHelper implements PanelState,
 				}
 			}
 			if (e.getSource() == goBackButton) {
-				System.out.println("go back");
+				mf.setState(mf.getInputPage());
+				mf.reloadStatePanel();
 			}
 			if (e.getSource() == goToOutputPageButton) {
-				System.out.println("go to output");
+				mf.setState(mf.getOutputPage());
+				mf.reloadStatePanel();
 			}
 			if (e.getSource() == helpButton) {
 				helpController.handleHelpButton();
