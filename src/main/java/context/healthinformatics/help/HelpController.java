@@ -14,6 +14,7 @@ public class HelpController implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private boolean helpFrameOpen;
 	private ReadHelpInfoFromTXTFile readHelpFromTXTFile;
+	private HelpFrame theHelpFrame;
 
 	/**
 	 * Makes a reader for the help area and sets the frame open on false.
@@ -32,16 +33,23 @@ public class HelpController implements Serializable {
 	 */
 	public void handleHelpButton() {
 		if (!helpFrameOpen) {
-			setHelpFrameOpen(true);
-			try {
-				readHelpFromTXTFile.parse();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			ArrayList<HelpFrameInfoContainer> listOfHelpFrameInfo = readHelpFromTXTFile
-					.getHelpFrameInfoContainer();
-			new HelpFrame("Input Page Help", listOfHelpFrameInfo, this);
+			createNewHelpFrame();
+		} else {
+			theHelpFrame.getHelpFrame().toFront();
 		}
+	}
+
+	private void createNewHelpFrame() {
+		setHelpFrameOpen(true);
+		try {
+			readHelpFromTXTFile.parse();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		ArrayList<HelpFrameInfoContainer> listOfHelpFrameInfo = readHelpFromTXTFile
+				.getHelpFrameInfoContainer();
+		theHelpFrame = new HelpFrame("Input Page Help", listOfHelpFrameInfo,
+				this);
 	}
 
 	/**

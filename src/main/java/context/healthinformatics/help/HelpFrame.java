@@ -225,4 +225,13 @@ public class HelpFrame extends InterfaceHelper {
 			}
 		});
 	}
+
+	/**
+	 * Get the main frame of the Help window.
+	 * 
+	 * @return the frame
+	 */
+	public JFrame getHelpFrame() {
+		return helpMainFrame;
+	}
 }
