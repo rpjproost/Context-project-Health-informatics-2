@@ -16,7 +16,10 @@ import context.healthinformatics.parser.Column;
 public class ColumnFieldContainer extends InterfaceHelper implements
 		ActionListener {
 	private static final long serialVersionUID = 1L;
-
+	
+	private static final int XML_EDITOR_WIDTH = 800;
+	private static final int FORM_ELEMENT_HEIGHT = 25;
+	
 	private JTextField columnID;
 	private JTextField columnName;
 	private JComboBox<String> columnType;
@@ -319,8 +322,8 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	 */
 	private void addTheDateTypeElement(String selectedItem) {
 		comboValue = selectedItem;
-		dateTypePanel = makeFormRowWithTextField("Specified datetype: ",
-				getDateType());
+		dateTypePanel = makeFormRowPanelWithTextField("Specified datetype: ",
+				getDateType(), XML_EDITOR_WIDTH, FORM_ELEMENT_HEIGHT);
 		panel.add(dateTypePanel, setGrids(0, THREE));
 		panel.revalidate();
 	}

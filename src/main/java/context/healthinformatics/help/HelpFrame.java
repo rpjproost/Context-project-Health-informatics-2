@@ -3,6 +3,7 @@ package context.healthinformatics.help;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -179,7 +180,7 @@ public class HelpFrame extends InterfaceHelper {
 			currentButton.setPreferredSize(new Dimension(BUTTON_WIDTH,
 					BUTTON_HEIGHT));
 			addActionListenerToThisButton(currentButton, i);
-			tabPanel.add(currentButton, setGrids(0, i, MARGINTOP));
+			tabPanel.add(currentButton, setGrids(0, i, new Insets(MARGINTOP, 0, 0, 0)));
 		}
 	}
 

@@ -1,6 +1,7 @@
 package context.healthinformatics.interfacecomponents;
 
 import java.awt.Color;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -26,6 +27,12 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 
 	private static final int THREE = 3;
 
+	private static final int PARENTWIDTH = 900;
+	private static final int PARENTHEIGHT = 650;
+	private static final int FORM_ELEMENT_HEIGHT = 25;
+	private static final int BUTTON_PANEL_HEIGHT = 35;
+	private static final int XML_EDITOR_WIDTH = 800;
+
 	private JPanel containerScrollPanel;
 	private JScrollPane scrollPane;
 
@@ -38,19 +45,18 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	private InputPage inputPage;
 
 	/**
-	 * Empty Constructor of the XMLEditor.
+	 * Constructor of the XMLEditor.
 	 * 
 	 * @param inputPage
 	 *            the input page with the XMLEditorController
 	 */
 	public XMLEditor(InputPage inputPage) {
 		this.inputPage = inputPage;
-		documentFieldsContainers = new ArrayList<DocumentFieldsContainer>();
-		JPanel extraContainer = createContainerPanel();
-		containerScrollPanel = createContainerPanel();
-		extraContainer.add(containerScrollPanel, setGrids(0, 0));
+		this.documentFieldsContainers = new ArrayList<DocumentFieldsContainer>();
+		containerScrollPanel = createContainerWithGivenSizePanel(PARENTWIDTH, PARENTHEIGHT);
+		scrollPane = makeScrollPaneForContainerPanel(containerScrollPanel,
+				PARENTWIDTH, PARENTHEIGHT);
 		addActionListeners();
-		scrollPane = makeScrollPaneForContainerPanel(extraContainer);
 	}
 
 	/**
@@ -74,8 +80,9 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 		parentPanel.add(createTitle("The XMLEditor:"), setGrids(0, 0));
 		parentPanel.add(scrollPaneContainerPanel, setGrids(0, 1));
 		parentPanel.add(
-				makeFormRowWithThreeButton(addDocument, saveXMLDocument,
-						removeDocument), setGrids(0, 2, MARGINTOP));
+				makeFormRowPanelWithThreeButton(addDocument, saveXMLDocument,
+						removeDocument, XML_EDITOR_WIDTH, BUTTON_PANEL_HEIGHT),
+				setGrids(0, 2, new Insets(MARGINTOP, 0, 0, 0)));
 		return parentPanel;
 	}
 
@@ -91,9 +98,12 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 		JPanel documentContainerPanel = createDocumentPanel(documentFieldsContainers
 				.get(documentFieldsContainers.size() - 1));
 		documentPanels.add(documentContainerPanel);
-		containerScrollPanel.add(documentContainerPanel,
-				setGrids(0, documentFieldsContainers.size() - 1, MARGINTOP));
+		containerScrollPanel.add(
+				documentContainerPanel,
+				setGrids(0, documentFieldsContainers.size() - 1, new Insets(
+						MARGINTOP, 0, 0, 0)));
 		scrollPane.revalidate();
+		scrollPane.getVerticalScrollBar().setValue(0);
 	}
 
 	/**
@@ -149,11 +159,13 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 			DocumentFieldsContainer documentFieldContainer) {
 		if (documentFieldContainer.getDocumentTypeValue().toLowerCase()
 				.equals("excel")) {
-			return makeFormRowWithTextField("Document sheet: ",
-					documentFieldContainer.getSheet());
+			return makeFormRowPanelWithTextField("Document sheet: ",
+					documentFieldContainer.getSheet(), XML_EDITOR_WIDTH,
+					FORM_ELEMENT_HEIGHT);
 		} else {
-			return makeFormRowWithTextField("Document delimiter: ",
-					documentFieldContainer.getDelimiter());
+			return makeFormRowPanelWithTextField("Document delimiter: ",
+					documentFieldContainer.getDelimiter(), XML_EDITOR_WIDTH,
+					FORM_ELEMENT_HEIGHT);
 		}
 	}
 
@@ -168,20 +180,21 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 			DocumentFieldsContainer documentFieldContainer) {
 		JPanel standardSettingsPanel = createEmptyWithGridBagLayoutPanel();
 		standardSettingsPanel.add(
-				makeFormRowWithTextField("Document name: ",
-						documentFieldContainer.getDocumentName()),
-				setGrids(0, 0));
+				makeFormRowPanelWithTextField("Document name: ",
+						documentFieldContainer.getDocumentName(),
+						XML_EDITOR_WIDTH, FORM_ELEMENT_HEIGHT), setGrids(0, 0));
 		standardSettingsPanel.add(
-				makeFormRowWithComboBox("Document type: ",
-						documentFieldContainer.getDocumentType()),
-				setGrids(0, 1));
+				makeFormRowPanelWithComboBox("Document type: ",
+						documentFieldContainer.getDocumentType(),
+						XML_EDITOR_WIDTH, FORM_ELEMENT_HEIGHT), setGrids(0, 1));
 		standardSettingsPanel.add(
-				makeFormRowWithTextField("Document path: ",
-						documentFieldContainer.getDocumentPath()),
-				setGrids(0, 2));
+				makeFormRowPanelWithTextField("Document path: ",
+						documentFieldContainer.getDocumentPath(),
+						XML_EDITOR_WIDTH, FORM_ELEMENT_HEIGHT), setGrids(0, 2));
 		standardSettingsPanel.add(
-				makeFormRowWithTextField("Document start line: ",
-						documentFieldContainer.getStartLine()),
+				makeFormRowPanelWithTextField("Document start line: ",
+						documentFieldContainer.getStartLine(),
+						XML_EDITOR_WIDTH, FORM_ELEMENT_HEIGHT),
 				setGrids(0, THREE));
 		return standardSettingsPanel;
 	}
@@ -199,10 +212,10 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 		ArrayList<ColumnFieldContainer> columnsOfDocument = documentFieldContainer
 				.getColumnFields();
 		columnFormPanel.add(
-				makeFormRowWithButton(
+				makeFormRowPanelWithTwoButton(
 						documentFieldContainer.getAddColumnButton(),
-						documentFieldContainer.getRemoveColumnButton()),
-				setGrids(0, 0));
+						documentFieldContainer.getRemoveColumnButton(),
+						XML_EDITOR_WIDTH, BUTTON_PANEL_HEIGHT), setGrids(0, 0));
 		for (int i = 0; i < columnsOfDocument.size(); i++) {
 			columnFormPanel.add(createColumnForm(columnsOfDocument.get(i)),
 					setGrids(0, i + 1));
@@ -240,8 +253,10 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	 */
 	private JPanel getDateTypePanel(
 			ColumnFieldContainer currentColumnFieldContainer) {
-		JPanel dateTypePanel = makeFormRowWithTextField("Specified datetype: ",
-				currentColumnFieldContainer.getDateType());
+		JPanel dateTypePanel = makeFormRowPanelWithTextField(
+				"Specified datetype: ",
+				currentColumnFieldContainer.getDateType(), XML_EDITOR_WIDTH,
+				FORM_ELEMENT_HEIGHT);
 		currentColumnFieldContainer.setDateTypePanel(dateTypePanel);
 		return dateTypePanel;
 	}
@@ -257,17 +272,17 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 			ColumnFieldContainer currentColumnFieldContainer) {
 		JPanel containerPanel = createEmptyWithGridBagLayoutPanel();
 		containerPanel.add(
-				makeFormRowWithTextField("Column id: ",
-						currentColumnFieldContainer.getColumnID()),
-				setGrids(0, 0));
+				makeFormRowPanelWithTextField("Column id: ",
+						currentColumnFieldContainer.getColumnID(),
+						XML_EDITOR_WIDTH, FORM_ELEMENT_HEIGHT), setGrids(0, 0));
 		containerPanel.add(
-				makeFormRowWithTextField("Column name: ",
-						currentColumnFieldContainer.getColumnName()),
-				setGrids(0, 1));
+				makeFormRowPanelWithTextField("Column name: ",
+						currentColumnFieldContainer.getColumnName(),
+						XML_EDITOR_WIDTH, FORM_ELEMENT_HEIGHT), setGrids(0, 1));
 		containerPanel.add(
-				makeFormRowWithComboBox("Select type: ",
-						currentColumnFieldContainer.getColumnType()),
-				setGrids(0, 2));
+				makeFormRowPanelWithComboBox("Select type: ",
+						currentColumnFieldContainer.getColumnType(),
+						XML_EDITOR_WIDTH, FORM_ELEMENT_HEIGHT), setGrids(0, 2));
 		return containerPanel;
 	}
 
@@ -328,6 +343,16 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 		}
 	}
 
+	private void handleRemoveButton() {
+		if (documentFieldsContainers.size() > 0) {
+			removeDocument();
+		} else {
+			JOptionPane.showMessageDialog(null,
+					"You can't remove a document, because there are none!",
+					"Remove Document Error", JOptionPane.WARNING_MESSAGE);
+		}
+	}
+
 	/**
 	 * Remove a document from the document field.
 	 */
@@ -347,9 +372,7 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 			inputPage.getXMLController().updateDocuments(inputPage,
 					getAllXMLDocuments());
 		} else if (e.getSource() == removeDocument) {
-			if (documentFieldsContainers.size() > 0) {
-				removeDocument();
-			}
+			handleRemoveButton();
 		} else if (e.getSource() == saveXMLDocument) {
 			saveXMLFile();
 		}

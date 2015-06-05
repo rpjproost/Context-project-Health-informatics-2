@@ -25,18 +25,13 @@ import javax.swing.ScrollPaneConstants;
 public class InterfaceHelper extends JPanel {
 
 	private static final long serialVersionUID = 1L;
+	
 	private int tabsX;
 	private static final int TABSY = 120;
 	private static final int TABTEXTFONTSIZE = 40;
 	public static final int TITLEFONT = 28;
 	private static final int TEXTSIZE = 20;
-
-	private static final int PARENTWIDTH = 900;
-	private static final int PARENTHEIGHT = 650;
-	private static final int BUTTONHEIGHT = 35;
-	private static final int FORMELEMENTWIDTH = 800;
 	private static final int THREE = 3;
-	private static final int FORMELEMENTHEIGHT = 25;
 
 	/**
 	 * @return JPanel with attributes specified by the arguments.
@@ -73,19 +68,19 @@ public class InterfaceHelper extends JPanel {
 	}
 
 	/**
-	 * Set the gridbag location of a Component with margin top.
+	 * Set the GridBag location of a Component with margin top.
 	 * 
 	 * @param x
 	 *            coordinate.
 	 * @param y
 	 *            coordinate.
-	 * @param marginTop
-	 *            let gridbag marge top.
+	 * @param insets
+	 *            set insets on the gridBagConstraints
 	 * @return the location for the Component.
 	 */
-	protected GridBagConstraints setGrids(int x, int y, int marginTop) {
+	protected GridBagConstraints setGrids(int x, int y, Insets insets) {
 		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(marginTop, 0, 0, 0);
+		c.insets = insets;
 		c.gridx = x;
 		c.gridy = y;
 		return c;
@@ -105,23 +100,6 @@ public class InterfaceHelper extends JPanel {
 		c.gridx = x;
 		c.gridy = y;
 		return c;
-	}
-
-	/**
-	 * Creates a text area with a specified width and height. default font is
-	 * Arial with letter size 20.
-	 * 
-	 * @param fieldwidth
-	 *            the width of the text area.
-	 * @param fieldheight
-	 *            the height of the text area.
-	 * @return new text field area.
-	 */
-	protected JTextArea createTextField(int fieldwidth, int fieldheight) {
-		JTextArea area = new JTextArea();
-		area.setPreferredSize(new Dimension(fieldwidth, fieldheight));
-		area.setFont(new Font("Arial", Font.PLAIN, TEXTSIZE));
-		return area;
 	}
 
 	/**
@@ -213,11 +191,15 @@ public class InterfaceHelper extends JPanel {
 	 *            the button on the left side of the panel
 	 * @param buttonRight
 	 *            the button on the right side of the panel
+	 * @param buttonWidth
+	 *            the width of the button
+	 * @param buttonHeight
+	 *            the height of the button
 	 * @return the panel with white space and the button
 	 */
-	public JPanel makeFormRowWithButton(JButton buttonLeft, JButton buttonRight) {
-		JPanel buttonPanel = createPanel(Color.WHITE, FORMELEMENTWIDTH,
-				BUTTONHEIGHT);
+	public JPanel makeFormRowPanelWithTwoButton(JButton buttonLeft,
+			JButton buttonRight, int buttonWidth, int buttonHeight) {
+		JPanel buttonPanel = createPanel(Color.WHITE, buttonWidth, buttonHeight);
 		buttonPanel.setLayout(new GridLayout(1, THREE));
 		buttonPanel.add(buttonLeft);
 		buttonPanel.add(new JPanel());
@@ -234,12 +216,15 @@ public class InterfaceHelper extends JPanel {
 	 *            the button in the middle
 	 * @param buttonRight
 	 *            the button on the right.
+	 * @param width
+	 *            the with of the panel
+	 * @param height
+	 *            the height of the panel
 	 * @return the panel containing the buttons
 	 */
-	public JPanel makeFormRowWithThreeButton(JButton buttonLeft,
-			JButton middleButton, JButton buttonRight) {
-		JPanel buttonPanel = createPanel(Color.WHITE, FORMELEMENTWIDTH,
-				BUTTONHEIGHT);
+	public JPanel makeFormRowPanelWithThreeButton(JButton buttonLeft,
+			JButton middleButton, JButton buttonRight, int width, int height) {
+		JPanel buttonPanel = createPanel(Color.WHITE, width, height);
 		buttonPanel.setLayout(new GridLayout(1, THREE));
 		buttonPanel.add(buttonLeft);
 		buttonPanel.add(middleButton);
@@ -254,12 +239,15 @@ public class InterfaceHelper extends JPanel {
 	 *            the name of the label.
 	 * @param comboBox
 	 *            the given comboBox
+	 * @param width
+	 *            the width of the panel
+	 * @param height
+	 *            the height of the panel
 	 * @return panel with the two textfields
 	 */
-	public JPanel makeFormRowWithComboBox(String name,
-			JComboBox<String> comboBox) {
-		JPanel containerPanel = createPanel(Color.WHITE, FORMELEMENTWIDTH,
-				FORMELEMENTHEIGHT);
+	public JPanel makeFormRowPanelWithComboBox(String name,
+			JComboBox<String> comboBox, int width, int height) {
+		JPanel containerPanel = createPanel(Color.WHITE, width, height);
 		containerPanel.setLayout(new GridLayout(1, 2));
 		containerPanel.add(new JLabel(name));
 		containerPanel.add(comboBox);
@@ -273,12 +261,15 @@ public class InterfaceHelper extends JPanel {
 	 *            the name of the label.
 	 * @param textField
 	 *            the textfield of the row
+	 * @param width
+	 *            the width of the panel
+	 * @param height
+	 *            the height of the panel
 	 * @return panel with the the textfield and label
 	 */
-	public JPanel makeFormRowWithTextField(String labelName,
-			JTextField textField) {
-		JPanel containerPanel = createPanel(Color.WHITE, FORMELEMENTWIDTH,
-				FORMELEMENTHEIGHT);
+	public JPanel makeFormRowPanelWithTextField(String labelName,
+			JTextField textField, int width, int height) {
+		JPanel containerPanel = createPanel(Color.WHITE, width, height);
 		containerPanel.setLayout(new GridLayout(1, 2));
 		containerPanel.add(new JLabel(labelName));
 		containerPanel.add(textField);
@@ -290,13 +281,18 @@ public class InterfaceHelper extends JPanel {
 	 * 
 	 * @param containerPanel
 	 *            the panel for which the scrollpane is made
+	 * @param width
+	 *            the width of the scrollpane
+	 * @param height
+	 *            the height of the scrollpane
 	 * @return the scrollPane
 	 */
-	public JScrollPane makeScrollPaneForContainerPanel(JPanel containerPanel) {
+	public JScrollPane makeScrollPaneForContainerPanel(JPanel containerPanel,
+			int width, int height) {
 		JScrollPane scrollPane = new JScrollPane(containerPanel,
-				ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane.setPreferredSize(new Dimension(PARENTWIDTH, PARENTHEIGHT));
+				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scrollPane.setPreferredSize(new Dimension(width, height));
 		return scrollPane;
 	}
 
@@ -323,11 +319,15 @@ public class InterfaceHelper extends JPanel {
 	/**
 	 * Create a container panel for the document of xml files to container.
 	 * 
+	 * @param width
+	 *            the width of the panel
+	 * @param height
+	 *            the height of the panel
 	 * @return the panel to container the documents
 	 */
-	public JPanel createContainerPanel() {
+	public JPanel createContainerWithGivenSizePanel(int width, int height) {
 		JPanel parentPanel = new JPanel();
-		parentPanel.setMinimumSize(new Dimension(PARENTWIDTH, PARENTHEIGHT));
+		parentPanel.setMinimumSize(new Dimension(width, height));
 		parentPanel.setLayout(new GridBagLayout());
 		return parentPanel;
 	}
