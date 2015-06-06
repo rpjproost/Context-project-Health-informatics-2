@@ -27,11 +27,9 @@ public class Codes extends Task {
 	 * Set the code on line line with the string code.
 	 * 
 	 * @param line
-	 *            the line of the code
+	 *            the line of the code.
 	 * @param code
-	 *            the code to be set
-	 * @throws Exception
-	 *             thrown if you couldn't set the code.
+	 *            the code to be set.
 	 */
 	public void setCodeOfLine(int line, String code) {
 		Chunk temp = getChunkByLine(line, getChunks());
@@ -45,10 +43,9 @@ public class Codes extends Task {
 	 * string code.
 	 * 
 	 * @param indexInChunks
-	 *            the index of the chunk in the ArrayList chunks
+	 *            the index of the chunk in the ArrayList chunks.
 	 * @param code
-	 *            the code to be set
-	 * @throws Exception
+	 *            the code to be set.
 	 */
 	public void setCodeOfChunks(int indexInChunks, String code) {
 		try {
@@ -72,7 +69,7 @@ public class Codes extends Task {
 
 	/**
 	 * Method which sets the code of every chunk with the comment : comment, to code.
-	 * @param comment c
+	 * @param comment comment to set the code on.
 	 */
 	public void setCodeOnComment(String comment) {
 		try {
