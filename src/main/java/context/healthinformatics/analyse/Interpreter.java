@@ -34,7 +34,8 @@ public class Interpreter {
 	 * 
 	 * @param code
 	 *            code to interpret.
-	 * @throws Exception 
+	 * @throws Exception Throws Exception when the
+	 * 				code can not be parsed.
 	 */
 	public void interpret(String code) throws Exception {
 		Scanner sc = new Scanner(code);
@@ -58,7 +59,7 @@ public class Interpreter {
 	 * Method to handle the splitting of the line.
 	 * @param a new list for the splitted strings.
 	 * @return the parameter found.
-	 * @throws Exception 
+	 * @throws Exception Might throw an index out of bounds exception.
 	 */
 	private String splitLine(ArrayList<String> strings, Scanner sc) throws Exception {
 		String[] splittedParameterLine = splitParameter(sc.nextLine());
@@ -129,8 +130,7 @@ public class Interpreter {
 	/**
 	 * checks the splitted line for empty strings in case of dubble " ".
 	 * @param splittedLine ArrayList of strings with the splitted line.
-	 * @param 
-	 * @return
+	 * @return A list of strings without empty places.
 	 */
 	private ArrayList<String> checkSplittedLineForUnwantedSpaces(ArrayList<String> splittedLine) {
 		ArrayList<String> strings = new ArrayList<String>();
