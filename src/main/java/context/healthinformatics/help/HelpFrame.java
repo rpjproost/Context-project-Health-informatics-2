@@ -93,6 +93,14 @@ public class HelpFrame extends InterfaceHelper {
 	}
 
 	/**
+	 * Get the help frame to the front of the screen.
+	 */
+	public void getToFront() {
+		System.out.println("IK OWRDT NAAR VOREN GEHAALD");
+		helpMainFrame.toFront();
+	}
+
+	/**
 	 * Set the settings of the text area.
 	 */
 	private void setTextAreaSettings() {
@@ -181,7 +189,8 @@ public class HelpFrame extends InterfaceHelper {
 			currentButton.setPreferredSize(new Dimension(BUTTON_WIDTH,
 					BUTTON_HEIGHT));
 			addActionListenerToThisButton(currentButton, i);
-			tabPanel.add(currentButton, setGrids(0, i, new Insets(MARGINTOP, 0, 0, 0)));
+			tabPanel.add(currentButton,
+					setGrids(0, i, new Insets(MARGINTOP, 0, 0, 0)));
 		}
 	}
 

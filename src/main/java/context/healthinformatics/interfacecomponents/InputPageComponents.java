@@ -269,7 +269,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 			ip.openFiles(ip.getFileSelecter().getSelectedFiles());
 		}
 		if (e.getSource() == getHelpButton()) {
-			helpController.handleHelpButton();
+			helpController.handleHelpButton("Input Page Help");
 		}
 		if (e.getSource() == getAnalyseButton()) {
 			handleAnalystButton();

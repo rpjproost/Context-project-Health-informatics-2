@@ -1,6 +1,7 @@
 package context.healthinformatics.interfacecomponents;
 
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
 import java.util.ArrayList;
 
 import javax.swing.JEditorPane;
@@ -90,8 +91,10 @@ public class IntermediateResults extends InterfaceHelper {
 	 * Add the title and the display pane to the parent panel.
 	 */
 	private void addEverythingToMainPanel() {
+		GridBagConstraints c = setGrids(0, 0);
+		c.anchor = GridBagConstraints.LINE_START;
 		interMediateResultParentPanel.add(
-				createTitle("The intermediate Result:"), setGrids(0, 0));
+				createTitle("The intermediate Result:"), c);
 		interMediateResultParentPanel.add(scroll, setGrids(0, 1));
 
 	}
@@ -125,8 +128,10 @@ public class IntermediateResults extends InterfaceHelper {
 		String htmlOfColumnTableRow = buildColumnsHTMLTableRow(database
 				.getColumns());
 		String htmlOfTableContent = loopThroughChunks(chunks);
-		buildString.append("<html><body><h2>Number of chunks: "
-				+ (globalChunkCounter - 1) + "</h2><table style='width:100%;'>");
+		buildString
+				.append("<html><body><h2>Number of chunks: "
+						+ (globalChunkCounter - 1)
+						+ "</h2><table style='width:100%;'>");
 		buildString.append(htmlOfColumnTableRow);
 		buildString.append(htmlOfTableContent);
 
