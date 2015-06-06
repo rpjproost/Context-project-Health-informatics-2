@@ -57,7 +57,7 @@ public class WriteToTXT {
 
 	/**
 	 * Write to file.
-	 * @param rs 
+	 * @param rs Result set to write to the file.
 	 * 
 	 * @throws SQLException
 	 *             the sql exception of resultset
