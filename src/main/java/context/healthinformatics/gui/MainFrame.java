@@ -171,6 +171,9 @@ public class MainFrame extends InterfaceHelper {
 	 * Reload the State panel.
 	 */
 	public void reloadStatePanel() {
+		if (!state.equals(codeState)) {
+			getCodeTab().addMouseListener(new MouseHandler());
+		}
 		varPanel.removeAll();
 		varPanel.add(state.loadPanel());
 		varPanel.revalidate();
@@ -183,7 +186,6 @@ public class MainFrame extends InterfaceHelper {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-
 		}
 
 		@Override
@@ -191,6 +193,7 @@ public class MainFrame extends InterfaceHelper {
 			if (e.getSource() == inputTab) {
 				setState(inputState);
 			} else if (e.getSource() == codeTab) {
+				codeTab.removeMouseListener(this);
 				setState(codeState);
 			} else if (e.getSource() == outputTab) {
 				setState(outputState);

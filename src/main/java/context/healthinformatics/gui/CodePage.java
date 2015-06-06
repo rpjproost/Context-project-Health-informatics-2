@@ -9,12 +9,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serializable;
 
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
+import javax.swing.InputMap;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 import javax.swing.border.Border;
 
 import context.healthinformatics.analyse.Interpreter;
@@ -27,7 +32,7 @@ import context.healthinformatics.interfacecomponents.IntermediateResults;
  * mainFrame.
  */
 public class CodePage extends InterfaceHelper implements PanelState,
-		Serializable {
+		Serializable, ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private static final int FIELDCORRECTION = 130;
@@ -36,21 +41,25 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	private static final int INSETS = 10;
 	private static final int THREE = 3;
 	private static final int FOUR = 4;
+
 	private MainFrame mf;
 	private JTextArea codeTextArea;
+	private JTextArea oldCodeArea;
 	private Interpreter interpreter;
 	private JPanel codePageParentpanel;
 	private JPanel leftPanel;
 	private JPanel rightPanel;
 	private JButton analyseButton;
 	private JButton goBackButton;
-	private IntermediateResults imr;
-	private JTextArea oldCodeArea;
 	private JButton goToOutputPageButton;
 	private JButton helpButton;
 	private HelpController helpController;
 	private JScrollPane scrollWithTextArea;
 	private JScrollPane scrollBarForOldCodeArea;
+	private IntermediateResults imr;
+
+	private static final String TEXT_SUBMIT = "text-submit";
+	private static final String INSERT_BREAK = "insert-break";
 
 	/**
 	 * Constructor.
@@ -65,8 +74,8 @@ public class CodePage extends InterfaceHelper implements PanelState,
 				"src/main/data/guihelpdata/codepagehelp.txt");
 		mf = m;
 		initButtons();
-		initActionListeners();
 		initTextFields();
+		initActionListeners();
 		initAll();
 	}
 
@@ -76,26 +85,46 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	 * @return the panel of the code page
 	 */
 	public JPanel loadPanel() {
+
 		imr.updateIntermediateResult();
 		JPanel panel = createPanel(MainFrame.CODETABCOLOR, mf.getScreenWidth(),
 				mf.getStatePanelSize());
 		panel.add(codePageParentpanel);
+		codeTextArea.requestFocusInWindow();
 		return panel;
 	}
 
 	private void initTextFields() {
 		int panelWidth = mf.getScreenWidth() / 2 - 2 * INSETS;
 		int panelHeight = mf.getStatePanelSize() / 2 - FIELDCORRECTION;
-		codeTextArea = createTextField();
+		codeTextArea = createTextAreaWithFocus();
 		scrollWithTextArea = makeScrollPaneForTextArea(codeTextArea,
 				mf.getScreenWidth() / 2 - 2 * INSETS, mf.getStatePanelSize()
 						/ 2 - FIELDCORRECTION);
-		oldCodeArea = createTextField();
+		testKeyListenerCodeTextArea();
+		oldCodeArea = creatTextArea();
 		oldCodeArea.setEditable(false);
 		Border border = BorderFactory.createLineBorder(Color.GRAY, 1);
 		scrollBarForOldCodeArea = makeScrollPaneForTextArea(oldCodeArea,
 				panelWidth, panelHeight);
 		oldCodeArea.setBorder(border);
+	}
+
+	private void testKeyListenerCodeTextArea() {
+		InputMap input = codeTextArea.getInputMap();
+		KeyStroke enter = KeyStroke.getKeyStroke("ENTER");
+		KeyStroke shiftEnter = KeyStroke.getKeyStroke("shift ENTER");
+		input.put(shiftEnter, INSERT_BREAK);
+		input.put(enter, TEXT_SUBMIT);
+		ActionMap actions = codeTextArea.getActionMap();
+		actions.put(TEXT_SUBMIT, new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				analyseCodeArea();
+			}
+		});
 	}
 
 	private void initButtons() {
@@ -110,10 +139,10 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	}
 
 	private void initActionListeners() {
-		goBackButton.addActionListener(new ActionHandler());
-		analyseButton.addActionListener(new ActionHandler());
-		goToOutputPageButton.addActionListener(new ActionHandler());
-		helpButton.addActionListener(new ActionHandler());
+		goBackButton.addActionListener(this);
+		analyseButton.addActionListener(this);
+		goToOutputPageButton.addActionListener(this);
+		helpButton.addActionListener(this);
 	}
 
 	private void initAll() {
@@ -254,38 +283,40 @@ public class CodePage extends InterfaceHelper implements PanelState,
 		rightPanel.add(buttonArea, setGrids(0, FOUR));
 	}
 
-	/**
-	 * Class which handles the actions when buttons are clicked.
-	 */
-	private class ActionHandler implements ActionListener {
-		/**
-		 * Action when the button is pressed the save pop up will be shown.
-		 */
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if (e.getSource() == analyseButton) {
-				interpreter = SingletonInterpreter.getInterpreter();
-				try {
-					String code = codeTextArea.getText();
-					interpreter.interpret(code);
-					imr.updateIntermediateResult();
-					codeTextArea.setText("");
-					oldCodeArea.append(code + "\n");
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
+	private void analyseCodeArea() {
+		interpreter = SingletonInterpreter.getInterpreter();
+		try {
+			String code = codeTextArea.getText();
+			interpreter.interpret(code);
+			imr.updateIntermediateResult();
+			codeTextArea.setText("");
+			if (!code.equals("")) {
+				oldCodeArea.append(code + "\n");
+			} else {
+				throw new Exception("Your query is empty!");
 			}
-			if (e.getSource() == goBackButton) {
-				mf.setState(mf.getInputPage());
-				mf.reloadStatePanel();
-			}
-			if (e.getSource() == goToOutputPageButton) {
-				mf.setState(mf.getOutputPage());
-				mf.reloadStatePanel();
-			}
-			if (e.getSource() == helpButton) {
-				helpController.handleHelpButton();
-			}
+		} catch (Exception e1) {
+			JOptionPane.showMessageDialog(null, e1.getMessage(),
+					"Analyse Error", JOptionPane.WARNING_MESSAGE);
 		}
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == analyseButton) {
+			analyseCodeArea();
+		}
+		if (e.getSource() == goBackButton) {
+			mf.setState(mf.getInputPage());
+			mf.reloadStatePanel();
+		}
+		if (e.getSource() == goToOutputPageButton) {
+			mf.setState(mf.getOutputPage());
+			mf.reloadStatePanel();
+		}
+		if (e.getSource() == helpButton) {
+			helpController.handleHelpButton();
+		}
+
 	}
 }

@@ -25,7 +25,7 @@ import javax.swing.ScrollPaneConstants;
 public class InterfaceHelper extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private int tabsX;
 	private static final int TABSY = 120;
 	private static final int TABTEXTFONTSIZE = 40;
@@ -107,8 +107,26 @@ public class InterfaceHelper extends JPanel {
 	 * 
 	 * @return the text area
 	 */
-	protected JTextArea createTextField() {
+	protected JTextArea creatTextArea() {
 		JTextArea area = new JTextArea();
+		area.setFont(new Font("Arial", Font.PLAIN, TEXTSIZE));
+		return area;
+	}
+
+	/**
+	 * Create a TextArea which has focus.
+	 * 
+	 * @return the text area
+	 */
+	protected JTextArea createTextAreaWithFocus() {
+		JTextArea area = new JTextArea() {
+			private static final long serialVersionUID = 1L;
+
+			public void addNotify() {
+				super.addNotify();
+				requestFocus();
+			}
+		};
 		area.setFont(new Font("Arial", Font.PLAIN, TEXTSIZE));
 		return area;
 	}
@@ -310,6 +328,26 @@ public class InterfaceHelper extends JPanel {
 	public JScrollPane makeScrollPaneForTextArea(
 			JTextArea textAreaWithScollPane, int width, int height) {
 		JScrollPane scrollPane = new JScrollPane(textAreaWithScollPane,
+				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scrollPane.setPreferredSize(new Dimension(width, height));
+		return scrollPane;
+	}
+
+	/**
+	 * Create a textfield with scroll pane.
+	 * 
+	 * @param textFieldWithScollPane
+	 *            the text field
+	 * @param width
+	 *            the width
+	 * @param height
+	 *            the height
+	 * @return a scrollpane with the textfield
+	 */
+	public JScrollPane makeScrollPaneForTextField(
+			JTextField textFieldWithScollPane, int width, int height) {
+		JScrollPane scrollPane = new JScrollPane(textFieldWithScollPane,
 				ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
 				ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		scrollPane.setPreferredSize(new Dimension(width, height));
