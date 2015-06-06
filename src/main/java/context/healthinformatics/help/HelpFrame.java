@@ -139,6 +139,7 @@ public class HelpFrame extends InterfaceHelper {
 	private void initHelpMainFrame() {
 		helpMainFrame.getContentPane().add(mainPanel);
 		helpMainFrame.pack();
+		helpMainFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		helpMainFrame.setResizable(false);
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
 		helpMainFrame.setLocation(dim.width / 2 - helpMainFrame.getSize().width
@@ -222,19 +223,26 @@ public class HelpFrame extends InterfaceHelper {
 			public void hyperlinkUpdate(HyperlinkEvent e) {
 				if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED
 						&& Desktop.isDesktopSupported()) {
-					try {
-						Desktop.getDesktop().browse(e.getURL().toURI());
-					} catch (IOException | URISyntaxException e1) {
-						JOptionPane
-								.showMessageDialog(null,
-										"We could not open this link for you!",
-										"Open Link Error!",
-										JOptionPane.WARNING_MESSAGE);
-					}
-
+					tryToOpenLink(e);
 				}
 			}
 		});
+	}
+
+	/**
+	 * Try to open browser with given link.
+	 * 
+	 * @param e
+	 *            the hyperlink event
+	 */
+	private void tryToOpenLink(HyperlinkEvent e) {
+		try {
+			Desktop.getDesktop().browse(e.getURL().toURI());
+		} catch (IOException | URISyntaxException e1) {
+			JOptionPane.showMessageDialog(null,
+					"We could not open this link for you!", "Open Link Error!",
+					JOptionPane.WARNING_MESSAGE);
+		}
 	}
 
 	/**

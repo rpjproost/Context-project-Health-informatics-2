@@ -16,6 +16,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import context.healthinformatics.database.Db;
 import context.healthinformatics.database.MergeTable;
@@ -71,7 +72,8 @@ public class InputPageComponents implements Serializable, ActionListener {
 		ip = p;
 		screenWidth = mf.getScreenWidth() / 2;
 		box = new JComboBox<String>(ip.getProjects());
-		helpController = new HelpController("src/main/data/guihelpdata/inputpagehelp.txt");
+		helpController = new HelpController(
+				"src/main/data/guihelpdata/inputpagehelp.txt");
 	}
 
 	/**
@@ -300,14 +302,27 @@ public class InputPageComponents implements Serializable, ActionListener {
 
 	private void analyseIfXMLIsCorrect() {
 		if (!ip.getEditor().checkAllXMLDocumentsOnError()) {
-			ip.loadDatabase();
-			mergeTables();
-		//	mf.getCodePage().test();
-			mf.setState(mf.getCodePage());
-			mf.reloadStatePanel();
+			LoadingScreen ls = new LoadingScreen();
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					ip.loadDatabase();
+					mergeTables();
+					ls.displayMessage("Almost done we are loading the results for you!");
+					SwingUtilities.invokeLater(new Runnable() {
+						@Override
+						public void run() {
+							mf.setState(mf.getCodePage());
+							mf.reloadStatePanel();
+							ls.closeLoadFrame();
+						}
+					});
+				}
+
+			}).start();
 		}
 	}
-	
+
 	private void mergeTables() {
 		Db db = SingletonDb.getDb();
 		if (db.getTables().size() > 0 && !db.getTables().containsKey("result")) {
@@ -317,8 +332,9 @@ public class InputPageComponents implements Serializable, ActionListener {
 			try {
 				mergeTables.merge(clause);
 			} catch (SQLException e) {
-				//TODO show popup
-				e.printStackTrace();
+				JOptionPane.showMessageDialog(null,
+						"The files you are trying to merge can't be merged!!",
+						"Merge Tables Error", JOptionPane.WARNING_MESSAGE);
 			}
 		}
 	}
