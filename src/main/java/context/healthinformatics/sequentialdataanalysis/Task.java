@@ -26,8 +26,8 @@ public abstract class Task {
 	private ArrayList<Chunk> result;
 
 	/**
-	 * 
-	 * @return previous state of ArrayList<Chunk>.
+	 * Undoes the changes made by this Task.
+	 * @return previous state of ArrayList of chunks.
 	 */
 	public abstract ArrayList<Chunk> undo();
 
@@ -57,14 +57,14 @@ public abstract class Task {
 	/**
 	 * Return the chunks from the constructor.
 	 * 
-	 * @return the chunks
+	 * @return the chunks.
 	 */
 	public ArrayList<Chunk> getChunks() {
 		return chunks;
 	}
 
 	/**
-	 * 
+	 * Setter for the ArrayList of chunks.
 	 * @param c ArrayList of chunks.
 	 */
 	protected void setChunks(ArrayList<Chunk> c) {
@@ -76,7 +76,6 @@ public abstract class Task {
 	 * @param whereClause Constrains String.
 	 * @return Result list of chunks.
 	 * @throws SQLException if sql query is incorrect.
-	 * @throws  if constraint is not found.
 	 */
 	protected abstract ArrayList<Chunk> constraintOnData(String whereClause) throws SQLException;
 	
@@ -105,11 +104,10 @@ public abstract class Task {
 	 * Get the chunk at line line and add the comment.
 	 * 
 	 * @param line
-	 *            the line of the chunk
+	 *            the line of the chunk.
 	 * @param chunk
-	 *            the chunk
-	 * @return the chunk at line line
-	 * @throws Exception 
+	 *            the chunk.
+	 * @return the chunk at line line.
 	 */
 	public Chunk getChunkByLine(int line, ArrayList<Chunk> chunk) {
 		Chunk curChunk = null;
@@ -129,7 +127,7 @@ public abstract class Task {
 	 * Get line numbers of data which correspond to sql query.
 	 * @param whereClause clause for sql query.
 	 * @return lineNumbers of data in arrayList.
-	 * @throws SQLException if data is not found
+	 * @throws SQLException if data is not found.
 	 */
 	protected ArrayList<Integer> getLinesFromData(String whereClause) throws SQLException {
 		ArrayList<Integer> res = new ArrayList<Integer>();
