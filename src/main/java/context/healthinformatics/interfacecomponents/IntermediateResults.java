@@ -101,8 +101,6 @@ public class IntermediateResults extends InterfaceHelper {
 
 	/**
 	 * Update the text of the intermediate result.
-	 * 
-	 * @param
 	 */
 	public void updateIntermediateResult() {
 		if (interpreter.getChunks() != null) {

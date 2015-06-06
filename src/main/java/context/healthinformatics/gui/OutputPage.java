@@ -87,6 +87,7 @@ public class OutputPage extends InterfaceHelper implements PanelState, Serializa
 		 * @throws SQLException
 		 *             the sql exception of resultset
 		 * @throws IOException 
+		 * 				if the parsing of the xmlDocument goes wrong.
 		 */
 		public void fileChooser(int rVal) throws SQLException, IOException {
 			if (rVal == JFileChooser.APPROVE_OPTION) {
