@@ -20,7 +20,7 @@ public class ConnectionsTest {
 	private Chunk c1;
 	private Chunk c2;
 	private Chunk c3;
-	
+
 	/**
 	 * CodeBefore each method create a arraylist with chunks already.
 	 */
@@ -37,128 +37,114 @@ public class ConnectionsTest {
 		c2.setComment("CommentB");
 		chunks.add(c2);
 		c3 = new Chunk();
-		c3.setCode("CodeB");
+		c3.setCode("CodeC");
 		c3.setLine(2);
 		chunks.add(c3);
 		Interpreter i = SingletonInterpreter.getInterpreter();
 		i.setIntialChunks(chunks);
 	}
-	
+
+	/**
+	 * Increments by 1.
+	 * @param i integer.
+	 * @return incremented.
+	 */
+	public int inc(int i) {
+		int k = i + 1;
+		return k;
+	}
+
 	/**
 	 * Method which checks if there is no connection made,
 	 * if you try to connect to a chunk higher in the table.
 	 * @throws Exception e
 	 */
 	@Test
-	public void testConnectionOnLine() throws Exception {
+	public void testConnectionOnCodeToComment() throws Exception {
 		Connections c = new Connections(note);
-		String[] query =  new String[8];
-		query[0] = "Connect";
-		query[1] = "code";
+		final int size = 8;
+		int i = 0;
+		String[] query =  new String[size];
+		query[i] = "Connect";
+		i = inc(i);
+		query[i] = "code";
+		i = inc(i);
 		//query[2] = "where";
-		query[2] = "equals";
-		query[3] = "CodeA";
-		query[4] = "to";
-		query[5] = "comment";
+		query[i] = "equals";
+		i = inc(i);
+		query[i] = "CodeA";
+		i = inc(i);
+		query[i] = "to";
+		i = inc(i);
+		query[i] = "comment";
 		//query[7] = "where";
-		query[6] = "equals";
-		query[7] = "CommentB";
+		i = inc(i);
+		query[i] = "equals";
+		i = inc(i);
+		query[i] = "CommentB";
 		c.runCode(query);
 		assertEquals(note, c.getResult().get(0).getPointer().get(c2));
 	}
-	
+
 	/**
-	 * Connection not made when left side has higher index.
+	 * Method which checks if there is no connection made,
+	 * if you try to connect to a chunk higher in the table.
+	 * @throws Exception e
 	 */
 	@Test
-	public void testConnectionNotMade() {
+	public void testConnectionNotMade() throws Exception {
 		Connections c = new Connections(note);
-		//c.connectOnLine(1, 0);
-		assertEquals(null, c.getResult().get(1).getPointer().get(c2));
+		final int size = 8;
+		int i = 0;
+		String[] query =  new String[size];
+		query[i] = "Connect";
+		i = inc(i);
+		query[i] = "comment";
+		i = inc(i);
+		//query[2] = "where";
+		query[i] = "equals";
+		i = inc(i);
+		query[i] = "CommentB";
+		i = inc(i);
+		query[i] = "to";
+		i = inc(i);
+		query[i] = "code";
+		//query[7] = "where";
+		i = inc(i);
+		query[i] = "equals";
+		i = inc(i);
+		query[i] = "CodeA";
+		c.runComment(query);
+		assertEquals(null, c.getResult().get(1).getPointer().get(c1));
 	}
-	
+
+	/**
+	 * Checks connection code to code.
+	 */
 	@Test
-	public void testGetListOnCode() {
+	public void testConnectionCodetoCode() {
 		Connections c = new Connections(note);
-		//c.get
+		final int size = 8;
+		int i = 0;
+		String[] query =  new String[size];
+		query[i] = "Connect";
+		i = inc(i);
+		query[i] = "code";
+		i = inc(i);
+		//query[2] = "where";
+		query[i] = "equals";
+		i = inc(i);
+		query[i] = "CodeA";
+		i = inc(i);
+		query[i] = "to";
+		i = inc(i);
+		query[i] = "code";
+		//query[7] = "where";
+		i = inc(i);
+		query[i] = "equals";
+		i = inc(i);
+		query[i] = "CodeC";
+		c.runCode(query);
+		assertEquals(note, c.getResult().get(0).getPointer().get(c3));
 	}
-	
-	/**
-	 * Test the set connection between a chunk and a line method.
-	 * 
-	 * @throws Exception
-	 *             maybe the connection couldn't be set.
-	 */
-//	@Test
-//	public void testConnectToLine() throws Exception {
-//		Connections c = new Connections(note);
-//		c.setChunks(chunks);
-//		c.connectToLine(c1, 2);
-//		assertEquals(c1.getPointer().get(c3), "test");
-//	}
-	
-	/**
-	 * Test the set connection between a chunk and another chunk method.
-	 * 
-	 * @throws Exception
-	 *             maybe the connection couldn't be set.
-	 */
-//	@Test
-//	public void testConnectToChunk() throws Exception {
-//		Connections c = new Connections(note);
-//		c.setChunks(chunks);
-//		c.connectToChunk(c1, c2);
-//		assertEquals(c1.getPointer().get(c2), "test");
-//	}
-	
-	/**
-	 * Checks if a chunk at a line is fetched correctly.
-	 * @throws Exception e
-	 */
-//	@Test
-//	public void testGetChunks() throws Exception {
-//		Connections c = new Connections(note);
-//		c.setChunks(chunks);
-//		assertEquals(c.getChunkByLine(1, chunks), c1);
-//		assertEquals(c.getChunkByLine(2, chunks), c3);
-//	}
-	
-	/**
-	 * Method which tests if a connection is made from chunks
-	 * with code "CodeA" to chunks with code "CodeB".
-	 * @throws Exception e
-	 */
-//	@Test
-//	public void testConnectOnCode() throws Exception {
-//		Connections c = new Connections(note);
-//		c.setChunks(chunks);
-//		c.connectOnCode("CodeA", "CodeB");
-//		assertEquals(c1.getPointer().get(c3), "test");
-//	}
-	
-	/**
-	 * Method which tests if a connection is made from chunks
-	 * on line "CodeA" to chunks on line "CodeB".
-	 * @throws Exception e
-	 */
-//	@Test
-//	public void testConnectOnLine() throws Exception {
-//		Connections c = new Connections(note);
-//		c.setChunks(chunks);
-//		c.connectOnLine(1, 2);
-//		assertEquals(c1.getPointer().get(c3), "test");
-//	}
-	
-	/**
-	 * Method which tests if a connection is made
-	 * from chunks with comment "CodeA" to chunks with comment "CodeB".
-	 * @throws Exception e
-	 */
-//	@Test
-//	public void testConnectOnCmment() throws Exception {
-//		Connections c = new Connections(note);
-//		c.setChunks(chunks);
-//		c.connectOnComment("CommentA", "CommentB");
-//		assertEquals(c1.getPointer().get(c2), "test");
-//	}
 }
