@@ -39,7 +39,7 @@ public class Connections extends Task {
 	 * @param index2 the line where the connections is made to.
 	 * @throws Exception e
 	 */
-	public void connectOnLine(int index1, int index2) {
+	private void connectOnLine(int index1, int index2) {
 		if (index1 < index2) {
 			HashMap<Chunk, String> pointer1 = copyOfChunks.get(index1).getPointer();
 			pointer1.put(getChunks().get(index2), noteForConnection);
@@ -52,7 +52,7 @@ public class Connections extends Task {
 	 * @param originChunkList one 
 	 * @param destinationChunkList two
 	 */
-	public void connectListsOfChunkIndices(ArrayList<Integer> originChunkList
+	private void connectListsOfChunkIndices(ArrayList<Integer> originChunkList
 			, ArrayList<Integer> destinationChunkList) {
 		for (Integer i : originChunkList) {
 			for (Integer j : destinationChunkList) {
@@ -66,7 +66,7 @@ public class Connections extends Task {
 	 * @param code the desired code.
 	 * @return list
 	 */
-	public ArrayList<Integer> getListOnCode(String code) {
+	private ArrayList<Integer> getListOnCode(String code) {
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		for (int i = 0; i < copyOfChunks.size(); i++) {
 			if (copyOfChunks.get(i).getCode().equals(code)) {
@@ -82,7 +82,7 @@ public class Connections extends Task {
 	 * @param comment to be had.
 	 * @return list
 	 */
-	public ArrayList<Integer> getListOnComment(String comment) {
+	private ArrayList<Integer> getListOnComment(String comment) {
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		for (int i = 0; i < copyOfChunks.size(); i++) {
 			if (copyOfChunks.get(i).getComment().equals(comment)) {
@@ -90,6 +90,14 @@ public class Connections extends Task {
 			}
 		}
 		return list;
+	}
+	
+	/**
+	 * returns the list of chunks with pointers added.
+	 * @return list of chunks.
+	 */
+	public ArrayList<Chunk> getResult() {
+		return copyOfChunks;
 	}
 
 	@Override
@@ -158,8 +166,15 @@ public class Connections extends Task {
 	
 	private void parseSecondCondition(String[] query, ArrayList<Integer> originList,
 			ArrayList<Integer> destinationList) {
+		System.out.println(query);
+		//TODO: fix interpreter second part.
+		//je checkt hier query, maar je hebt niks gedaan met querypart. dus dit gaat fout. 
+		//Neem contact met me op als je het niet begrijpt.
+		//Voor de rest heb ik wat methodes op private gezet in plaats van public. Maar dit heb
+		//ik zelf ook fout in chunking geloof ik.
 		if (isComment(query)) {
 			increment(2);
+			System.out.println(query[getQueryPart()]);
 			destinationList = getListOnComment(query[getQueryPart()]);
 			connectListsOfChunkIndices(originList, destinationList);
 		}

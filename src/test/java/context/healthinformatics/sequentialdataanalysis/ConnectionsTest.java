@@ -40,6 +40,8 @@ public class ConnectionsTest {
 		c3.setCode("CodeB");
 		c3.setLine(2);
 		chunks.add(c3);
+		Interpreter i = SingletonInterpreter.getInterpreter();
+		i.setIntialChunks(chunks);
 	}
 	
 	/**
@@ -47,15 +49,39 @@ public class ConnectionsTest {
 	 * if you try to connect to a chunk higher in the table.
 	 * @throws Exception e
 	 */
-//	@Test
-//	public void testConnectionOnLine() throws Exception {
-//		Interpreter i = SingletonInterpreter.getInterpreter();
-//		i.setIntialChunks(chunks);
-//		Connections c = new Connections(note);
-//		c.connectOnLine(0, 1);
-//		assertEquals(note, c1.getPointer().get(c1));
-//		//assertEquals(c3.getPointer().get(c2), null);
-//	}
+	@Test
+	public void testConnectionOnLine() throws Exception {
+		Connections c = new Connections(note);
+		String[] query =  new String[8];
+		query[0] = "Connect";
+		query[1] = "code";
+		//query[2] = "where";
+		query[2] = "equals";
+		query[3] = "CodeA";
+		query[4] = "to";
+		query[5] = "comment";
+		//query[7] = "where";
+		query[6] = "equals";
+		query[7] = "codeB";
+		c.runCode(query);
+		assertEquals(note, c.getResult().get(0).getPointer().get(c2));
+	}
+	
+	/**
+	 * Connection not made when left side has higher index.
+	 */
+	@Test
+	public void testConnectionNotMade() {
+		Connections c = new Connections(note);
+		//c.connectOnLine(1, 0);
+		assertEquals(null, c.getResult().get(1).getPointer().get(c2));
+	}
+	
+	@Test
+	public void testGetListOnCode() {
+		Connections c = new Connections(note);
+		//c.get
+	}
 	
 	/**
 	 * Test the set connection between a chunk and a line method.
@@ -96,17 +122,6 @@ public class ConnectionsTest {
 //		assertEquals(c.getChunkByLine(1, chunks), c1);
 //		assertEquals(c.getChunkByLine(2, chunks), c3);
 //	}
-	
-	/**
-	 * Method which tests if an exception is thrown with incorrect input for the method.
-	 * @throws Exception e
-	 */
-	@Test(expected = Exception.class)
-	public void testGetChunkCodeByLineException() throws Exception {
-		Connections c = new Connections(note);
-		c.setChunks(chunks);
-		c.getChunkByLine(-1, chunks);
-	}
 	
 	/**
 	 * Method which tests if a connection is made from chunks
