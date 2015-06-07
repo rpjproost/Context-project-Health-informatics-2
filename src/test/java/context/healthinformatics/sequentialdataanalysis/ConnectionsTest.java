@@ -62,7 +62,7 @@ public class ConnectionsTest {
 		query[5] = "comment";
 		//query[7] = "where";
 		query[6] = "equals";
-		query[7] = "codeB";
+		query[7] = "CommentB";
 		c.runCode(query);
 		assertEquals(note, c.getResult().get(0).getPointer().get(c2));
 	}

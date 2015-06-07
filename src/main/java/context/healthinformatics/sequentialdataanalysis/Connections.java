@@ -166,15 +166,9 @@ public class Connections extends Task {
 	
 	private void parseSecondCondition(String[] query, ArrayList<Integer> originList,
 			ArrayList<Integer> destinationList) {
-		System.out.println(query);
-		//TODO: fix interpreter second part.
-		//je checkt hier query, maar je hebt niks gedaan met querypart. dus dit gaat fout. 
-		//Neem contact met me op als je het niet begrijpt.
-		//Voor de rest heb ik wat methodes op private gezet in plaats van public. Maar dit heb
-		//ik zelf ook fout in chunking geloof ik.
+		increment(2);
 		if (isComment(query)) {
 			increment(2);
-			System.out.println(query[getQueryPart()]);
 			destinationList = getListOnComment(query[getQueryPart()]);
 			connectListsOfChunkIndices(originList, destinationList);
 		}
