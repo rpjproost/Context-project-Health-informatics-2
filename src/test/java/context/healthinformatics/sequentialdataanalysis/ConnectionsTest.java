@@ -1,11 +1,14 @@
 package context.healthinformatics.sequentialdataanalysis;
 
-//import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import context.healthinformatics.analyse.Interpreter;
+import context.healthinformatics.analyse.SingletonInterpreter;
 
 /**
  * Tests for class Connections.
@@ -44,15 +47,15 @@ public class ConnectionsTest {
 	 * if you try to connect to a chunk higher in the table.
 	 * @throws Exception e
 	 */
-//	@Test
-//	public void testUpwardConnection() throws Exception {
-//		Connections c = new Connections(note);
-//		c.setChunks(chunks);
-//		c.connectToLine(c3, 1);
-//		assertEquals(c1.getPointer().get(c1), null);
-//		c.connectToChunk(c3, c2);
-//		assertEquals(c3.getPointer().get(c2), null);
-//	}
+	@Test
+	public void testConnectionOnLine() throws Exception {
+		Interpreter i = SingletonInterpreter.getInterpreter();
+		i.setIntialChunks(chunks);
+		Connections c = new Connections(note);
+		c.connectOnLine(0, 1);
+		assertEquals(note, c1.getPointer().get(c1));
+		//assertEquals(c3.getPointer().get(c2), null);
+	}
 	
 	/**
 	 * Test the set connection between a chunk and a line method.

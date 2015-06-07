@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
+import context.healthinformatics.analyse.SingletonInterpreter;
+
 /**
  * The Class Connections.
  */
@@ -20,6 +22,8 @@ public class Connections extends Task {
 	 */
 	public Connections(String info) { 
 		noteForConnection = info;
+		ArrayList<Chunk> c = SingletonInterpreter.getInterpreter().getChunks();
+		setChunks(c);
 		copyOfChunks = copyChunks(getChunks());
 	}
 	
