@@ -47,15 +47,15 @@ public class ConnectionsTest {
 	 * if you try to connect to a chunk higher in the table.
 	 * @throws Exception e
 	 */
-	@Test
-	public void testConnectionOnLine() throws Exception {
-		Interpreter i = SingletonInterpreter.getInterpreter();
-		i.setIntialChunks(chunks);
-		Connections c = new Connections(note);
-		c.connectOnLine(0, 1);
-		assertEquals(note, c1.getPointer().get(c1));
-		//assertEquals(c3.getPointer().get(c2), null);
-	}
+//	@Test
+//	public void testConnectionOnLine() throws Exception {
+//		Interpreter i = SingletonInterpreter.getInterpreter();
+//		i.setIntialChunks(chunks);
+//		Connections c = new Connections(note);
+//		c.connectOnLine(0, 1);
+//		assertEquals(note, c1.getPointer().get(c1));
+//		//assertEquals(c3.getPointer().get(c2), null);
+//	}
 	
 	/**
 	 * Test the set connection between a chunk and a line method.
