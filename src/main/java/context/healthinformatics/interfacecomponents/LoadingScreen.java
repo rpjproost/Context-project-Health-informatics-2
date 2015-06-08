@@ -101,7 +101,7 @@ public class LoadingScreen extends InterfaceHelper {
 	public void displayMessage(String message) {
 		displayHtmlPane
 				.setText("<html><body style='text-align: center; font-family: Arial; "
-						+ "font-size: 12px'><h1>Pleas wait!</h1><br/>"
+						+ "font-size: 12px'><h1>Please wait!</h1><br/>"
 						+ message + "</body></html>");
 	}
 
