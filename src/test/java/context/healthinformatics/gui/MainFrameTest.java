@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import context.healthinformatics.gui.MainFrame.MouseHandler;
+import context.healthinformatics.interfacecomponents.LoadingScreen;
 
 /**
  * Test for the MainFrame of the Interface.
@@ -109,6 +110,16 @@ public class MainFrameTest {
 		MouseEvent me = new MouseEvent(mf, 0, 0, 0, 0, 0, 0, false);
 		ml.mouseClicked(me);
 		assertEquals(mf.getPanelState(), ps);
+	}
+	
+	/**
+	 * Tests the loading screen.
+	 */
+	@Test
+	public void testLoadingScreen() {
+		LoadingScreen ls = new LoadingScreen();
+		ls.displayMessage("Test");
+		ls.closeLoadFrame();
 	}
 	
 	/**
