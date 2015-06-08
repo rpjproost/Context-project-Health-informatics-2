@@ -60,7 +60,7 @@ public class Constraints extends Task {
 				res.add(curChunk);
 			}
 			if (curChunk.hasChild()) {
-				hasCode(code, curChunk.getChunks(), res);
+				hasCode(code, curChunk.getChildren(), res);
 			}
 		}
 		return res;
@@ -85,7 +85,7 @@ public class Constraints extends Task {
 				res.add(curChunk);
 			}
 			if (curChunk.hasChild()) {
-				containsComment(comment, curChunk.getChunks(), res);
+				containsComment(comment, curChunk.getChildren(), res);
 			}
 		}
 		return res;
@@ -110,7 +110,7 @@ public class Constraints extends Task {
 				res.add(curChunk);
 			}
 			if (curChunk.hasChild()) {
-				equalsComment(comment, curChunk.getChunks(), res);
+				equalsComment(comment, curChunk.getChildren(), res);
 			}
 		}
 		return res;
@@ -132,7 +132,7 @@ public class Constraints extends Task {
 				chunk.remove(i);
 				removeChunks(arrList, chunk);
 			} else if (curChunk.hasChild()) {
-				removeChunks(arrList, curChunk.getChunks());
+				removeChunks(arrList, curChunk.getChildren());
 			}
 		}
 	}
@@ -184,7 +184,7 @@ public class Constraints extends Task {
 				res.append(appendOrClauseForQuery(tableName, curChunk.getLine()));
 			}
 			if (curChunk.hasChild()) {
-				res.append(getAllChunkLines(curChunk.getChunks(), res,
+				res.append(getAllChunkLines(curChunk.getChildren(), res,
 						tableName));
 			}
 		}
@@ -223,7 +223,7 @@ public class Constraints extends Task {
 		}
 		else {
 			if (curChunk.hasChild()) {
-				checkChildsOnData(curChunk, curChunk.getChunks(), ints, res);
+				checkChildsOnData(curChunk, curChunk.getChildren(), ints, res);
 			}	
 		}
 	}
@@ -245,7 +245,7 @@ public class Constraints extends Task {
 			}
 			else {
 				if (childs.get(i).hasChild()) {
-					checkChildsOnData(curChunk, childs.get(i).getChunks(), ints, res);
+					checkChildsOnData(curChunk, childs.get(i).getChildren(), ints, res);
 				}
 				else {
 					childs.remove(i);
