@@ -186,6 +186,7 @@ public class MainFrame extends InterfaceHelper {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
+			//Do nothing
 		}
 
 		@Override
@@ -203,14 +204,17 @@ public class MainFrame extends InterfaceHelper {
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
+			//Do nothing
 		}
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
+			//Do nothing
 		}
 
 		@Override
 		public void mouseExited(MouseEvent e) {
+			//Do nothing
 		}
 	}
 }
