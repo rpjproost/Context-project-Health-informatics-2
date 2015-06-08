@@ -44,41 +44,19 @@ public class Interpreter {
 		Scanner sc = new Scanner(code);
 		
 		while (sc.hasNextLine()) {
-			ArrayList<String> strings = new ArrayList<String>();
-			String parameter = splitLine(strings, sc);
-			strings = checkSplittedLineForUnwantedSpaces(strings);
-			Task task = createTask(strings.get(0), parameter);
+			Query query = new Query(sc.nextLine());
+			Task task = createTask(query);
 			if (task != null) { //task == null if revert / undo was called
-				task.run(buildStringArray(strings));
+				task.run(query);
 				tasks.push(task);
-			} else if (strings.get(0).equals("undo") || strings.get(0).equals("revert")) {
+			} else if (query.part().equals("undo") || query.part().equals("revert")) {
 				undo();
 			}
 		}
 		sc.close();
 	}
 	
-	/**
-	 * Method to handle the splitting of the line.
-	 * @param a new list for the splitted strings.
-	 * @return the parameter found.
-	 * @throws Exception Might throw an index out of bounds exception.
-	 */
-	private String splitLine(ArrayList<String> strings, Scanner sc) throws Exception {
-		String[] splittedParameterLine = splitParameter(sc.nextLine());
-		String parameter = null;
-		addStrings(splittedParameterLine[0].split(" "), strings);
-		try {
-			if (splittedParameterLine.length > 1) {
-				addStrings(splittedParameterLine[2].split(" "), strings);
-				parameter = splittedParameterLine[1];
-			}
-		} catch (Exception e) {
-			sc.close();
-			throw new Exception(e.getMessage());
-		}
-		return parameter;
-	}
+	
 	
 	/**
 	 * method to create the correct task.
@@ -130,20 +108,6 @@ public class Interpreter {
 		
 	}
 	
-	/**
-	 * checks the splitted line for empty strings in case of dubble " ".
-	 * @param splittedLine ArrayList of strings with the splitted line.
-	 * @return A list of strings without empty places.
-	 */
-	private ArrayList<String> checkSplittedLineForUnwantedSpaces(ArrayList<String> splittedLine) {
-		ArrayList<String> strings = new ArrayList<String>();
-		for (String split : splittedLine) {
-			if (split.length() > 0) {
-				strings.add(split);
-			}
-		}
-		return strings;
-	}
 	
 	/**
 	 * setter for the initial list of chunks.
@@ -153,48 +117,7 @@ public class Interpreter {
 		firstList = list;
 	}
 	
-	/**
-	 * split the line to get the parameter out.
-	 * @param line line to split
-	 * @return the splitted line;
-	 */
-	private String[] splitParameter(String line) {
-		ArrayList<String> strings = new ArrayList<String>();
-		int fp = findChar(line, "(");
-		int sp = findChar(line, ")");
-		if (fp == -1) { //geen haakjes
-			strings.add(line);
-			return buildStringArray(strings);
-		}
-		strings.add(line.substring(0, fp));
-		strings.add(line.substring(fp + 1, sp));
-		strings.add(line.substring(sp + 1, line.length()));
-		return buildStringArray(strings);
-	}
-	
-	/**
-	 * builds an array from strings from an ArrayList of Strings.
-	 * @param strings arrayList to build from.
-	 * @return the created String array.
-	 */
-	private String[] buildStringArray(ArrayList<String> strings) {
-		String[] ans  = new String[strings.size()];
-		for (int i = 0; i < strings.size(); i++) {
-			ans[i] = strings.get(i);
-		}
-		return ans;
-	}
-	
-	/**
-	 * adds all strings from the string array to the list.
-	 * @param array array of strings to add
-	 * @param list list to add the strings to.
-	 */
-	private void addStrings(String[] array, ArrayList<String> list) {
-		for (int i = 0; i < array.length; i++) {
-			list.add(array[i]);
-		}
-	}
+
 	
 	/**
 	 * deep coppy a list of chunks.
@@ -218,14 +141,6 @@ public class Interpreter {
 		}
 	}
 	
-	private int findChar(String string, String cha) {
-		for (int i = 0; i < string.length(); i++) {
-			if (string.charAt(i) == cha.charAt(0)) {
-				return i;
-			}
-		}
-		return -1;
-	}
 	
 	/**
 	 * getter for the name of the interpreter.
