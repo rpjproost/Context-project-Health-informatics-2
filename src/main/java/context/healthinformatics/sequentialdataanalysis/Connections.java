@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
+import context.healthinformatics.analyse.SingletonInterpreter;
+
 /**
  * The Class Connections.
  */
@@ -20,6 +22,8 @@ public class Connections extends Task {
 	 */
 	public Connections(String info) { 
 		noteForConnection = info;
+		ArrayList<Chunk> c = SingletonInterpreter.getInterpreter().getChunks();
+		setChunks(c);
 		copyOfChunks = copyChunks(getChunks());
 	}
 	
@@ -34,7 +38,7 @@ public class Connections extends Task {
 	 * @param index1 the line where the connection originates.
 	 * @param index2 the line where the connections is made to.
 	 */
-	public void connectOnLine(int index1, int index2) {
+	private void connectOnLine(int index1, int index2) {
 		if (index1 < index2) {
 			HashMap<Chunk, String> pointer1 = copyOfChunks.get(index1).getPointer();
 			pointer1.put(getChunks().get(index2), noteForConnection);
@@ -47,7 +51,7 @@ public class Connections extends Task {
 	 * @param originChunkList one.
 	 * @param destinationChunkList two.
 	 */
-	public void connectListsOfChunkIndices(ArrayList<Integer> originChunkList
+	private void connectListsOfChunkIndices(ArrayList<Integer> originChunkList
 			, ArrayList<Integer> destinationChunkList) {
 		for (Integer i : originChunkList) {
 			for (Integer j : destinationChunkList) {
@@ -61,7 +65,7 @@ public class Connections extends Task {
 	 * @param code the desired code.
 	 * @return the asked list.
 	 */
-	public ArrayList<Integer> getListOnCode(String code) {
+	private ArrayList<Integer> getListOnCode(String code) {
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		for (int i = 0; i < copyOfChunks.size(); i++) {
 			if (copyOfChunks.get(i).getCode().equals(code)) {
@@ -77,7 +81,7 @@ public class Connections extends Task {
 	 * @param comment to be had.
 	 * @return the asked list.
 	 */
-	public ArrayList<Integer> getListOnComment(String comment) {
+	private ArrayList<Integer> getListOnComment(String comment) {
 		ArrayList<Integer> list = new ArrayList<Integer>();
 		for (int i = 0; i < copyOfChunks.size(); i++) {
 			if (copyOfChunks.get(i).getComment().equals(comment)) {
@@ -85,6 +89,14 @@ public class Connections extends Task {
 			}
 		}
 		return list;
+	}
+	
+	/**
+	 * returns the list of chunks with pointers added.
+	 * @return list of chunks.
+	 */
+	public ArrayList<Chunk> getResult() {
+		return copyOfChunks;
 	}
 
 	@Override
@@ -153,6 +165,7 @@ public class Connections extends Task {
 	
 	private void parseSecondCondition(String[] query, ArrayList<Integer> originList,
 			ArrayList<Integer> destinationList) {
+		increment(2);
 		if (isComment(query)) {
 			increment(2);
 			destinationList = getListOnComment(query[getQueryPart()]);
