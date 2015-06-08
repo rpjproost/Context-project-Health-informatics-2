@@ -77,7 +77,8 @@ public class ConnectionsTest {
 		Connections c = new Connections(note);
 //		final int size = 8;
 //		int i = 0;
-		Query query = new Query("Connect(test) code where equals CodeA to comment equals CommentB");
+		Query query = new Query("Connect(test) code = CodeA to"
+				+ "comment = CommentB");
 //		String[] query =  new String[size];
 //		query[i] = "Connect";
 //		i = inc(i);
@@ -106,7 +107,7 @@ public class ConnectionsTest {
 	@Test
 	public void testConnectionCodetoCode() {
 		Connections c = new Connections(note);
-		Query query = new Query("Connect(test) code where equals CodeA to code where equals CodeC");
+		Query query = new Query("Connect(test) code = CodeA code = CodeC");
 //		final int size = 8;
 //		int i = 0;
 //		String[] query =  new String[size];
@@ -139,8 +140,7 @@ public class ConnectionsTest {
 	@Test
 	public void testConnectionNotMade() throws Exception {
 		Connections c = new Connections(note);
-		Query query = new Query("Connect(test) comment where "
-				+ "= CommentB to code where equals CodeA");
+		Query query = new Query("Connect(test) comment = CommentB code = CodeA");
 //		final int size = 8;
 //		int i = 0;
 //		String[] query =  new String[size];
