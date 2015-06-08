@@ -7,7 +7,7 @@ import java.util.HashMap;
  */
 public final class SingletonInterpreter {
 
-	private static HashMap<String, Interpreter > interpreters;
+	private static HashMap<String, Interpreter > interpreters = new HashMap<String, Interpreter>();
 
 	/**
 	 * method to defeat the constructor.
