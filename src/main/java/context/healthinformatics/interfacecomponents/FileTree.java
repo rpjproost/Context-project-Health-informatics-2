@@ -28,7 +28,6 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private MainFrame mf;
 	private InputPage ip;
 	private JPanel folderPanel;
 	private JTree tree;
@@ -45,11 +44,9 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	
 	/**
 	 * Constructor.
-	 * @param m is the mainframe object.
 	 * @param p is the InptPage object.
 	 */
-	public FileTree(MainFrame m, InputPage p) {
-		mf = m;
+	public FileTree(InputPage p) {
 		ip = p;
 		initTree();
 	}
@@ -59,7 +56,7 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	 */
 	public JPanel loadFolder() {
 		folderPanel = MainFrame.createPanel(MainFrame.INPUTTABCOLOR,
-				mf.getScreenWidth(), FOLDERSECTIONHEIGHT);
+				ip.getScreenWidth(), FOLDERSECTIONHEIGHT);
 		folderPanel.setLayout(new  GridBagLayout());
 		loadFileSelectionTitle(folderPanel);
 		addTreePane(folderPanel);

@@ -108,7 +108,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		xmlController.setProject(project);
 		xmlController.setDocumentsInProject(docsOfFile);
 		folder.add(xmlController.breakDownXMLDocumentsIntoNames(docsOfFile));
-		ft = new FileTree(mf, this);
+		ft = new FileTree(this);
 		ipc.getComboBox().addItem(project);
 		ipc.getComboBox().setSelectedItem(project);
 		xmlController.loadProject(xmledit);
@@ -118,8 +118,8 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	/**
 	 * Creates a clear project with a standard project default.
 	 */
-	private void runClearedProject() {
-		ft = new FileTree(mf, this);
+	public void runClearedProject() {
+		ft = new FileTree(this);
 		xmlController.setProject("(default)");
 		addComboItem("(default)");
 	}
@@ -253,13 +253,6 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	}
 
 	/**
-	 * @return the left panel.
-	 */
-	public JPanel getLeftPanel() {
-		return leftPanel;
-	}
-
-	/**
 	 * @return the InputPageComponents object.
 	 */
 	public InputPageComponents getInputPageComponent() {
@@ -285,13 +278,6 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 */
 	public ArrayList<ArrayList<String>> getFolder() {
 		return folder;
-	}
-
-	/**
-	 * @return selecter.
-	 */
-	public JFileChooser getSelecter() {
-		return selecter;
 	}
 
 	/**
@@ -348,7 +334,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 * @param path
 	 *            the source of the xml file.
 	 */
-	private void addXmlFile(String path) {
+	protected void addXmlFile(String path) {
 		XMLParser parser = new XMLParser(path);
 		try {
 			parser.parse();
@@ -374,9 +360,9 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 * 
 	 * @param path
 	 *            the path to a file.
-	 * @return
+	 * @return xmlDocument
 	 */
-	private XMLDocument makeDocument(String path) {
+	protected XMLDocument makeDocument(String path) {
 		XMLDocument current = new XMLDocument();
 		current.setPath(path);
 		return current;

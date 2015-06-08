@@ -8,6 +8,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import context.healthinformatics.writer.XMLDocument;
+
 /**
  * Test for the InputPage of the Interface.
  */
@@ -87,6 +89,34 @@ public class InputPageTest {
 		ip.addFile("test");
 		ArrayList<String> list = ip.getFolder().get(0);
 		assertEquals(list.get(list.size() - 1), "test");
+	}
+	
+	/**
+	 * Tests if the method correctly instantiates to only a default project.
+	 */
+	@Test
+	public void testRunClearedProject() {
+		ip.runClearedProject();
+		assertEquals(ip.findFolderProject("(default)"), 0);
+	}
+	
+	/**
+	 * Tests if an XML file is correctly added.
+	 */
+	@Test
+	public void testAddXMLFile() {
+		ip.addXmlFile("src/test/data/mergeTableFiles/twoDocs.xml");
+		assertEquals(ip.getXMLController().getProjectDocuments().isEmpty(), false);
+	}
+	
+	/**
+	 * Tests if an XML document is correctly made.
+	 */
+	@Test
+	public void testmakeDocument() {
+		String path = "src/test/data/mergeTableFiles/twoDocs.xml";
+		XMLDocument doc = ip.makeDocument(path);
+		assertEquals(doc.getPath(), path);
 	}
 	
 	/**
