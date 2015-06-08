@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,6 +17,7 @@ import context.healthinformatics.analyse.SingletonInterpreter;
 public class ConnectionsTest {
 
 	private ArrayList<Chunk> chunks;
+	private Interpreter i;
 	private String note;
 	private Chunk c1;
 	private Chunk c2;
@@ -40,8 +42,18 @@ public class ConnectionsTest {
 		c3.setCode("CodeC");
 		c3.setLine(2);
 		chunks.add(c3);
-		Interpreter i = SingletonInterpreter.getInterpreter();
+		i = SingletonInterpreter.getInterpreter();
 		i.setIntialChunks(chunks);
+	}
+	
+	/**
+	 * Clean up interpreter.
+	 * @throws Exception if query is not right.
+	 */
+	@After
+	public void after() throws Exception {
+		i.setIntialChunks(null);
+		i.interpret("undo");
 	}
 
 	/**
@@ -62,6 +74,7 @@ public class ConnectionsTest {
 	@Test
 	public void testConnectionOnCodeToComment() throws Exception {
 		Connections c = new Connections(note);
+		System.out.println(c.getChunks());
 		final int size = 8;
 		int i = 0;
 		String[] query =  new String[size];
@@ -84,38 +97,6 @@ public class ConnectionsTest {
 		query[i] = "CommentB";
 		c.runCode(query);
 		assertEquals(note, c.getResult().get(0).getPointer().get(c2));
-	}
-
-	/**
-	 * Method which checks if there is no connection made,
-	 * if you try to connect to a chunk higher in the table.
-	 * @throws Exception e
-	 */
-	@Test
-	public void testConnectionNotMade() throws Exception {
-		Connections c = new Connections(note);
-		final int size = 8;
-		int i = 0;
-		String[] query =  new String[size];
-		query[i] = "Connect";
-		i = inc(i);
-		query[i] = "comment";
-		i = inc(i);
-		//query[2] = "where";
-		query[i] = "equals";
-		i = inc(i);
-		query[i] = "CommentB";
-		i = inc(i);
-		query[i] = "to";
-		i = inc(i);
-		query[i] = "code";
-		//query[7] = "where";
-		i = inc(i);
-		query[i] = "equals";
-		i = inc(i);
-		query[i] = "CodeA";
-		c.runComment(query);
-		assertEquals(null, c.getResult().get(1).getPointer().get(c1));
 	}
 
 	/**
@@ -146,5 +127,37 @@ public class ConnectionsTest {
 		query[i] = "CodeC";
 		c.runCode(query);
 		assertEquals(note, c.getResult().get(0).getPointer().get(c3));
+	}
+	
+	/**
+	 * Method which checks if there is no connection made,
+	 * if you try to connect to a chunk higher in the table.
+	 * @throws Exception e
+	 */
+	@Test
+	public void testConnectionNotMade() throws Exception {
+		Connections c = new Connections(note);
+		final int size = 8;
+		int i = 0;
+		String[] query =  new String[size];
+		query[i] = "Connect";
+		i = inc(i);
+		query[i] = "comment";
+		i = inc(i);
+		//query[2] = "where";
+		query[i] = "equals";
+		i = inc(i);
+		query[i] = "CommentB";
+		i = inc(i);
+		query[i] = "to";
+		i = inc(i);
+		query[i] = "code";
+		//query[7] = "where";
+		i = inc(i);
+		query[i] = "equals";
+		i = inc(i);
+		query[i] = "CodeA";
+		c.runComment(query);
+		assertEquals(null, c.getResult().get(1).getPointer().get(c1));
 	}
 }

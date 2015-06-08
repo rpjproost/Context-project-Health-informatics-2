@@ -109,5 +109,6 @@ public class ChunkingOnDataTest {
 		data.dropTable("result");
 		data.dropTable("HospitalRecords");
 		data.dropTable("StatSensor");
+		i.interpret("undo");
 	}
 }
