@@ -1,16 +1,11 @@
 package context.healthinformatics.sequentialdataanalysis;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import context.healthinformatics.database.Db;
-import context.healthinformatics.database.SingletonDb;
-import context.healthinformatics.parser.XMLParser;
 
 /**
  * Test for class Constraints.
@@ -26,21 +21,6 @@ public class ConstraintsTest {
 	 * The list of chunks.
 	 */
 	private ArrayList<Chunk> cList2;
-
-	/**e
-	 * variable used to save the newly created parser.
-	 */
-	private XMLParser xmlp;
-
-	/**
-	 * path leading to the place of all test files.
-	 */
-	private String path = "src/test/data/constraintsfiles/";
-
-	/**
-	 * object calling the database.
-	 */
-	private Db data = SingletonDb.getDb();
 
 	private static final int THREE = 3;
 
@@ -96,22 +76,6 @@ public class ConstraintsTest {
 	@Test
 	public void testContainsCommentConstraints() {
 		cs.containsComment("com", cs.getChunks(), new ArrayList<Chunk>());
-	}
-
-	/**
-	 * Test if null is an integer.
-	 */
-	@Test
-	public void testIsIntegerNULL() {
-		assertFalse(cs.isInteger(null));
-	}
-
-	/**
-	 * Test is a string is an integer.
-	 */
-	@Test
-	public void testIsIntegerString() {
-		assertFalse(cs.isInteger("string"));
 	}
 
 	/**

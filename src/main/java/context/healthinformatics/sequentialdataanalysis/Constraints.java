@@ -1,11 +1,7 @@
 package context.healthinformatics.sequentialdataanalysis;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
-import context.healthinformatics.database.Db;
-import context.healthinformatics.database.SingletonDb;
 
 /**
  * Class Constraints.
@@ -52,7 +48,7 @@ public class Constraints extends Task {
 	 *            the result list of chunks
 	 * @return the result of chunks.
 	 */
-	public ArrayList<Chunk> hasCode(String code, ArrayList<Chunk> chunk,
+	protected ArrayList<Chunk> hasCode(String code, ArrayList<Chunk> chunk,
 			ArrayList<Chunk> res) {
 		for (int i = 0; i < chunk.size(); i++) {
 			Chunk curChunk = chunk.get(i);
@@ -77,7 +73,7 @@ public class Constraints extends Task {
 	 *            the resulting chunks
 	 * @return the chunks which contains the comment
 	 */
-	public ArrayList<Chunk> containsComment(String comment,
+	protected ArrayList<Chunk> containsComment(String comment,
 			ArrayList<Chunk> chunk, ArrayList<Chunk> res) {
 		for (int i = 0; i < chunk.size(); i++) {
 			Chunk curChunk = chunk.get(i);
@@ -102,7 +98,7 @@ public class Constraints extends Task {
 	 *            the result
 	 * @return the resulting Chunks which have the comment
 	 */
-	public ArrayList<Chunk> equalsComment(String comment,
+	protected ArrayList<Chunk> equalsComment(String comment,
 			ArrayList<Chunk> chunk, ArrayList<Chunk> res) {
 		for (int i = 0; i < chunk.size(); i++) {
 			Chunk curChunk = chunk.get(i);
@@ -114,27 +110,6 @@ public class Constraints extends Task {
 			}
 		}
 		return res;
-	}
-
-	/**
-	 * Remove chunks which do not pass the constraint.
-	 * 
-	 * @param arrList
-	 *            the list of lines remaining
-	 * @param chunk
-	 *            the current chunk
-	 */
-	public void removeChunks(ArrayList<Integer> arrList, ArrayList<Chunk> chunk) {
-		Chunk curChunk;
-		for (int i = 0; i < chunk.size(); i++) {
-			curChunk = chunk.get(i);
-			if (!arrList.contains(curChunk.getLine()) && !curChunk.hasChild()) {
-				chunk.remove(i);
-				removeChunks(arrList, chunk);
-			} else if (curChunk.hasChild()) {
-				removeChunks(arrList, curChunk.getChunks());
-			}
-		}
 	}
 
 	/**
@@ -207,47 +182,6 @@ public class Constraints extends Task {
 				}
 			}
 		}
-	}
-
-	/**
-	 * Get the id's which pass the constraint from the database.
-	 * 
-	 * @param tableName
-	 *            the name of the table
-	 * @param whereClause
-	 *            the where clause
-	 * @return the id's which pass
-	 * @throws SQLException
-	 *             sql exception
-	 */
-	public ArrayList<Integer> getRemainingIDs(String tableName,
-			String whereClause) throws SQLException {
-		Db data = SingletonDb.getDb();
-		ResultSet rs = data.selectAllWithWhereClause(tableName, whereClause);
-		ArrayList<Integer> intArr = new ArrayList<Integer>();
-		while (rs.next()) {
-			intArr.add(rs.getInt(tableName + "id"));
-		}
-		rs.close();
-		return intArr;
-	}
-
-	/**
-	 * Check if a string is an integer.
-	 * 
-	 * @param s
-	 *            the string to check
-	 * @return return true if is integer and false if not
-	 */
-	public boolean isInteger(String s) {
-		try {
-			Integer.parseInt(s);
-		} catch (NumberFormatException e) {
-			return false;
-		} catch (NullPointerException e) {
-			return false;
-		}
-		return true;
 	}
 	
 	@Override
