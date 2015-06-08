@@ -61,7 +61,7 @@ public class ChunkTest {
 	 * Test method hadChild.
 	 */
 	@Test
-	public void testChunkChilds() {
+	public void testChunkChildren() {
 		assertEquals(chunk.hasChild(), false);
 		Chunk test = new Chunk();
 		chunk.setChunk(test);
