@@ -74,7 +74,6 @@ public class ConnectionsTest {
 	@Test
 	public void testConnectionOnCodeToComment() throws Exception {
 		Connections c = new Connections(note);
-		System.out.println(c.getChunks());
 		final int size = 8;
 		int i = 0;
 		String[] query =  new String[size];

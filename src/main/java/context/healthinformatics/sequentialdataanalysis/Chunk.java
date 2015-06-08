@@ -54,6 +54,18 @@ public class Chunk {
 	}
 
 	/**
+	 * Add a chunk to the pointer map.
+	 * 
+	 * @param chunk
+	 *            the chunk which it points too
+	 * @param note
+	 *            the note of the connection
+	 */
+	public void addPointer(Chunk chunk, String note) {
+		pointer.put(chunk, note);
+	}
+
+	/**
 	 * 
 	 * @return pointer connection to other chunk.
 	 */
@@ -110,7 +122,9 @@ public class Chunk {
 
 	/**
 	 * setter for sum.
-	 * @param i sum to set.
+	 * 
+	 * @param i
+	 *            sum to set.
 	 */
 	public void setSum(int i) {
 		sum = i;
@@ -175,8 +189,9 @@ public class Chunk {
 			res.add(sum + "");
 			return res;
 		} else if (hasChild()) {
-				res.add("Chunk contains childs, code = " + code + " comment = " + comment);
-				return res;
+			res.add("Chunk contains childs, code = " + code + " comment = "
+					+ comment);
+			return res;
 
 		} else {
 			Db data = SingletonDb.getDb();
@@ -233,9 +248,8 @@ public class Chunk {
 					String comp = Integer.toString(compare);
 					if (temp.equals(comp)) {
 						res.add("");
-					}
-					else {
-						res.add(temp);	
+					} else {
+						res.add(temp);
 					}
 				} else {
 					res.add("");
