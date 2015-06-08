@@ -13,6 +13,7 @@ import context.healthinformatics.analyse.Interpreter;
 import context.healthinformatics.analyse.SingletonInterpreter;
 import context.healthinformatics.database.Db;
 import context.healthinformatics.database.SingletonDb;
+import context.healthinformatics.gui.CodePage;
 import context.healthinformatics.gui.InterfaceHelper;
 import context.healthinformatics.gui.MainFrame;
 import context.healthinformatics.parser.Column;
@@ -24,16 +25,15 @@ import context.healthinformatics.sequentialdataanalysis.Chunk;
 public class IntermediateResults extends InterfaceHelper {
 	private static final long serialVersionUID = 1L;
 	private static final int FIELDCORRECTION = 130;
-	private static final int HUNDRED_PERCENT = 100;
 	private static final int TEN = 100;
 	private static final int NINE = 98;
 	private int intermediateResultWidth;
+	private int intermediateResultHeight;
 
 	private JPanel interMediateResultParentPanel;
 	private JEditorPane displayHtmlPane = new JEditorPane();
 	private JScrollPane scroll;
 	private Interpreter interpreter = SingletonInterpreter.getInterpreter();
-	private MainFrame mf;
 
 	private int globalChunkCounter = 1;
 
@@ -44,9 +44,9 @@ public class IntermediateResults extends InterfaceHelper {
 	 *            the mainframe to get screen width
 	 */
 	public IntermediateResults(MainFrame mf) {
-		this.mf = mf;
-		intermediateResultWidth = mf.getScreenWidth() / 2
-				- (mf.getScreenWidth() / HUNDRED_PERCENT) * 2;
+		intermediateResultWidth = mf.getScreenWidth() / 2 - 2 * CodePage.INSETS;
+		intermediateResultHeight = mf.getStatePanelSize() / TEN * NINE
+				- FIELDCORRECTION - CodePage.INSETS;
 		interMediateResultParentPanel = createEmptyWithGridBagLayoutPanel(MainFrame.CODETABCOLOR);
 		initDisplayHTMLPane();
 		initScrollPane();
@@ -67,8 +67,7 @@ public class IntermediateResults extends InterfaceHelper {
 	 */
 	private void initDisplayHTMLPane() {
 		this.displayHtmlPane.setPreferredSize(new Dimension(
-				intermediateResultWidth, mf.getStatePanelSize() / TEN * NINE
-						- FIELDCORRECTION));
+				intermediateResultWidth, intermediateResultHeight));
 		this.displayHtmlPane.setEditable(false);
 		this.displayHtmlPane.setContentType("text/html");
 		updateIntermediateResult();
@@ -82,8 +81,7 @@ public class IntermediateResults extends InterfaceHelper {
 		scroll = new JScrollPane(displayHtmlPane);
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scroll.setPreferredSize(new Dimension(intermediateResultWidth, mf
-				.getStatePanelSize() / TEN * NINE - FIELDCORRECTION));
+		scroll.setPreferredSize(new Dimension(intermediateResultWidth, intermediateResultHeight));
 		scroll.getVerticalScrollBar().setValue(0);
 	}
 

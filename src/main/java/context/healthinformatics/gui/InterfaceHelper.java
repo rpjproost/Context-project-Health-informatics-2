@@ -79,10 +79,8 @@ public class InterfaceHelper extends JPanel {
 	 * @return the location for the Component.
 	 */
 	protected GridBagConstraints setGrids(int x, int y, Insets insets) {
-		GridBagConstraints c = new GridBagConstraints();
+		GridBagConstraints c = setGrids(x, y);
 		c.insets = insets;
-		c.gridx = x;
-		c.gridy = y;
 		return c;
 	}
 

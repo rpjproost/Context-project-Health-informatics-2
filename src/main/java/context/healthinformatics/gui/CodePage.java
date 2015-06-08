@@ -38,7 +38,7 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	private static final int FIELDCORRECTION = 130;
 	private static final int ANALYZEBUTTONWIDTH = 220;
 	private static final int ANALYZEBUTTONHEIGHT = 80;
-	private static final int INSETS = 10;
+	public static final int INSETS = 10;
 	private static final int THREE = 3;
 	private static final int FOUR = 4;
 
@@ -300,7 +300,7 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	 * Set the rightpanel.
 	 */
 	private void setRightPanelWithOldIntermediateResult() {
-		rightPanel.add(imr.loadPanel(), setGrids(0, 2));
+		rightPanel.add(imr.loadPanel(), setGrids(0, 0, new Insets(0, 0, INSETS, 0)));
 		codePageParentpanel.add(rightPanel, setGrids(1, 0));
 		setGoToOutputPageButton();
 	}
@@ -315,8 +315,8 @@ public class CodePage extends InterfaceHelper implements PanelState,
 				setGrids(0, 0, new Insets(INSETS, INSETS, INSETS, 0)));
 		setEmptyPanel(buttonArea);
 		buttonArea.add(goToOutputPageButton,
-				setGrids(THREE, 0, new Insets(INSETS, 0, INSETS, INSETS)));
-		rightPanel.add(buttonArea, setGrids(0, FOUR));
+				setGrids(2, 0, new Insets(INSETS, 0, INSETS, INSETS)));
+		rightPanel.add(buttonArea, setGrids(0, 1));
 	}
 
 	/**

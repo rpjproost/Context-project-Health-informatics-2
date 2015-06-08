@@ -1,7 +1,6 @@
 package context.healthinformatics.help;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import context.healthinformatics.parser.ReadHelpInfoFromTXTFile;
@@ -9,9 +8,8 @@ import context.healthinformatics.parser.ReadHelpInfoFromTXTFile;
 /**
  * Controls the help frame.
  */
-public class HelpController implements Serializable {
+public class HelpController {
 
-	private static final long serialVersionUID = 1L;
 	private boolean helpFrameOpen;
 	private ReadHelpInfoFromTXTFile test;
 	private ArrayList<HelpFrameInfoContainer> listOfHelpFrameInfo;
