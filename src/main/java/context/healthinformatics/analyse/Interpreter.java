@@ -22,11 +22,14 @@ public class Interpreter {
 	
 	private Stack<Task> tasks;
 	private ArrayList<Chunk> firstList;
+	private String name;
 	/**
 	 * constructor for the Interpreter.
+	 * @param name name of this interpreter.
 	 */
-	protected Interpreter() {
+	protected Interpreter(String name) {
 		tasks = new Stack<Task>();
+		this.name = name;
 	}
 
 	/**
@@ -222,6 +225,14 @@ public class Interpreter {
 			}
 		}
 		return -1;
+	}
+	
+	/**
+	 * getter for the name of the interpreter.
+	 * @return the name of the interpreter.
+	 */
+	public String getName() {
+		return name;
 	}
 
 }

@@ -117,7 +117,7 @@ public abstract class Task {
 				return curChunk;
 			}
 			else if (curChunk.hasChild()) {
-				return getChunkByLine(line, curChunk.getChunks());
+				return getChunkByLine(line, curChunk.getChildren());
 			}
 		}
 		return curChunk;

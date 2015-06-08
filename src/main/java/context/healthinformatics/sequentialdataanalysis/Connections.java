@@ -2,7 +2,6 @@ package context.healthinformatics.sequentialdataanalysis;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.logging.Logger;
 
 import context.healthinformatics.analyse.SingletonInterpreter;
@@ -40,9 +39,7 @@ public class Connections extends Task {
 	 */
 	private void connectOnLine(int index1, int index2) {
 		if (index1 < index2) {
-			HashMap<Chunk, String> pointer1 = copyOfChunks.get(index1).getPointer();
-			pointer1.put(getChunks().get(index2), noteForConnection);
-			copyOfChunks.get(index1).setPointer(pointer1);
+			copyOfChunks.get(index1).addPointer(getChunks().get(index2), noteForConnection);
 		}
 	}	
 

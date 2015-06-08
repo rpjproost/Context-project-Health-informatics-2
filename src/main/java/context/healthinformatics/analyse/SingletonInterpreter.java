@@ -1,11 +1,13 @@
 package context.healthinformatics.analyse;
 
+import java.util.HashMap;
+
 /**
  * The SingleTonInterpreter class.
  */
 public final class SingletonInterpreter {
 
-	private static Interpreter interpreter = createInterpreter();
+	private static HashMap<String, Interpreter > interpreters;
 
 	/**
 	 * method to defeat the constructor.
@@ -16,14 +18,25 @@ public final class SingletonInterpreter {
 
 	/**
 	 * method returning the Interpreter.
-	 * 
+	 * @param name the name of the interpreter.
+	 * @return the Interpreter.
+	 */
+	public static synchronized Interpreter getInterpreter(String name) {
+		if (!interpreters.containsKey(name)) {
+			interpreters.put(name, createInterpreter(name));
+		}
+		return interpreters.get(name);
+	}
+
+	private static Interpreter createInterpreter(String name) {
+		return new Interpreter(name);
+	}
+	
+	/**
+	 * method returning the default Interpreter.
 	 * @return the Interpreter.
 	 */
 	public static Interpreter getInterpreter() {
-		return interpreter;
-	}
-
-	private static Interpreter createInterpreter() {
-		return new Interpreter();
+		return getInterpreter("analyse");
 	}
 }

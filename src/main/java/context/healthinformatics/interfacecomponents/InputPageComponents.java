@@ -302,7 +302,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 
 	private void analyseIfXMLIsCorrect() {
 		if (!ip.getEditor().checkAllXMLDocumentsOnError()) {
-			LoadingScreen ls = new LoadingScreen();
+			final LoadingScreen ls = new LoadingScreen();
 			new Thread(new Runnable() {
 				@Override
 				public void run() {

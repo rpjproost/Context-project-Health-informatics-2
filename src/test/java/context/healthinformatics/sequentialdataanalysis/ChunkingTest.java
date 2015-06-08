@@ -56,9 +56,9 @@ public class ChunkingTest {
 		ArrayList<Chunk> res = testChunking.constraintOnCode("A");
 		final int three = 3;
 		assertEquals(three, res.size());
-		assertEquals(res.get(0).getChunks().get(0).getCode(), "A");
-		assertEquals(res.get(0).getChunks().get(0).getChunks().get(0).getCode(), "B");
-		assertEquals(res.get(0).getChunks().get(0).getChunks().get(1).getCode(), "C");
+		assertEquals(res.get(0).getChildren().get(0).getCode(), "A");
+		assertEquals(res.get(0).getChildren().get(0).getChildren().get(0).getCode(), "B");
+		assertEquals(res.get(0).getChildren().get(0).getChildren().get(1).getCode(), "C");
 		assertEquals(res.get(1).getCode(), "E");
 	}
 	
@@ -70,7 +70,7 @@ public class ChunkingTest {
 		ArrayList<Chunk> res = testChunking.constraintOnContainsComment("E");
 		final int size = 4;
 		assertEquals(size, res.size());
-		assertEquals(res.get(2).getChunks().get(0).getCode(), "E");
+		assertEquals(res.get(2).getChildren().get(0).getCode(), "E");
 	}
 	
 	/**
@@ -81,7 +81,7 @@ public class ChunkingTest {
 		ArrayList<Chunk> res = testChunking.constraintOnEqualsComment("Deze heeft code E");
 		final int size = 4;
 		assertEquals(size, res.size());
-		assertEquals(res.get(2).getChunks().get(0).getCode(), "E");
+		assertEquals(res.get(2).getChildren().get(0).getCode(), "E");
 	}
 	
 	/**

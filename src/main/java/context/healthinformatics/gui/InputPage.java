@@ -163,7 +163,6 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		JPanel rightPanel = createPanel(MainFrame.INPUTTABCOLOR,
 				mf.getScreenWidth() / 2, mf.getStatePanelSize());
 		rightPanel.add(xmledit.loadPanel(), setGrids(0, 0));
-
 		rightPanel.add(ipc.loadAnalyzeButtonSection(), setGrids(0, 1));
 		return rightPanel;
 	}
@@ -221,7 +220,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		selecter = new JFileChooser();
 		selecter.setMultiSelectionEnabled(true);
 		FileNameExtensionFilter filter = new FileNameExtensionFilter(
-				"Only txt, excel and xml", "txt", "csv", "xlsx", "xls", "xml");
+				"Only text, excel and xml", "txt", "csv", "xlsx", "xls", "xml");
 		selecter.setFileFilter(filter);
 		selecter.setPreferredSize(new Dimension(SELECTERWIDTH, SELECTERHEIGHT));
 		selecter.setFileSelectionMode(JFileChooser.FILES_ONLY);

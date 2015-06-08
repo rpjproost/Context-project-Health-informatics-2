@@ -56,7 +56,7 @@ public class Constraints extends Task {
 				res.add(curChunk);
 			}
 			if (curChunk.hasChild()) {
-				hasCode(code, curChunk.getChunks(), res);
+				hasCode(code, curChunk.getChildren(), res);
 			}
 		}
 		return res;
@@ -81,7 +81,7 @@ public class Constraints extends Task {
 				res.add(curChunk);
 			}
 			if (curChunk.hasChild()) {
-				containsComment(comment, curChunk.getChunks(), res);
+				containsComment(comment, curChunk.getChildren(), res);
 			}
 		}
 		return res;
@@ -106,13 +106,37 @@ public class Constraints extends Task {
 				res.add(curChunk);
 			}
 			if (curChunk.hasChild()) {
-				equalsComment(comment, curChunk.getChunks(), res);
+				equalsComment(comment, curChunk.getChildren(), res);
 			}
 		}
 		return res;
 	}
 
 	/**
+<<<<<<< HEAD
+=======
+	 * Remove chunks which do not pass the constraint.
+	 * 
+	 * @param arrList
+	 *            the list of lines remaining
+	 * @param chunk
+	 *            the current chunk
+	 */
+	public void removeChunks(ArrayList<Integer> arrList, ArrayList<Chunk> chunk) {
+		Chunk curChunk;
+		for (int i = 0; i < chunk.size(); i++) {
+			curChunk = chunk.get(i);
+			if (!arrList.contains(curChunk.getLine()) && !curChunk.hasChild()) {
+				chunk.remove(i);
+				removeChunks(arrList, chunk);
+			} else if (curChunk.hasChild()) {
+				removeChunks(arrList, curChunk.getChildren());
+			}
+		}
+	}
+
+	/**
+>>>>>>> master
 	 * Get the column name.
 	 * 
 	 * @return the name of the column
@@ -122,6 +146,54 @@ public class Constraints extends Task {
 	}
 
 	/**
+<<<<<<< HEAD
+=======
+	 * Append string for the sql where clause.
+	 * 
+	 * @param tableName
+	 *            the name of the table
+	 * @param line
+	 *            the line of the chunk
+	 * @return the resulting where string
+	 */
+	public String appendOrClauseForQuery(String tableName, int line) {
+		StringBuilder res = new StringBuilder();
+		res.append("OR ");
+		res.append(tableName);
+		res.append("id = ");
+		res.append(line);
+		res.append(" ");
+		return res.toString();
+	}
+
+	/**
+	 * Get all lines from the chunks and format it for sql.
+	 * 
+	 * @param chunk
+	 *            the chunks
+	 * @param res
+	 *            the resulting sql string for where clause
+	 * @param tableName
+	 *            the name of the table
+	 * @return the sql string for the where clause
+	 */
+	public String getAllChunkLines(ArrayList<Chunk> chunk, StringBuilder res,
+			String tableName) {
+		for (int i = 0; i < chunk.size(); i++) {
+			Chunk curChunk = chunk.get(i);
+			if (curChunk.getLine() != 0) {
+				res.append(appendOrClauseForQuery(tableName, curChunk.getLine()));
+			}
+			if (curChunk.hasChild()) {
+				res.append(getAllChunkLines(curChunk.getChildren(), res,
+						tableName));
+			}
+		}
+		return res.toString();
+	}
+
+	/**
+>>>>>>> master
 	 * Checks current arraylist on constraint on data.
 	 * @param whereClause sql clause over data.
 	 * @return filtered arraylist.
@@ -153,7 +225,7 @@ public class Constraints extends Task {
 		}
 		else {
 			if (curChunk.hasChild()) {
-				checkChildsOnData(curChunk, curChunk.getChunks(), ints, res);
+				checkChildsOnData(curChunk, curChunk.getChildren(), ints, res);
 			}	
 		}
 	}
@@ -175,7 +247,7 @@ public class Constraints extends Task {
 			}
 			else {
 				if (childs.get(i).hasChild()) {
-					checkChildsOnData(curChunk, childs.get(i).getChunks(), ints, res);
+					checkChildsOnData(curChunk, childs.get(i).getChildren(), ints, res);
 				}
 				else {
 					childs.remove(i);

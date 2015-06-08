@@ -163,7 +163,7 @@ public class IntermediateResults extends InterfaceHelper {
 	 * @return HTML list with the children
 	 */
 	private String getChildsOfChunk(Chunk chunk) {
-		ArrayList<Chunk> childChunks = chunk.getChunks();
+		ArrayList<Chunk> childChunks = chunk.getChildren();
 		StringBuilder buildString = new StringBuilder();
 		buildString.append(loopThroughChunks(childChunks));
 		return buildString.toString();
