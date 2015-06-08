@@ -147,51 +147,6 @@ public class Constraints extends Task {
 	}
 
 	/**
-	 * Append string for the sql where clause.
-	 * 
-	 * @param tableName
-	 *            the name of the table
-	 * @param line
-	 *            the line of the chunk
-	 * @return the resulting where string
-	 */
-	public String appendOrClauseForQuery(String tableName, int line) {
-		StringBuilder res = new StringBuilder();
-		res.append("OR ");
-		res.append(tableName);
-		res.append("id = ");
-		res.append(line);
-		res.append(" ");
-		return res.toString();
-	}
-
-	/**
-	 * Get all lines from the chunks and format it for sql.
-	 * 
-	 * @param chunk
-	 *            the chunks
-	 * @param res
-	 *            the resulting sql string for where clause
-	 * @param tableName
-	 *            the name of the table
-	 * @return the sql string for the where clause
-	 */
-	public String getAllChunkLines(ArrayList<Chunk> chunk, StringBuilder res,
-			String tableName) {
-		for (int i = 0; i < chunk.size(); i++) {
-			Chunk curChunk = chunk.get(i);
-			if (curChunk.getLine() != 0) {
-				res.append(appendOrClauseForQuery(tableName, curChunk.getLine()));
-			}
-			if (curChunk.hasChild()) {
-				res.append(getAllChunkLines(curChunk.getChunks(), res,
-						tableName));
-			}
-		}
-		return res.toString();
-	}
-
-	/**
 	 * Checks current arraylist on constraint on data.
 	 * @param whereClause sql clause over data.
 	 * @return filtered arraylist.
@@ -252,35 +207,6 @@ public class Constraints extends Task {
 				}
 			}
 		}
-	}
-
-	/**
-	 * Constraint on a data value string.
-	 * 
-	 * @param value
-	 *            the string value
-	 * @param operator
-	 *            the operator to specify the constraint
-	 * @param tableName
-	 *            the name of the table
-	 * @return return the ArrayList with remaining chunks
-	 * @throws SQLException
-	 *             the sql exception
-	 */
-	public ArrayList<Chunk> constraint(String value, String operator,
-			String tableName) throws SQLException {
-		String rowClause = getAllChunkLines(getChunks(), new StringBuilder(),
-				tableName);
-		rowClause = "(" + rowClause.substring(2, rowClause.length()) + ")";
-		String constraint = columnName + " " + operator + " ";
-		if (isInteger(value)) {
-			constraint += value + " ";
-		} else {
-			constraint += "'" + value + "' ";
-		}
-		String whereClause = constraint + " AND " + rowClause;
-		removeChunks(getRemainingIDs(tableName, whereClause), getChunks());
-		return getChunks();
 	}
 
 	/**
