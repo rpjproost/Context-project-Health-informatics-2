@@ -7,6 +7,7 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -252,5 +253,19 @@ public class HelpFrame extends InterfaceHelper {
 	 */
 	public JFrame getHelpFrame() {
 		return helpMainFrame;
+	}
+	
+	/**
+	* Close the helpFrame.
+	*/
+	public void closeHelpFrame() {
+		helpMainFrame.dispatchEvent(new WindowEvent(helpMainFrame, WindowEvent.WINDOW_CLOSING));
+	}
+
+	/**
+	* @return the list of containers for the helpFrame items.
+	*/
+	public ArrayList<HelpFrameInfoContainer> getListOFContainers() {
+		return listOfHelpFrameInfo;
 	}
 }

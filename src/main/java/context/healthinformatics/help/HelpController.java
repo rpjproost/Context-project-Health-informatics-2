@@ -58,5 +58,18 @@ public class HelpController implements Serializable {
 	protected void setHelpFrameOpen(boolean frameOpened) {
 		helpFrameOpen = frameOpened;
 	}
-
+	
+	/**
+	 * Close the help frame.
+	 */
+	protected void closeHelpFrame() {
+		helpFrame.closeHelpFrame();
+	}
+	
+	/**
+	 * @return the help frame.
+	 */
+	protected HelpFrame getHelpFrame() {
+		return helpFrame;
+	}
 }
