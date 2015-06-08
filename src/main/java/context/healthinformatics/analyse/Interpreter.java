@@ -64,15 +64,14 @@ public class Interpreter {
 	 * @param parameter parameter for the task.
 	 * @return the newly created task.
 	 */
-	private Task createTask(String k, String parameter) {
-		String[] keys = k.split("\\(");
-		String key = keys[0];
+	private Task createTask(Query q) {
+		String key = q.part();
+		String parameter = q.getParameter();
 		if (key.equals("chunk")) {
 			if (parameter != null) {
 				return new Chunking(parameter);
-			} else {
-				return new Chunking();
 			}
+			return new Chunking();
 		}
 		if (key.equals("filter")) {
 			return new Constraints();
@@ -89,8 +88,6 @@ public class Interpreter {
 		if (key.equals("compute")) {
 			return new Computations();
 		}
-			
-			
 		return null;
 	}
 

@@ -1,7 +1,6 @@
 package context.healthinformatics.analyse;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.regex.Pattern;
 
 /**
@@ -125,5 +124,13 @@ public class Query {
 	 */
 	public String part() {
 		return query.get(index);
+	}
+	
+	/**
+	 * returns the parameter for this query.
+	 * @return the parameter.
+	 */
+	public String getParameter() {
+		return parameter;
 	}
 }
