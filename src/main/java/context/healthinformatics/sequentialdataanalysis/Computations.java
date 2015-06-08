@@ -48,7 +48,7 @@ public class Computations extends Task {
 		for (Chunk c : getChunks()) {
 			if (c.hasChild()) {
 				Chunk res = new Chunk();
-				int i = c.getChunks().size();
+				int i = c.getChildren().size();
 				res.setSum(i);
 				list.add(res);
 			}

@@ -102,11 +102,11 @@ public class Chunk {
 	}
 
 	/**
-	 * List of chunks this chunk consists out of.
+	 * List of children this chunk contains.
 	 * 
-	 * @return childs of this chunk.
+	 * @return children of this chunk.
 	 */
-	public ArrayList<Chunk> getChunks() {
+	public ArrayList<Chunk> getChildren() {
 		return chunks;
 	}
 
@@ -218,7 +218,7 @@ public class Chunk {
 		Chunk c = new Chunk();
 		c.setCode(this.getCode());
 		c.setChunks(SingletonInterpreter.getInterpreter().copyChunks(
-				getChunks()));
+				getChildren()));
 		c.setComment(getComment());
 		c.setLine(c.getLine());
 		HashMap<Chunk, String> map = new HashMap<Chunk, String>();
