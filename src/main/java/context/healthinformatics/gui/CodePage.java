@@ -206,7 +206,7 @@ public class CodePage extends InterfaceHelper implements PanelState,
 		setCodeInputArea();
 		setOldCodeAreaTitle();
 		setOldCodeArea();
-		setButtonArea();
+		setButtonArea(leftPanel, goBackButton, analyseButton, FOUR);
 		codePageParentpanel.add(leftPanel, setGrids(0, 0));
 	}
 
@@ -214,9 +214,8 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	 * Sets a title to the code input area panel.
 	 */
 	private void setCodeInputAreaTitle() {
-		GridBagConstraints c = setGrids(0, 0);
+		GridBagConstraints c = setGrids(0, 0, new Insets(0, INSETS, 0, 0));
 		c.anchor = GridBagConstraints.LINE_START;
-		c.insets = new Insets(0, INSETS, 0, 0);
 		leftPanel.add(createTitle("Code input area:"), c);
 	}
 
@@ -224,9 +223,7 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	 * Sets the code input area.
 	 */
 	private void setCodeInputArea() {
-		GridBagConstraints c = setGrids(0, 1);
-		c.insets = new Insets(0, INSETS, INSETS, INSETS);
-		leftPanel.add(scrollWithTextArea, c);
+		leftPanel.add(scrollWithTextArea, setGrids(0, 1, new Insets(0, INSETS, INSETS, INSETS)));
 	}
 
 	/**
@@ -250,15 +247,20 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	}
 
 	/**
-	 * Sets up the whole button area.
+	 * Sets a specific button area for the code page.
+	 * @param parent the side of the screen where it should be set.
+	 * @param leftButton the left button on the screen.
+	 * @param rightButton the right button on the screen.
+	 * @param position which height the entire area should be.
 	 */
-	private void setButtonArea() {
+	private void setButtonArea(JPanel parent, JButton leftButton, 
+			JButton rightButton, int position) {
 		JPanel buttonArea = createPanel(MainFrame.CODETABCOLOR,
 				mf.getScreenWidth() / 2, FIELDCORRECTION);
-		setGoBackButton(buttonArea);
+		setLeftButton(buttonArea, leftButton);
 		setEmptyPanel(buttonArea);
-		setAnalyseButton(buttonArea);
-		leftPanel.add(buttonArea, setGrids(0, FOUR));
+		setRightButton(buttonArea, rightButton);
+		parent.add(buttonArea, setGrids(0, position));
 	}
 
 	/**
@@ -267,8 +269,8 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	 * @param panel
 	 *            the panel which the go back button will added to.
 	 */
-	private void setGoBackButton(JPanel panel) {
-		panel.add(goBackButton,
+	private void setLeftButton(JPanel panel, JButton button) {
+		panel.add(button,
 				setGrids(0, 0, new Insets(INSETS, INSETS, INSETS, 0)));
 	}
 
@@ -291,8 +293,8 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	 * @param panel
 	 *            which the analyze button will be added to.
 	 */
-	private void setAnalyseButton(JPanel panel) {
-		panel.add(analyseButton,
+	private void setRightButton(JPanel panel, JButton button) {
+		panel.add(button,
 				setGrids(2, 0, new Insets(INSETS, 0, INSETS, INSETS)));
 	}
 
@@ -302,21 +304,7 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	private void setRightPanelWithOldIntermediateResult() {
 		rightPanel.add(imr.loadPanel(), setGrids(0, 0, new Insets(0, 0, INSETS, 0)));
 		codePageParentpanel.add(rightPanel, setGrids(1, 0));
-		setGoToOutputPageButton();
-	}
-
-	/**
-	 * Sets the button for go to output page.
-	 */
-	private void setGoToOutputPageButton() {
-		JPanel buttonArea = createPanel(MainFrame.CODETABCOLOR,
-				mf.getScreenWidth() / 2, FIELDCORRECTION);
-		buttonArea.add(helpButton,
-				setGrids(0, 0, new Insets(INSETS, INSETS, INSETS, 0)));
-		setEmptyPanel(buttonArea);
-		buttonArea.add(goToOutputPageButton,
-				setGrids(2, 0, new Insets(INSETS, 0, INSETS, INSETS)));
-		rightPanel.add(buttonArea, setGrids(0, 1));
+		setButtonArea(rightPanel, helpButton, goToOutputPageButton, 1);
 	}
 
 	/**
