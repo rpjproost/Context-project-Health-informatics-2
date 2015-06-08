@@ -41,6 +41,11 @@ public class ConstraintOnDataTest {
 	
 	private MergeTable test;
 
+	/**
+	 * Set up parsers and database for constraint over data.
+	 * @throws SQLException Database exceptions that should not happen here.
+	 * @throws IOException Parser exceptions that should not happen here.
+	 */
 	@Before
 	public void before() throws SQLException, IOException {
 		xmlp = new XMLParser(path + "demo.xml");
@@ -80,20 +85,13 @@ public class ConstraintOnDataTest {
 	 */
 	@Test
 	public void testConstraintOnDataWithChunks() throws Exception {
-		final int res = 1;
+		final int res = 5;
 		Interpreter i = SingletonInterpreter.getInterpreter();
 		i.setIntialChunks(chunks);
-		i.interpret("chunk data where createdby < 'admire2'");
-		int counter = 0;
-		for(Chunk x: i.getChunks()) {
-			counter = counter + 1;
-			System.out.println(x);
-		}
-		System.out.println(counter);
-		i.interpret("filter data where value = 171");
-		ArrayList<Chunk> c = i.getChunks();
+		i.interpret("chunk data where value < 172");
+		i.interpret("filter data where value = 170");
 
-		//assertEquals(res, c.size());
+		assertEquals(res, i.getChunks().size());
 		
 		test.dropView("workspace");
 		data.dropTable("result");
