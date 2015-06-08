@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
+import context.healthinformatics.analyse.Query;
 import context.healthinformatics.analyse.SingletonInterpreter;
 
 /**
@@ -123,14 +124,14 @@ public class Connections extends Task {
 	 * @throws SQLException iff sql query goes wrong.
 	 */
 	@Override
-	protected void runData(String[] query) throws SQLException {
+	protected void runData(Query query) throws SQLException {
 		StringBuilder q = new StringBuilder();
 		ArrayList<Integer> destinationList = new ArrayList<Integer>();
-		increment(2);
-		while (!isData(query) || !isComment(query) || !isCode(query)) {
-			q.append(query[getQueryPart()]);
+		query.inc();
+		while (!isData(query.next()) || !isComment(query.part()) || !isCode(query.part())) {
+			q.append(query.part());
 			q.append(" ");
-			inc();
+			query.next();
 		}
 		ArrayList<Integer> originList = getLinesFromData(q.toString());
 		parseSecondCondition(query, originList, destinationList);
@@ -141,9 +142,9 @@ public class Connections extends Task {
 	 * @param query interpreter query.
 	 */
 	@Override
-	protected void runCode(String[] query) {
-		increment(2);
-		ArrayList<Integer> originList = getListOnCode(query[getQueryPart()]);
+	protected void runCode(Query query) {
+		query.inc();
+		ArrayList<Integer> originList = getListOnCode(query.next());
 		ArrayList<Integer> destinationList = new ArrayList<Integer>();
 		parseSecondCondition(query, originList, destinationList);
 	}
@@ -153,26 +154,25 @@ public class Connections extends Task {
 	 * @param query interpreter query.
 	 */
 	@Override
-	protected void runComment(String[] query) {
-		increment(2);
-		ArrayList<Integer> originList = getListOnComment(query[getQueryPart()]);
+	protected void runComment(Query query) {
+		query.inc();
+		ArrayList<Integer> originList = getListOnComment(query.next());
 		ArrayList<Integer> destinationList = new ArrayList<Integer>();
 		parseSecondCondition(query, originList, destinationList);
 	}
 	
-	private void parseSecondCondition(String[] query, ArrayList<Integer> originList,
+	private void parseSecondCondition(Query query, ArrayList<Integer> originList,
 			ArrayList<Integer> destinationList) {
-		increment(2);
-		if (isComment(query)) {
-			increment(2);
-			destinationList = getListOnComment(query[getQueryPart()]);
+		query.inc();
+		if (isComment(query.next())) {
+			query.inc();
+			destinationList = getListOnComment(query.next());
 			connectListsOfChunkIndices(originList, destinationList);
 		}
-		if (isData(query)) {
+		if (isData(query.part())) {
 			StringBuilder q = new StringBuilder();
-			inc();
-			for (int i = getQueryPart(); i < query.length; i++) {
-				q.append(query[i]);
+			while (query.hasNext()) {
+				q.append(query.next());
 				q.append(" ");
 			}
 			try {
@@ -182,9 +182,9 @@ public class Connections extends Task {
 			}
 			connectListsOfChunkIndices(originList, destinationList);
 		}
-		if (isCode(query)) {
-			increment(2);
-			destinationList = getListOnCode(query[getQueryPart()]);
+		if (isCode(query.part())) {
+			query.inc();
+			destinationList = getListOnCode(query.next());
 			connectListsOfChunkIndices(originList, destinationList);
 		}
 	}

@@ -22,6 +22,11 @@ public class Query {
 		query = splitLine(line);
 	}
 	
+	/**
+	 * empty constructor for testing purposes.
+	 */
+	protected Query() { }
+	
 	
 	/**
 	 * Method to handle the splitting of the line.
@@ -43,16 +48,13 @@ public class Query {
 	 * @return A list of strings without empty places.
 	 */
 	private void checkSplittedLineForUnwantedSpaces(ArrayList<String> splittedLine) {
-		int[] remove = new int[splittedLine.size()];
-		int count = 0;
-		for (int i = 0; i < splittedLine.size(); i++) {
+		int i = 0;
+		while (i < splittedLine.size()) {
 			if (!(splittedLine.get(i).length() > 0)) {
-				remove[count] = i;
-				count++;
+				splittedLine.remove(i);
+			} else {
+				i++;
 			}
-		}
-		for (int i = 0; i < count; i++) {
-			splittedLine.remove(remove[count - i]);
 		}
 	}
 	
@@ -104,8 +106,8 @@ public class Query {
 	 * @param s given string
 	 * @return boolean containing the answer. True for 1 word. False for more then 1 word.
 	 */
-	private boolean checkForCommand(String s) { //checks if the string is 1 word.
-		return Pattern.matches("/\\s*\b([A-Z]*[a-z]+)+\\s*\b/g", s);
+	protected boolean checkForCommand(String s) { //checks if the string is 1 word.
+		return Pattern.matches("^\\s*[A-Za-z]+\\s*$", s);
 	}
 	
 	/**
@@ -132,5 +134,37 @@ public class Query {
 	 */
 	public String getParameter() {
 		return parameter;
+	}
+	
+	/**
+	 * increment index with 1.
+	 */
+	public void inc() {
+		setPointer(index + 1);
+	}
+	
+	/**
+	 * increment index with given number.
+	 * @param i number to add.
+	 */
+	public void inc(int i) {
+		setPointer(index + i);
+	}
+	
+	/**
+	 * returns true if there is a next queryPart.
+	 * @return true or false.
+	 */
+	public boolean hasNext() {
+		return (index + 1 < query.size());
+	}
+	
+	/**
+	 * return the next Querypart. 
+	 * @return the next part of the query.
+	 */
+	public String next() {
+		inc();
+		return part();
 	}
 }
