@@ -1,5 +1,6 @@
 package context.healthinformatics.interfacecomponents;
 
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
@@ -87,6 +88,7 @@ public class DocumentFieldsContainerTest {
 	
 	@Test
 	public void testIsEmptyMethods() {
+		assertFalse(fullDoc.isDelimiterEmpty());
 		assertTrue(emptyDoc.isDelimiterEmpty());
 		assertFalse(emptyDoc.isSheetEmpty());
 		assertFalse(emptyDoc.isDocumentPathEmpty());
@@ -95,7 +97,11 @@ public class DocumentFieldsContainerTest {
 	@Test
 	public void testActionListeners() {
 		ActionListener[] listeners = fullDoc.getAddColumnButton().getActionListeners();
-		
+		ActionEvent event = new ActionEvent(fullDoc.getAddColumnButton(), 0, null);
+		listeners[0].actionPerformed(event);
+		listeners = fullDoc.getRemoveColumnButton().getActionListeners();
+		event = new ActionEvent(fullDoc.getRemoveColumnButton(), 0, null);
+		listeners[0].actionPerformed(event);
 	}
 
 }
