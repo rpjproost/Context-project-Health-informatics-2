@@ -64,7 +64,7 @@ public class Chunking extends Task {
 	/**
 	 * Chunking chunks on a code constraint.
 	 * @param code Code constraint for a chunk.
-	 * @return New ArrayList<Chunk> chunked on code.
+	 * @return New ArrayList of chunks chunked on code.
 	 */
 	@Override
 	public ArrayList<Chunk> constraintOnCode(String code) {
@@ -84,7 +84,7 @@ public class Chunking extends Task {
 	 * @param curChunk Chunk to be checked on constraint.
 	 * @param temp New chunk that will be returned in new ArrayList<Chunk>
 	 * @param c String for code constraint.
-	 * @param res ArrayList<Chunk> chunked.
+	 * @param res ArrayList of chunks chunked.
 	 */
 	private void addChunkOnEqualsCode(Chunk curChunk, String c, ArrayList<Chunk> res) {
 		if (curChunk.getCode().equals(c)) {
@@ -99,7 +99,7 @@ public class Chunking extends Task {
 	/**
 	 * Chunking chunks on a comment contains constraint.
 	 * @param comment String for comment.
-	 * @return new ArrayList<Chunk> chunked on constraint.
+	 * @return new ArrayList of chunks chunked on constraint.
 	 */
 	@Override
 	public ArrayList<Chunk> constraintOnContainsComment(String comment) {
@@ -119,7 +119,7 @@ public class Chunking extends Task {
 	 * @param curChunk Chunk to be checked on constraint.
 	 * @param temp New chunk that will be returned in new ArrayList<Chunk>
 	 * @param c String for comment constraint.
-	 * @param res ArrayList<Chunk> chunked.
+	 * @param res ArrayList of chunks chunked.
 	 */
 	private void addChunkOnContainsComment(Chunk curChunk, String c, 
 			ArrayList<Chunk> res) {
@@ -135,7 +135,7 @@ public class Chunking extends Task {
 	/**
 	 * Chunking chunks on a comment equals constraint.
 	 * @param comment String for comment.
-	 * @return new ArrayList<Chunk> chunked on constraint.
+	 * @return new ArrayList of chunks chunked on constraint.
 	 */
 	@Override
 	public ArrayList<Chunk> constraintOnEqualsComment(String comment) {
@@ -153,9 +153,9 @@ public class Chunking extends Task {
 	/**
 	 * Add chunk to new Chunk in new ArrayList if it equals comment.
 	 * @param curChunk Chunk to be checked on constraint.
-	 * @param temp New chunk that will be returned in new ArrayList<Chunk>
+	 * @param temp New chunk that will be returned in new ArrayList of chunks
 	 * @param c String for comment constraint.
-	 * @param res ArrayList<Chunk> chunked.
+	 * @param res ArrayList of chunks chunked.
 	 */
 	private void addChunkOnEqualsComment(Chunk curChunk, String c, 
 			ArrayList<Chunk> res) {
@@ -171,7 +171,7 @@ public class Chunking extends Task {
 	/**
 	 * Adds a Chunk to a new chunk if it is part of the Chunk.
 	 * @param temp The new Chunk.
-	 * @param res The new ArrayList<Chunk> to be returned after chunking.
+	 * @param res The new ArrayList of chunks to be returned after chunking.
 	 */
 	private void addChunkToRes(ArrayList<Chunk> res, Chunk curChunk) {
 		if (temp.hasChild()) {

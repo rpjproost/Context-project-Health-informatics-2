@@ -55,8 +55,8 @@ public class XMLParser extends Parser {
 	/**
 	 * Parse the XML file to objects.
 	 * 
-	 * @throws SQLException
-	 * @throws InvalidFormatException
+	 * @throws IOException Throws an IOException 
+	 * 			if the parsing of the xmlFile went wrong.
 	 */
 	@Override
 	public void parse() throws IOException {
@@ -107,9 +107,9 @@ public class XMLParser extends Parser {
 	/**
 	 * Method that handles parsing for a single document.
 	 * 
-	 * @param n
-	 *            the document node.
-	 * @throws InvalidFormatException
+	 * @param n the document node.
+	 * @throws InvalidFormatException Throws an InvalidFormatException if the
+	 * 		format of the xmlDocument is wrong.
 	 */
 	private void parseDocument(Node n) throws InvalidFormatException {
 		Element e = (Element) n;
@@ -138,7 +138,7 @@ public class XMLParser extends Parser {
 				parsers.get(i).parse();
 			}
 		} catch (SQLException | IOException e) {
-			System.out.println("One of the parsers failed!"); // TODO exception
+			System.out.println("DB was not created!"); // TODO exception
 		}
 	}
 	
@@ -158,7 +158,7 @@ public class XMLParser extends Parser {
 			}
 			dropOldTables(currentData);
 		} catch (SQLException | IOException e) {
-			System.out.println("One of the parsers failed!"); // TODO exception
+			System.out.println("Table not created!"); // TODO exception
 		}
 	}
 
@@ -269,8 +269,7 @@ public class XMLParser extends Parser {
 	 * Get a Integer at the place of the tag in the xml. When there isn't a
 	 * Integer, it will be set on a default 1.
 	 * 
-	 * @param s
-	 *            the tag in the xml
+	 * @param s the tag in the xml
 	 * @return parsed int or default 1
 	 */
 	private int getInt(Element e, String s) {
@@ -409,6 +408,7 @@ public class XMLParser extends Parser {
 	}
 
 	/**
+	 *  Getter for the documnets.
 	 * @return the documents
 	 */
 	public ArrayList<XMLDocument> getDocuments() {
@@ -416,6 +416,7 @@ public class XMLParser extends Parser {
 	}
 
 	/**
+	 * Getter for doctype.
 	 * @return the docType
 	 */
 	public String getDocType() {
@@ -423,6 +424,7 @@ public class XMLParser extends Parser {
 	}
 
 	/**
+	 * setter for docType.
 	 * @param docType
 	 *            the docType to set
 	 */

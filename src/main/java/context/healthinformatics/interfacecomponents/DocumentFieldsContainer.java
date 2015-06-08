@@ -22,6 +22,9 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 
 	private static final long serialVersionUID = 1L;
 
+	private static final int FORM_ELEMENT_HEIGHT = 25;
+	private static final int XML_EDITOR_WIDTH = 800;
+
 	private JTextField documentName;
 	private JComboBox<String> documentType;
 	private JTextField documentPath;
@@ -518,7 +521,8 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	 */
 	private void changeLastDocumentRow(String labelName, JTextField theTextField) {
 		panelForDocTypeSpecificInput.setVisible(false);
-		JPanel testPanel = makeFormRowWithTextField(labelName, theTextField);
+		JPanel testPanel = makeFormRowPanelWithTextField(labelName,
+				theTextField, XML_EDITOR_WIDTH, FORM_ELEMENT_HEIGHT);
 		documentFormPanel.add(testPanel, setGrids(0, 1));
 		setPanelForDocTypeSpecificInput(testPanel);
 		documentFormPanel.revalidate();

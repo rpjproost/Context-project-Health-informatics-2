@@ -24,7 +24,7 @@ public final class SqlBuilder {
 	/**
 	 * Creates query for new table in database.
 	 * @param tableName Name of table.
-	 * @param columns ArrayList<Column> with names of columns and datatypes.
+	 * @param columns ArrayList of Columns with names of columns and datatypes.
 	 * @return the sql query to be executed.
 	 */
 	public static String createSqlTable(String tableName, ArrayList<Column> columns) {
@@ -37,7 +37,7 @@ public final class SqlBuilder {
 	/**
 	 * Appends query with tableColumn names and types of createTable.
 	 * @param tableName Name of table to create.
-	 * @param columns ArrayList<Column> for column names and types.
+	 * @param columns ArrayList of Columns for column names and types.
 	 * @param res Query to be appended.
 	 */
 	private static void createTableColumns(String tableName, ArrayList<Column> columns, 
@@ -60,7 +60,7 @@ public final class SqlBuilder {
 
 	/**
 	 * Appends every column in Arraylist to the query of createTable.
-	 * @param columns ArrayList<Column> for column names and types.
+	 * @param columns ArrayList of Columns for column names and types.
 	 * @param res res Query to be appended.
 	 */
 	private static void createTableWithColumnsFromArrayList(ArrayList<Column> columns, 

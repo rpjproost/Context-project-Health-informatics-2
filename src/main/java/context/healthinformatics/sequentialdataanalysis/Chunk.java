@@ -5,6 +5,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import context.healthinformatics.analyse.SingletonInterpreter;
 import context.healthinformatics.database.Db;
@@ -205,11 +206,11 @@ public class Chunk {
 				getChunks()));
 		c.setComment(getComment());
 		c.setLine(c.getLine());
-		Object o = this.getPointer().clone();
-		if (o instanceof HashMap<?, ?>) {
-			HashMap<Chunk, String> map = (HashMap<Chunk, String>) o;
-			c.setPointer(map);
+		HashMap<Chunk, String> map = new HashMap<Chunk, String>();
+		for (Entry<Chunk, String> e : pointer.entrySet()) {
+			map.put(e.getKey(), e.getValue());
 		}
+		c.setPointer(map);
 		return c;
 	}
 

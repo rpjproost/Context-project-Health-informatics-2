@@ -7,6 +7,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -15,7 +16,11 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
+import context.healthinformatics.database.Db;
+import context.healthinformatics.database.MergeTable;
+import context.healthinformatics.database.SingletonDb;
 import context.healthinformatics.gui.InputPage;
 import context.healthinformatics.gui.MainFrame;
 import context.healthinformatics.writer.XMLDocument;
@@ -67,7 +72,8 @@ public class InputPageComponents implements Serializable, ActionListener {
 		ip = p;
 		screenWidth = mf.getScreenWidth() / 2;
 		box = new JComboBox<String>(ip.getProjects());
-		helpController = new HelpController("src/main/data/guihelpdata/inputpagehelp.txt");
+		helpController = new HelpController(
+				"src/main/data/guihelpdata/inputpagehelp.txt");
 	}
 
 	/**
@@ -265,7 +271,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 			ip.openFiles(ip.getFileSelecter().getSelectedFiles());
 		}
 		if (e.getSource() == getHelpButton()) {
-			helpController.handleHelpButton();
+			helpController.handleHelpButton("Input Page Help");
 		}
 		if (e.getSource() == getAnalyseButton()) {
 			handleAnalystButton();
@@ -296,9 +302,40 @@ public class InputPageComponents implements Serializable, ActionListener {
 
 	private void analyseIfXMLIsCorrect() {
 		if (!ip.getEditor().checkAllXMLDocumentsOnError()) {
-			ip.loadDatabase();
-			mf.setState(mf.getCodePage());
-			mf.reloadStatePanel();
+			LoadingScreen ls = new LoadingScreen();
+			new Thread(new Runnable() {
+				@Override
+				public void run() {
+					ip.loadDatabase();
+					mergeTables();
+					ls.displayMessage("Almost done we are loading the results for you!");
+					SwingUtilities.invokeLater(new Runnable() {
+						@Override
+						public void run() {
+							mf.setState(mf.getCodePage());
+							mf.reloadStatePanel();
+							ls.closeLoadFrame();
+						}
+					});
+				}
+
+			}).start();
+		}
+	}
+
+	private void mergeTables() {
+		Db db = SingletonDb.getDb();
+		if (db.getTables().size() > 0 && !db.getTables().containsKey("result")) {
+			MergeTable mergeTables = new MergeTable();
+			String[] clause = new String[1];
+			clause[0] = "meeting.createdby = 'admire2'";
+			try {
+				mergeTables.merge(clause);
+			} catch (SQLException e) {
+				JOptionPane.showMessageDialog(null,
+						"The files you are trying to merge can't be merged!!",
+						"Merge Tables Error", JOptionPane.WARNING_MESSAGE);
+			}
 		}
 	}
 
@@ -323,33 +360,4 @@ public class InputPageComponents implements Serializable, ActionListener {
 		controller.setProject((String) getComboBox().getSelectedItem());
 		controller.loadProject(ip.getEditor());
 	}
-
-//	/**
-//	 * Set if the help frame is open or not.
-//	 * 
-//	 * @param helpFrameNew
-//	 *            the boolean value
-//	 */
-//	public void setHelpFrameOpen(boolean helpFrameNew) {
-//		this.helpFrameOpen = helpFrameNew;
-//	}
-//
-//	/**
-//	 * Handle the help button.
-//	 */
-//	private void handleHelpButton() {
-//		if (!helpFrameOpen) {
-//			setHelpFrameOpen(true);
-//			ReadHelpInfoFromTXTFile test = new ReadHelpInfoFromTXTFile(
-//					"src/main/data/guihelpdata/inputpagehelp.txt");
-//			try {
-//				test.parse();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//			ArrayList<HelpFrameInfoContainer> listOfHelpFrameInfo = test
-//					.getHelpFrameInfoContainer();
-//			new HelpFrame("Input Page Help", listOfHelpFrameInfo, this);
-//		}
-//	}
 }

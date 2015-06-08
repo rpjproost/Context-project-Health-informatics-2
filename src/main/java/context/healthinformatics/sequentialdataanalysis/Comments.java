@@ -30,10 +30,9 @@ public class Comments extends Task {
 	 * Set the comment on line line with the string comment.
 	 * 
 	 * @param line
-	 *            the line of the comment
+	 *            the line of the comment.
 	 * @param comment
-	 *            the comment to be set
-	 * @throws Exception 
+	 *            the comment to be set.
 	 */
 	public void setCommentByLine(int line, String comment) {
 		Chunk c = getChunkByLine(line, getChunks());

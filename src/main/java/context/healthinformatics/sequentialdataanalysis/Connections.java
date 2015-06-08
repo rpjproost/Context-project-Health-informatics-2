@@ -33,7 +33,6 @@ public class Connections extends Task {
 	 * Method which connects on line numbers.
 	 * @param index1 the line where the connection originates.
 	 * @param index2 the line where the connections is made to.
-	 * @throws Exception e
 	 */
 	public void connectOnLine(int index1, int index2) {
 		if (index1 < index2) {
@@ -45,8 +44,8 @@ public class Connections extends Task {
 
 	/**
 	 * Method which connects every chunk in list one, to every chunk in list two.
-	 * @param originChunkList one 
-	 * @param destinationChunkList two
+	 * @param originChunkList one.
+	 * @param destinationChunkList two.
 	 */
 	public void connectListsOfChunkIndices(ArrayList<Integer> originChunkList
 			, ArrayList<Integer> destinationChunkList) {
@@ -60,7 +59,7 @@ public class Connections extends Task {
 	/**
 	 * Method which gives a list of indices of all chunks which have code : code.
 	 * @param code the desired code.
-	 * @return list
+	 * @return the asked list.
 	 */
 	public ArrayList<Integer> getListOnCode(String code) {
 		ArrayList<Integer> list = new ArrayList<Integer>();
@@ -76,7 +75,7 @@ public class Connections extends Task {
 	/**
 	 * Method which gives a list of indices of all chunks which have comment : comment.
 	 * @param comment to be had.
-	 * @return list
+	 * @return the asked list.
 	 */
 	public ArrayList<Integer> getListOnComment(String comment) {
 		ArrayList<Integer> list = new ArrayList<Integer>();

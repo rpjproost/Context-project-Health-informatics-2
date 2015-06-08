@@ -428,5 +428,4 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		}
 		xmlController.updateDocuments(this, xmlDocuments);
 	}
-
 }
