@@ -387,8 +387,7 @@ public class InterfaceHelper extends JPanel {
 	 * @return the panel
 	 */
 	public JPanel createEmptyWithGridBagLayoutPanel(Color color) {
-		JPanel panel = new JPanel();
-		panel.setLayout(new GridBagLayout());
+		JPanel panel = createEmptyWithGridBagLayoutPanel();
 		panel.setBackground(color);
 		return panel;
 	}
