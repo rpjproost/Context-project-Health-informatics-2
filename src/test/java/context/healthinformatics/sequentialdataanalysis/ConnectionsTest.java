@@ -77,7 +77,7 @@ public class ConnectionsTest {
 		Connections c = new Connections(note);
 //		final int size = 8;
 //		int i = 0;
-		Query query = new Query("Connect(test) code = CodeA to"
+		Query query = new Query("Connect where code = CodeA to"
 				+ "comment = CommentB");
 //		String[] query =  new String[size];
 //		query[i] = "Connect";
