@@ -88,4 +88,5 @@ public class QueryTest {
 		assertFalse(q.hasNext());
 	}
 	
+	
 }
