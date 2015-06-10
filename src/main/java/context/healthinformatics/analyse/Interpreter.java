@@ -46,7 +46,6 @@ public class Interpreter {
 		while (sc.hasNextLine()) {
 			Query query = new Query(sc.nextLine());
 			Task task = createTask(query);
-			query.inc();
 			if (task != null) { //task == null if revert / undo was called
 				task.run(query);
 				tasks.push(task);
