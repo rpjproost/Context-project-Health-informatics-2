@@ -10,6 +10,7 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -394,5 +395,18 @@ public class InterfaceHelper extends JPanel {
 		JPanel panel = createEmptyWithGridBagLayoutPanel();
 		panel.setBackground(color);
 		return panel;
+	}
+	
+	/**
+	 * Creates a check box.
+	 * @param title the title of the check box.
+	 * @param color the color of the background of the check box.
+	 * @return a check box.
+	 */
+	public JCheckBox createCheckBox(String title, Color color) {
+		JCheckBox checkbox = new JCheckBox(title);
+		checkbox.setBackground(color);
+		checkbox.setFont(new Font("Arial", Font.PLAIN, TEXTSIZE));
+		return checkbox;
 	}
 }
