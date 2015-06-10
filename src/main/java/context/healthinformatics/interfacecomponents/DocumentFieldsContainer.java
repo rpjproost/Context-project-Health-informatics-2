@@ -132,7 +132,7 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	 *            the type of the document
 	 * @return the index
 	 */
-	private int getComboBoxIndex(String doctype) {
+	protected int getComboBoxIndex(String doctype) {
 		if (doctype.toLowerCase().equals("excel")) {
 			return 0;
 		} else if (doctype.toLowerCase().equals("csv")) {
@@ -171,11 +171,7 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	private boolean checkEmptyColumns() {
 		boolean emptyColumns = false;
 		for (int i = 0; i < columnFields.size(); i++) {
-			if (emptyColumns) {
-				return emptyColumns;
-			} else {
-				emptyColumns = columnFields.get(i).checkIfHasEmptyFields();
-			}
+			emptyColumns = columnFields.get(i).checkIfHasEmptyFields();
 		}
 		return emptyColumns;
 	}
@@ -488,7 +484,12 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 		}
 	}
 
-	private boolean isInteger(String s) {
+	/**
+	 * Checks of the string could be parsed to a Integer.
+	 * @param s the string to be parsed.
+	 * @return false if couldn't parse else true.
+	 */
+	protected boolean isInteger(String s) {
 		try {
 			Integer.parseInt(s);
 		} catch (NumberFormatException e) {
