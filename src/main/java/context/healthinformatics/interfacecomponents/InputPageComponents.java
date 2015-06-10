@@ -342,8 +342,6 @@ public class InputPageComponents implements Serializable, ActionListener {
 		Db db = SingletonDb.getDb();
 		if (db.getTables().size() > 0 && !db.getTables().containsKey("result")) {
 			MergeTable mergeTables = new MergeTable();
-			// String[] clause = new String[1];
-			// clause[0] = "meeting.createdby = 'admire2'";
 			try {
 				mergeTables.merge(clause, "date");
 			} catch (SQLException e) {

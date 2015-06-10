@@ -71,9 +71,7 @@ public class MergeTable {
 		StringBuilder sql = new StringBuilder();
 		sql.append("CREATE VIEW workspace AS SELECT * FROM  " + mergeTable
 				+ " ORDER BY ");
-//		sql.append("date ");
 		sql.append(sortingString);
-		System.out.println(sql.toString());
 		try {
 			data.executeUpdate(sql.toString());
 		} catch (SQLException e) {

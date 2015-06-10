@@ -190,7 +190,6 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 		String[] filterValues = new String[rows.size()];
 		for (int i = 0; i < rows.size(); i++) {
 			filterValues[i] = rows.get(i).getValues();
-			System.out.println(rows.get(i).getValues());
 		}
 		closePopUp();
 		popupController.setOpen(false);
