@@ -41,7 +41,8 @@ public class DbTest {
 	public void before() throws NullPointerException, SQLException {
 		path = "C:/db/";
 		dbName = "testDB";
-		data = new Db(dbName, path);
+		//data = new Db(dbName, path);
+		data = SingletonDb.getDb();
 
 		tableName = "test";
 
@@ -311,6 +312,17 @@ public class DbTest {
 		data.setMergeTable("result2");
 		assertEquals("result2", data.getMergeTable());
 		data.setMergeTable("result");
+	}
+	
+	/**
+	 * Tests creating new project.
+	 */
+	@Test
+	public void testProjectName() {
+		SingletonDb.setDbName("test");
+		SingletonDb.setPath("C:/db/");
+		data = SingletonDb.setDb();
+		assertEquals("test", data.getDbName());
 	}
 
 }

@@ -21,7 +21,7 @@ public class Db {
 
 	private String db; // db query.
 	private String dName;
-	private String pad = "C:/db/"; // default path for testing.
+	private String pad;
 	private Connection conn;
 	private Statement stmt = null;
 	private HashMap<String, ArrayList<Column>> tables;
@@ -42,14 +42,11 @@ public class Db {
 	 */
 	protected Db(String databaseName, String p) throws NullPointerException,
 			SQLException {
-		if (p == null || databaseName == null) {
-			throw new NullPointerException();
-		}
 		dName = databaseName;
 		pad = p;
-		File delDb = new File(pad + dName);
+		//File delDb = new File(pad + dName);
 		tables = new HashMap<String, ArrayList<Column>>();
-		removeDirectory(delDb);
+		//removeDirectory(delDb);
 		setupConn();
 	}
 
@@ -61,6 +58,7 @@ public class Db {
 	 * @return true iff connection is set.
 	 */
 	private boolean setupConn() throws SQLException {
+		System.out.println(dName);
 		boolean res = false;
 		setDb(pad, dName);
 		try {
@@ -249,6 +247,17 @@ public class Db {
 	}
 
 	/**
+	 * Closes connection for new project.
+	 */
+	public void closeConnection() {
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
 	 * Returns specified path to the database on your computer.
 	 * 
 	 * @return db path string.
@@ -257,6 +266,14 @@ public class Db {
 		return pad;
 	}
 
+	/**
+	 * Returns name of database.
+	 * @return String name of database.
+	 */
+	public String getDbName() {
+		return dName;
+	}
+	
 	/**
 	 * 
 	 * @param path
@@ -362,6 +379,9 @@ public class Db {
 	 * @return list with columns.
 	 */
 	public ArrayList<Column> getColumns() {
-		return columns;
+		if (columns != null) {
+			return columns;
+		}
+		return new ArrayList<Column>();
 	}
 }
