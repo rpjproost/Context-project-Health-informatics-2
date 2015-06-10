@@ -2,11 +2,12 @@ package context.healthinformatics.analyse;
 
 import java.util.HashMap;
 
+import context.healthinformatics.interfacecomponents.Observable;
 import context.healthinformatics.interfacecomponents.Observer;
 /**
  * The SingleTonInterpreter class.
  */
-public final class SingletonInterpreter implements Observer {
+public final class SingletonInterpreter {
 
 	private static HashMap<String, Interpreter > interpreters = new HashMap<String, Interpreter>();
 	private static String project = "analyse";
@@ -45,8 +46,7 @@ public final class SingletonInterpreter implements Observer {
 		return getInterpreter(project);
 	}
 
-	@Override
-	public void update(String param) {
+	static protected void update(String param) {
 		project = param;
 	}
 }

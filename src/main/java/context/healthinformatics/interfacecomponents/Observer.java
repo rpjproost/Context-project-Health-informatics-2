@@ -9,4 +9,10 @@ public interface Observer {
 	 * @param param String with the parameter.
 	 */
 	void update(String param);
+	
+	/**
+	 * observes observable o.
+	 * @param o observable to observe.
+	 */
+	void observe(Observable o);
 }

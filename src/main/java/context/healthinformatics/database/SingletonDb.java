@@ -9,7 +9,7 @@ import context.healthinformatics.interfacecomponents.Observer;
  * 
  *
  */
-public final class SingletonDb implements Observer {
+public final class SingletonDb {
 
 	private static Db data = setDb();
 	private static String path;
@@ -85,10 +85,5 @@ public final class SingletonDb implements Observer {
 		return dbName;
 	}
 
-	@Override
-	public void update(String param) {
-		// TODO Auto-generated method stub
-		
-	}
 
 }
