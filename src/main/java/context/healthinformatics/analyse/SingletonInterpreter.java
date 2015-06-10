@@ -2,12 +2,14 @@ package context.healthinformatics.analyse;
 
 import java.util.HashMap;
 
+import context.healthinformatics.interfacecomponents.Observer;
 /**
  * The SingleTonInterpreter class.
  */
-public final class SingletonInterpreter {
+public final class SingletonInterpreter implements Observer {
 
 	private static HashMap<String, Interpreter > interpreters = new HashMap<String, Interpreter>();
+	private static String project = "analyse";
 
 	/**
 	 * method to defeat the constructor.
@@ -21,15 +23,18 @@ public final class SingletonInterpreter {
 	 * @param name the name of the interpreter.
 	 * @return the Interpreter.
 	 */
-	public static synchronized Interpreter getInterpreter(String name) {
+	private static Interpreter getInterpreter(String name) {
 		if (!interpreters.containsKey(name)) {
 			interpreters.put(name, createInterpreter(name));
 		}
 		return interpreters.get(name);
 	}
 
-	private static Interpreter createInterpreter(String name) {
-		return new Interpreter(name);
+	private static synchronized Interpreter createInterpreter(String name) {
+		if (!interpreters.containsKey(name)) {
+			return new Interpreter(name);
+		}
+		return interpreters.get(name);
 	}
 	
 	/**
@@ -37,6 +42,11 @@ public final class SingletonInterpreter {
 	 * @return the Interpreter.
 	 */
 	public static Interpreter getInterpreter() {
-		return getInterpreter("analyse");
+		return getInterpreter(project);
+	}
+
+	@Override
+	public void update(String param) {
+		project = param;
 	}
 }
