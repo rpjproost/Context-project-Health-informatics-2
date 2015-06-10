@@ -29,18 +29,15 @@ public class AnalysePopupRowContainer extends InterfaceHelper implements
 	/**
 	 * The constructor of the row container which inits all values.
 	 * 
-	 * @param docNames
+	 * @param docNamesIn
 	 *            the names of the documents for the combobox
-	 * @param columnNames
+	 * @param columnNamesIn
 	 *            the names of the columns per document in a hashmap
 	 */
-	public AnalysePopupRowContainer(String[] docNames,
-			HashMap<String, String[]> columnNames) {
-		docNames = new String[docNames.length];
-		for (int i = 0; i < docNames.length; i++) {
-			this.docNames[i] = docNames[i];
-		}
-		this.columnNames = columnNames;
+	public AnalysePopupRowContainer(String[] docNamesIn,
+			HashMap<String, String[]> columnNamesIn) {
+		this.docNames = docNamesIn;
+		this.columnNames = columnNamesIn;
 		initAnalysePopupRow();
 	}
 
