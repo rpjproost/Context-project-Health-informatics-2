@@ -35,11 +35,8 @@ public class CodePage extends InterfaceHelper implements PanelState,
 		Serializable, ActionListener {
 
 	private static final long serialVersionUID = 1L;
-	private static final int FIELDCORRECTION = 130;
 	private static final int ANALYZEBUTTONWIDTH = 220;
 	private static final int ANALYZEBUTTONHEIGHT = 80;
-	public static final int INSETS = 10;
-	private static final int THREE = 3;
 	private static final int FOUR = 4;
 
 	private MainFrame mf;
@@ -72,7 +69,11 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	 */
 	public CodePage(MainFrame m) {
 		mf = m;
-		imr = new IntermediateResults(mf);
+		panelWidth = mf.getScreenWidth() / 2 - 2 * INSETS;
+		panelHeight = mf.getStatePanelSize() / 2 - FIELDCORRECTION;
+		imr = new IntermediateResults(panelWidth, mf.getStatePanelSize()
+				/ HUNDERTPROCENT * CORRECION - FIELDCORRECTION - INSETS,
+				"Intermediate Result:", MainFrame.CODETABCOLOR);
 		leftPanel = createEmptyWithGridBagLayoutPanel(MainFrame.CODETABCOLOR);
 		rightPanel = createEmptyWithGridBagLayoutPanel(MainFrame.CODETABCOLOR);
 		helpController = new HelpController(
@@ -98,18 +99,9 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	 * Init all components of the code page.
 	 */
 	private void initComponents() {
-		initPanelWidthAndHeight();
 		initButtons();
 		initTextFields();
 		initButtonActionListeners();
-	}
-
-	/**
-	 * Set the width and height of the panel.
-	 */
-	private void initPanelWidthAndHeight() {
-		panelWidth = mf.getScreenWidth() / 2 - 2 * INSETS;
-		panelHeight = mf.getStatePanelSize() / 2 - FIELDCORRECTION;
 	}
 
 	private void initButtons() {
@@ -243,7 +235,7 @@ public class CodePage extends InterfaceHelper implements PanelState,
 		JPanel oldCodePanel = createPanel(Color.WHITE, panelWidth, panelHeight);
 		oldCodePanel.add(scrollBarForOldCodeArea);
 		leftPanel.add(oldCodePanel,
-				setGrids(0, THREE, new Insets(0, INSETS, INSETS, INSETS)));
+				setGrids(0, THREE, new Insets(0, INSETS, 0, INSETS)));
 	}
 
 	/**
@@ -302,7 +294,7 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	 * Set the rightpanel.
 	 */
 	private void setRightPanelWithOldIntermediateResult() {
-		rightPanel.add(imr.loadPanel(), setGrids(0, 0, new Insets(0, 0, INSETS, 0)));
+		rightPanel.add(imr.loadPanel(), setGrids(0, 0));
 		codePageParentpanel.add(rightPanel, setGrids(1, 0));
 		setButtonArea(rightPanel, helpButton, goToOutputPageButton, 1);
 	}

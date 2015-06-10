@@ -1,5 +1,6 @@
 package context.healthinformatics.interfacecomponents;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.util.ArrayList;
@@ -13,9 +14,7 @@ import context.healthinformatics.analyse.Interpreter;
 import context.healthinformatics.analyse.SingletonInterpreter;
 import context.healthinformatics.database.Db;
 import context.healthinformatics.database.SingletonDb;
-import context.healthinformatics.gui.CodePage;
 import context.healthinformatics.gui.InterfaceHelper;
-import context.healthinformatics.gui.MainFrame;
 import context.healthinformatics.parser.Column;
 import context.healthinformatics.sequentialdataanalysis.Chunk;
 
@@ -24,9 +23,6 @@ import context.healthinformatics.sequentialdataanalysis.Chunk;
  */
 public class IntermediateResults extends InterfaceHelper {
 	private static final long serialVersionUID = 1L;
-	private static final int FIELDCORRECTION = 130;
-	private static final int TEN = 100;
-	private static final int NINE = 98;
 	private int intermediateResultWidth;
 	private int intermediateResultHeight;
 
@@ -36,18 +32,21 @@ public class IntermediateResults extends InterfaceHelper {
 	private Interpreter interpreter = SingletonInterpreter.getInterpreter();
 
 	private int globalChunkCounter = 1;
+	private String title;
 
 	/**
 	 * Constructor of the IntermediateResults class.
 	 * 
-	 * @param mf
-	 *            the mainframe to get screen width
+	 * @param color the color of the panel.
+	 * @param width the width of the panel.
+	 * @param height the height of this panel.
+	 * @param title the title of the panel.
 	 */
-	public IntermediateResults(MainFrame mf) {
-		intermediateResultWidth = mf.getScreenWidth() / 2 - 2 * CodePage.INSETS;
-		intermediateResultHeight = mf.getStatePanelSize() / TEN * NINE
-				- FIELDCORRECTION - CodePage.INSETS;
-		interMediateResultParentPanel = createEmptyWithGridBagLayoutPanel(MainFrame.CODETABCOLOR);
+	public IntermediateResults(int width, int height, String title, Color color) {
+		intermediateResultWidth = width;
+		intermediateResultHeight = height;
+		this.title = title;
+		interMediateResultParentPanel = createEmptyWithGridBagLayoutPanel(color);
 		initDisplayHTMLPane();
 		initScrollPane();
 		addEverythingToMainPanel();
@@ -92,7 +91,7 @@ public class IntermediateResults extends InterfaceHelper {
 		GridBagConstraints c = setGrids(0, 0);
 		c.anchor = GridBagConstraints.LINE_START;
 		interMediateResultParentPanel.add(
-				createTitle("The intermediate Result:"), c);
+				createTitle(title), c);
 		interMediateResultParentPanel.add(scroll, setGrids(0, 1));
 
 	}
