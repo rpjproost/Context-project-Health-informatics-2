@@ -173,7 +173,7 @@ public class Db {
 					whereClause);
 			rs = stmt.executeQuery(sql);
 		} catch (SQLException e) {
-			throw new SQLException("ResultSet not created: Data not found");
+			throw new SQLException(whereClause);
 		}
 		return rs;
 	}
@@ -200,7 +200,7 @@ public class Db {
 					variable, whereClause);
 			rs = stmt.executeQuery(sql);
 		} catch (SQLException e) {
-			throw new SQLException("ResultSet not created: Data not found");
+			throw new SQLException(whereClause);
 		}
 		return rs;
 	}
