@@ -220,7 +220,7 @@ public class Chunk {
 		c.setChunks(SingletonInterpreter.getInterpreter().copyChunks(
 				getChildren()));
 		c.setComment(getComment());
-		c.setLine(c.getLine());
+		c.setLine(getLine());
 		HashMap<Chunk, String> map = new HashMap<Chunk, String>();
 		for (Entry<Chunk, String> e : pointer.entrySet()) {
 			map.put(e.getKey(), e.getValue());

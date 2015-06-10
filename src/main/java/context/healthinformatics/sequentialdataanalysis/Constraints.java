@@ -223,7 +223,8 @@ public class Constraints extends Task {
 		}
 		else {
 			if (curChunk.hasChild()) {
-				checkChildsOnData(curChunk, curChunk.getChildren(), ints, res);
+				Chunk temp = curChunk.copy();
+				checkChildsOnData(temp, temp.getChildren(), ints, res);
 			}	
 		}
 	}
