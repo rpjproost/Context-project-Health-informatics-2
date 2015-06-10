@@ -1,6 +1,7 @@
 package context.healthinformatics.gui;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -83,7 +84,7 @@ public class MainFrameTest {
 			ml.mouseClicked(me);
 			assertEquals(mf.getPanelState(), mf.getInputPage());
 		} catch (ClassCastException e) {
-			// do nothing
+			fail();
 		}
 	}
 
@@ -98,7 +99,7 @@ public class MainFrameTest {
 			ml.mousePressed(me);
 			assertEquals(mf.getPanelState(), mf.getCodePage());
 		} catch (ClassCastException e) {
-			// do nothing
+			fail();
 		}
 	}
 
@@ -113,7 +114,7 @@ public class MainFrameTest {
 			ml.mousePressed(me);
 			assertEquals(mf.getPanelState(), mf.getOutputPage());
 		} catch (ClassCastException e) {
-			// do nothing
+			fail();
 		}
 	}
 
@@ -128,7 +129,7 @@ public class MainFrameTest {
 			ml.mouseClicked(me);
 			assertEquals(mf.getPanelState(), ps);
 		} catch (ClassCastException e) {
-			// do nothing
+			fail();
 		}
 	}
 
