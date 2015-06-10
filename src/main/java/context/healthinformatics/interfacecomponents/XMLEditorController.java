@@ -11,11 +11,12 @@ import context.healthinformatics.writer.XMLWriter;
 /**
  * The controller of the XMLEditor Panel.
  */
-public class XMLEditorController {
+public class XMLEditorController implements Observable {
 
 	private HashMap<String, ArrayList<XMLDocument>> allDocs;
 	private HashMap<String, ArrayList<XMLDocument>> selectedDocs;
 	private String project;
+	private ArrayList<Observer> observers;
 
 	/**
 	 * Constructor for the XMLEditorController.
@@ -23,6 +24,7 @@ public class XMLEditorController {
 	public XMLEditorController() {
 		allDocs = new HashMap<String, ArrayList<XMLDocument>>();
 		setSelectedDocs(new HashMap<String, ArrayList<XMLDocument>>());
+		observers = new ArrayList<Observer>();
 	}
 
 	/**
@@ -188,6 +190,7 @@ public class XMLEditorController {
 	 */
 	public void setProject(String project) {
 		this.project = project;
+		notifyObservers(project);
 	}
 
 	/**
@@ -320,5 +323,26 @@ public class XMLEditorController {
 	 */
 	public String getProjectName() {
 		return this.project;
+	}
+
+	@Override
+	public void notifyObservers(String param) {
+		for (Observer o : observers) {
+			o.update(param);
+		}
+	}
+
+	@Override
+	public void subscribe(Observer o) {
+		if (!observers.contains(o)) {
+			observers.add(o);
+		}
+	}
+
+	@Override
+	public void unsubscribe(Observer o) {
+		if (observers.contains(o)) {
+			observers.remove(o);
+		}
 	}
 }
