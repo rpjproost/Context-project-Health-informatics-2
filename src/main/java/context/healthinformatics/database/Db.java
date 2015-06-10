@@ -260,6 +260,9 @@ public class Db {
 	 */
 	public void closeConnection() {
 		try {
+			if (stmt != null) {
+				stmt.close();
+			}
 			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();

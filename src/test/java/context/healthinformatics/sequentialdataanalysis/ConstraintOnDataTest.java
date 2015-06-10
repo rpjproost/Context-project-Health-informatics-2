@@ -36,7 +36,7 @@ public class ConstraintOnDataTest {
 	/**
 	 * object calling the database.
 	 */
-	private Db data = SingletonDb.getDb();
+	private Db data;
 
 	private ArrayList<Chunk> chunks;
 	
@@ -49,10 +49,10 @@ public class ConstraintOnDataTest {
 	 */
 	@Before
 	public void before() throws SQLException, IOException {
+		data = SingletonDb.setDb();
 		xmlp = new XMLParser(path + "demo.xml");
 		xmlp.parse();
 		xmlp.createDatabase();
-		
 		String[] clause = new String[1];
 		clause[0] = "meeting.createdby = 'admire2'";
 		test = new MergeTable();

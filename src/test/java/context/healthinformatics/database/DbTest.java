@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -40,8 +41,7 @@ public class DbTest {
 	@Before
 	public void before() throws NullPointerException, SQLException {
 		path = "C:/db/";
-		dbName = "testDB";
-		//data = new Db(dbName, path);
+		dbName = "test";
 		data = SingletonDb.getDb();
 
 		tableName = "test";
@@ -209,7 +209,7 @@ public class DbTest {
 		assertEquals(data.setDb("path", "DBName"),
 				"jdbc:derby:pathDBName;create=true");
 		assertEquals(data.setDb(path, dbName),
-				"jdbc:derby:C:/db/testDB;create=true");
+				"jdbc:derby:C:/db/test;create=true");
 	}
 
 	/**

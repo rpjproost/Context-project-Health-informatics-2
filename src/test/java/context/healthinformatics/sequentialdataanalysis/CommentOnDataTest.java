@@ -34,7 +34,7 @@ public class CommentOnDataTest {
 	/**
 	 * object calling the database.
 	 */
-	private Db data = SingletonDb.getDb();
+	private Db data = SingletonDb.setDb();
 	private ArrayList<Chunk> chunks;
 
 	/**
