@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import context.healthinformatics.analyse.SingletonInterpreter;
 import context.healthinformatics.database.Db;
 import context.healthinformatics.database.SingletonDb;
+import context.healthinformatics.analyse.Query;
 
 /**
  * 
@@ -16,7 +17,6 @@ import context.healthinformatics.database.SingletonDb;
 public abstract class Task {
 
 	private String mergeTable = SingletonDb.getDb().getMergeTable();
-	private int querypart = 1;
 
 	/**
 	 * List of chunks that every Class. 
@@ -36,20 +36,21 @@ public abstract class Task {
 	 * @param query An array of query words.
 	 * @throws Exception query input can be wrong.
 	 */
-	public void run(String[] query) throws Exception {
+	public void run(Query query) throws Exception {
 		ArrayList<Chunk> c = SingletonInterpreter.getInterpreter().getChunks();
+		query.inc();
 		setChunks(c);
-		if (isData(query)) {
+		if (isData(query.part())) {
 			runData(query);
 		}
-		else if (isCode(query)) {
+		else if (isCode(query.part())) {
 			runCode(query);
 		}
-		else if (isComment(query)) {
+		else if (isComment(query.part())) {
 			runComment(query);
 		}
 		else {
-			throw new Exception("query input is wrong at: " + query[getQueryPart()]
+			throw new Exception("query input is wrong at: " + query.part()
 					+ "Expected: (data/comment/code");
 		}
 	}
@@ -148,8 +149,8 @@ public abstract class Task {
 	 * @param query The query.
 	 * @return true/false.
 	 */
-	protected boolean isData(String[] query) {
-		return query[querypart].equals("data");
+	protected boolean isData(String query) {
+		return query.equals("data");
 	}
 
 	/**
@@ -157,8 +158,8 @@ public abstract class Task {
 	 * @param query The query.
 	 * @return true/false.
 	 */
-	protected boolean isCode(String[] query) {
-		return query[querypart].equals("code");
+	protected boolean isCode(String query) {
+		return query.equals("code");
 	}
 
 	/**
@@ -166,8 +167,8 @@ public abstract class Task {
 	 * @param query The query.
 	 * @return true/false.
 	 */
-	protected boolean isComment(String[] query) {
-		return query[querypart].equals("comment");
+	protected boolean isComment(String query) {
+		return query.equals("comment");
 	}
 
 	/**
@@ -204,39 +205,17 @@ public abstract class Task {
 		return result;
 	}
 	
-	/**
-	 * Increment the querypart (word you are interpreting).
-	 * @param i Integer for how many words you skip.
-	 */
-	protected void increment(int i) {
-		querypart += i;
-	}
-	
-	/**
-	 * Increment querypart counter with 1.
-	 */
-	protected void inc() {
-		querypart++;
-	}
-	
-	/**
-	 * Returns actual query counter.
-	 * @return Integer of query counter.
-	 */
-	protected int getQueryPart() {
-		return querypart;
-	}
 	
 	/**
 	 * Executes constraintOnData with query.
 	 * @param query interpreter query.
 	 * @throws SQLException iff sql query goes wrong.
 	 */
-	protected void runData(String[] query) throws SQLException {
+	protected void runData(Query query) throws SQLException {
 		StringBuilder q = new StringBuilder();
-		increment(2);
-		for (int i = getQueryPart(); i < query.length; i++) {
-			q.append(query[i]);
+		query.inc();
+		while (query.hasNext()) {
+			q.append(query.next());
 			q.append(" ");
 		}
 		setResult(constraintOnData(q.toString()));
@@ -246,11 +225,10 @@ public abstract class Task {
 	 * Executes constraintOnCode with query.
 	 * @param query interpreter query.
 	 */
-	protected void runCode(String[] query) {
-		increment(2);
-		if (isEquals(query[getQueryPart()])) {
-			inc();
-			setResult(constraintOnCode(query[getQueryPart()]));
+	protected void runCode(Query query) {
+		query.inc();
+		if (isEquals(query.next())) {
+			setResult(constraintOnCode(query.next()));
 		}
 	}
 	
@@ -258,22 +236,20 @@ public abstract class Task {
 	 * Executes constraint on contains/equals comment.
 	 * @param query interpreter query.
 	 */
-	protected void runComment(String[] query) {
-		increment(2);
-		if (isEquals(query[getQueryPart()])) {
-			inc();
+	protected void runComment(Query query) {
+		query.inc();
+		if (isEquals(query.next())) {
 			StringBuilder q = new StringBuilder();
 			String prefix = "";
-			for (int i = getQueryPart(); i < query.length; i++) {
+			while (query.hasNext()) {
 				q.append(prefix);
-				q.append(query[i]);
+				q.append(query.next());
 				prefix = " ";
 			}
 			setResult(constraintOnEqualsComment(q.toString()));
 		}
-		if (isContains(query[getQueryPart()])) {
-			inc();
-			setResult(constraintOnContainsComment(query[getQueryPart()]));
+		if (isContains(query.next())) {
+			setResult(constraintOnContainsComment(query.next()));
 		}
 	}
 	/**

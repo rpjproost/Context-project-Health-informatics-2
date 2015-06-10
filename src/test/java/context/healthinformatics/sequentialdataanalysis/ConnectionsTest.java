@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import context.healthinformatics.analyse.Interpreter;
+import context.healthinformatics.analyse.Query;
 import context.healthinformatics.analyse.SingletonInterpreter;
 
 /**
@@ -74,26 +75,10 @@ public class ConnectionsTest {
 	@Test
 	public void testConnectionOnCodeToComment() throws Exception {
 		Connections c = new Connections(note);
-		final int size = 8;
-		int i = 0;
-		String[] query =  new String[size];
-		query[i] = "Connect";
-		i = inc(i);
-		query[i] = "code";
-		i = inc(i);
-		//query[2] = "where";
-		query[i] = "equals";
-		i = inc(i);
-		query[i] = "CodeA";
-		i = inc(i);
-		query[i] = "to";
-		i = inc(i);
-		query[i] = "comment";
-		//query[7] = "where";
-		i = inc(i);
-		query[i] = "equals";
-		i = inc(i);
-		query[i] = "CommentB";
+
+		Query query = new Query("Connect code = CodeA to "
+				+ "comment = CommentB");
+		query.inc();
 		c.runCode(query);
 		assertEquals(note, c.getResult().get(0).getPointer().get(c2));
 	}
@@ -104,26 +89,8 @@ public class ConnectionsTest {
 	@Test
 	public void testConnectionCodetoCode() {
 		Connections c = new Connections(note);
-		final int size = 8;
-		int i = 0;
-		String[] query =  new String[size];
-		query[i] = "Connect";
-		i = inc(i);
-		query[i] = "code";
-		i = inc(i);
-		//query[2] = "where";
-		query[i] = "equals";
-		i = inc(i);
-		query[i] = "CodeA";
-		i = inc(i);
-		query[i] = "to";
-		i = inc(i);
-		query[i] = "code";
-		//query[7] = "where";
-		i = inc(i);
-		query[i] = "equals";
-		i = inc(i);
-		query[i] = "CodeC";
+		Query query = new Query("Connect(test) code = CodeA to code = CodeC");
+		query.inc();
 		c.runCode(query);
 		assertEquals(note, c.getResult().get(0).getPointer().get(c3));
 	}
@@ -136,26 +103,7 @@ public class ConnectionsTest {
 	@Test
 	public void testConnectionNotMade() throws Exception {
 		Connections c = new Connections(note);
-		final int size = 8;
-		int i = 0;
-		String[] query =  new String[size];
-		query[i] = "Connect";
-		i = inc(i);
-		query[i] = "comment";
-		i = inc(i);
-		//query[2] = "where";
-		query[i] = "equals";
-		i = inc(i);
-		query[i] = "CommentB";
-		i = inc(i);
-		query[i] = "to";
-		i = inc(i);
-		query[i] = "code";
-		//query[7] = "where";
-		i = inc(i);
-		query[i] = "equals";
-		i = inc(i);
-		query[i] = "CodeA";
+		Query query = new Query("Connect(test) comment = CommentB to code = CodeA");
 		c.runComment(query);
 		assertEquals(null, c.getResult().get(1).getPointer().get(c1));
 	}
