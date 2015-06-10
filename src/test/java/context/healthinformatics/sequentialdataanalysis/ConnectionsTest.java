@@ -107,7 +107,7 @@ public class ConnectionsTest {
 	@Test
 	public void testConnectionCodetoCode() {
 		Connections c = new Connections(note);
-		Query query = new Query("Connect(test) code = CodeA code = CodeC");
+		Query query = new Query("Connect(test) code = CodeA to code = CodeC");
 //		final int size = 8;
 //		int i = 0;
 //		String[] query =  new String[size];
@@ -140,7 +140,7 @@ public class ConnectionsTest {
 	@Test
 	public void testConnectionNotMade() throws Exception {
 		Connections c = new Connections(note);
-		Query query = new Query("Connect(test) comment = CommentB code = CodeA");
+		Query query = new Query("Connect(test) comment = CommentB to code = CodeA");
 //		final int size = 8;
 //		int i = 0;
 //		String[] query =  new String[size];
