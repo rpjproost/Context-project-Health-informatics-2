@@ -49,7 +49,7 @@ public class ConstraintOnDataTest {
 	 */
 	@Before
 	public void before() throws SQLException, IOException {
-		data = SingletonDb.setDb();
+		data = SingletonDb.getDb();
 		xmlp = new XMLParser(path + "demo.xml");
 		xmlp.parse();
 		xmlp.createDatabase();
