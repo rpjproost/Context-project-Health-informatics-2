@@ -8,10 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 import context.healthinformatics.gui.InterfaceHelper;
 import context.healthinformatics.writer.XMLDocument;
@@ -39,19 +37,22 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 	private JButton goToAnalyse;
 	private JButton removeFilter;
 	private JPanel buttonPanel;
-	
-	private InputPageComponents ipc;
+
+	private GoToAnalysePopupController popupController;
 
 	/**
 	 * Constructor of the Go to analyse popup.
 	 * 
 	 * @param selectedDocs
 	 *            the selected xml documents
+	 * @param controller
+	 *            the controller which handles the popupframe
 	 */
-	public GoToAnalysePopup(ArrayList<XMLDocument> selectedDocs, InputPageComponents ipc) {
+	public GoToAnalysePopup(ArrayList<XMLDocument> selectedDocs,
+			GoToAnalysePopupController controller) {
 		initButtons();
 		setupTheLoadingMainFrame();
-		this.ipc = ipc;
+		this.popupController = controller;
 		docNames = new String[selectedDocs.size()];
 		for (int i = 0; i < selectedDocs.size(); i++) {
 			XMLDocument doc = selectedDocs.get(i);
@@ -63,16 +64,40 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 			columnNames.put(docNames[i], columnNamesString);
 		}
 		filterPanel = createEmptyWithGridBagLayoutPanel();
-		rows.add(new AnalysePopupRowContainer(docNames, columnNames));
-		filterPanel.add(rows.get(0).getPanelOfRow(),
-				setGrids(0, rows.size() - 1));
+//		rows.add(new AnalysePopupRowContainer(docNames, columnNames));
+//		filterPanel.add(rows.get(0).getPanelOfRow(),
+//				setGrids(0, rows.size() - 1));
 
 		mainPanel = createEmptyWithGridBagLayoutPanel();
 		mainPanel.add(filterPanel, setGrids(0, 0));
 		mainPanel.add(buttonPanel, setGrids(0, 1));
 		popupMainFrame.add(mainPanel);
+		setWindowListener();
 	}
 
+	/**
+	 * Add a WindowsListener to tell the input page components when the windows
+	 * is closed.
+	 */
+	private void setWindowListener() {
+		popupMainFrame.addWindowListener(new java.awt.event.WindowAdapter() {
+			@Override
+			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+				popupController.setOpen(false);
+			}
+		});
+	}
+
+	/**
+	 * Get the mainframe of the popup to the front.
+	 */
+	public void getToFront() {
+		popupMainFrame.toFront();
+	}
+
+	/**
+	 * Initialise the buttons with action listeners.
+	 */
 	private void initButtons() {
 		buttonPanel = createEmptyWithGridBagLayoutPanel();
 		addFilter = new JButton("Add pre filter");
@@ -106,23 +131,47 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 	/**
 	 * Close the frame.
 	 */
-	public void closeLoadFrame() {
+	public void closePopUp() {
 		popupMainFrame.setVisible(false);
 		popupMainFrame.dispose();
+	}
+
+	/**
+	 * Set all the saved filter values in the popup.
+	 * 
+	 * @param filters
+	 *            the saved filters
+	 */
+	public void setFilters(ArrayList<String[]> filters) {
+		for (int i = 0; i < filters.size(); i++) {
+			AnalysePopupRowContainer popupRowContainer = new AnalysePopupRowContainer(
+					docNames, columnNames);
+			popupRowContainer.setValues(filters.get(i)[0], filters.get(i)[1],
+					filters.get(i)[2]);
+			rows.add(popupRowContainer);
+			filterPanel.add(rows.get(rows.size() - 1).getPanelOfRow(),
+					setGrids(0, rows.size() - 1));
+		}
+		filterPanel.revalidate();
+	}
+
+	/**
+	 * Add an empty filter.
+	 */
+	public void addEmptyFilter() {
+		rows.add(new AnalysePopupRowContainer(docNames, columnNames));
+		filterPanel.add(rows.get(rows.size() - 1).getPanelOfRow(),
+				setGrids(0, rows.size() - 1));
+		filterPanel.revalidate();
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == addFilter) {
-			System.out.println("Hallo");
-			rows.add(new AnalysePopupRowContainer(docNames, columnNames));
-			filterPanel.add(rows.get(rows.size() - 1).getPanelOfRow(),
-					setGrids(0, rows.size() - 1));
-			filterPanel.revalidate();
-			mainPanel.add(filterPanel, setGrids(0, 0));
+			addEmptyFilter();
 		}
 		if (e.getSource() == removeFilter) {
-			if (rows.size() > 1) {
+			if (rows.size() > 0) {
 				JPanel panel = rows.remove(rows.size() - 1).getPanelOfRow();
 				filterPanel.remove(panel);
 				filterPanel.revalidate();
@@ -134,7 +183,9 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 				filterValues[i] = rows.get(i).getValues();
 				System.out.println(rows.get(i).getValues());
 			}
-			ipc.handleSpecifiedFilter(filterValues);
+			closePopUp();
+			popupController.setOpen(false);
+			popupController.handleSpecifiedFilter(filterValues);
 
 		}
 

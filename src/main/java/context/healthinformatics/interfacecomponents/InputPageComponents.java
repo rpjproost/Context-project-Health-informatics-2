@@ -58,6 +58,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 	public static final int HELPBUTTONWIDTH = 300;
 	public static final int FOLDERSECTIONHEIGHT = 100;
 	private HelpController helpController;
+	private GoToAnalysePopupController popUpController;
 
 	/**
 	 * Constructor.
@@ -74,6 +75,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 		box = new JComboBox<String>(ip.getProjects());
 		helpController = new HelpController(
 				"src/main/data/guihelpdata/inputpagehelp.txt");
+		popUpController = new GoToAnalysePopupController(this);
 	}
 
 	/**
@@ -302,10 +304,18 @@ public class InputPageComponents implements Serializable, ActionListener {
 
 	private void analyseIfXMLIsCorrect() {
 		if (!ip.getEditor().checkAllXMLDocumentsOnError()) {
-			new GoToAnalysePopup(ip.getXMLController().getSelectedDocs(), this);
+			popUpController.createPopup(
+					ip.getXMLController().getSelectedDocs(), ip
+							.getXMLController().getProjectName());
 		}
 	}
 
+	/**
+	 * Merge the tables for the codepage with the specified filters.
+	 * 
+	 * @param clauses
+	 *            the filters
+	 */
 	public void handleSpecifiedFilter(String[] clauses) {
 		final LoadingScreen ls = new LoadingScreen();
 		new Thread(new Runnable() {

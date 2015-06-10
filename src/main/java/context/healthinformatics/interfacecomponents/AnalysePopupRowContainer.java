@@ -15,9 +15,9 @@ import context.healthinformatics.gui.InterfaceHelper;
  */
 public class AnalysePopupRowContainer extends InterfaceHelper implements
 		ActionListener {
-	
+
 	private static final long serialVersionUID = 1L;
-	
+
 	private static final int TEXT_FIELD_LENGTH = 10;
 	private JComboBox<String> docNameDropDown;
 	private JComboBox<String> docDropDown;
@@ -50,6 +50,27 @@ public class AnalysePopupRowContainer extends InterfaceHelper implements
 		filterRow.add(docNameDropDown, setGrids(0, 0));
 		filterRow.add(docDropDown, setGrids(1, 0));
 		filterRow.add(filterValue, setGrids(2, 0));
+	}
+
+	/**
+	 * Set the values of the analyse filter row to the specified values.
+	 * 
+	 * @param docName
+	 *            the document name
+	 * @param columnName
+	 *            the column name
+	 * @param filterValue
+	 *            the filter value
+	 */
+	public void setValues(String docName, String columnName, String filterValue) {
+		this.docNameDropDown.setSelectedItem(docName);
+		this.filterValue.setText(filterValue);
+		docDropDown.removeAllItems();
+		for (String s : columnNames.get(docNameDropDown.getSelectedItem()
+				.toString())) {
+			docDropDown.addItem(s);
+		}
+		docDropDown.setSelectedItem(columnName);
 	}
 
 	/**
