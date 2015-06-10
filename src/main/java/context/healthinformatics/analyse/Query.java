@@ -155,7 +155,7 @@ public class Query {
 	 * @return true or false.
 	 */
 	public boolean hasNext() {
-		return (index + 1 < query.size());
+		return index + 1 < query.size();
 	}
 	
 	/**
