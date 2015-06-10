@@ -46,7 +46,8 @@ public class Connections extends Task {
 	}	
 
 	/**
-	 * Method which connects a chunk in origin list, to the first chunk in list two with a lower index in the copyOfChunk list.
+	 * Method which connects a chunk in origin list, to the first chunk in list two with
+	 * a lower index in the copyOfChunk list.
 	 * @param originChunkList one.
 	 * @param destinationChunkList two.
 	 */
@@ -54,7 +55,7 @@ public class Connections extends Task {
 			, ArrayList<Integer> destinationChunkList) {
 		int count = 0;
 		for (Integer i : destinationChunkList) {
-			while (originChunkList.get(count) < i) {
+			while (count < originChunkList.size() && originChunkList.get(count) < i) {
 				connectOnLine(originChunkList.get(count), i);
 				count++;
 			}
