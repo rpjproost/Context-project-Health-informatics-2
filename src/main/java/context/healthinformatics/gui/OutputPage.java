@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import context.healthinformatics.interfacecomponents.IntermediateResults;
+import context.healthinformatics.writer.WriteToTXT;
 
 /**
  * Class which represents one of the states for the variabel panel in the
@@ -39,7 +40,6 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	private JPanel outputParentPanel;
 	private int panelWidth;
 	private int panelHeight;
-	private JFileChooser c;
 	private JFileChooser savePopup;
 
 	/**
@@ -114,7 +114,8 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	}
 
 	private void setGraphInputPanel() {
-		JPanel graphInputPanel = createEmptyWithGridBagLayoutPanel(MainFrame.CODETABCOLOR); //TODO change color
+		JPanel graphInputPanel = createEmptyWithGridBagLayoutPanel(MainFrame.CODETABCOLOR); 
+		//TODO change color
 		graphInputPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
 		leftPanel.add(graphInputPanel, setGrids(0, 1, new Insets(0, INSETS, INSETS, 0)));
 	}
@@ -134,7 +135,8 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	}
 
 	private void setGraphArea() {
-		JPanel graphArea = createEmptyWithGridBagLayoutPanel(MainFrame.CODETABCOLOR); //TODO change color
+		JPanel graphArea = createEmptyWithGridBagLayoutPanel(MainFrame.CODETABCOLOR); 
+		//TODO change color
 		graphArea.setPreferredSize(new Dimension(panelWidth, mf.getStatePanelSize()
 				/ HUNDERTPROCENT * CORRECION - FIELDCORRECTION - INSETS));
 		rightPanel.add(graphArea, setGrids(0, 1, new Insets(0, INSETS, 0, INSETS)));
@@ -148,6 +150,8 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	}
 	
 	/**
+	 * @param button the button where the pop up is for.
+	 * @param filter which file type will be saved.
 	 * @return the anwser of the filechooser.
 	 */
 	public int saveFileChooser(JButton button, String filter) {
@@ -185,8 +189,9 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	 */
 	public void fileChooser(int rVal) throws SQLException, IOException {
 		if (rVal == JFileChooser.APPROVE_OPTION) {
-			// WriteToTXT write = new WriteToTXT(c.getSelectedFile().getName(),
-			// c.getCurrentDirectory().toString());
+			 WriteToTXT write = new WriteToTXT(savePopup.getSelectedFile().getName(),
+					 savePopup.getCurrentDirectory().toString());
+			 write.toString(); //TODO
 		}
 	}
 }
