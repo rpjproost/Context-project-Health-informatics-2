@@ -1,6 +1,9 @@
 package context.healthinformatics.database;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -9,6 +12,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import org.apache.derby.tools.ij;
 
 import context.healthinformatics.parser.Column;
 
@@ -41,12 +46,10 @@ public class Db {
 	 *             the sql exception
 	 */
 	protected Db(String databaseName, String p) throws NullPointerException,
-			SQLException {
+	SQLException {
 		dName = databaseName;
 		pad = p;
-		//File delDb = new File(pad + dName);
 		tables = new HashMap<String, ArrayList<Column>>();
-		//removeDirectory(delDb);
 		setupConn();
 	}
 
@@ -69,6 +72,13 @@ public class Db {
 			throw new SQLException(e);
 		}
 		return res;
+	}
+
+	public void showTables() throws Exception {
+		String sqlIn = "SHOW TABLES;";
+		InputStream stream = new ByteArrayInputStream(sqlIn.getBytes(StandardCharsets.UTF_8));
+		ij.runScript(conn,stream,StandardCharsets.UTF_8.name(), System.out,"UTF-8");
+		stream.close();
 	}
 
 	/**
@@ -255,7 +265,7 @@ public class Db {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Returns specified path to the database on your computer.
 	 * 
@@ -272,7 +282,7 @@ public class Db {
 	public String getDbName() {
 		return dName;
 	}
-	
+
 	/**
 	 * 
 	 * @param path
@@ -348,7 +358,7 @@ public class Db {
 		}
 		return dir.delete();
 	}
-	
+
 	/**
 	 * Gets mergeTable name.
 	 * @return String of mergeTable name.
@@ -364,7 +374,7 @@ public class Db {
 	public void setMergeTable(String mt) {
 		mergeTable = mt;
 	}
-	
+
 	/**
 	 * Sets all columns in result table.
 	 * @param col column list.
@@ -372,7 +382,7 @@ public class Db {
 	public void setColumns(ArrayList<Column> col) {
 		columns = col;
 	}
-	
+
 	/**
 	 * Get all columns in result table.
 	 * @return list with columns.
