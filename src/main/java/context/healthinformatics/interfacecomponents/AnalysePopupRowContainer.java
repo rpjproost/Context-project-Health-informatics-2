@@ -36,9 +36,7 @@ public class AnalysePopupRowContainer extends InterfaceHelper implements
 	 */
 	public AnalysePopupRowContainer(String[] docNamesIn,
 			HashMap<String, String[]> columnNamesIn) {
-		for (int i = 0; i < docNamesIn.length; i++) {
-			this.docNames[i] = docNamesIn[i];
-		}
+		this.docNames = docNamesIn.clone();
 		this.columnNames = columnNamesIn;
 		initAnalysePopupRow();
 	}
