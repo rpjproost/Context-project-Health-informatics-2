@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.junit.After;
 import org.junit.Test;
 
 import context.healthinformatics.analyse.Interpreter;
@@ -43,15 +44,15 @@ public class ChunkingOnDataTest {
 	 */
 	@org.junit.Before
 	public void before() {
-		Set<String> tables = new TreeSet<String>();
-		tables.addAll(data.getTables().keySet());
-		try {
-			for (String key : tables) {
-				data.dropTable(key);
-			}
-		} catch (SQLException e) {
-			System.out.println("Something went wrong preparing db for tests.");
-		}
+		SingletonDb.dropAll(data);
+	}
+	
+	/**
+	 * Empty the interpreter.
+	 */
+	@After
+	public void after() {
+		SingletonInterpreter.getInterpreter().setIntialChunks(null);
 	}
 
 	/**

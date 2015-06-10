@@ -50,6 +50,7 @@ public class ConstraintOnDataTest {
 	@Before
 	public void before() throws SQLException, IOException {
 		data = SingletonDb.getDb();
+		SingletonDb.dropAll(data);
 		xmlp = new XMLParser(path + "demo.xml");
 		xmlp.parse();
 		xmlp.createDatabase();
