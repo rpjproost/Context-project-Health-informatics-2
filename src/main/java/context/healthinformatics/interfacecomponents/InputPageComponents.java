@@ -1,3 +1,4 @@
+
 package context.healthinformatics.interfacecomponents;
 
 import java.awt.Dimension;
@@ -58,6 +59,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 	public static final int HELPBUTTONWIDTH = 300;
 	public static final int FOLDERSECTIONHEIGHT = 100;
 	private HelpController helpController;
+	private GoToAnalysePopupController popUpController;
 
 	/**
 	 * Constructor.
@@ -74,6 +76,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 		box = new JComboBox<String>(ip.getProjects());
 		helpController = new HelpController(
 				"src/main/data/guihelpdata/inputpagehelp.txt");
+		popUpController = new GoToAnalysePopupController(this);
 	}
 
 	/**
@@ -302,35 +305,45 @@ public class InputPageComponents implements Serializable, ActionListener {
 
 	private void analyseIfXMLIsCorrect() {
 		if (!ip.getEditor().checkAllXMLDocumentsOnError()) {
-			final LoadingScreen ls = new LoadingScreen();
-			new Thread(new Runnable() {
-				@Override
-				public void run() {
-					ip.loadDatabase();
-					mergeTables();
-					ls.displayMessage("Almost done we are loading the results for you!");
-					SwingUtilities.invokeLater(new Runnable() {
-						@Override
-						public void run() {
-							mf.setState(mf.getCodePage());
-							mf.reloadStatePanel();
-							ls.closeLoadFrame();
-						}
-					});
-				}
-
-			}).start();
+			popUpController.createPopup(
+					ip.getXMLController().getSelectedDocs(), ip
+							.getXMLController().getProjectName());
 		}
 	}
 
-	private void mergeTables() {
+	/**
+	 * Merge the tables for the codepage with the specified filters.
+	 * 
+	 * @param clauses
+	 *            the filters
+	 */
+	public void handleSpecifiedFilter(String[] clauses) {
+		final LoadingScreen ls = new LoadingScreen();
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				ip.loadDatabase();
+				mergeTables(clauses);
+				ls.displayMessage("Almost done we are loading the results for you!");
+				SwingUtilities.invokeLater(new Runnable() {
+					@Override
+					public void run() {
+						mf.setState(mf.getCodePage());
+						mf.reloadStatePanel();
+						ls.closeLoadFrame();
+					}
+				});
+			}
+
+		}).start();
+	}
+
+	private void mergeTables(String[] clause) {
 		Db db = SingletonDb.getDb();
 		if (db.getTables().size() > 0 && !db.getTables().containsKey("result")) {
 			MergeTable mergeTables = new MergeTable();
-			String[] clause = new String[1];
-			clause[0] = "meeting.createdby = 'admire2'";
 			try {
-				mergeTables.merge(clause);
+				mergeTables.merge(clause, "date");
 			} catch (SQLException e) {
 				JOptionPane.showMessageDialog(null,
 						"The files you are trying to merge can't be merged!!",
