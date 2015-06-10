@@ -134,7 +134,7 @@ public class MergeTableTest {
 		
 		MergeTable test = new MergeTable();
 		test.mergeTables(clause);
-		test.mergeTablesView();
+		test.mergeTablesView("date");
 		
 		ResultSet rs = data.selectResultSet("workspace", "date", "");
 		

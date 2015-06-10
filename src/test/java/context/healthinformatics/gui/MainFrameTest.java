@@ -1,6 +1,7 @@
 package context.healthinformatics.gui;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -11,12 +12,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import context.healthinformatics.gui.MainFrame.MouseHandler;
+import context.healthinformatics.interfacecomponents.LoadingScreen;
 
 /**
  * Test for the MainFrame of the Interface.
  */
 public class MainFrameTest {
-	
+
 	private MainFrame mf;
 	private Dimension screenSize;
 	private MouseHandler ml;
@@ -40,12 +42,13 @@ public class MainFrameTest {
 	public void testState() {
 		PanelState outputState = new OutputPage(mf);
 		mf.setState(outputState);
-		
+
 		assertEquals(mf.getPanelState(), outputState);
 	}
 
 	/**
-	 * The state panel height must be the same as the screen height minus the tabs height.
+	 * The state panel height must be the same as the screen height minus the
+	 * tabs height.
 	 */
 	@Test
 	public void testGetStatePanelSize() {
@@ -69,48 +72,77 @@ public class MainFrameTest {
 	public void testGetTabsY() {
 		assertEquals(mf.getTabsY(), TABSHEIGHT);
 	}
-	
+
 	/**
 	 * Checks if the state changes when you click the input tab.
 	 */
 	@Test
-	public void checkMouseClickEventInputState()  {
-		MouseEvent me = new MouseEvent(mf.getInputTab(), 0, 0, 0, 0, 0, 0, false);
-		ml.mouseClicked(me);
-		assertEquals(mf.getPanelState(), mf.getInputPage());
+	public void checkMouseClickEventInputState() {
+		try {
+			MouseEvent me = new MouseEvent(mf.getInputTab(), 0, 0, 0, 0, 0, 0,
+					false);
+			ml.mouseClicked(me);
+			assertEquals(mf.getPanelState(), mf.getInputPage());
+		} catch (ClassCastException e) {
+			fail();
+		}
 	}
-	
+
 	/**
 	 * Checks if the state changes when you click code tab.
 	 */
 	@Test
 	public void checkMouseClickEventCodePage() {
-		MouseEvent me = new MouseEvent(mf.getCodeTab(), 0, 0, 0, 0, 0, 0, false);
-		ml.mousePressed(me);
-		assertEquals(mf.getPanelState(), mf.getCodePage());
+		try {
+			MouseEvent me = new MouseEvent(mf.getCodeTab(), 0, 0, 0, 0, 0, 0,
+					false);
+			ml.mousePressed(me);
+			assertEquals(mf.getPanelState(), mf.getCodePage());
+		} catch (ClassCastException e) {
+			fail();
+		}
 	}
-	
+
 	/**
 	 * Checks if the state changes when you click output tab.
 	 */
 	@Test
 	public void checkMouseClickEventOutputPage() {
-		MouseEvent me = new MouseEvent(mf.getOutputTab(), 0, 0, 0, 0, 0, 0, false);
-		ml.mousePressed(me);
-		assertEquals(mf.getPanelState(), mf.getOutputPage());
+		try {
+			MouseEvent me = new MouseEvent(mf.getOutputTab(), 0, 0, 0, 0, 0, 0,
+					false);
+			ml.mousePressed(me);
+			assertEquals(mf.getPanelState(), mf.getOutputPage());
+		} catch (ClassCastException e) {
+			fail();
+		}
 	}
-	
+
 	/**
 	 * Checks if the state changes when you click anywhere in the variable page.
 	 */
 	@Test
 	public void checkMouseClickEventVariablePage() {
-		PanelState ps = mf.getPanelState();
-		MouseEvent me = new MouseEvent(mf, 0, 0, 0, 0, 0, 0, false);
-		ml.mouseClicked(me);
-		assertEquals(mf.getPanelState(), ps);
+		try {
+			PanelState ps = mf.getPanelState();
+			MouseEvent me = new MouseEvent(mf, 0, 0, 0, 0, 0, 0, false);
+			ml.mouseClicked(me);
+			assertEquals(mf.getPanelState(), ps);
+		} catch (ClassCastException e) {
+			fail();
+		}
 	}
-	
+
+	/**
+	 * Tests the loading screen.
+	 */
+	@Test
+	public void testLoadingScreen() {
+		LoadingScreen ls = new LoadingScreen();
+		ls.displayMessage("Test");
+		ls.closeLoadFrame();
+	}
+
 	/**
 	 * After the test the MainFrame should be closed.
 	 */

@@ -1,0 +1,20 @@
+%%
+Add Project
+<html>
+	<body>
+	test 
+	</body>
+</html>
+%%
+Remove Project
+<html>
+	<body>
+	<h2>To remove a project follow the following steps:</h2>
+	<ol>
+	  <li>Select the project you want to delete. You can do this two ways either by selecting a project in the drop down menu or select it in the project selection section.</li>
+	  <li>You have to click on the button with the text "Remove Project".</li>
+	  <li>The selected Project is now removed.</li>
+	</ol>  
+	</body>
+</html>
+%%
