@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -57,6 +58,14 @@ public class ConstraintOnDataTest {
 		test = new MergeTable();
 		test.merge(clause);
 		chunks = test.getChunks();
+	}
+	
+	/**
+	 * Removes chunks from interpreter.
+	 */
+	@After
+	public void after() {
+		SingletonInterpreter.getInterpreter().setIntialChunks(null);
 	}
 	
 	/**

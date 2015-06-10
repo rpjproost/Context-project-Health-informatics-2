@@ -53,8 +53,8 @@ public class ConnectionsTest {
 	 */
 	@After
 	public void after() throws Exception {
-		i.setIntialChunks(null);
 		i.interpret("undo");
+		i.setIntialChunks(null);
 	}
 
 	/**

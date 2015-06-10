@@ -58,7 +58,6 @@ public class Db {
 	 * @return true iff connection is set.
 	 */
 	private boolean setupConn() throws SQLException {
-		System.out.println(dName);
 		boolean res = false;
 		setDb(pad, dName);
 		try {

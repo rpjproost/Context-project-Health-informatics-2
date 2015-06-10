@@ -7,8 +7,10 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.junit.After;
 import org.junit.Test;
 
+import context.healthinformatics.analyse.SingletonInterpreter;
 import context.healthinformatics.database.Db;
 import context.healthinformatics.database.MergeTable;
 import context.healthinformatics.database.SingletonDb;
@@ -58,6 +60,14 @@ public class CodeOnDataTest {
 		} catch (SQLException e) {
 			System.out.println("Something went wrong preparing db for tests.");
 		}
+	}
+	
+	/**
+	 * Removes chunks from interpreter.
+	 */
+	@After
+	public void after() {
+		SingletonInterpreter.getInterpreter().setIntialChunks(null);
 	}
 	
 	/**
