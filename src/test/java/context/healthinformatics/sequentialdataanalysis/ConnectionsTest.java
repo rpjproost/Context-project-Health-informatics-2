@@ -79,6 +79,7 @@ public class ConnectionsTest {
 //		int i = 0;
 		Query query = new Query("Connect where code = CodeA to"
 				+ "comment = CommentB");
+		query.inc();
 //		String[] query =  new String[size];
 //		query[i] = "Connect";
 //		i = inc(i);
@@ -108,6 +109,7 @@ public class ConnectionsTest {
 	public void testConnectionCodetoCode() {
 		Connections c = new Connections(note);
 		Query query = new Query("Connect(test) code = CodeA to code = CodeC");
+		query.inc();
 //		final int size = 8;
 //		int i = 0;
 //		String[] query =  new String[size];

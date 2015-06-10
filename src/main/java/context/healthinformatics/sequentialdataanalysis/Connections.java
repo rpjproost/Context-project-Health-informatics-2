@@ -127,11 +127,11 @@ public class Connections extends Task {
 	protected void runData(Query query) throws SQLException {
 		StringBuilder q = new StringBuilder();
 		ArrayList<Integer> destinationList = new ArrayList<Integer>();
-		query.inc();
-		while (!isData(query.next()) || !isComment(query.part()) || !isCode(query.part())) {
+		query.inc(2);
+		while (!isData(query.part()) || !isComment(query.part()) || !isCode(query.part())) {
 			q.append(query.part());
 			q.append(" ");
-			query.next();
+			query.inc();
 		}
 		ArrayList<Integer> originList = getLinesFromData(q.toString());
 		parseSecondCondition(query, originList, destinationList);
@@ -145,6 +145,7 @@ public class Connections extends Task {
 	protected void runCode(Query query) {
 		query.inc();
 		ArrayList<Integer> originList = getListOnCode(query.next());
+		System.out.println(query.part() + " : runCode");
 		ArrayList<Integer> destinationList = new ArrayList<Integer>();
 		parseSecondCondition(query, originList, destinationList);
 	}
@@ -163,8 +164,9 @@ public class Connections extends Task {
 	
 	private void parseSecondCondition(Query query, ArrayList<Integer> originList,
 			ArrayList<Integer> destinationList) {
-		query.inc();
-		if (isComment(query.next())) {
+		query.inc(2);
+		System.out.println(query.part() + " : secondCondition");
+		if (isComment(query.part())) {
 			query.inc();
 			destinationList = getListOnComment(query.next());
 			connectListsOfChunkIndices(originList, destinationList);
