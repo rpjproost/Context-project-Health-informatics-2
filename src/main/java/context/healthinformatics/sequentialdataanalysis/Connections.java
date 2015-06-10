@@ -46,15 +46,18 @@ public class Connections extends Task {
 	}	
 
 	/**
-	 * Method which connects every chunk in list one, to every chunk in list two.
+	 * Method which connects a chunk in origin list, to the first chunk in list two with
+	 * a lower index in the copyOfChunk list.
 	 * @param originChunkList one.
 	 * @param destinationChunkList two.
 	 */
 	private void connectListsOfChunkIndices(ArrayList<Integer> originChunkList
 			, ArrayList<Integer> destinationChunkList) {
-		for (Integer i : originChunkList) {
-			for (Integer j : destinationChunkList) {
-				connectOnLine(i, j);
+		int count = 0;
+		for (Integer i : destinationChunkList) {
+			while (count < originChunkList.size() && originChunkList.get(count) < i) {
+				connectOnLine(originChunkList.get(count), i);
+				count++;
 			}
 		}
 	}
