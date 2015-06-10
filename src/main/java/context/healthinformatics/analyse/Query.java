@@ -15,10 +15,9 @@ public class Query {
 	 * Constructor for a query.
 	 * @param q String with the query.
 	 */
-	public Query(String q) {
+	public Query(String line) {
 		index = 0;
 		parameter = "";
-		String line = splitParameter(q);
 		query = splitLine(line);
 	}
 	
