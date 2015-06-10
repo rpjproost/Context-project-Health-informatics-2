@@ -201,12 +201,10 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 		if (e.getSource() == addFilter) {
 			addEmptyFilter();
 		}
-		if (e.getSource() == removeFilter) {
-			if (rows.size() > 0) {
-				JPanel panel = rows.remove(rows.size() - 1).getPanelOfRow();
-				filterPanel.remove(panel);
-				filterPanel.revalidate();
-			}
+		if (e.getSource() == removeFilter && rows.size() > 0) {
+			JPanel panel = rows.remove(rows.size() - 1).getPanelOfRow();
+			filterPanel.remove(panel);
+			filterPanel.revalidate();
 		}
 		if (e.getSource() == goToAnalyse) {
 			getAllFilterValues();
