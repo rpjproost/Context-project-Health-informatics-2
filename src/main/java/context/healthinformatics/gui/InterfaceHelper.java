@@ -32,6 +32,10 @@ public class InterfaceHelper extends JPanel {
 	public static final int TITLEFONT = 28;
 	private static final int TEXTSIZE = 20;
 	protected static final int THREE = 3;
+	protected static final int HUNDERTPROCENT = 100;
+	protected static final int CORRECION = 98;
+	protected static final int INSETS = 10;
+	protected static final int FIELDCORRECTION = 130;
 
 	/**
 	 * @return JPanel with attributes specified by the arguments.
