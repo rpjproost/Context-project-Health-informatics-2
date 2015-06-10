@@ -28,7 +28,7 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 	private JFrame popupMainFrame;
 	private JPanel mainPanel;
 
-	private String[] docNames;
+	private ArrayList<String> docNames;
 	private HashMap<String, String[]> columnNames = new HashMap<String, String[]>();
 	private ArrayList<AnalysePopupRowContainer> rows = new ArrayList<AnalysePopupRowContainer>();
 	private JPanel filterPanel;
@@ -53,26 +53,35 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 		initButtons();
 		setupTheLoadingMainFrame();
 		this.popupController = controller;
-		docNames = new String[selectedDocs.size()];
-		for (int i = 0; i < selectedDocs.size(); i++) {
-			XMLDocument doc = selectedDocs.get(i);
-			docNames[i] = doc.getDocName();
-			String[] columnNamesString = new String[doc.getColumns().size()];
-			for (int j = 0; j < doc.getColumns().size(); j++) {
-				columnNamesString[j] = doc.getColumns().get(j).getColumnName();
-			}
-			columnNames.put(docNames[i], columnNamesString);
-		}
+
+		initDropDownMenus(selectedDocs);
+
 		filterPanel = createEmptyWithGridBagLayoutPanel();
-//		rows.add(new AnalysePopupRowContainer(docNames, columnNames));
-//		filterPanel.add(rows.get(0).getPanelOfRow(),
-//				setGrids(0, rows.size() - 1));
 
 		mainPanel = createEmptyWithGridBagLayoutPanel();
 		mainPanel.add(filterPanel, setGrids(0, 0));
 		mainPanel.add(buttonPanel, setGrids(0, 1));
 		popupMainFrame.add(mainPanel);
 		setWindowListener();
+	}
+
+	/**
+	 * Initialise the comboboxes with values of the documents and columns.
+	 * 
+	 * @param selectedDocs
+	 *            the selected documents
+	 */
+	private void initDropDownMenus(ArrayList<XMLDocument> selectedDocs) {
+		docNames = new ArrayList<String>();
+		for (int i = 0; i < selectedDocs.size(); i++) {
+			XMLDocument doc = selectedDocs.get(i);
+			docNames.add(doc.getDocName());
+			String[] columnNamesString = new String[doc.getColumns().size()];
+			for (int j = 0; j < doc.getColumns().size(); j++) {
+				columnNamesString[j] = doc.getColumns().get(j).getColumnName();
+			}
+			columnNames.put(docNames.get(i), columnNamesString);
+		}
 	}
 
 	/**
@@ -143,14 +152,22 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 	 *            the saved filters
 	 */
 	public void setFilters(ArrayList<String[]> filters) {
+		int counter = 0;
 		for (int i = 0; i < filters.size(); i++) {
-			AnalysePopupRowContainer popupRowContainer = new AnalysePopupRowContainer(
-					docNames, columnNames);
-			popupRowContainer.setValues(filters.get(i)[0], filters.get(i)[1],
-					filters.get(i)[2]);
-			rows.add(popupRowContainer);
-			filterPanel.add(rows.get(rows.size() - 1).getPanelOfRow(),
-					setGrids(0, rows.size() - 1));
+			if (docNames.contains(filters.get(i)[0])) {
+				counter++;
+				AnalysePopupRowContainer popupRowContainer = new AnalysePopupRowContainer(
+						docNames.toArray(new String[docNames.size()]),
+						columnNames);
+				popupRowContainer.setValues(filters.get(i)[0],
+						filters.get(i)[1], filters.get(i)[2]);
+				rows.add(popupRowContainer);
+				filterPanel.add(rows.get(rows.size() - 1).getPanelOfRow(),
+						setGrids(0, rows.size() - 1));
+			}
+		}
+		if (counter == 0) {
+			addEmptyFilter();
 		}
 		filterPanel.revalidate();
 	}
@@ -159,10 +176,25 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 	 * Add an empty filter.
 	 */
 	public void addEmptyFilter() {
-		rows.add(new AnalysePopupRowContainer(docNames, columnNames));
+		rows.add(new AnalysePopupRowContainer(docNames
+				.toArray(new String[docNames.size()]), columnNames));
 		filterPanel.add(rows.get(rows.size() - 1).getPanelOfRow(),
 				setGrids(0, rows.size() - 1));
 		filterPanel.revalidate();
+	}
+
+	/**
+	 * Get the filter values from all rows.
+	 */
+	private void getAllFilterValues() {
+		String[] filterValues = new String[rows.size()];
+		for (int i = 0; i < rows.size(); i++) {
+			filterValues[i] = rows.get(i).getValues();
+			System.out.println(rows.get(i).getValues());
+		}
+		closePopUp();
+		popupController.setOpen(false);
+		popupController.handleSpecifiedFilter(filterValues);
 	}
 
 	@Override
@@ -178,14 +210,7 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 			}
 		}
 		if (e.getSource() == goToAnalyse) {
-			String[] filterValues = new String[rows.size()];
-			for (int i = 0; i < rows.size(); i++) {
-				filterValues[i] = rows.get(i).getValues();
-				System.out.println(rows.get(i).getValues());
-			}
-			closePopUp();
-			popupController.setOpen(false);
-			popupController.handleSpecifiedFilter(filterValues);
+			getAllFilterValues();
 
 		}
 

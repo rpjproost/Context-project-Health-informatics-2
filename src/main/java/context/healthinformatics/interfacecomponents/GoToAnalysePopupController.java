@@ -1,7 +1,11 @@
 package context.healthinformatics.interfacecomponents;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
 
 import context.healthinformatics.writer.ReadWriteAnalyseFilter;
 import context.healthinformatics.writer.XMLDocument;
@@ -13,6 +17,7 @@ public class GoToAnalysePopupController {
 	private InputPageComponents ipc;
 	private boolean isOpen;
 	private GoToAnalysePopup currentPopUp;
+	private String projectName;
 
 	/**
 	 * Constructor of the controller.
@@ -36,6 +41,7 @@ public class GoToAnalysePopupController {
 	 */
 	public void createPopup(ArrayList<XMLDocument> selectedDocs,
 			String projectName) {
+		this.projectName = projectName;
 		if (!isOpen) {
 			ReadWriteAnalyseFilter rwaf = new ReadWriteAnalyseFilter(
 					"src/main/data/savedFilters/" + projectName + ".txt");
@@ -69,5 +75,14 @@ public class GoToAnalysePopupController {
 	 */
 	public void handleSpecifiedFilter(String[] filterValues) {
 		ipc.handleSpecifiedFilter(filterValues);
+		ReadWriteAnalyseFilter rwaf = new ReadWriteAnalyseFilter(
+				"src/main/data/savedFilters/" + projectName + ".txt");
+		try {
+			rwaf.writeToFile(filterValues);
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {
+			JOptionPane.showMessageDialog(null,
+					"Something went wrong saving your filters!",
+					"Save filters error", JOptionPane.WARNING_MESSAGE);
+		}
 	}
 }

@@ -1,7 +1,10 @@
 package context.healthinformatics.writer;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -70,5 +73,51 @@ public class ReadWriteAnalyseFilter {
 					thisLine.lastIndexOf("'"));
 			listOfFilters.add(listOfValues);
 		}
+	}
+
+	/**
+	 * Get the printwriter to save filters.
+	 * 
+	 * @return the print writer
+	 * @throws FileNotFoundException
+	 *             filenotfoundexception
+	 * @throws UnsupportedEncodingException
+	 *             unsupportedencodingexception
+	 */
+	public PrintWriter getPrintWriter() throws FileNotFoundException,
+			UnsupportedEncodingException {
+		PrintWriter writer = null;
+
+		try {
+			writer = new PrintWriter(fileName, "UTF-8");
+		} catch (FileNotFoundException e) {
+			throw new FileNotFoundException(
+					"The path to write to is not found!");
+		} catch (UnsupportedEncodingException e) {
+			throw new UnsupportedEncodingException(
+					"The encoding for the write to file is not supported!");
+		}
+
+		return writer;
+	}
+
+	/**
+	 * Write to file.
+	 * 
+	 * @param filters
+	 *            the specified filters which need to be stored
+	 * 
+	 * @throws FileNotFoundException
+	 *             filenotfoundexception
+	 * @throws UnsupportedEncodingException
+	 *             unsupportedencodingexception
+	 */
+	public void writeToFile(String[] filters) throws FileNotFoundException,
+			UnsupportedEncodingException {
+		PrintWriter writer = getPrintWriter();
+		for (int i = 0; i < filters.length; i++) {
+			writer.println(filters[i]);
+		}
+		writer.close();
 	}
 }
