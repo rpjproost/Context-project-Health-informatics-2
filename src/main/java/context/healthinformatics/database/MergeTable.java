@@ -72,6 +72,7 @@ public class MergeTable {
 		sql.append("CREATE VIEW workspace AS SELECT * FROM  " + mergeTable
 				+ " ORDER BY ");
 		sql.append(sortingString);
+		data.setMerged(true);
 		try {
 			data.executeUpdate(sql.toString());
 		} catch (SQLException e) {

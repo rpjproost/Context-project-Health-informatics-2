@@ -1,8 +1,8 @@
 package context.healthinformatics.database;
 
 import java.sql.SQLException;
-
-import context.healthinformatics.interfacecomponents.Observer;
+import java.util.Set;
+import java.util.TreeSet;
 
 /** Class for setting up database.
  * 
@@ -51,6 +51,29 @@ public final class SingletonDb {
 			}
 		}
 		return data;
+	}
+
+	public static void dropAll(Db data) {
+		MergeTable mt = new MergeTable();
+		if (data.isMerged()) {
+			mt.dropView("workspace");
+		}
+		try {
+			data.dropTable("result");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+		}
+		Set<String> tables = new TreeSet<String>();
+		tables.addAll(data.getTables().keySet());
+		for (String s : tables) {
+			try {
+				data.dropTable(s);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				//e.printStackTrace();
+			}
+		}
 	}
 
 	/**Sets path where database will be stored.

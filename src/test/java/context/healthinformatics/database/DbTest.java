@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -62,21 +61,9 @@ public class DbTest {
 
 		values[0] = "Rick";
 		values[1] = "22";
-		beforeTests();
+		SingletonDb.dropAll(data);
 	}
 	
-	/**
-	 * remove all tables from db.
-	 */
-	public void beforeTests() {
-		try {
-			for (String key : data.getTables().keySet()) {
-				data.dropTable(key);
-			}
-		} catch (SQLException e) {
-			System.out.println("Something went wrong preparing db for tests.");
-		}
-	}
 
 	/**
 	 * After test is run.

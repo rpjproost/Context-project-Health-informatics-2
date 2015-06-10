@@ -32,6 +32,7 @@ public class Db {
 	private HashMap<String, ArrayList<Column>> tables;
 	private String mergeTable = "result";
 	private ArrayList<Column> columns;
+	private boolean merged = false;
 
 	/**
 	 * Constructor, sets variables and calls setupConn.
@@ -395,5 +396,21 @@ public class Db {
 			return columns;
 		}
 		return new ArrayList<Column>();
+	}
+
+	/**
+	 * if database has a merged table true.
+	 * @return true/false.
+	 */
+	public boolean isMerged() {
+		return merged;
+	}
+
+	/**
+	 * Sets boolean to true if database gets mergetable.
+	 * @param merged boolean.
+	 */
+	public void setMerged(boolean merged) {
+		this.merged = merged;
 	}
 }
