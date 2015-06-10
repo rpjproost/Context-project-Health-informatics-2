@@ -145,7 +145,6 @@ public class Connections extends Task {
 	protected void runCode(Query query) {
 		query.inc();
 		ArrayList<Integer> originList = getListOnCode(query.next());
-		System.out.println(query.part() + " : runCode");
 		ArrayList<Integer> destinationList = new ArrayList<Integer>();
 		parseSecondCondition(query, originList, destinationList);
 	}
@@ -165,7 +164,6 @@ public class Connections extends Task {
 	private void parseSecondCondition(Query query, ArrayList<Integer> originList,
 			ArrayList<Integer> destinationList) {
 		query.inc(2);
-		System.out.println(query.part() + " : secondCondition");
 		if (isComment(query.part())) {
 			query.inc();
 			destinationList = getListOnComment(query.next());
