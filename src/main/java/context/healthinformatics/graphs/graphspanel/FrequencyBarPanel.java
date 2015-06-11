@@ -41,18 +41,12 @@ public class FrequencyBarPanel extends InterfaceHelper implements GraphPanel {
 	public JPanel initGraphPanel(String title) {
 		JPanel graphPanel = createEmptyWithGridBagLayoutPanel(Color.WHITE);
 		graphPanel.setPreferredSize(new Dimension(panelWidth - 2 * INSETS, 
-				INPUTELEMENTS * CHECKBOXHEIGHT));
+				2 * CHECKBOXHEIGHT));
 		graphPanel.setVisible(false);
 		graphPanel.add(createSubTitle(title, panelWidth, CHECKBOXHEIGHT), setGrids(0, 0));
 		graphPanel.add(makeFormRowPanelWithTextField("Graph Title:", 
 				container.getGraphTitle(), panelWidth - 2 * INSETS, CHECKBOXHEIGHT), 
 				setGrids(0, 1));
-		graphPanel.add(makeFormRowPanelWithComboBox("Select data for the x-as:", 
-				container.getxValue(), panelWidth - 2 * INSETS, CHECKBOXHEIGHT), 
-				setGrids(0, 2));
-		graphPanel.add(makeFormRowPanelWithComboBox("Select column for the y-as:", 
-				container.getyValue(), panelWidth - 2 * INSETS, CHECKBOXHEIGHT), 
-				setGrids(0, THREE));
 		return graphPanel;
 	}
 
