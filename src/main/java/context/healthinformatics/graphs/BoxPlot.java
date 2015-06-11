@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
@@ -34,8 +33,7 @@ public class BoxPlot extends InterfaceHelper {
 	private JPanel chartContainerPanel;
 	private JPanel mainPanel;
 	private static final int BOX_PLOT_PANEL_HEIGHT = 400;
-	private static final int BOX_PLOT_HEIGHT = 300;
-	private JButton boxPlotTempRefreshButton;
+	private static final int BOX_PLOT_HEIGHT = 350;
 
 	private int width;
 
@@ -52,11 +50,9 @@ public class BoxPlot extends InterfaceHelper {
 		chartContainerPanel.setPreferredSize(new Dimension(width,
 				BOX_PLOT_HEIGHT));
 		width = getScreenWidth() / 2 - 2 * INSETS;
-		boxPlotTempRefreshButton = new JButton("Refresh BoxPlotWithData");
 		mainPanel = createEmptyWithGridBagLayoutPanel();
 		mainPanel.setPreferredSize(new Dimension(width, BOX_PLOT_PANEL_HEIGHT));
 		mainPanel.add(chartContainerPanel, setGrids(0, 0));
-		mainPanel.add(boxPlotTempRefreshButton, setGrids(0, 1));
 	}
 
 	/**
