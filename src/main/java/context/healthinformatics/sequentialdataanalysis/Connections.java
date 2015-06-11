@@ -15,6 +15,7 @@ public class Connections extends Task {
 	
 	private String noteForConnection;
 	private ArrayList<Chunk> copyOfChunks;
+	private ArrayList<Chunk> oldList;
 	private Logger log = Logger.getLogger(Comments.class.getName());
 	
 	/**
@@ -26,12 +27,13 @@ public class Connections extends Task {
 		ArrayList<Chunk> c = SingletonInterpreter.getInterpreter().getChunks();
 		setChunks(c);
 		copyOfChunks = copyChunks(getChunks());
+		oldList = copyOfChunks;
 	}
 	
 	@Override
 	public ArrayList<Chunk> undo() {
-		// TODO Auto-generated method stub
-		return null;
+		setChunks(oldList);
+		return getChunks();
 	}
 	
 	/**

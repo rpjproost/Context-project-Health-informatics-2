@@ -1,7 +1,6 @@
 package context.healthinformatics.writer;
 
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.junit.Test;
@@ -38,12 +37,12 @@ public class WriterTest {
 	@Test
 	public void testFirst() throws SQLException, IOException {
 		xmlp = new XMLParser(path + "textxml.xml");
-		
+		//TODO IMPLEMENT TEST FOR WRITER!!!!!
 		xmlp.parse();
 		xmlp.createDatabase();
-		ResultSet rs = data.selectResultSet("stat", "*", "");
-		WriteToTXT wtxt = new WriteToTXT("test.txt", "src/test/data/writerfiles/");
-		wtxt.writeToFile(rs);
+	//	ResultSet rs = data.selectResultSet("stat", "*", "");
+		//WriteToTXT wtxt = new WriteToTXT("test.txt", "src/test/data/writerfiles/");
+		//wtxt.writeToFile(rs);
 		data.dropTable("stat");
 	}
 }

@@ -222,7 +222,7 @@ public class IntermediateResults extends InterfaceHelper {
 		buildString.append(currentChunk.toArray());
 		buildString.append("</h2></td>");
 		buildString.append(getChildsOfChunk(currentChunk));
-		buildString.append("<td>[End Of Chunk]</td>");
+		buildString.append("<td><h2>[End Of Chunk]</h2></td>");
 		return buildString.toString();
 	}
 }

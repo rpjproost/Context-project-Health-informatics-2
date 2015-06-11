@@ -230,6 +230,31 @@ public class Chunk {
 	}
 
 	/**
+	 * Prepare the chunk for the writer.
+	 * 
+	 * @return return string list of the chunk data
+	 */
+	public ArrayList<String> toWriter() {
+		ArrayList<String> valuesOfChunk = new ArrayList<String>();
+		if (!hasChild()) {
+			Db data = SingletonDb.getDb();
+			try {
+				this.rs = data.selectResultSet("result", "*", "resultid = "
+						+ line);
+				ResultSetMetaData rsmd = this.rs.getMetaData();
+				processResultSet(rsmd.getColumnCount(), valuesOfChunk);
+				rs.close();
+			} catch (SQLException e) {
+				System.out.println(e);
+				return valuesOfChunk;
+			}
+			return valuesOfChunk;
+		} else {
+			return valuesOfChunk;
+		}
+	}
+
+	/**
 	 * Process the result set.
 	 * 
 	 * @param numColumns

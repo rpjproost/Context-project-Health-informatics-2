@@ -3,9 +3,11 @@ package context.healthinformatics.writer;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
+import java.util.ArrayList;
+
+import context.healthinformatics.database.Db;
+import context.healthinformatics.parser.Column;
+import context.healthinformatics.sequentialdataanalysis.Chunk;
 
 /**
  * Class which output txt file for spss. Spss text file format:
@@ -13,20 +15,15 @@ import java.sql.SQLException;
  */
 public class WriteToTXT {
 	private String fileName;
-	private String path;
-	private ResultSet rs;
 
 	/**
 	 * Constructor for writetoTXT.
 	 * 
 	 * @param fileName
 	 *            the filename of the txtfile
-	 * @param path
-	 *            the path where the txt file is put
 	 */
-	public WriteToTXT(String fileName, String path) {
+	public WriteToTXT(String fileName) {
 		this.fileName = fileName;
-		this.path = path;
 	}
 
 	/**
@@ -41,9 +38,12 @@ public class WriteToTXT {
 	public PrintWriter getPrintWriter() throws FileNotFoundException,
 			UnsupportedEncodingException {
 		PrintWriter writer = null;
-
+		if (!fileName.endsWith(".txt")) {
+			fileName += ".txt";
+		}
+		System.out.println(fileName);
 		try {
-			writer = new PrintWriter(path + fileName, "UTF-8");
+			writer = new PrintWriter(fileName, "UTF-8");
 		} catch (FileNotFoundException e) {
 			throw new FileNotFoundException(
 					"The path to write to is not found!");
@@ -57,27 +57,24 @@ public class WriteToTXT {
 
 	/**
 	 * Write to file.
-	 * @param rs Result set to write to the file.
 	 * 
-	 * @throws SQLException
-	 *             the sql exception of resultset
+	 * @param chunks
+	 *            the chunks to write to file
+	 * @param database
+	 *            the database to get the columnnames
 	 * @throws FileNotFoundException
 	 *             filenotfoundexception
 	 * @throws UnsupportedEncodingException
 	 *             unsupportedencodingexception
 	 */
-	public void writeToFile(ResultSet rs) throws SQLException, FileNotFoundException,
-			UnsupportedEncodingException {
+	public void writeToFile(ArrayList<Chunk> chunks, Db database)
+			throws FileNotFoundException, UnsupportedEncodingException {
 		PrintWriter writer = getPrintWriter();
-		this.rs = rs;
 		writer.println("DATA LIST LIST");
-		ResultSetMetaData rsmd = this.rs.getMetaData();
-		writer.println("/ " + processColumnNames(rsmd, rsmd.getColumnCount()).toString());
-
+		writer.println("/ " + processColumnNames(database.getColumns()));
 		writer.println("BEGIN DATA.");
-		writer.println(processResultSet(rsmd.getColumnCount()).toString());
+		writer.println(processChunks(chunks));
 		writer.println("END DATA.");
-		
 		writer.println();
 		writer.println("LIST.");
 		writer.close();
@@ -85,50 +82,51 @@ public class WriteToTXT {
 
 	/**
 	 * Process the column names of the table.
-	 * @param rsmd the resultsets meta data
-	 * @param numColumns the number of columns
-	 * @return a stringbuffer with the columnnames
-	 * @throws SQLException the sqlexception
+	 * 
+	 * @param columns
+	 *            the columns of the data
+	 * @return a the columns
+	 * @throws SQLException
+	 *             the sqlexception
 	 */
-	public StringBuffer processColumnNames(ResultSetMetaData rsmd,
-			int numColumns) throws SQLException {
+	public String processColumnNames(ArrayList<Column> columns) {
 		StringBuffer res = new StringBuffer();
-		for (int i = 1; i < numColumns; i++) {
-			if (i == numColumns - 1) {
-				res.append(rsmd.getColumnName(i + 1));
+		for (int i = 1; i < columns.size(); i++) {
+			if (i == columns.size() - 1) {
+				res.append(columns.get(i).getColumnName());
 			} else {
-				res.append(rsmd.getColumnName(i + 1) + " ");
+				res.append(columns.get(i).getColumnName() + " ");
 			}
 		}
-		
-		return res;
+		return res.toString();
 	}
 
 	/**
 	 * Process the result set.
 	 * 
-	 * @param numColumns
-	 *            the number of columns in the resultset
+	 * @param chunks
+	 *            the list of chunks
 	 * @return a stringbuffer with the right formatted resultset
 	 * @throws SQLException
 	 *             the sql exception of the resultset
 	 */
-	public StringBuffer processResultSet(int numColumns) throws SQLException {
+	public String processChunks(ArrayList<Chunk> chunks) {
 		StringBuffer str = new StringBuffer();
-		while (rs.next()) {
-			for (int i = 1; i < numColumns; i++) {
-				if (i == numColumns - 1) {
-					str.append(rs.getObject(i + 1));
-				} else {
-					str.append(rs.getObject(i + 1) + " ");
+		for (int i = 0; i < chunks.size(); i++) {
+			Chunk chunk = chunks.get(i);
+			if (chunk.hasChild()) {
+				str.append(processChunks(chunk.getChildren()));
+			} else {
+				ArrayList<String> values = chunk.toWriter();
+				for (int j = 0; j < values.size(); j++) {
+					if (j == values.size() - 1) {
+						str.append(values.get(j) + "\r\n");
+					} else {
+						str.append(values.get(j) + ",");
+					}
 				}
 			}
-			str.append(System.lineSeparator());
 		}
-		if (str.length() > 2) {
-			str.setLength(str.length() - 2);
-		}
-		rs.close();
-		return str;
+		return str.toString();
 	}
 }

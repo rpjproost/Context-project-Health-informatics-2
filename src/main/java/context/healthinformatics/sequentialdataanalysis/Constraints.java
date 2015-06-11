@@ -8,7 +8,8 @@ import java.util.ArrayList;
  */
 public class Constraints extends Task {
 	private String columnName;
-
+	private int indexcheck = 0;
+	private int indexres = -1;
 	private ArrayList<Chunk> oldList;
 	/**
 	 * Constructor Constraints.
@@ -161,8 +162,10 @@ public class Constraints extends Task {
 	 */
 	public void checkConstraintOnData(Chunk curChunk, ArrayList<Integer> ints, 
 			ArrayList<Chunk> res) {
-		if (ints.contains(curChunk.getLine())) {
+		if (indexcheck < ints.size() && curChunk.getLine() == ints.get(indexcheck)) {
 			res.add(curChunk);
+			indexcheck++;
+			indexres++;
 		}
 		else {
 			if (curChunk.hasChild()) {
@@ -183,10 +186,16 @@ public class Constraints extends Task {
 			ArrayList<Integer> ints, ArrayList<Chunk> res) {
 		ArrayList<Chunk> kids = new ArrayList<Chunk>();
 		for (Chunk c : childs) {
-			if (ints.contains(c.getLine())) {
-				if (!res.contains(curChunk)) {
-					res.add(curChunk);
+			if (indexcheck < ints.size() && c.getLine() == ints.get(indexcheck)) {
+				if (indexres == -1) {
+					addKids(res, kids, curChunk, c);
+				}
+				else if (indexres < res.size() && !res.get(indexres).equals(curChunk)) {
+					addKids(res, kids, curChunk, c);
+				}
+				else {
 					kids.add(c);
+					indexcheck++;
 				}
 			}
 			else {
@@ -198,6 +207,20 @@ public class Constraints extends Task {
 		if (kids.size() != 0) {
 			curChunk.setChunks(kids);
 		}
+	}
+	
+	/**
+	 * 
+	 * @param res Arraylist to return.
+	 * @param kids children from curChunk.
+	 * @param curChunk Parent chunk.
+	 * @param kid kid to be added.
+	 */
+	public void addKids(ArrayList<Chunk> res, ArrayList<Chunk> kids, Chunk curChunk, Chunk kid) {
+		res.add(curChunk);
+		kids.add(kid);
+		indexcheck++;
+		indexres++;
 	}
 	
 	@Override

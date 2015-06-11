@@ -13,9 +13,15 @@ import java.sql.SQLException;
 import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import context.healthinformatics.analyse.SingletonInterpreter;
+import context.healthinformatics.database.SingletonDb;
+import context.healthinformatics.graphs.GraphController;
+import context.healthinformatics.graphs.GraphInputInterface;
 import context.healthinformatics.interfacecomponents.IntermediateResults;
 import context.healthinformatics.writer.WriteToTXT;
 
@@ -31,16 +37,20 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	private static final int BUTTONHEIGHT = 80;
 	private static final int SELECTERHEIGHT = 500;
 	private static final int SELECTERWIDTH = 600;
-	private MainFrame mf;
+//	private MainFrame mf;
 	private IntermediateResults imr;
 	private JButton exportFileButton;
-	private JButton exportGraphButton;
+	private JButton updateGraphButton;
 	private JPanel leftPanel;
 	private JPanel rightPanel;
 	private JPanel outputParentPanel;
 	private int panelWidth;
 	private int panelHeight;
 	private JFileChooser savePopup;
+	private GraphInputInterface graphInputInterface;
+	private GraphController graphController;
+	private JPanel graphArea;
+	private JScrollPane scrollPane;
 
 	/**
 	 * Constructor.
@@ -49,11 +59,12 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	 *            is the mainframe object
 	 */
 	public OutputPage(MainFrame m) {
-		mf = m;
-		panelWidth = mf.getScreenWidth() / 2 - 2 * INSETS;
-		panelHeight = mf.getStatePanelSize() / 2 - FIELDCORRECTION;
-		imr = new IntermediateResults(panelWidth, panelHeight, "The Result:", 
+//		mf = m;
+		panelWidth = getScreenWidth() / 2 - 2 * INSETS;
+		panelHeight = getStatePanelSize() / 2 - FIELDCORRECTION;
+		imr = new IntermediateResults(panelWidth, panelHeight, "The Result:",
 				MainFrame.OUTPUTTABCOLOR);
+		graphController = new GraphController();
 		leftPanel = createEmptyWithGridBagLayoutPanel(MainFrame.OUTPUTTABCOLOR);
 		rightPanel = createEmptyWithGridBagLayoutPanel(MainFrame.OUTPUTTABCOLOR);
 		initComponents();
@@ -66,8 +77,9 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	@Override
 	public JPanel loadPanel() {
 		imr.updateIntermediateResult();
+		graphInputInterface.update();
 		JPanel panel = MainFrame.createPanel(MainFrame.OUTPUTTABCOLOR,
-				mf.getScreenWidth(), mf.getStatePanelSize());
+				getScreenWidth(), getStatePanelSize());
 		panel.add(outputParentPanel);
 		return panel;
 	}
@@ -78,23 +90,23 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	}
 
 	private void initButtons() {
-		exportFileButton = createButton("Export File", BUTTONWIDTH, BUTTONHEIGHT);
-		exportGraphButton = createButton("Export Graph", BUTTONWIDTH, BUTTONHEIGHT);
+		exportFileButton = createButton("Export File", BUTTONWIDTH,
+				BUTTONHEIGHT);
+		updateGraphButton = createButton("Update Graphs", BUTTONWIDTH,
+				BUTTONHEIGHT);
 	}
 
 	private void initButtonActionListeners() {
 		exportFileButton.addActionListener(this);
-		exportGraphButton.addActionListener(this);
+		updateGraphButton.addActionListener(this);
 	}
 
 	private void initAll() {
-		outputParentPanel = createPanel(MainFrame.OUTPUTTABCOLOR, 
-				mf.getScreenWidth(), mf.getStatePanelSize());
+		outputParentPanel = createPanel(MainFrame.OUTPUTTABCOLOR,
+				getScreenWidth(), getStatePanelSize());
 		outputParentPanel.setLayout(new GridBagLayout());
-		leftPanel.setPreferredSize(new Dimension(mf.getScreenWidth() / 2, 
-				mf.getStatePanelSize()));
-		rightPanel.setPreferredSize(new Dimension(mf.getScreenWidth() / 2, 
-				mf.getStatePanelSize()));
+		leftPanel.setPreferredSize(new Dimension(getScreenWidth() / 2, getStatePanelSize()));
+		rightPanel.setPreferredSize(new Dimension(getScreenWidth() / 2, getStatePanelSize()));
 		setLeftPanel();
 		setRightPanel();
 	}
@@ -102,7 +114,8 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	private void setLeftPanel() {
 		setTitle(leftPanel, "Graph Input:");
 		setGraphInputPanel();
-		leftPanel.add(imr.loadPanel(), setGrids(0, 2, new Insets(0, INSETS, 0, 0)));
+		leftPanel.add(imr.loadPanel(),
+				setGrids(0, 2, new Insets(0, INSETS, 0, 0)));
 		setButtonArea(exportFileButton, leftPanel, THREE);
 		outputParentPanel.add(leftPanel, setGrids(0, 0));
 	}
@@ -114,32 +127,34 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	}
 
 	private void setGraphInputPanel() {
-		JPanel graphInputPanel = createEmptyWithGridBagLayoutPanel(MainFrame.CODETABCOLOR); 
-		//TODO change color
-		graphInputPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
-		leftPanel.add(graphInputPanel, setGrids(0, 1, new Insets(0, INSETS, INSETS, 0)));
+		graphInputInterface = new GraphInputInterface(panelWidth, panelHeight,
+				MainFrame.OUTPUTTABCOLOR);
+		leftPanel.add(graphInputInterface.loadPanel(),
+				setGrids(0, 1, new Insets(0, INSETS, INSETS, 0)));
 	}
-	
+
 	private void setButtonArea(JButton button, JPanel parent, int y) {
-		JPanel buttonArea = createPanel(MainFrame.OUTPUTTABCOLOR, panelWidth, FIELDCORRECTION);
+		JPanel buttonArea = createPanel(MainFrame.OUTPUTTABCOLOR, panelWidth,
+				FIELDCORRECTION);
 		buttonArea.add(button, setGrids(0, 0));
 		parent.add(buttonArea, setGrids(0, y));
 	}
-
 
 	private void setRightPanel() {
 		setTitle(rightPanel, "Graph(s):");
 		setGraphArea();
 		outputParentPanel.add(rightPanel, setGrids(1, 0));
-		setButtonArea(exportGraphButton, rightPanel, 2);
+		setButtonArea(updateGraphButton, rightPanel, 2);
 	}
 
 	private void setGraphArea() {
-		JPanel graphArea = createEmptyWithGridBagLayoutPanel(MainFrame.CODETABCOLOR); 
-		//TODO change color
-		graphArea.setPreferredSize(new Dimension(panelWidth, mf.getStatePanelSize()
-				/ HUNDERTPROCENT * CORRECION - FIELDCORRECTION - INSETS));
-		rightPanel.add(graphArea, setGrids(0, 1, new Insets(0, INSETS, 0, INSETS)));
+		int height = getStatePanelSize() / HUNDERTPROCENT * CORRECION - FIELDCORRECTION - INSETS;
+		graphArea = createContainerWithGivenSizePanel(panelWidth - 2 * INSETS, height - INSETS);
+		scrollPane = makeScrollPaneForContainerPanel(graphArea, panelWidth, height);
+		graphArea.add(graphController.getBoxPlot(), setGrids(0, 0));
+		graphArea.add(graphController.getFerquencyBar(), setGrids(0, 1));
+		rightPanel.add(scrollPane,
+				setGrids(0, 1, new Insets(0, INSETS, 0, INSETS)));
 	}
 
 	/**
@@ -148,10 +163,12 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	public JButton getFileButton() {
 		return exportFileButton;
 	}
-	
+
 	/**
-	 * @param button the button where the pop up is for.
-	 * @param filter which file type will be saved.
+	 * @param button
+	 *            the button where the pop up is for.
+	 * @param filter
+	 *            which file type will be saved.
 	 * @return the anwser of the filechooser.
 	 */
 	public int saveFileChooser(JButton button, String filter) {
@@ -161,7 +178,8 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 		FileNameExtensionFilter extenstionFilter = new FileNameExtensionFilter(
 				filtername, filter);
 		savePopup.setFileFilter(extenstionFilter);
-		savePopup.setPreferredSize(new Dimension(SELECTERWIDTH, SELECTERHEIGHT));
+		savePopup
+				.setPreferredSize(new Dimension(SELECTERWIDTH, SELECTERHEIGHT));
 		savePopup.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		Action details = savePopup.getActionMap().get("viewTypeDetails");
 		details.actionPerformed(null);
@@ -171,9 +189,23 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == getFileButton()) {
-			saveFileChooser(getFileButton(), "txt");
-		} if (e.getSource() == exportGraphButton) {
-			saveFileChooser(exportGraphButton, "jpg");
+			try {
+				fileChooser(saveFileChooser(getFileButton(), "txt"));
+			} catch (SQLException | IOException e1) {
+				JOptionPane.showMessageDialog(null,
+						"Something went wrong exporting your file!!",
+						"Export File Error", JOptionPane.WARNING_MESSAGE);
+			}
+		}
+		if (e.getSource() == updateGraphButton) {
+			try {
+				graphController.updateGraphs(graphInputInterface);
+				scrollPane.revalidate();
+			} catch (NullPointerException excep) {
+				JOptionPane.showMessageDialog(null,
+						"Your input fields aren't filled in correctly!!",
+						"Graph Error", JOptionPane.WARNING_MESSAGE);
+			}
 		}
 	}
 
@@ -189,9 +221,11 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	 */
 	public void fileChooser(int rVal) throws SQLException, IOException {
 		if (rVal == JFileChooser.APPROVE_OPTION) {
-			 WriteToTXT write = new WriteToTXT(savePopup.getSelectedFile().getName(),
-					 savePopup.getCurrentDirectory().toString());
-			 write.toString(); //TODO
+			WriteToTXT write = new WriteToTXT(savePopup.getSelectedFile()
+					.getAbsolutePath());
+			write.writeToFile(
+					SingletonInterpreter.getInterpreter().getChunks(),
+					SingletonDb.getDb());
 		}
 	}
 }

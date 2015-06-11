@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import context.healthinformatics.interfacecomponents.Observable;
@@ -210,6 +211,33 @@ public class Db implements Observer {
 			throw new SQLException(whereClause);
 		}
 		return rs;
+	}
+	
+	/**
+	 * Selects date with resultid.
+	 * @param id result id integer.
+	 * @return Date in date column.
+	 * @throws SQLException id could not be found.
+	 */
+	public Date selectDate(int id) throws SQLException {
+		ResultSet rs = null;
+		Date datum = null;
+		try {
+			stmt = conn.createStatement();
+			String sql = SqlBuilder.createSelectWithOneColumn(mergeTable,
+					"date", mergeTable + "id = " + id);
+			rs = stmt.executeQuery(sql);
+			while (rs.next()) {
+				datum = rs.getDate("date");
+			}
+		} catch (SQLException e) {
+			throw new SQLException("Error with recovering date with resultid.");
+		} finally {
+			if (rs != null) {
+				rs.close();
+			}
+		}
+		return datum;
 	}
 
 	/**

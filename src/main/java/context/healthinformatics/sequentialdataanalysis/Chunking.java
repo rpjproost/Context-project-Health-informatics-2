@@ -1,7 +1,13 @@
 package context.healthinformatics.sequentialdataanalysis;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
+import context.healthinformatics.analyse.Query;
+import context.healthinformatics.database.SingletonDb;
 
 /**
  * Class for chunking a list of chunks.
@@ -11,6 +17,7 @@ public class Chunking extends Task {
 
 	private Chunk temp;
 	private String code = "";
+	private int indexcheck = 0;
 	/**
 	 * Constructor for chunking.
 	 */
@@ -38,7 +45,7 @@ public class Chunking extends Task {
 		ArrayList<Integer> ints = getLinesFromData(whereClause);
 		for (int i = 0; i < chunks.size(); i++) {
 			Chunk curChunk = chunks.get(i);
-			addChunkOnEqualsData(ints, curChunk, res);
+			addChunkOnEqualsData(ints, curChunk, res, indexcheck);
 		}
 		addLastElementToChunks(res);
 		return res;
@@ -49,11 +56,13 @@ public class Chunking extends Task {
 	 * @param ints the arraylist with integers with correct data.
 	 * @param curChunk Chunk that currently is being checked.
 	 * @param res arraylist result.
+	 * @param index for list to check
 	 */
 	public void addChunkOnEqualsData(ArrayList<Integer> ints, Chunk curChunk,
-			ArrayList<Chunk> res) {
-		if (ints.contains(curChunk.getLine())) {
+			ArrayList<Chunk> res, int index) {
+		if (indexcheck < ints.size() && curChunk.getLine() == ints.get(indexcheck)) {
 			temp.setChunk(curChunk);
+			indexcheck++;
 		}
 		else {
 			addChunkToRes(res, curChunk);
@@ -204,5 +213,101 @@ public class Chunking extends Task {
 	protected ArrayList<Chunk> constraintOnLine(String line) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public void run(Query query) throws Exception {
+		try {
+			super.run(query);
+		} catch (Exception e) {
+			boolean check = isDate(query.part());
+			if (check) {
+				setResult(chunkOnDate(query));
+			}
+			else {
+				throw new Exception(e.getMessage() + "/date");
+			}
+		}
+	}
+	
+	private boolean isDate(String s) {
+		return "date".equals(s);
+	}
+	
+	/**
+	 * Chunks the data repeatedly on dates.
+	 * @param q Query to run.
+	 * @return The output of the query.
+	 * @throws Exception throws an exception if chunking on date goes wrong.
+	 */
+	protected ArrayList<Chunk> chunkOnDate(Query q) throws Exception {
+		ArrayList<Chunk> res = new ArrayList<Chunk>();
+		int days = Integer.parseInt(q.next());
+		ArrayList<Integer> sizes = intsOnDate(getStartDate(), days);
+		int chunkIndex = 0;
+		for (int i = 0; i < sizes.size(); i++) {
+			Chunk temp = new Chunk();
+			for (int k = 0; k < sizes.get(i); k++) {
+				temp.setChunk(getChunks().get(chunkIndex));
+				chunkIndex++;
+			}
+			res.add(temp);
+		}
+		return res;
+	}
+	
+	private Date getStartDate() throws SQLException {
+		Chunk chunk = getChunks().get(0);
+		while (chunk.hasChild()) {
+			chunk = chunk.getChildren().get(0);
+		}
+		return SingletonDb.getDb().selectDate(chunk.getLine());
+	}
+
+	/**
+	 * gives a list of integers with the number of chunks between the dates.
+	 * @param start Start date of the method
+	 * @param days number of days to chunk.
+	 * @return list with the sizes of the chunks.
+	 */
+	protected ArrayList<Integer> intsOnDate(Date start, int days) {
+		ArrayList<Integer> res = new ArrayList<Integer>();
+		int size = 0;
+		Calendar c = Calendar.getInstance();
+		Date startDate = start;
+		Date endDate = null;
+		int numChunks;
+		c.setTime(start);
+		while (size < getChunks().size()) {
+			c.add(Calendar.DAY_OF_MONTH, days);
+			endDate = c.getTime();
+			numChunks  = getPeriod(startDate, endDate);
+			if (numChunks > 0) {
+				res.add(numChunks);
+			}
+			c.add(Calendar.DAY_OF_MONTH, 1);
+			startDate = c.getTime();
+			size += numChunks;
+		}
+		return res;
+	}
+	
+	/**
+	 * returns the number of chunks between the given dates.
+	 * @param start start date;
+	 * @param end end date;
+	 * @return the number of chunks between that.
+	 */
+	protected int getPeriod(Date start, Date end) {
+		String s = "date BETWEEN '" + convertDate(start) + "' AND '" + convertDate(end) + "'";
+		try {
+			return getLinesFromData(s).size();
+		} catch (SQLException e) {
+			return 0;
+		}
+	}
+	
+	private String convertDate(Date date) {
+		return new SimpleDateFormat("yyyy-MM-dd").format(date);
 	}
 }
