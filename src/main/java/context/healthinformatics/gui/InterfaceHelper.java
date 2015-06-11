@@ -8,8 +8,10 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -17,6 +19,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+
+import context.healthinformatics.database.SingletonDb;
+import context.healthinformatics.parser.Column;
 
 /**
  * Class that defines the most methods that are needed in several interface
@@ -36,6 +41,9 @@ public class InterfaceHelper extends JPanel {
 	protected static final int CORRECION = 98;
 	protected static final int INSETS = 10;
 	protected static final int FIELDCORRECTION = 130;
+	private static final int SUBTITLEFONT = 20;
+	
+	protected static final int FOUR = 4;
 
 	/**
 	 * @return JPanel with attributes specified by the arguments.
@@ -394,5 +402,62 @@ public class InterfaceHelper extends JPanel {
 		JPanel panel = createEmptyWithGridBagLayoutPanel();
 		panel.setBackground(color);
 		return panel;
+	}
+	
+	/**
+	 * Creates a check box.
+	 * @param title the title of the check box.
+	 * @param color the color of the background of the check box.
+	 * @return a check box.
+	 */
+	public JCheckBox createCheckBox(String title, Color color) {
+		JCheckBox checkbox = new JCheckBox(title);
+		checkbox.setBackground(color);
+		checkbox.setFont(new Font("Arial", Font.PLAIN, TEXTSIZE));
+		return checkbox;
+	}
+	
+	/**
+	 * @param titleName the name of that will be shown on the screen.
+	 * @param width the width of the label with the title.
+	 * @param height the height of the label with the title.
+	 * @return a subtitle in italic with a size of 20.
+	 */
+	protected JLabel createSubTitle(String titleName, int width, int height) {
+		JLabel title = new JLabel(titleName);
+		title.setFont(new Font("Arial", Font.ITALIC, SUBTITLEFONT));
+		title.setPreferredSize(new Dimension(width - 2 * INSETS, height));
+		return title;
+	}
+	
+	/**
+	 * Checks for a check-box if its selected or not.
+	 * On this basis it will determined whether the panel is visible or not.
+	 * @param checkbox the check-box that will be checked.
+	 * @param panel the panel that must be set visible or not.
+	 */
+	public void checkVisibility(JCheckBox checkbox, JPanel panel) { 
+		if (checkbox.isSelected()) {
+			panel.setVisible(true);
+		} else {
+			panel.setVisible(false);
+		}
+	}
+	
+	/**
+	 * @return the column names of the database.
+	 */
+	public String[] getColumnNames() {
+		String[] columnNames;
+		ArrayList<Column> columns = SingletonDb.getDb().getColumns();
+		if (columns != null) {
+			columnNames = new String[columns.size()];
+			for (int i = 0; i < columns.size(); i++) {
+				columnNames[i] = columns.get(i).getColumnName();
+			}
+		} else {
+			columnNames = new String[0];
+		}
+		return columnNames;
 	}
 }
