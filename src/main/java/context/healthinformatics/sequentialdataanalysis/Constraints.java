@@ -220,6 +220,7 @@ public class Constraints extends Task {
 		res.add(curChunk);
 		kids.add(kid);
 		indexcheck++;
+		indexres++;
 	}
 	
 	@Override
