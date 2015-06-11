@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 
 import context.healthinformatics.graphs.graphspanel.BoxPlotPanel;
+import context.healthinformatics.graphs.graphspanel.FrequencyBarPanel;
 
 /**
  * Controls the graphs.
@@ -13,12 +14,19 @@ public class GraphController {
 
 	private BoxPlot boxPlot;
 	private JPanel boxPlotGraph;
+	private FrequencyBar frequencyBar;
+	private JPanel frequencyBarGraph;
 
 	/**
 	 * Constructs for each graph a class.
 	 */
 	public GraphController() {
 		boxPlot = new BoxPlot();
+		frequencyBar = new FrequencyBar();
+		boxPlotGraph = boxPlot.getPanel();
+		frequencyBarGraph = frequencyBar.getPanel();
+		boxPlotGraph.setVisible(false);
+		frequencyBarGraph.setVisible(false);
 	}
 
 	/**
@@ -30,6 +38,11 @@ public class GraphController {
 			plotBoxPlot(graphInput.getBoxPlotPanel());
 		} else {
 			boxPlotGraph.setVisible(false);
+		}
+		if (graphInput.isSelected(graphInput.getFrequencyCheckBox())) {
+			plotFrequencyBar(graphInput.getFrequencyPanel());
+		} else {
+			frequencyBarGraph.setVisible(false);
 		}
 	}
 
@@ -57,6 +70,23 @@ public class GraphController {
 	 */
 	public JPanel getBoxPlot() {
 		return boxPlotGraph;
+	}
+	
+	/**
+	 * Creates a frequency bar.
+	 * @param frequencyPanel the panel with all data.
+	 */
+	private void plotFrequencyBar(FrequencyBarPanel frequencyPanel) {
+		frequencyBar.createFrequencyBar(frequencyPanel.getGraphContainer().getGraphTitleValue());
+		frequencyBarGraph = frequencyBar.getPanel();
+		frequencyBarGraph.setVisible(true);
+	}
+
+	/**
+	 * @return the panel with the frequency bar.
+	 */
+	public JPanel getFerquencyBar() {
+		return frequencyBarGraph;
 	}
 
 }
