@@ -50,7 +50,6 @@ public abstract class Task {
 			runComment(query);
 		}
 		else if (isLine(query.part())) {
-			System.out.println("in the run");
 			runLine(query);
 		}
 		else {
@@ -258,7 +257,6 @@ public abstract class Task {
 	protected void runLine(Query query) {
 		query.inc();
 		if (isEquals(query.part())) {
-			System.out.println(query.part());
 			setResult(constraintOnLine(query.next()));
 		}
 	}
