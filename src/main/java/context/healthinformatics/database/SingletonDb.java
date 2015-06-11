@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.logging.Logger;
 
 /** Class for setting up database.
  * 
@@ -15,6 +16,7 @@ public final class SingletonDb {
 	private static Db data;
 	private static String path = "C:/db/";
 	private static String dbName = "analyze";
+	private static Logger log = Logger.getLogger(SingletonDb.class.getName());
 	private static HashMap<String , Db> databases = new HashMap<String, Db>();
 
 	/**
@@ -59,6 +61,7 @@ public final class SingletonDb {
 	 * @param data database to drop from.
 	 */
 	public static void dropAll(Db data) {
+		boolean ignore = false;
 		if (data == null) {
 			return;
 		}
@@ -67,14 +70,25 @@ public final class SingletonDb {
 			try {
 				mt.dropView("workspace");
 			} catch (SQLException e) {
-			//do nothing for tests.
+				ignore = true;
 			}
 		}
 		try {
+		dropTables();
+		} catch (SQLException e) {
+			ignore = true;
+		}
+		if (ignore) {
+			log.info("Exceptions where ignored in dropAll()");
+		}
+	}
+	
+	private static void dropTables() throws SQLException {
+		boolean ignore = false;
+		try {
 			data.dropTable("result");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			//e.printStackTrace();
+			ignore = true;
 		}
 		Set<String> tables = new TreeSet<String>();
 		tables.addAll(data.getTables().keySet());
@@ -82,9 +96,11 @@ public final class SingletonDb {
 			try {
 				data.dropTable(s);
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				//e.printStackTrace();
+				ignore = true;
 			}
+		}
+		if (ignore) {
+			throw new SQLException("Exceptions where ignored.");
 		}
 	}
 
