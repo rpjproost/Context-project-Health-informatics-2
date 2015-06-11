@@ -120,6 +120,10 @@ public final class SingletonDb {
 		return dbName;
 	}
 
+	/**
+	 * Update dbName for new project.
+	 * @param param dbName.
+	 */
 	public static void update(String param) {
 		dbName = param;
 		data = null;

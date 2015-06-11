@@ -1,9 +1,6 @@
 package context.healthinformatics.database;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -12,8 +9,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import org.apache.derby.tools.ij;
 
 import context.healthinformatics.interfacecomponents.Observable;
 import context.healthinformatics.interfacecomponents.Observer;
@@ -79,12 +74,12 @@ public class Db implements Observer {
 		return res;
 	}
 
-	public void showTables() throws Exception {
-		String sqlIn = "SHOW TABLES;";
-		InputStream stream = new ByteArrayInputStream(sqlIn.getBytes(StandardCharsets.UTF_8));
-		ij.runScript(conn,stream,StandardCharsets.UTF_8.name(), System.out,"UTF-8");
-		stream.close();
-	}
+//	public void showTables() throws Exception {
+//		String sqlIn = "SHOW TABLES;";
+//		InputStream stream = new ByteArrayInputStream(sqlIn.getBytes(StandardCharsets.UTF_8));
+//		ij.runScript(conn,stream,StandardCharsets.UTF_8.name(), System.out,"UTF-8");
+//		stream.close();
+//	}
 
 	/**
 	 * Creates new table.
