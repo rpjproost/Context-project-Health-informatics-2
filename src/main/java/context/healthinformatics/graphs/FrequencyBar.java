@@ -36,6 +36,10 @@ public class FrequencyBar extends InterfaceHelper {
 	private static final int BOX_PLOT_HEIGHT = 350;
 	private int width;
 
+	private static final double ITEM_MARGIN = 0.10;
+
+	private static final int FONT_SIZE = 11;
+
 	/**
 	 * Constructor of FrequencyBar initialises the panels.
 	 */
@@ -148,7 +152,7 @@ public class FrequencyBar extends InterfaceHelper {
 		// disable bar outlines...
 		final BarRenderer renderer = (BarRenderer) plot.getRenderer();
 		renderer.setDrawBarOutline(false);
-		renderer.setItemMargin(0.10);
+		renderer.setItemMargin(ITEM_MARGIN);
 
 		// set up gradient paints for series...
 		final GradientPaint gp0 = new GradientPaint(0.0f, 0.0f, Color.blue,
@@ -165,10 +169,9 @@ public class FrequencyBar extends InterfaceHelper {
 	private IntervalMarker createIntervalMarker() {
 		final IntervalMarker target = new IntervalMarker(4.5, 7.5);
 		target.setLabel("Target Range");
-		target.setLabelFont(new Font("SansSerif", Font.ITALIC, 11));
+		target.setLabelFont(new Font("SansSerif", Font.ITALIC, FONT_SIZE));
 		target.setLabelAnchor(RectangleAnchor.LEFT);
 		target.setLabelTextAnchor(TextAnchor.CENTER_LEFT);
-		target.setPaint(new Color(222, 222, 255, 128));
 		return target;
 	}
 }
