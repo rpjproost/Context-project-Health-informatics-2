@@ -1,6 +1,7 @@
 package context.healthinformatics.sequentialdataanalysis;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -221,7 +222,7 @@ public class Chunking extends Task {
 		} catch (Exception e) {
 			boolean check = isDate(query.part());
 			if (check) {
-				chunkOnDate(query);
+				setResult(chunkOnDate(query));
 			}
 			else {
 				throw new Exception(e.getMessage() + "/date");
@@ -243,14 +244,14 @@ public class Chunking extends Task {
 		ArrayList<Chunk> res = new ArrayList<Chunk>();
 		int days = Integer.parseInt(q.next());
 		ArrayList<Integer> sizes = intsOnDate(getStartDate(), days);
-		int counter = 0;
-		for (Chunk c : getChunks()) {
+		int chunkIndex = 0;
+		for (int i = 0; i < sizes.size(); i++) {
 			Chunk temp = new Chunk();
-			for (int i = 0; i < sizes.get(counter); i++) {
-				temp.setChunk(c);
+			for (int k = 0; k < sizes.get(i); k++) {
+				temp.setChunk(getChunks().get(chunkIndex));
+				chunkIndex++;
 			}
 			res.add(temp);
-			counter++;
 		}
 		return res;
 	}
@@ -288,6 +289,7 @@ public class Chunking extends Task {
 			startDate = c.getTime();
 			size += numChunks;
 		}
+		System.out.println("stopped");
 		return res;
 	}
 	
@@ -298,12 +300,15 @@ public class Chunking extends Task {
 	 * @return the number of chunks between that.
 	 */
 	protected int getPeriod(Date start, Date end) {
-		String s = "date BETWEEN '" + start.toString() + "' AND '" + end.toString() + "'";
-		System.out.println(s);
+		String s = "date BETWEEN '" + convertDate(start) + "' AND '" + convertDate(end) + "'";
 		try {
 			return getLinesFromData(s).size();
 		} catch (SQLException e) {
 			return 0;
 		}
+	}
+	
+	private String convertDate(Date date) {
+		return new SimpleDateFormat("yyyy-MM-dd").format(date);
 	}
 }

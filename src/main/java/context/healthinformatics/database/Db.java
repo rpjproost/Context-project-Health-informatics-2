@@ -225,7 +225,7 @@ public class Db implements Observer {
 		try {
 			stmt = conn.createStatement();
 			String sql = SqlBuilder.createSelectWithOneColumn(mergeTable,
-					"date", mergeTable + " = " + id);
+					"date", mergeTable + "id = " + id);
 			rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				datum = rs.getDate("date");
