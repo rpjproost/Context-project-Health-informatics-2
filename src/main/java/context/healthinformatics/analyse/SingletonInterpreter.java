@@ -36,7 +36,7 @@ public final class SingletonInterpreter {
 	}
 
 	private static synchronized Interpreter createInterpreter(String name) {
-		if (interpreters.get(name) != null) {
+		if (!interpreters.containsKey(name)) {
 			return new Interpreter(name);
 		}
 		return interpreters.get(name);
