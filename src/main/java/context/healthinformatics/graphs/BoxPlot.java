@@ -1,7 +1,11 @@
 package context.healthinformatics.graphs;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -14,6 +18,9 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.CategoryPlot;
+import org.jfree.chart.plot.Plot;
+import org.jfree.chart.plot.PlotRenderingInfo;
+import org.jfree.chart.plot.PlotState;
 import org.jfree.chart.renderer.category.BoxAndWhiskerRenderer;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 
@@ -34,16 +41,21 @@ public class BoxPlot extends InterfaceHelper {
 	private JPanel mainPanel;
 	private static final int BOX_PLOT_PANEL_HEIGHT = 400;
 	private static final int BOX_PLOT_HEIGHT = 350;
+	private static final int PLOTSMEANINVISIBLE = 5;
 
 	private int width;
 
 	private DefaultBoxAndWhiskerCategoryDataset dataset;
+	private int plotsize;
+	private ChartPanel chartPanelTest;
 
 	/**
 	 * Creates a new box plot.
 	 */
 	public BoxPlot() {
+		plotsize = 0;
 		width = getScreenWidth() / 2 - FOUR * INSETS;
+		chartPanelTest = new ChartPanel(new JFreeChart(new CategoryPlot()));
 		chartContainerPanel = createEmptyWithGridBagLayoutPanel();
 		chartContainerPanel.setPreferredSize(new Dimension(width,
 				BOX_PLOT_HEIGHT));
@@ -74,16 +86,18 @@ public class BoxPlot extends InterfaceHelper {
 		yAxis.setAutoRangeIncludesZero(false);
 		final BoxAndWhiskerRenderer renderer = new BoxAndWhiskerRenderer();
 		renderer.setFillBox(false);
+		if (plotsize < PLOTSMEANINVISIBLE) {
+			renderer.setMeanVisible(false);
+		}
 		final CategoryPlot plot = new CategoryPlot(dataset, xAxis, yAxis,
 				renderer);
-
-		final JFreeChart chart = new JFreeChart(title, new Font("SansSerif",
-				Font.BOLD, 14), plot, true);
+		final JFreeChart chart = new JFreeChart("Box Plot: " + title, new Font(
+				"SansSerif", Font.BOLD, 14), plot, true);
 		mainPanel.remove(chartContainerPanel);
-		chartContainerPanel = createEmptyWithGridBagLayoutPanel();
+		chartContainerPanel.remove(chartPanelTest);
 		chartContainerPanel.setPreferredSize(new Dimension(width,
 				BOX_PLOT_HEIGHT));
-		ChartPanel chartPanelTest = new ChartPanel(chart);
+		chartPanelTest = new ChartPanel(chart);
 		chartPanelTest.setPreferredSize(new Dimension(width, BOX_PLOT_HEIGHT));
 		chartContainerPanel.add(chartPanelTest, setGrids(0, 0));
 
@@ -110,7 +124,7 @@ public class BoxPlot extends InterfaceHelper {
 			}
 			dataset.add(dataList, columns.get(j), " Type " + j);
 		}
-//		createBoxPlot("Boxplot with: " + buildTitle.toString());
+		plotsize = 1;
 	}
 
 	/**
@@ -132,7 +146,7 @@ public class BoxPlot extends InterfaceHelper {
 				dataset.add(dataList, columns.get(j), " Type " + i);
 			}
 		}
-//		createBoxPlot("Boxplot with: " + buildTitle.toString());
+		plotsize = chunks.size();
 	}
 
 	/**
@@ -145,7 +159,8 @@ public class BoxPlot extends InterfaceHelper {
 	 *            the column of the chunk we need
 	 * @return the values or values if the chunk has childs
 	 */
-	private ArrayList<Double> loopThroughChunks(Chunk currentChunk, String column) {
+	private ArrayList<Double> loopThroughChunks(Chunk currentChunk,
+			String column) {
 		ArrayList<Double> listOfValues = new ArrayList<Double>();
 
 		if (currentChunk.hasChild()) {
