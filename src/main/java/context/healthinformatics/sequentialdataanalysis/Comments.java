@@ -118,7 +118,8 @@ public class Comments extends Task {
 
 	@Override
 	protected ArrayList<Chunk> constraintOnLine(String line) {
-		// TODO Auto-generated method stub
-		return null;
+		int i = Integer.parseInt(line);
+		getChunks().get(i - 1).setComment(comment);
+		return getChunks();
 	}
 }
