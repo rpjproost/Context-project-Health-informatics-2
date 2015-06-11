@@ -46,12 +46,48 @@ public class Comparison extends Task {
 		ArrayList<Chunk> c = SingletonInterpreter.getInterpreter().getChunks();
 		query.inc();
 		setChunks(c);
+		
 		//handle second part
+		getCreaValuesAndDates();
+		ArrayList<String> advices = getAdvice();
+		// dates is now filled with unique dates.
+		// advices is as long as dates, and it has corresponding advices for that day.
 	}
 	
 	private ArrayList<String> getAdvice() throws SQLException {
-		ArrayList<String> list = determineCreatineStatus();
-		ArrayList<Date> uniqueDates = removeDuplicateDates();
+		ArrayList<String> statusList = determineCreatineStatus();
+		removeDuplicateDates();
+		ArrayList<String> result = new ArrayList<String>();
+		result.add("no advice");
+		for (int i = 1; i < statusList.size(); i++) {
+			String status = resolveStatus(statusList.get(i - 1), statusList.get(i));
+			result.add(status);
+		}
+		return result;
+	}
+	
+	private String resolveStatus(String s1, String s2) {
+		if (s1.equals("Reasonably Safe") &&  s1.equals("Reasonably Safe")) {
+			return "Do Nothing";
+		}
+		if (s1.equals("Reasonably Safe") &&  s1.equals("Somewhat Safe")) {
+			return "Repeat measurement tommorow";
+		}
+		if (s1.equals("Reasonably Safe") &&  s1.equals("Concerned")) {
+			return "Contact Hospital";
+		}
+		if (s1.equals("Somewhat Safe") &&  s1.equals("Safe")) {
+			return "Do Nothing";
+		}
+		if (s1.equals("Somewhat Safe") &&  s1.equals("Reasonably Safe")) {
+			return "Contact Hospital";
+		}
+		if (s1.equals("Concerned")) {
+			return "Follow doctors advice";
+		}
+		else {
+			return null;
+		}
 	}
 	
 	private ArrayList<String> determineCreatineStatus() throws SQLException {
@@ -74,7 +110,7 @@ public class Comparison extends Task {
 		return result;
 	}
 	
-	private ArrayList<Date> removeDuplicateDates() {
+	private void removeDuplicateDates() {
 		ArrayList<Date> list = new ArrayList<Date>();
 		Date d = dates.get(0);
 		list.add(d);
@@ -85,7 +121,7 @@ public class Comparison extends Task {
 				d = curDate;
 			}
 		}
-		return list;
+		dates = list;
 	}
 	
 	private String resolveBoundaries(String s1, String s2) {
