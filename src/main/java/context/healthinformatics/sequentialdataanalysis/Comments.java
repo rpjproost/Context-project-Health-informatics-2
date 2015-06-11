@@ -11,8 +11,9 @@ public class Comments extends Task {
 
 	private Logger log = Logger.getLogger(Comments.class.getName());
 	private String comment;
-	private ArrayList<Integer> changedLines;
+	private ArrayList<Chunk> changedChunks;
 	private ArrayList<String> oldComments;
+	private int indexcheck = 0;
 
 	/**
 	 * Constructor for comments without arguments.
@@ -20,15 +21,14 @@ public class Comments extends Task {
 	 */
 	public Comments(String c) {
 		comment = c;
-		changedLines = new ArrayList<Integer>();
+		changedChunks = new ArrayList<Chunk>();
 		oldComments = new ArrayList<String>();
 	}
-	
+
 	@Override
 	public ArrayList<Chunk> undo() {
-		for (int i = 0; i < changedLines.size(); i++) {
-			int index = changedLines.get(i);
-			getChunks().get(index).setCode(oldComments.get(i));
+		for (int i = 0; i < changedChunks.size(); i++) {
+			changedChunks.get(i).setComment(oldComments.get(i));
 		}
 		return getChunks();
 	}
@@ -50,7 +50,7 @@ public class Comments extends Task {
 					+ "The comment '" + comment + "' was not set.");
 		}
 	}
-	
+
 	/**
 	 * Method which sets the comment of all chunks in a list.
 	 * @param chunks list of chunks.
@@ -61,7 +61,7 @@ public class Comments extends Task {
 			chunk.setComment(comment);
 		}
 	}
-	
+
 	/**
 	 * Method which sets the comment for all chunks which have a certain comment.
 	 * @param code to be set, if the condition is met.
@@ -71,12 +71,12 @@ public class Comments extends Task {
 			Chunk c = getChunks().get(i);
 			if (c.getCode().equals(code)) {
 				oldComments.add(c.getComment());
-				changedLines.add(i);
+				changedChunks.add(c);
 				c.setComment(comment);
 			}
 		}
 	}
-	
+
 	/**
 	 * Method which replaces the comment for all chunks which have a certain comment.
 	 * @param previousComment the chunk has to have.
@@ -86,12 +86,12 @@ public class Comments extends Task {
 			Chunk c = getChunks().get(i);
 			if (c.getComment().equals(previousComment)) {
 				oldComments.add(c.getComment());
-				changedLines.add(i);
+				changedChunks.add(c);
 				c.setComment(comment);
 			}
 		}
 	}
-	
+
 	/**
 	 * Method that sets the comment for all chunks which
 	 * Fulfill the conditions of the whereClause.
@@ -100,11 +100,23 @@ public class Comments extends Task {
 	 */
 	public void setCommentOnData(String whereClause) throws SQLException {
 		ArrayList<Integer> list = getLinesFromData(whereClause);
-		for (Integer i : list) {
-			changedLines.add(i);
-			String oldComment = getChunkByLine(i, getChunks()).getComment();
-			oldComments.add(oldComment);
-			setCommentByLine(i, comment);
+		setCommentOnChild(getChunks(), list);
+		indexcheck = 0;
+	}
+
+	private void setCommentOnChild(ArrayList<Chunk> childs, ArrayList<Integer> list) {
+		for (int i = 0; i < childs.size(); i++) {
+			Chunk temp = childs.get(i);
+			if (indexcheck < list.size() && temp.getLine() == list.get(indexcheck)) {
+				oldComments.add(temp.getComment());
+				changedChunks.add(temp);
+				temp.setComment(comment);
+				indexcheck++;
+			}
+			else if (temp.hasChild()) {
+				setCommentOnChild(temp.getChildren(), list);
+			}
+
 		}
 	}
 
@@ -135,7 +147,7 @@ public class Comments extends Task {
 	@Override
 	protected ArrayList<Chunk> constraintOnLine(String line) {
 		int i = Integer.parseInt(line);
-		changedLines.add(i - 1);
+		changedChunks.add(getChunks().get(i - 1));
 		oldComments.add(getChunks().get(i - 1).getComment());
 		getChunks().get(i - 1).setComment(comment);
 		return getChunks();
