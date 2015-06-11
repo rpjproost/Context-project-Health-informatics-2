@@ -2,6 +2,7 @@ package context.healthinformatics.analyse;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.Stack;
 
@@ -152,5 +153,25 @@ public class Interpreter implements Observer {
 	@Override
 	public void observe(Observable o) {
 		o.subscribe(this);
+	}
+	
+	/**
+	 * counts all the codes from the last chunkList.
+	 * @return  a Hashmap with codes as keys, and values as ints.
+	 */
+	public HashMap<String, Integer> countCodes() {
+		HashMap<String, Integer> res = new HashMap<String, Integer>();
+		String code;
+		for (Chunk c : getChunks()) {
+			code = c.getCode();
+			if (code != null) {
+				if (res.containsKey(code)) {
+					res.put(code, res.get(code) + 1);
+				} else {
+					res.put(code, 1);
+				}
+			}
+		}
+		return res;
 	}
 }
