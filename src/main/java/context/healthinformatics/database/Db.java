@@ -232,6 +232,10 @@ public class Db implements Observer {
 			}
 		} catch (SQLException e) {
 			throw new SQLException("Error with recovering date with resultid.");
+		} finally {
+			if (rs != null) {
+				rs.close();
+			}
 		}
 		return datum;
 	}
