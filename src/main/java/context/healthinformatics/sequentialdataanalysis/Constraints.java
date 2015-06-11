@@ -112,8 +112,6 @@ public class Constraints extends Task {
 		return res;
 	}
 
-
-
 	/**
 	 * Get the column name.
 	 * 
@@ -122,7 +120,19 @@ public class Constraints extends Task {
 	public String getColumnName() {
 		return columnName;
 	}
-
+	
+	/**
+	 * Method which returns the chunk at line.
+	 * -1 because the list starts at 1 when we show it to the user.
+	 * @param line in the intermediate result.
+	 * @return list with one chunk.
+	 */
+	public ArrayList<Chunk> getChunksByLine(String line) {
+		int i = Integer.parseInt(line);
+		ArrayList<Chunk> list = new ArrayList<Chunk>();
+		list.add(getChunks().get(i - 1));
+		return list;
+	}
 
 	/**
 	 * Checks current arraylist on constraint on data.
@@ -199,7 +209,6 @@ public class Constraints extends Task {
 	@Override
 	public ArrayList<Chunk> undo() {
 		return oldList;
-		
 	}
 
 	@Override
@@ -215,5 +224,10 @@ public class Constraints extends Task {
 	@Override
 	protected ArrayList<Chunk> constraintOnContainsComment(String comment) {
 		return containsComment(comment, getChunks(), new ArrayList<Chunk>());
+	}
+
+	@Override
+	protected ArrayList<Chunk> constraintOnLine(String line) {
+		return getChunksByLine(line);
 	}
 }

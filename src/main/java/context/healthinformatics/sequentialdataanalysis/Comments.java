@@ -115,4 +115,12 @@ public class Comments extends Task {
 	protected ArrayList<Chunk> constraintOnContainsComment(String comment) {
 		return null;
 	}
+
+	@Override
+	protected ArrayList<Chunk> constraintOnLine(String line) {
+		int i = Integer.parseInt(line);
+		System.out.println(i);
+		getChunks().get(i - 1).setComment(comment);
+		return getChunks();
+	}
 }

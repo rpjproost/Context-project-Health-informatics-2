@@ -129,4 +129,11 @@ public class Codes extends Task {
 	protected ArrayList<Chunk> constraintOnContainsComment(String comment) {
 		return getChunks();
 	}
+
+	@Override
+	protected ArrayList<Chunk> constraintOnLine(String line) {
+		int i = Integer.parseInt(line);
+		getChunks().get(i - 1).setCode(code);
+		return getChunks();
+	}
 }

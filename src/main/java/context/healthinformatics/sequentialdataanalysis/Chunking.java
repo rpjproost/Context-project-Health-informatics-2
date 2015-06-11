@@ -199,4 +199,10 @@ public class Chunking extends Task {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	protected ArrayList<Chunk> constraintOnLine(String line) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

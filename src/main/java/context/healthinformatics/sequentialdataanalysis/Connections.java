@@ -76,7 +76,6 @@ public class Connections extends Task {
 		}
 		return list;
 	}
-	
 
 	/**
 	 * Method which gives a list of indices of all chunks which have comment : comment.
@@ -119,6 +118,11 @@ public class Connections extends Task {
 
 	@Override
 	protected ArrayList<Chunk> constraintOnContainsComment(String comment) {
+		return null;
+	}
+	
+	@Override
+	protected ArrayList<Chunk> constraintOnLine(String line) {
 		return null;
 	}
 	
@@ -165,14 +169,79 @@ public class Connections extends Task {
 		parseSecondCondition(query, originList, destinationList);
 	}
 	
+	/**
+	 * Executes constraint on equals line number.
+	 * -1 because the list starts at 1 when we show it to the user.
+	 * @param query interpreter query.
+	 */
+	@Override
+	protected void runLine(Query query) {
+		query.inc();
+		int i = Integer.parseInt(query.next());
+		ArrayList<Integer> originList = new ArrayList<Integer>();
+		originList.add(i - 1);
+		ArrayList<Integer> destinationList = new ArrayList<Integer>();
+		parseSecondCondition(query, originList, destinationList);
+	}
+	
+	/**
+	 * Method which handles the second part of the query.
+	 * @param query
+	 * @param originList
+	 * @param destinationList
+	 */
 	private void parseSecondCondition(Query query, ArrayList<Integer> originList,
 			ArrayList<Integer> destinationList) {
 		query.inc(2);
+		handleSecondComment(query, originList, destinationList);
+		handleSecondData(query, originList, destinationList);
+		handleSecondCode(query, originList, destinationList);
+		if (isLine(query.part())) {
+			query.inc();
+			int i = Integer.parseInt(query.next());
+			destinationList.add(i - 1);
+			connectListsOfChunkIndices(originList, destinationList);
+		}
+	}
+	
+	/**
+	 * Method which handles the second half of the query if it starts with comment.
+	 * @param query
+	 * @param originList
+	 * @param destinationList
+	 */
+	private void handleSecondComment(Query query, ArrayList<Integer> originList,
+			ArrayList<Integer> destinationList) {
 		if (isComment(query.part())) {
 			query.inc();
 			destinationList = getListOnComment(query.next());
 			connectListsOfChunkIndices(originList, destinationList);
 		}
+	}
+	
+	/**
+	 * Method which handles the second half of the query if it starts with code.
+	 * @param query
+	 * @param originList
+	 * @param destinationList
+	 */
+	private void handleSecondCode(Query query, ArrayList<Integer> originList,
+			ArrayList<Integer> destinationList) {
+		if (isCode(query.part())) {
+			query.inc();
+			destinationList = getListOnCode(query.next());
+			connectListsOfChunkIndices(originList, destinationList);
+		}
+	}
+	
+	/**
+	 * Method which handles the second half of the query if it starts with data.
+	 * @param query
+	 * @param originList
+	 * @param destinationList
+	 */
+	private void handleSecondData(Query query, ArrayList<Integer> originList,
+			ArrayList<Integer> destinationList) {
 		if (isData(query.part())) {
 			StringBuilder q = new StringBuilder();
 			while (query.hasNext()) {
@@ -184,11 +253,6 @@ public class Connections extends Task {
 			} catch (SQLException e) {
 				log.info("Could not retrieve lines from database");
 			}
-			connectListsOfChunkIndices(originList, destinationList);
-		}
-		if (isCode(query.part())) {
-			query.inc();
-			destinationList = getListOnCode(query.next());
 			connectListsOfChunkIndices(originList, destinationList);
 		}
 	}

@@ -42,6 +42,12 @@ public class Computations extends Task {
 	}
 	
 	@Override
+	protected ArrayList<Chunk> constraintOnLine(String line) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
 	public void run(Query args) {
 		ArrayList<Chunk> chunks = SingletonInterpreter.getInterpreter().getChunks();
 		setChunks(chunks);
@@ -59,5 +65,4 @@ public class Computations extends Task {
 		}
 		setResult(list);
 	}
-
 }
