@@ -4,8 +4,10 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
+import context.healthinformatics.analyse.SingletonInterpreter;
 import context.healthinformatics.graphs.graphspanel.BoxPlotPanel;
 import context.healthinformatics.graphs.graphspanel.FrequencyBarPanel;
+import context.healthinformatics.graphs.graphspanel.TransitionaMatrixPanel;
 
 /**
  * Controls the graphs.
@@ -16,6 +18,8 @@ public class GraphController {
 	private JPanel boxPlotGraph;
 	private FrequencyBar frequencyBar;
 	private JPanel frequencyBarGraph;
+	private StateTransitionMatrix stm;
+	private JPanel transitionPanel;
 
 	/**
 	 * Constructs for each graph a class.
@@ -23,10 +27,13 @@ public class GraphController {
 	public GraphController() {
 		boxPlot = new BoxPlot();
 		frequencyBar = new FrequencyBar();
+		stm = new StateTransitionMatrix();
 		boxPlotGraph = boxPlot.getPanel();
 		frequencyBarGraph = frequencyBar.getPanel();
+		transitionPanel = stm.getStateTransitionMatrix();
 		boxPlotGraph.setVisible(false);
 		frequencyBarGraph.setVisible(false);
+		transitionPanel.setVisible(false);
 	}
 
 	/**
@@ -43,6 +50,10 @@ public class GraphController {
 			plotFrequencyBar(graphInput.getFrequencyPanel());
 		} else {
 			frequencyBarGraph.setVisible(false);
+		} if (graphInput.isSelected(graphInput.getTransitionMatrixCheckBox())) {
+			plotTransitionMatrix(graphInput.getTransitionMatrixPanel());
+		} else {
+			transitionPanel.setVisible(false);
 		}
 	}
 
@@ -87,6 +98,21 @@ public class GraphController {
 	 */
 	public JPanel getFerquencyBar() {
 		return frequencyBarGraph;
+	}
+	
+	private void plotTransitionMatrix(TransitionaMatrixPanel transitionaMatrixPanel) 
+			throws NullPointerException {
+		stm.fillTransitionMatrix(SingletonInterpreter.getInterpreter().getChunks());
+		stm.initTable();
+		transitionPanel = stm.getStateTransitionMatrix();
+		transitionPanel.setVisible(true);
+	}
+	
+	/**
+	 * @return the panel with the transition matrix.
+	 */
+	public JPanel getTransitionMatrix() {
+		return transitionPanel;
 	}
 
 }

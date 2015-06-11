@@ -11,7 +11,7 @@ import javax.swing.JScrollPane;
 import context.healthinformatics.graphs.graphspanel.BoxPlotPanel;
 import context.healthinformatics.graphs.graphspanel.FrequencyBarPanel;
 import context.healthinformatics.graphs.graphspanel.HistogramPanel;
-import context.healthinformatics.graphs.graphspanel.StemAndLeafPanel;
+import context.healthinformatics.graphs.graphspanel.TransitionaMatrixPanel;
 import context.healthinformatics.gui.InterfaceHelper;
 import context.healthinformatics.gui.MainFrame;
 
@@ -28,11 +28,11 @@ public class GraphInputInterface extends InterfaceHelper {
 	private JPanel graphInputParentPanel;
 	private JCheckBox boxPlotCheckBox;
 	private JCheckBox frequencyCheckBox;
-	private JCheckBox stemAndLeafPlotCheckBox;
+	private JCheckBox transitionMatrixCheckBox;
 	private JCheckBox histogramCheckbox;
 	private BoxPlotPanel boxPlotPanel;
 	private FrequencyBarPanel frequencyPanel;
-	private StemAndLeafPanel stemAndLeafPlotPanel;
+	private TransitionaMatrixPanel transitionMatrixPanel;
 	private HistogramPanel histogramPanel;
 	private JPanel containerScrollPanel;
 	private JScrollPane scrollPane;
@@ -68,7 +68,8 @@ public class GraphInputInterface extends InterfaceHelper {
 	private void initCheckBoxes() {
 		boxPlotCheckBox = createCheckBox("Box Plot", MainFrame.OUTPUTTABCOLOR);
 		frequencyCheckBox = createCheckBox("Frequency Bar", MainFrame.OUTPUTTABCOLOR);
-		stemAndLeafPlotCheckBox = createCheckBox("Stem-and-Leaf Plot", MainFrame.OUTPUTTABCOLOR);
+		transitionMatrixCheckBox = createCheckBox("State-Transition Matrix", 
+				MainFrame.OUTPUTTABCOLOR);
 		histogramCheckbox = createCheckBox("Histogram", MainFrame.OUTPUTTABCOLOR);
 	}
 	
@@ -78,7 +79,8 @@ public class GraphInputInterface extends InterfaceHelper {
 	private void initPanels() {
 		boxPlotPanel = new BoxPlotPanel(boxPlotCheckBox, graphInputWidth);
 		frequencyPanel = new FrequencyBarPanel(frequencyCheckBox, graphInputWidth);
-		stemAndLeafPlotPanel = new StemAndLeafPanel(stemAndLeafPlotCheckBox, graphInputWidth);
+		transitionMatrixPanel = new TransitionaMatrixPanel(transitionMatrixCheckBox, 
+				graphInputWidth);
 		histogramPanel = new HistogramPanel(histogramCheckbox, graphInputWidth);
 	}
 	
@@ -100,7 +102,7 @@ public class GraphInputInterface extends InterfaceHelper {
 		containerScrollPanel.add(boxPlotPanel.loadPanel(), setGrids(0, 0));
 		containerScrollPanel.add(frequencyPanel.loadPanel(), 
 				setGrids(0, 1, new Insets(INSETS, 0, 0, 0)));
-		containerScrollPanel.add(stemAndLeafPlotPanel.loadPanel(), 
+		containerScrollPanel.add(transitionMatrixPanel.loadPanel(), 
 				setGrids(0, 2, new Insets(INSETS, 0, 0, 0)));
 		containerScrollPanel.add(histogramPanel.loadPanel(), 
 				setGrids(0, THREE, new Insets(INSETS, 0, 0, 0)));
@@ -124,7 +126,7 @@ public class GraphInputInterface extends InterfaceHelper {
 				new Insets(0, 0, 0, CHECKBOXESINSETS)));
 		checkboxes.add(frequencyCheckBox, setGrids(1, 0, 
 				new Insets(0, 0, 0, CHECKBOXESINSETS)));
-		checkboxes.add(stemAndLeafPlotCheckBox, setGrids(2, 0, 
+		checkboxes.add(transitionMatrixCheckBox, setGrids(2, 0, 
 				new Insets(0, 0, 0, CHECKBOXESINSETS)));
 		checkboxes.add(histogramCheckbox, setGrids(THREE, 0, 
 				new Insets(0, 0, 0, CHECKBOXESINSETS)));
@@ -138,7 +140,7 @@ public class GraphInputInterface extends InterfaceHelper {
 		boxPlotPanel.updateContainer();
 		frequencyPanel.updateContainer();
 		histogramPanel.updateContainer();
-		stemAndLeafPlotPanel.updateContainer();
+		transitionMatrixPanel.updateContainer();
 	}
 	
 	/**
@@ -158,8 +160,8 @@ public class GraphInputInterface extends InterfaceHelper {
 	/**
 	 * @return the stemAndLeafPlotPanel
 	 */
-	protected StemAndLeafPanel getStemAndLeafPlotPanel() {
-		return stemAndLeafPlotPanel;
+	protected TransitionaMatrixPanel getTransitionMatrixPanel() {
+		return transitionMatrixPanel;
 	}
 
 	/**
@@ -186,8 +188,8 @@ public class GraphInputInterface extends InterfaceHelper {
 	/**
 	 * @return the stemAndLeafPlotCheckBox
 	 */
-	protected JCheckBox getStemAndLeafPlotCheckBox() {
-		return stemAndLeafPlotCheckBox;
+	protected JCheckBox getTransitionMatrixCheckBox() {
+		return transitionMatrixCheckBox;
 	}
 
 	/**
