@@ -1,6 +1,7 @@
 package context.healthinformatics.database;
 
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -11,9 +12,10 @@ import java.util.TreeSet;
  */
 public final class SingletonDb {
 
-	private static Db data = setDb();
+	private static Db data;
 	private static String path;
 	private static String dbName;
+	private static HashMap<String , Db> databases;
 
 	/**
 	 * 
@@ -23,10 +25,19 @@ public final class SingletonDb {
 	}
 
 	/**
-	 * 
+	 * getter for the current database.
 	 * @return database.
 	 */
 	public static Db getDb() {
+		if (data != null) {
+			return data;
+		}
+		if (!databases.containsKey(dbName)) {
+			data = databases.get(dbName);
+		} else {
+			data = setDb();
+			databases.put(dbName, data);
+		}
 		return data;
 	}
 
@@ -34,22 +45,11 @@ public final class SingletonDb {
 	 * 
 	 * @return database
 	 */
-	public static Db setDb() {
-		if (data == null) {
-			try {
-				data = new Db("analyze", "C:/db/");
-			} catch (NullPointerException | SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		else {
-			try {
-				dropAll(data);
-				data.closeConnection();
-				data = new Db(dbName, path);
-			} catch (NullPointerException | SQLException e) {
-				e.printStackTrace();
-			}
+	protected static Db setDb() {
+		try {
+			data = new Db(dbName, path);
+		} catch (NullPointerException | SQLException e) {
+			e.printStackTrace();
 		}
 		return data;
 	}
@@ -121,8 +121,8 @@ public final class SingletonDb {
 	}
 
 	public static void update(String param) {
-		
-		
+		dbName = param;
+		data = null;
 	}
 
 

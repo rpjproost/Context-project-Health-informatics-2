@@ -10,6 +10,7 @@ import context.healthinformatics.interfacecomponents.Observer;
 public final class SingletonInterpreter {
 
 	private static HashMap<String, Interpreter > interpreters = new HashMap<String, Interpreter>();
+	private static Interpreter interpreter;
 	private static String project = "analyse";
 
 	/**
@@ -25,10 +26,13 @@ public final class SingletonInterpreter {
 	 * @return the Interpreter.
 	 */
 	private static Interpreter getInterpreter(String name) {
-		if (!interpreters.containsKey(name)) {
-			interpreters.put(name, createInterpreter(name));
+		if (interpreter == null) {
+			if (!interpreters.containsKey(name)) {
+				interpreters.put(name, createInterpreter(name));
+			}
+			interpreter = interpreters.get(name);
 		}
-		return interpreters.get(name);
+		return interpreter;
 	}
 
 	private static synchronized Interpreter createInterpreter(String name) {
@@ -46,7 +50,12 @@ public final class SingletonInterpreter {
 		return getInterpreter(project);
 	}
 
-	static protected void update(String param) {
+	/**
+	 * udpates the current workspace.
+	 * @param param paramter.
+	 */
+	protected static void update(String param) {
 		project = param;
+		interpreter = null;
 	}
 }
