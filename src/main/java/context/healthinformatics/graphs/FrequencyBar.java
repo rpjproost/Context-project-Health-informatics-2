@@ -36,6 +36,9 @@ public class FrequencyBar extends InterfaceHelper {
 	private static final int BOX_PLOT_HEIGHT = 350;
 	private int width;
 
+	/**
+	 * Constructor of FrequencyBar initialises the panels.
+	 */
 	public FrequencyBar() {
 		width = getScreenWidth() / 2 - 2 * INSETS;
 		chartContainerPanel = createEmptyWithGridBagLayoutPanel();
@@ -46,6 +49,11 @@ public class FrequencyBar extends InterfaceHelper {
 		mainPanel.add(chartContainerPanel, setGrids(0, 0));
 	}
 
+	/**
+	 * Get the panel with the frequency bar.
+	 * 
+	 * @return the panel of the frequency bar
+	 */
 	public JPanel getPanel() {
 		return mainPanel;
 	}
@@ -63,7 +71,12 @@ public class FrequencyBar extends InterfaceHelper {
 		return dataset;
 	}
 
-	public void createFrequencyBar() {
+	/**
+	 * Create a frequency bar with data and a title.
+	 * 
+	 * @param title
+	 */
+	public void createFrequencyBar(String title) {
 		// TODO WE NEED TO ADJUST THIS TO READ THE FREQUENCY OF CODES!!!!!!!!
 		HashMap<String, Double> map = new HashMap<String, Double>();
 		map.put("a", 4.0);
@@ -71,15 +84,16 @@ public class FrequencyBar extends InterfaceHelper {
 		map.put("c", 5.0);
 		map.put("d", 12.0);
 		map.put("2", 10.0);
-		JFreeChart chart = createChart(createDataset(map));
+		JFreeChart chart = createChart(title, createDataset(map));
 
 		mainPanel.remove(chartContainerPanel);
 		chartContainerPanel = createEmptyWithGridBagLayoutPanel();
 		chartContainerPanel.setPreferredSize(new Dimension(width,
 				BOX_PLOT_HEIGHT));
 		ChartPanel chartPanelTest = new ChartPanel(chart);
-		
-		chartPanelTest.setPreferredSize(new Dimension(width, BOX_PLOT_HEIGHT));
+
+		chartPanelTest.setPreferredSize(new Dimension(width - 1,
+				BOX_PLOT_HEIGHT));
 		chartContainerPanel.add(chartPanelTest, setGrids(0, 0));
 
 		mainPanel.add(chartContainerPanel, setGrids(0, 0));
@@ -94,10 +108,10 @@ public class FrequencyBar extends InterfaceHelper {
 	 * 
 	 * @return The chart.
 	 */
-	private JFreeChart createChart(final CategoryDataset dataset) {
-		final JFreeChart chart = ChartFactory.createBarChart("Frequency Bar",
-				"Codes", "Frequency", dataset, PlotOrientation.VERTICAL, false,
-				true, false);
+	private JFreeChart createChart(String title, final CategoryDataset dataset) {
+		final JFreeChart chart = ChartFactory.createBarChart("Frequency Bar: "
+				+ title, "Codes", "Frequency", dataset,
+				PlotOrientation.VERTICAL, false, true, false);
 		chart.setBackgroundPaint(Color.white);
 		final CategoryPlot plot = chart.getCategoryPlot();
 		setLook(plot);
