@@ -53,6 +53,12 @@ public class Computations extends Task {
 		setChunks(chunks);
 		ArrayList<Chunk> list = new ArrayList<Chunk>();
 		for (Chunk c : getChunks()) {
+			try {
+				c.initializeComputations("value");
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			if (c.hasChild()) {
 				Chunk res = new Chunk();
 				int i = c.getChildren().size();

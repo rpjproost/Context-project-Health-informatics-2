@@ -24,6 +24,8 @@ public class Chunk {
 	private int line;
 	private int sum;
 	private ResultSet rs;
+	private boolean compute = false;
+	private double[] computations;
 
 	/**
 	 * 
@@ -185,7 +187,10 @@ public class Chunk {
 	 */
 	public ArrayList<String> toArray() {
 		ArrayList<String> res = new ArrayList<String>();
-		if (sum != Integer.MIN_VALUE) {
+		if (isCompute()) {
+			res.add("sum of values = " + computations[0]);
+			res.add("Childs sum = " + sum);
+		} else if (sum != Integer.MIN_VALUE) {
 			res.add(sum + "");
 			return res;
 		} else if (hasChild()) {
@@ -205,8 +210,8 @@ public class Chunk {
 				System.out.println(e);
 				return res;
 			}
-			return res;
 		}
+		return res;
 	}
 
 	/**
@@ -282,6 +287,53 @@ public class Chunk {
 			}
 		}
 		rs.close();
+	}
+
+	/**
+	 * Returns boolean if chunk is computed.
+	 * @return true iff data is computed.
+	 */
+	public boolean isCompute() {
+		return compute;
+	}
+
+	/**
+	 * Sets boolean compute if data is being computed.
+	 * @param compute true iff data is being computed, false if normal data should be shown.
+	 */
+	public void setCompute(boolean compute) {
+		this.compute = compute;
+	}
+	
+	public void initializeComputations(String column) throws SQLException {
+		if (hasChild()) {
+			computations = new double[4];
+			Db data = SingletonDb.getDb();
+			computeSum(column, data);
+			setCompute(true);
+		}
+	}
+	
+	public void computeSum(String column, Db data) throws SQLException {
+		double sum = 0;
+		StringBuilder query = new StringBuilder();
+		String prefix = "";
+		for (int i = 0; i < getChildren().size(); i++) {
+			query.append(prefix); query.append(data.getMergeTable()); query.append("id = "); 
+			int line = getChildren().get(i).getLine();
+			query.append(line);
+			prefix = " OR "; 
+		}
+		ResultSet rs = data.selectResultSet(data.getMergeTable(), column, query.toString());
+		while (rs.next()) {
+			double value = rs.getDouble(column);
+			if (value != Integer.MIN_VALUE) {
+				sum += value;
+			}
+		}
+		rs.close();
+		computations[0] = sum;
+		System.out.println(computations[0]);
 	}
 
 }

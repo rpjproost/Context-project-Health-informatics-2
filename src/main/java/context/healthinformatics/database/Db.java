@@ -75,13 +75,6 @@ public class Db implements Observer {
 		return res;
 	}
 
-//	public void showTables() throws Exception {
-//		String sqlIn = "SHOW TABLES;";
-//		InputStream stream = new ByteArrayInputStream(sqlIn.getBytes(StandardCharsets.UTF_8));
-//		ij.runScript(conn,stream,StandardCharsets.UTF_8.name(), System.out,"UTF-8");
-//		stream.close();
-//	}
-
 	/**
 	 * Creates new table.
 	 * 
