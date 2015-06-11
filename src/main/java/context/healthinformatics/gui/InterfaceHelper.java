@@ -42,6 +42,8 @@ public class InterfaceHelper extends JPanel {
 	protected static final int INSETS = 10;
 	protected static final int FIELDCORRECTION = 130;
 	private static final int SUBTITLEFONT = 20;
+	
+	protected static final int FOUR = 4;
 
 	/**
 	 * @return JPanel with attributes specified by the arguments.

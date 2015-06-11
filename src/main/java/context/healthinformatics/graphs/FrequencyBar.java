@@ -40,7 +40,7 @@ public class FrequencyBar extends InterfaceHelper {
 	 * Constructor of FrequencyBar initialises the panels.
 	 */
 	public FrequencyBar() {
-		width = getScreenWidth() / 2 - 2 * INSETS;
+		width = getScreenWidth() / 2 - FOUR * INSETS;
 		chartContainerPanel = createEmptyWithGridBagLayoutPanel();
 		chartContainerPanel.setPreferredSize(new Dimension(width,
 				BOX_PLOT_HEIGHT));
@@ -75,15 +75,21 @@ public class FrequencyBar extends InterfaceHelper {
 	 * Create a frequency bar with data and a title.
 	 * 
 	 * @param title
+	 *            the title of the frequency bar
 	 */
 	public void createFrequencyBar(String title) {
 		// TODO WE NEED TO ADJUST THIS TO READ THE FREQUENCY OF CODES!!!!!!!!
 		HashMap<String, Double> map = new HashMap<String, Double>();
-		map.put("a", 4.0);
-		map.put("b", 7.0);
-		map.put("c", 5.0);
-		map.put("d", 12.0);
-		map.put("2", 10.0);
+		final double hardcodeda = 4.0;
+		final double hardcodedb = 7.0;
+		final double hardcodedc = 5.0;
+		final double hardcodedd = 10.0;
+		final double hardcodede = 12.0;
+		map.put("a", hardcodeda);
+		map.put("b", hardcodedb);
+		map.put("c", hardcodedc);
+		map.put("d", hardcodedd);
+		map.put("e", hardcodede);
 		JFreeChart chart = createChart(title, createDataset(map));
 
 		mainPanel.remove(chartContainerPanel);
@@ -119,23 +125,26 @@ public class FrequencyBar extends InterfaceHelper {
 
 	}
 
+	/**
+	 * Set the look of the plot.
+	 * 
+	 * @param plot
+	 *            the plot
+	 */
 	private void setLook(CategoryPlot plot) {
 		plot.setBackgroundPaint(Color.lightGray);
 		plot.setDomainGridlinePaint(Color.white);
 		plot.setRangeGridlinePaint(Color.white);
 
-		final IntervalMarker target = new IntervalMarker(4.5, 7.5);
-		target.setLabel("Target Range");
-		target.setLabelFont(new Font("SansSerif", Font.ITALIC, 11));
-		target.setLabelAnchor(RectangleAnchor.LEFT);
-		target.setLabelTextAnchor(TextAnchor.CENTER_LEFT);
-		target.setPaint(new Color(222, 222, 255, 128));
-		plot.addRangeMarker(target, Layer.BACKGROUND);
+		plot.addRangeMarker(createIntervalMarker(), Layer.BACKGROUND);
 
 		// set the range axis to display integers only...
 		final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
 		rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+		setRenderer(plot);
+	}
 
+	private void setRenderer(CategoryPlot plot) {
 		// disable bar outlines...
 		final BarRenderer renderer = (BarRenderer) plot.getRenderer();
 		renderer.setDrawBarOutline(false);
@@ -151,5 +160,15 @@ public class FrequencyBar extends InterfaceHelper {
 		renderer.setSeriesPaint(0, gp0);
 		renderer.setSeriesPaint(1, gp1);
 		renderer.setSeriesPaint(2, gp2);
+	}
+
+	private IntervalMarker createIntervalMarker() {
+		final IntervalMarker target = new IntervalMarker(4.5, 7.5);
+		target.setLabel("Target Range");
+		target.setLabelFont(new Font("SansSerif", Font.ITALIC, 11));
+		target.setLabelAnchor(RectangleAnchor.LEFT);
+		target.setLabelTextAnchor(TextAnchor.CENTER_LEFT);
+		target.setPaint(new Color(222, 222, 255, 128));
+		return target;
 	}
 }
