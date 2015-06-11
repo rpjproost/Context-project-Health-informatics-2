@@ -11,6 +11,7 @@ public class Codes extends Task {
 	private String code;
 	private ArrayList<Chunk> changedChunks;
 	private ArrayList<String> oldCodes;
+	private int index = 0;
 	/**
 	 * Constructor for codes without an argument.
 	 * @param c Code what is going to be set.
@@ -116,16 +117,11 @@ public class Codes extends Task {
 	 */
 	public void setCodeOnData(String whereClause) throws SQLException {
 		ArrayList<Integer> list = getLinesFromData(whereClause);
-		setCodesOnChild(getChunks(), list, 0);
-//		for (Integer i : list) {
-//			Chunk c = getChunkByLine(i, getChunks());
-//			changedLines.add(getChunks().indexOf(c));
-//			oldCodes.add(c.getCode());
-//			setCodeOfLine(i, code);
-//		}
+		setCodesOnChild(getChunks(), list);
+		index = 0;
 	}
 	
-	private void setCodesOnChild(ArrayList<Chunk> childs, ArrayList<Integer> list, int index) {
+	private void setCodesOnChild(ArrayList<Chunk> childs, ArrayList<Integer> list) {
 		for (int i = 0; i < childs.size(); i++) {
 			Chunk temp = childs.get(i);
 			if (index < list.size() && temp.getLine() == list.get(index)) {
@@ -135,7 +131,7 @@ public class Codes extends Task {
 				index++;
 			}
 			else if (temp.hasChild()) {
-				setCodesOnChild(temp.getChildren(), list, index);
+				setCodesOnChild(temp.getChildren(), list);
 			}
 
 		}
