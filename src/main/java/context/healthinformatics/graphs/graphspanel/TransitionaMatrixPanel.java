@@ -13,11 +13,11 @@ import context.healthinformatics.gui.InterfaceHelper;
 /**
  * Creates a panel specific for the stem-and-leaf plot.
  */
-public class StemAndLeafPanel extends InterfaceHelper implements GraphPanel {
+public class TransitionaMatrixPanel extends InterfaceHelper implements GraphPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JCheckBox checkbox;
-	private JPanel stemAndLeafPanel;
+	private JPanel transitionMatrixPanel;
 	private GraphInputContainer container;
 	private int panelWidth;
 	
@@ -26,11 +26,11 @@ public class StemAndLeafPanel extends InterfaceHelper implements GraphPanel {
 	 * @param checkbox the check-box that is for this panel.
 	 * @param width the width for this panel.
 	 */
-	public StemAndLeafPanel(JCheckBox checkbox, int width) {
+	public TransitionaMatrixPanel(JCheckBox checkbox, int width) {
 		this.checkbox = checkbox;
 		panelWidth = width;
 		container = new GraphInputContainer();
-		stemAndLeafPanel = initGraphPanel("Stem-and-Leaf Plot");
+		transitionMatrixPanel = initGraphPanel("State-Transition Matrix");
 		this.checkbox.addActionListener(this);
 	}
 	
@@ -47,9 +47,6 @@ public class StemAndLeafPanel extends InterfaceHelper implements GraphPanel {
 		graphPanel.add(makeFormRowPanelWithTextField("Graph Title:", 
 				container.getGraphTitle(), panelWidth - 2 * INSETS, CHECKBOXHEIGHT), 
 				setGrids(0, 1));
-		graphPanel.add(makeFormRowPanelWithComboBox("Select a column for stem-and-leaf plot:", 
-				container.getxValue(), panelWidth - 2 * INSETS, CHECKBOXHEIGHT), 
-				setGrids(0, 2));
 		return graphPanel;
 	}
 
@@ -59,7 +56,7 @@ public class StemAndLeafPanel extends InterfaceHelper implements GraphPanel {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == checkbox) {
-			checkVisibility(checkbox, stemAndLeafPanel);
+			checkVisibility(checkbox, transitionMatrixPanel);
 		}
 	}
 	
@@ -68,7 +65,7 @@ public class StemAndLeafPanel extends InterfaceHelper implements GraphPanel {
 	 */
 	@Override
 	public JPanel loadPanel() {
-		return stemAndLeafPanel;
+		return transitionMatrixPanel;
 	}
 
 	@Override

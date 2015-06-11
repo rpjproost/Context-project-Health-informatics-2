@@ -22,7 +22,6 @@ import context.healthinformatics.analyse.SingletonInterpreter;
 import context.healthinformatics.database.SingletonDb;
 import context.healthinformatics.graphs.GraphController;
 import context.healthinformatics.graphs.GraphInputInterface;
-import context.healthinformatics.graphs.StateTransitionMatrix;
 import context.healthinformatics.interfacecomponents.IntermediateResults;
 import context.healthinformatics.writer.WriteToTXT;
 
@@ -159,6 +158,7 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 				height);
 		graphArea.add(graphController.getBoxPlot(), setGrids(0, 0));
 		graphArea.add(graphController.getFerquencyBar(), setGrids(0, 1));
+		graphArea.add(graphController.getTransitionMatrix(), setGrids(0, 2));
 		rightPanel.add(scrollPane,
 				setGrids(0, 1, new Insets(0, INSETS, 0, INSETS)));
 	}
@@ -204,11 +204,6 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 			}
 		}
 		if (e.getSource() == updateGraphButton) {
-			StateTransitionMatrix stm = new StateTransitionMatrix();
-			stm.fillTransitionMatrix(SingletonInterpreter.getInterpreter()
-					.getChunks());
-			stm.initTable();
-			graphArea.add(stm.getStateTransitionMatrix(), setGrids(0, 2));
 			try {
 				graphController.updateGraphs(graphInputInterface);
 				scrollPane.revalidate();
