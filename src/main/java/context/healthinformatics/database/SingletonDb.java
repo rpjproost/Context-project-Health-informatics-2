@@ -15,7 +15,7 @@ public final class SingletonDb {
 	private static Db data;
 	private static String path;
 	private static String dbName;
-	private static HashMap<String , Db> databases;
+	private static HashMap<String , Db> databases = new HashMap<String, Db>();
 
 	/**
 	 * 
