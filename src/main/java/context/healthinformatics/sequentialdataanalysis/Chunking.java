@@ -289,7 +289,6 @@ public class Chunking extends Task {
 			startDate = c.getTime();
 			size += numChunks;
 		}
-		System.out.println("stopped");
 		return res;
 	}
 	
