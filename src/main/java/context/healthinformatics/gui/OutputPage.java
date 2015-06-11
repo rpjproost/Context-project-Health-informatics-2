@@ -13,10 +13,10 @@ import java.sql.SQLException;
 import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import context.healthinformatics.graphs.BoxPlot;
 import context.healthinformatics.graphs.GraphController;
 import context.healthinformatics.graphs.GraphInputInterface;
 import context.healthinformatics.interfacecomponents.IntermediateResults;
@@ -46,7 +46,6 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	private JFileChooser savePopup;
 	private GraphInputInterface graphInputInterface;
 	private GraphController graphController;
-	private JPanel boxPlotGraph;
 	private JPanel graphArea;
 
 	/**
@@ -193,9 +192,15 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 			saveFileChooser(getFileButton(), "txt");
 		}
 		if (e.getSource() == updateGraphButton) {
-			graphController.updateGraphs(graphInputInterface);
-			graphArea.add(graphController.getBoxPlot(), setGrids(0, 0));
-			rightPanel.revalidate();
+			try {
+				graphController.updateGraphs(graphInputInterface);
+				graphArea.add(graphController.getBoxPlot(), setGrids(0, 0));
+				rightPanel.revalidate();
+			} catch (NullPointerException excep) {
+				JOptionPane.showMessageDialog(null,
+						"Your input fields aren't filled in correctly!!",
+						"Graph Error", JOptionPane.WARNING_MESSAGE);
+			}
 		}
 	}
 

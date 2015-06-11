@@ -2,7 +2,6 @@ package context.healthinformatics.graphs;
 
 import java.util.ArrayList;
 
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import context.healthinformatics.graphs.graphspanel.BoxPlotPanel;
@@ -38,25 +37,19 @@ public class GraphController {
 	 * Creates a box plot.
 	 * @param boxPlotPanel the panel with all data.
 	 */
-	private void plotBoxPlot(BoxPlotPanel boxPlotPanel) {
+	private void plotBoxPlot(BoxPlotPanel boxPlotPanel) throws NullPointerException {
 		GraphInputContainer container = boxPlotPanel.getGraphContainer();
-		try {
-			String type = container.getSelectedColumnX();
-			ArrayList<String> columns = new ArrayList<String>();
-			columns.add(container.getSelectedColumnY());
-			if (type.equals("All")) {
-				boxPlot.setDataPerColumn(columns);
-			} else if (type.equals("Chunks")) {
-				boxPlot.setDataPerChunk(columns);
-			}
-			boxPlotGraph = boxPlot.getPanel();
-			boxPlotGraph.setVisible(true);
-			boxPlot.createBoxPlot(container.getGraphTitleValue());
-		} catch (NullPointerException e) {
-			JOptionPane.showMessageDialog(null,
-					"Your input fields aren't filled in correctly!!", "Graph Error",
-					JOptionPane.WARNING_MESSAGE);
+		String type = container.getSelectedColumnX();
+		ArrayList<String> columns = new ArrayList<String>();
+		columns.add(container.getSelectedColumnY());
+		if (type.equals("All")) {
+			boxPlot.setDataPerColumn(columns);
+		} else if (type.equals("Chunks")) {
+			boxPlot.setDataPerChunk(columns);
 		}
+		boxPlotGraph = boxPlot.getPanel();
+		boxPlotGraph.setVisible(true);
+		boxPlot.createBoxPlot(container.getGraphTitleValue());
 	}
 	
 	/**
