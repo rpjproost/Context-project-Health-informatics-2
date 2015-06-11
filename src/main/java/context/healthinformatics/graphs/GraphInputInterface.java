@@ -140,4 +140,68 @@ public class GraphInputInterface extends InterfaceHelper {
 		histogramPanel.updateContainer();
 		stemAndLeafPlotPanel.updateContainer();
 	}
+	
+	/**
+	 * @return the boxPlotPanel
+	 */
+	protected BoxPlotPanel getBoxPlotPanel() {
+		return boxPlotPanel;
+	}
+
+	/**
+	 * @return the frequencyPanel
+	 */
+	protected FrequencyBarPanel getFrequencyPanel() {
+		return frequencyPanel;
+	}
+
+	/**
+	 * @return the stemAndLeafPlotPanel
+	 */
+	protected StemAndLeafPanel getStemAndLeafPlotPanel() {
+		return stemAndLeafPlotPanel;
+	}
+
+	/**
+	 * @return the histogramPanel
+	 */
+	protected HistogramPanel getHistogramPanel() {
+		return histogramPanel;
+	}
+
+	/**
+	 * @return the boxPlotCheckBox
+	 */
+	protected JCheckBox getBoxPlotCheckBox() {
+		return boxPlotCheckBox;
+	}
+
+	/**
+	 * @return the frequencyCheckBox
+	 */
+	protected JCheckBox getFrequencyCheckBox() {
+		return frequencyCheckBox;
+	}
+
+	/**
+	 * @return the stemAndLeafPlotCheckBox
+	 */
+	protected JCheckBox getStemAndLeafPlotCheckBox() {
+		return stemAndLeafPlotCheckBox;
+	}
+
+	/**
+	 * @return the histogramCheckbox
+	 */
+	protected JCheckBox getHistogramCheckbox() {
+		return histogramCheckbox;
+	}
+
+	/**
+	 * @param checkbox the check-box that must be checked.
+	 * @return  true if the check-box is selected else false.
+	 */
+	protected boolean isSelected(JCheckBox checkbox) {
+		return checkbox.isSelected();
+	}
 }

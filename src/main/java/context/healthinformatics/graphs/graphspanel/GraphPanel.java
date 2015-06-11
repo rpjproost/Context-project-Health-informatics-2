@@ -4,6 +4,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
 
+import context.healthinformatics.graphs.GraphInputContainer;
+
 /**
  * Interface for creating panels for graphs.
  */
@@ -27,5 +29,10 @@ public interface GraphPanel extends ActionListener {
 	 * @return the panel with all data on it.
 	 */
 	JPanel loadPanel();
+	
+	/**
+	 * @return the container of the graph.
+	 */
+	GraphInputContainer getGraphContainer();
 
 }

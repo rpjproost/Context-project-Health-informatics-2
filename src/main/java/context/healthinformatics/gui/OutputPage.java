@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import context.healthinformatics.graphs.BoxPlot;
+import context.healthinformatics.graphs.GraphController;
 import context.healthinformatics.graphs.GraphInputInterface;
 import context.healthinformatics.interfacecomponents.IntermediateResults;
 import context.healthinformatics.writer.WriteToTXT;
@@ -44,6 +45,9 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	private int panelHeight;
 	private JFileChooser savePopup;
 	private GraphInputInterface graphInputInterface;
+	private GraphController graphController;
+	private JPanel boxPlotGraph;
+	private JPanel graphArea;
 
 	/**
 	 * Constructor.
@@ -57,6 +61,7 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 		panelHeight = mf.getStatePanelSize() / 2 - FIELDCORRECTION;
 		imr = new IntermediateResults(panelWidth, panelHeight, "The Result:",
 				MainFrame.OUTPUTTABCOLOR);
+		graphController = new GraphController();
 		leftPanel = createEmptyWithGridBagLayoutPanel(MainFrame.OUTPUTTABCOLOR);
 		rightPanel = createEmptyWithGridBagLayoutPanel(MainFrame.OUTPUTTABCOLOR);
 		initComponents();
@@ -142,16 +147,13 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	}
 
 	private void setGraphArea() {
-		JPanel graphArea = createEmptyWithGridBagLayoutPanel(MainFrame.CODETABCOLOR);
+		graphArea = createEmptyWithGridBagLayoutPanel(MainFrame.CODETABCOLOR);
 		// TODO change color
 		graphArea.setPreferredSize(new Dimension(panelWidth, mf
 				.getStatePanelSize()
 				/ HUNDERTPROCENT
 				* CORRECION
 				- FIELDCORRECTION - INSETS));
-		BoxPlot bp = new BoxPlot("");
-
-		graphArea.add(bp.getPanel(), setGrids(0, 0));
 		rightPanel.add(graphArea,
 				setGrids(0, 1, new Insets(0, INSETS, 0, INSETS)));
 	}
@@ -191,7 +193,9 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 			saveFileChooser(getFileButton(), "txt");
 		}
 		if (e.getSource() == updateGraphButton) {
-			// todo use some controller to update the selected graphs.
+			graphController.updateGraphs(graphInputInterface);
+			graphArea.add(graphController.getBoxPlot(), setGrids(0, 0));
+			rightPanel.revalidate();
 		}
 	}
 

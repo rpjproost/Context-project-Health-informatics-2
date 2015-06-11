@@ -80,4 +80,9 @@ public class FrequencyBarPanel extends InterfaceHelper implements GraphPanel {
 		
 	}
 
+	@Override
+	public GraphInputContainer getGraphContainer() {
+		return container;
+	}
+
 }

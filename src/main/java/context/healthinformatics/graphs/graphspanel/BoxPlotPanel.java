@@ -79,4 +79,9 @@ public class BoxPlotPanel extends InterfaceHelper implements GraphPanel {
 		return boxPlotPanel;
 	}
 
+	@Override
+	public GraphInputContainer getGraphContainer() {
+		return container;
+	}
+
 }

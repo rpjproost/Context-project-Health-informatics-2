@@ -40,12 +40,9 @@ public class BoxPlot extends InterfaceHelper {
 	private DefaultBoxAndWhiskerCategoryDataset dataset;
 
 	/**
-	 * Creates a new demo.
-	 *
-	 * @param title
-	 *            the frame title.
+	 * Creates a new box plot.
 	 */
-	public BoxPlot(final String title) {
+	public BoxPlot() {
 		chartContainerPanel = createEmptyWithGridBagLayoutPanel();
 		chartContainerPanel.setPreferredSize(new Dimension(width,
 				BOX_PLOT_HEIGHT));
@@ -113,7 +110,7 @@ public class BoxPlot extends InterfaceHelper {
 			}
 			dataset.add(dataList, columns.get(j), " Type " + j);
 		}
-		createBoxPlot("Boxplot with: " + buildTitle.toString());
+//		createBoxPlot("Boxplot with: " + buildTitle.toString());
 	}
 
 	/**
@@ -135,7 +132,7 @@ public class BoxPlot extends InterfaceHelper {
 				dataset.add(dataList, columns.get(j), " Type " + i);
 			}
 		}
-		createBoxPlot("Boxplot with: " + buildTitle.toString());
+//		createBoxPlot("Boxplot with: " + buildTitle.toString());
 	}
 
 	/**

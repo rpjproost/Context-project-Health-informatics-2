@@ -76,4 +76,9 @@ public class StemAndLeafPanel extends InterfaceHelper implements GraphPanel {
 		container.updateX(getColumnNames());
 	}
 
+	@Override
+	public GraphInputContainer getGraphContainer() {
+		return container;
+	}
+
 }
