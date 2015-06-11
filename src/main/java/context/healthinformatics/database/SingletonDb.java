@@ -13,8 +13,8 @@ import java.util.TreeSet;
 public final class SingletonDb {
 
 	private static Db data;
-	private static String path;
-	private static String dbName;
+	private static String path = "C:/db/";
+	private static String dbName = "analyze";
 	private static HashMap<String , Db> databases = new HashMap<String, Db>();
 
 	/**
@@ -32,7 +32,7 @@ public final class SingletonDb {
 		if (data != null) {
 			return data;
 		}
-		if (!databases.containsKey(dbName)) {
+		if (databases.get(dbName) != null) {
 			data = databases.get(dbName);
 		} else {
 			data = setDb();
