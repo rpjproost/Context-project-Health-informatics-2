@@ -129,4 +129,10 @@ public class Codes extends Task {
 	protected ArrayList<Chunk> constraintOnContainsComment(String comment) {
 		return getChunks();
 	}
+
+	@Override
+	protected ArrayList<Chunk> constraintOnLine(String line) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

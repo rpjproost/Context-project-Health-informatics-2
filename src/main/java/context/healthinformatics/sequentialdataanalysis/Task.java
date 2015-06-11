@@ -49,6 +49,9 @@ public abstract class Task {
 		else if (isComment(query.part())) {
 			runComment(query);
 		}
+		else if (isLine(query.part())) {
+			runLine(query);
+		}
 		else {
 			throw new Exception("query input is wrong at: " + query.part()
 					+ "Expected: (data/comment/code");
@@ -100,6 +103,13 @@ public abstract class Task {
 	 * @return Result list of chunks.
 	 */
 	protected abstract ArrayList<Chunk> constraintOnContainsComment(String comment);
+	
+	/**
+	 * Returns constraintOnLine line.
+	 * @param line Constraint String.
+	 * @return Result list of chunks.
+	 */
+	protected abstract ArrayList<Chunk> constraintOnLine(String line);
 	
 	/**
 	 * Get the chunk at line line and add the comment.
@@ -161,6 +171,15 @@ public abstract class Task {
 	protected boolean isCode(String query) {
 		return query.equals("code");
 	}
+	
+	/**
+	 * Returns if query constraints on line.
+	 * @param query The query.
+	 * @return true/false.
+	 */
+	protected boolean isLine(String query) {
+		return query.equals("line");
+	}
 
 	/**
 	 * Returns if query constraints on comment.
@@ -204,8 +223,7 @@ public abstract class Task {
 	public ArrayList<Chunk> getResult() {
 		return result;
 	}
-	
-	
+
 	/**
 	 * Executes constraintOnData with query.
 	 * @param query interpreter query.
@@ -233,6 +251,17 @@ public abstract class Task {
 	}
 	
 	/**
+	 * Executes constraintOnLine with query.
+	 * @param query interpreter query.
+	 */
+	protected void runLine(Query query) {
+		query.inc();
+		if (isEquals(query.next())) {
+			setResult(constraintOnLine(query.next()));
+		}
+	}
+	
+	/**
 	 * Executes constraint on contains/equals comment.
 	 * @param query interpreter query.
 	 */
@@ -252,6 +281,7 @@ public abstract class Task {
 			setResult(constraintOnContainsComment(query.next()));
 		}
 	}
+	
 	/**
 	 * deepcopys the list of chunks.
 	 * @param list list to copy.
@@ -260,5 +290,4 @@ public abstract class Task {
 	protected ArrayList<Chunk> copyChunks(ArrayList<Chunk> list) {
 		return SingletonInterpreter.getInterpreter().copyChunks(list);
 	}
-
 }

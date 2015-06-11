@@ -60,4 +60,10 @@ public class Computations extends Task {
 		setResult(list);
 	}
 
+	@Override
+	protected ArrayList<Chunk> constraintOnLine(String line) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

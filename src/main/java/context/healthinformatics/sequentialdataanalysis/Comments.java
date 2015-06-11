@@ -115,4 +115,10 @@ public class Comments extends Task {
 	protected ArrayList<Chunk> constraintOnContainsComment(String comment) {
 		return null;
 	}
+
+	@Override
+	protected ArrayList<Chunk> constraintOnLine(String line) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

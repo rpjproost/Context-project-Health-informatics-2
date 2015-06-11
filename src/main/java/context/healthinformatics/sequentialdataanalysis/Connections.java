@@ -76,7 +76,6 @@ public class Connections extends Task {
 		}
 		return list;
 	}
-	
 
 	/**
 	 * Method which gives a list of indices of all chunks which have comment : comment.
@@ -119,6 +118,11 @@ public class Connections extends Task {
 
 	@Override
 	protected ArrayList<Chunk> constraintOnContainsComment(String comment) {
+		return null;
+	}
+	
+	@Override
+	protected ArrayList<Chunk> constraintOnLine(String line) {
 		return null;
 	}
 	
@@ -165,6 +169,21 @@ public class Connections extends Task {
 		parseSecondCondition(query, originList, destinationList);
 	}
 	
+	/**
+	 * Executes constraint on equals line number.
+	 * -1 because the list starts at 1 when we show it to the user.
+	 * @param query interpreter query.
+	 */
+	@Override
+	protected void runLine(Query query) {
+		query.inc();
+		int i = Integer.parseInt(query.next());
+		ArrayList<Integer> originList = new ArrayList<Integer>();
+		originList.add(i - 1);
+		ArrayList<Integer> destinationList = new ArrayList<Integer>();
+		parseSecondCondition(query, originList, destinationList);
+	}
+	
 	private void parseSecondCondition(Query query, ArrayList<Integer> originList,
 			ArrayList<Integer> destinationList) {
 		query.inc(2);
@@ -189,6 +208,11 @@ public class Connections extends Task {
 		if (isCode(query.part())) {
 			query.inc();
 			destinationList = getListOnCode(query.next());
+			connectListsOfChunkIndices(originList, destinationList);
+		}
+		if (isLine(query.part())) {
+			query.inc();
+			//destinationList = getListOnLine(query.next());
 			connectListsOfChunkIndices(originList, destinationList);
 		}
 	}
