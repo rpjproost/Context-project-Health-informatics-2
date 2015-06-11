@@ -169,7 +169,10 @@ public class BoxPlot extends InterfaceHelper {
 				listOfValues.addAll(loopThroughChunks(children.get(i), column));
 			}
 		} else {
-			listOfValues.add(getChunkData(currentChunk, column));
+			Double res = getChunkData(currentChunk, column);
+			if (res != Integer.MIN_VALUE) {
+				listOfValues.add(res);
+			}
 		}
 		return listOfValues;
 	}
