@@ -144,7 +144,7 @@ public abstract class Task {
 		ArrayList<Integer> res = new ArrayList<Integer>();
 		Db data = SingletonDb.getDb();
 		try {
-			ResultSet rs = data.selectResultSet(mergeTable, mergeTable + "id", whereClause);
+			ResultSet rs = data.selectResultSet("workspace", mergeTable + "id", whereClause);
 			while (rs.next()) {
 				res.add(rs.getInt(mergeTable + "id"));
 			}

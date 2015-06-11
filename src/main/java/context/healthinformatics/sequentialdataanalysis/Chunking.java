@@ -11,6 +11,7 @@ public class Chunking extends Task {
 
 	private Chunk temp;
 	private String code = "";
+	private int indexcheck = 0;
 	/**
 	 * Constructor for chunking.
 	 */
@@ -38,7 +39,7 @@ public class Chunking extends Task {
 		ArrayList<Integer> ints = getLinesFromData(whereClause);
 		for (int i = 0; i < chunks.size(); i++) {
 			Chunk curChunk = chunks.get(i);
-			addChunkOnEqualsData(ints, curChunk, res);
+			addChunkOnEqualsData(ints, curChunk, res, indexcheck);
 		}
 		addLastElementToChunks(res);
 		return res;
@@ -49,11 +50,13 @@ public class Chunking extends Task {
 	 * @param ints the arraylist with integers with correct data.
 	 * @param curChunk Chunk that currently is being checked.
 	 * @param res arraylist result.
+	 * @param index for list to check
 	 */
 	public void addChunkOnEqualsData(ArrayList<Integer> ints, Chunk curChunk,
-			ArrayList<Chunk> res) {
-		if (ints.contains(curChunk.getLine())) {
+			ArrayList<Chunk> res, int index) {
+		if (indexcheck < ints.size() && curChunk.getLine() == ints.get(indexcheck)) {
 			temp.setChunk(curChunk);
+			indexcheck++;
 		}
 		else {
 			addChunkToRes(res, curChunk);
