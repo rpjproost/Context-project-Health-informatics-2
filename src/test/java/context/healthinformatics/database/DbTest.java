@@ -73,7 +73,7 @@ public class DbTest {
 	 */
 	@After
 	public void after() throws SQLException {
-
+		SingletonDb.dropAll(data);
 	}
 
 	/**

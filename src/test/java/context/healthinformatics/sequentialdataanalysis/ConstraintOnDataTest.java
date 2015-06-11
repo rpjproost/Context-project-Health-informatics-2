@@ -66,6 +66,7 @@ public class ConstraintOnDataTest {
 	 */
 	@After
 	public void after() {
+		SingletonDb.dropAll(data);
 		SingletonInterpreter.getInterpreter().setIntialChunks(null);
 	}
 	

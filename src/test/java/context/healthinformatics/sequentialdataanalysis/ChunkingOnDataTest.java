@@ -50,6 +50,7 @@ public class ChunkingOnDataTest {
 	 */
 	@After
 	public void after() {
+		SingletonDb.dropAll(data);
 		SingletonInterpreter.getInterpreter().setIntialChunks(null);
 	}
 

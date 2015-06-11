@@ -60,6 +60,7 @@ public class CommentOnDataTest {
 	 */
 	@After
 	public void after() {
+		SingletonDb.dropAll(data);
 		SingletonInterpreter.getInterpreter().setIntialChunks(null);
 	}
 
