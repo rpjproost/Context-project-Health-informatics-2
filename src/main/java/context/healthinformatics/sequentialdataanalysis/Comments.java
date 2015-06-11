@@ -26,8 +26,11 @@ public class Comments extends Task {
 	
 	@Override
 	public ArrayList<Chunk> undo() {
-		// TODO Auto-generated method stub
-		return null;
+		for (int i = 0; i < changedLines.size(); i++) {
+			int index = changedLines.get(i);
+			getChunks().get(index).setCode(oldComments.get(i));
+		}
+		return getChunks();
 	}
 
 	/**
