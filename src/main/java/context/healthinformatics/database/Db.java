@@ -52,6 +52,8 @@ public class Db implements Observer {
 	SQLException {
 		dName = databaseName;
 		pad = p;
+		File f = new File(pad + dName);
+		removeDirectory(f);
 		tables = new HashMap<String, ArrayList<Column>>();
 		setupConn();
 	}
