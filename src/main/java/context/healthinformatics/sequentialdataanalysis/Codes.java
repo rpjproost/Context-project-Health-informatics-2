@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class Codes extends Task {
 
 	private String code;
-	private ArrayList<Integer> changedLines;
+	private ArrayList<Chunk> changedChunks;
 	private ArrayList<String> oldCodes;
 	/**
 	 * Constructor for codes without an argument.
@@ -17,15 +17,15 @@ public class Codes extends Task {
 	 */
 	public Codes(String c) {
 		code = c;
-		changedLines = new ArrayList<Integer>();
+		changedChunks = new ArrayList<Chunk>();
 		oldCodes = new ArrayList<String>();
 	}
 	
 	@Override
 	public ArrayList<Chunk> undo() {
-		for (int i = 0; i < changedLines.size(); i++) {
-			int index = changedLines.get(i);
-			getChunks().get(index).setCode(oldCodes.get(i));
+		for (int i = 0; i < changedChunks.size(); i++) {
+			Chunk chunk = changedChunks.get(i);
+			chunk.setCode(oldCodes.get(i));
 		}
 		return getChunks();
 	}
@@ -84,7 +84,7 @@ public class Codes extends Task {
 				Chunk chunk = getChunks().get(i);
 				if (chunk.getComment().equals(comment)) {
 					oldCodes.add(chunk.getCode());
-					changedLines.add(i);
+					changedChunks.add(chunk);
 					chunk.setCode(code);
 					
 				}
@@ -103,7 +103,7 @@ public class Codes extends Task {
 			Chunk chunk = getChunks().get(i);
 			if (chunk.getCode().equals(previousCode)) {
 				oldCodes.add(chunk.getCode());
-				changedLines.add(i);
+				changedChunks.add(chunk);
 				chunk.setCode(code);
 			}
 		}
@@ -116,11 +116,28 @@ public class Codes extends Task {
 	 */
 	public void setCodeOnData(String whereClause) throws SQLException {
 		ArrayList<Integer> list = getLinesFromData(whereClause);
-		for (Integer i : list) {
-			Chunk c = getChunkByLine(i, getChunks());
-			changedLines.add(getChunks().indexOf(c));
-			oldCodes.add(c.getCode());
-			setCodeOfLine(i, code);
+		setCodesOnChild(getChunks(), list, 0);
+//		for (Integer i : list) {
+//			Chunk c = getChunkByLine(i, getChunks());
+//			changedLines.add(getChunks().indexOf(c));
+//			oldCodes.add(c.getCode());
+//			setCodeOfLine(i, code);
+//		}
+	}
+	
+	private void setCodesOnChild(ArrayList<Chunk> childs, ArrayList<Integer> list, int index) {
+		for (int i = 0; i < childs.size(); i++) {
+			Chunk temp = childs.get(i);
+			if (index < list.size() && temp.getLine() == list.get(index)) {
+				oldCodes.add(temp.getCode());
+				changedChunks.add(temp);
+				temp.setCode(code);
+				index++;
+			}
+			else if (temp.hasChild()) {
+				setCodesOnChild(temp.getChildren(), list, index);
+			}
+
 		}
 	}
 
@@ -150,7 +167,7 @@ public class Codes extends Task {
 	@Override
 	protected ArrayList<Chunk> constraintOnLine(String line) {
 		int i = Integer.parseInt(line);
-		changedLines.add(i - 1);
+		changedChunks.add(getChunks().get(i - 1));
 		oldCodes.add(getChunks().get(i - 1).getCode());
 		getChunks().get(i - 1).setCode(code);
 		return getChunks();
