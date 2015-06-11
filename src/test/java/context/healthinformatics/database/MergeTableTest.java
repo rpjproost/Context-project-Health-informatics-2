@@ -131,6 +131,7 @@ public class MergeTableTest {
 		ResultSet rs = data.selectResultSet("workspace", "date", "");
 		
 		orderedByDate(rs);
+		rs.close();
 
 		test.dropView("workspace");
 		data.dropTable("result");
@@ -188,6 +189,7 @@ public class MergeTableTest {
 		ResultSet rs = data.selectResultSet("workspace", "date", "");
 		
 		orderedByDate(rs);
+		rs.close();
 		
 		test.dropView("workspace");
 		data.dropTable("result");

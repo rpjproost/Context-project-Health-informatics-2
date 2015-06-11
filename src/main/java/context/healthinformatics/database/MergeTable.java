@@ -225,6 +225,7 @@ public class MergeTable {
 			c.setLine(line);
 			chunks.add(c);
 		}
+		rs.close();
 		return chunks;
 	}
 }
