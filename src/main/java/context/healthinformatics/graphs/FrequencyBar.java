@@ -63,7 +63,7 @@ public class FrequencyBar extends InterfaceHelper {
 	}
 
 	/**
-	 * Returns a sample dataset.
+	 * Create dataset from the HashMap with codes and count.
 	 * 
 	 * @return The dataset.
 	 */
@@ -101,17 +101,15 @@ public class FrequencyBar extends InterfaceHelper {
 		chartContainerPanel.setPreferredSize(new Dimension(width,
 				BOX_PLOT_HEIGHT));
 		ChartPanel chartPanelTest = new ChartPanel(chart);
-
 		chartPanelTest.setPreferredSize(new Dimension(width - 1,
 				BOX_PLOT_HEIGHT));
 		chartContainerPanel.add(chartPanelTest, setGrids(0, 0));
-
 		mainPanel.add(chartContainerPanel, setGrids(0, 0));
 		mainPanel.revalidate();
 	}
 
 	/**
-	 * Creates the chart.
+	 * Creates the frequency chart.
 	 * 
 	 * @param dataset
 	 *            the dataset.
@@ -126,7 +124,6 @@ public class FrequencyBar extends InterfaceHelper {
 		final CategoryPlot plot = chart.getCategoryPlot();
 		setLook(plot);
 		return chart;
-
 	}
 
 	/**
@@ -139,33 +136,34 @@ public class FrequencyBar extends InterfaceHelper {
 		plot.setBackgroundPaint(Color.lightGray);
 		plot.setDomainGridlinePaint(Color.white);
 		plot.setRangeGridlinePaint(Color.white);
-
 		plot.addRangeMarker(createIntervalMarker(), Layer.BACKGROUND);
-
 		// set the range axis to display integers only...
 		final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
 		rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
 		setRenderer(plot);
 	}
 
+	/**
+	 * Set renderer.
+	 * 
+	 * @param plot
+	 *            the plot
+	 */
 	private void setRenderer(CategoryPlot plot) {
 		// disable bar outlines...
 		final BarRenderer renderer = (BarRenderer) plot.getRenderer();
 		renderer.setDrawBarOutline(false);
 		renderer.setItemMargin(ITEM_MARGIN);
-
-		// set up gradient paints for series...
 		final GradientPaint gp0 = new GradientPaint(0.0f, 0.0f, Color.blue,
 				0.0f, 0.0f, Color.lightGray);
-		final GradientPaint gp1 = new GradientPaint(0.0f, 0.0f, Color.green,
-				0.0f, 0.0f, Color.lightGray);
-		final GradientPaint gp2 = new GradientPaint(0.0f, 0.0f, Color.red,
-				0.0f, 0.0f, Color.lightGray);
 		renderer.setSeriesPaint(0, gp0);
-		renderer.setSeriesPaint(1, gp1);
-		renderer.setSeriesPaint(2, gp2);
 	}
 
+	/**
+	 * Creates interval marker.
+	 * 
+	 * @return the interval marker
+	 */
 	private IntervalMarker createIntervalMarker() {
 		final IntervalMarker target = new IntervalMarker(4.5, 7.5);
 		target.setLabel("Target Range");
