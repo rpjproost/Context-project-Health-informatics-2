@@ -30,21 +30,21 @@ public class GraphInputContainer {
 	/**
 	 * @return the graphTitle
 	 */
-	protected JTextField getGraphTitle() {
+	public JTextField getGraphTitle() {
 		return graphTitle;
 	}
 
 	/**
 	 * @return the xValue
 	 */
-	protected JComboBox<String> getxValue() {
+	public JComboBox<String> getxValue() {
 		return xValue;
 	}
 
 	/**
 	 * @return the yValue
 	 */
-	protected JComboBox<String> getyValue() {
+	public JComboBox<String> getyValue() {
 		return yValue;
 	}
 	

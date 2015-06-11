@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 import javax.swing.Action;
 import javax.swing.JButton;
@@ -17,8 +16,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import context.healthinformatics.analyse.SingletonInterpreter;
 import context.healthinformatics.graphs.BoxPlot;
+import context.healthinformatics.graphs.GraphInputInterface;
 import context.healthinformatics.interfacecomponents.IntermediateResults;
 import context.healthinformatics.writer.WriteToTXT;
 
@@ -117,10 +116,10 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	}
 
 	private void setGraphInputPanel() {
-		JPanel graphInputPanel = createEmptyWithGridBagLayoutPanel(MainFrame.CODETABCOLOR); 
-		//TODO change color
-		graphInputPanel.setPreferredSize(new Dimension(panelWidth, panelHeight));
-		leftPanel.add(graphInputPanel, setGrids(0, 1, new Insets(0, INSETS, INSETS, 0)));
+		GraphInputInterface graphInputInterface = new GraphInputInterface(
+				panelWidth, panelHeight, MainFrame.OUTPUTTABCOLOR);
+		leftPanel.add(graphInputInterface.loadPanel(), 
+				setGrids(0, 1, new Insets(0, INSETS, INSETS, 0)));
 	}
 	
 	private void setButtonArea(JButton button, JPanel parent, int y) {
