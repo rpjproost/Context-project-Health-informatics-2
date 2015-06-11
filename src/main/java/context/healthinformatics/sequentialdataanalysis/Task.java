@@ -50,6 +50,7 @@ public abstract class Task {
 			runComment(query);
 		}
 		else if (isLine(query.part())) {
+			System.out.println("in the run");
 			runLine(query);
 		}
 		else {
@@ -245,7 +246,7 @@ public abstract class Task {
 	 */
 	protected void runCode(Query query) {
 		query.inc();
-		if (isEquals(query.next())) {
+		if (isEquals(query.part())) {
 			setResult(constraintOnCode(query.next()));
 		}
 	}
@@ -256,7 +257,8 @@ public abstract class Task {
 	 */
 	protected void runLine(Query query) {
 		query.inc();
-		if (isEquals(query.next())) {
+		if (isEquals(query.part())) {
+			System.out.println(query.part());
 			setResult(constraintOnLine(query.next()));
 		}
 	}
@@ -267,7 +269,7 @@ public abstract class Task {
 	 */
 	protected void runComment(Query query) {
 		query.inc();
-		if (isEquals(query.next())) {
+		if (isEquals(query.part())) {
 			StringBuilder q = new StringBuilder();
 			String prefix = "";
 			while (query.hasNext()) {
@@ -277,7 +279,7 @@ public abstract class Task {
 			}
 			setResult(constraintOnEqualsComment(q.toString()));
 		}
-		if (isContains(query.next())) {
+		if (isContains(query.part())) {
 			setResult(constraintOnContainsComment(query.next()));
 		}
 	}

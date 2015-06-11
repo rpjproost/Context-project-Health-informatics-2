@@ -119,6 +119,7 @@ public class Comments extends Task {
 	@Override
 	protected ArrayList<Chunk> constraintOnLine(String line) {
 		int i = Integer.parseInt(line);
+		System.out.println(i);
 		getChunks().get(i - 1).setComment(comment);
 		return getChunks();
 	}
