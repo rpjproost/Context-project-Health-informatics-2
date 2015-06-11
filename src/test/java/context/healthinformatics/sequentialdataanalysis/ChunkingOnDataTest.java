@@ -5,8 +5,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.TreeSet;
 
 import org.junit.After;
 import org.junit.Test;
@@ -76,11 +74,6 @@ public class ChunkingOnDataTest {
 
 		ArrayList<Chunk> x = tests.constraintOnData("groep = 2");
 		assertTrue(x.size() == res);
-
-		test.dropView("workspace");
-		data.dropTable("result");
-		data.dropTable("HospitalRecords");
-		data.dropTable("StatSensor");
 	}
 	
 	/**
@@ -105,11 +98,6 @@ public class ChunkingOnDataTest {
 		ArrayList<Chunk> c = i.getChunks();
 
 		assertTrue(c.size() == res);
-		
-		test.dropView("workspace");
-		data.dropTable("result");
-		data.dropTable("HospitalRecords");
-		data.dropTable("StatSensor");
 		i.interpret("undo");
 	}
 }

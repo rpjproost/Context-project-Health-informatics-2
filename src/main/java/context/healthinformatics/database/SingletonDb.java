@@ -44,6 +44,7 @@ public final class SingletonDb {
 		}
 		else {
 			try {
+				dropAll(data);
 				data.closeConnection();
 				data = new Db(dbName, path);
 			} catch (NullPointerException | SQLException e) {
@@ -58,6 +59,9 @@ public final class SingletonDb {
 	 * @param data database to drop from.
 	 */
 	public static void dropAll(Db data) {
+		if (data == null) {
+			return;
+		}
 		MergeTable mt = new MergeTable();
 		if (data.isMerged()) {
 			mt.dropView("workspace");

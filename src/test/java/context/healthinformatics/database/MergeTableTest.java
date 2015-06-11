@@ -39,13 +39,14 @@ public class MergeTableTest {
 	/**
 	 * object calling the database.
 	 */
-	private Db data = SingletonDb.getDb();
+	private Db data;
 
 	/**
 	 * method preparing for environment for tests.
 	 */
 	@org.junit.Before
 	public void before() {
+		data = SingletonDb.getDb();
 		SingletonDb.dropAll(data);
 	}
 	
@@ -54,6 +55,7 @@ public class MergeTableTest {
 	 */
 	@After
 	public void after() {
+		SingletonDb.dropAll(data);
 		SingletonInterpreter.getInterpreter().setIntialChunks(null);
 	}
 	
@@ -82,9 +84,6 @@ public class MergeTableTest {
 			}
 		}
 		rs.close();
-		data.dropTable("result");
-		data.dropTable("HospitalRecords");
-		data.dropTable("StatSensor");
 	}
 
 	/**
@@ -106,9 +105,6 @@ public class MergeTableTest {
 			assertNotNull(rs.getDate("date"));
 		}
 		rs.close();
-		data.dropTable("result");
-		data.dropTable("HospitalRecords");
-		data.dropTable("StatSensor");
 	}
 
 	/**
@@ -132,11 +128,6 @@ public class MergeTableTest {
 		
 		orderedByDate(rs);
 		rs.close();
-
-		test.dropView("workspace");
-		data.dropTable("result");
-		data.dropTable("HospitalRecords");
-		data.dropTable("StatSensor");
 	}
 	
 	/**
@@ -190,11 +181,6 @@ public class MergeTableTest {
 		
 		orderedByDate(rs);
 		rs.close();
-		
-		test.dropView("workspace");
-		data.dropTable("result");
-		data.dropTable("HospitalRecords");
-		data.dropTable("StatSensor");
 	}
 	
 	/**
@@ -230,11 +216,6 @@ public class MergeTableTest {
 		for (Chunk c : chunks) {
 			assertTrue(c.getLine() > 0);
 		}
-
-		test.dropView("workspace");
-		data.dropTable("result");
-		data.dropTable("HospitalRecords");
-		data.dropTable("StatSensor");
 	}
 
 

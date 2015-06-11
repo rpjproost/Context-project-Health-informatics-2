@@ -2,10 +2,7 @@ package context.healthinformatics.sequentialdataanalysis;
 
 import static org.junit.Assert.assertEquals;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.TreeSet;
 
 import org.junit.After;
 import org.junit.Test;
@@ -50,16 +47,7 @@ public class CodeOnDataTest {
 		Chunk c2 = new Chunk();
 		c2.setComment("A");
 		chunks.add(c2);
-		
-		Set<String> tables = new TreeSet<String>();
-		tables.addAll(data.getTables().keySet());
-		try {
-			for (String key : tables) {
-				data.dropTable(key);
-			}
-		} catch (SQLException e) {
-			System.out.println("Something went wrong preparing db for tests.");
-		}
+		SingletonDb.dropAll(data);
 	}
 	
 	/**
@@ -89,10 +77,5 @@ public class CodeOnDataTest {
 		
 		tests.setCodeOnData("value = 209");
 		assertEquals("test", chunks.get(1).getCode());
-
-		test.dropView("workspace");
-		data.dropTable("result");
-		data.dropTable("HospitalRecords");
-		data.dropTable("StatSensor");
 	}
 }
