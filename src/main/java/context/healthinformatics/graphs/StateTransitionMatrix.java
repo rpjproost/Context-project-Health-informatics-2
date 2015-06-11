@@ -1,12 +1,22 @@
 package context.healthinformatics.graphs;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
 
 import context.healthinformatics.gui.InterfaceHelper;
 import context.healthinformatics.sequentialdataanalysis.Chunk;
@@ -20,6 +30,7 @@ public class StateTransitionMatrix extends InterfaceHelper {
 	private JTable table;
 	private JScrollPane scroll;
 	private JPanel mainPanel;
+	private JTable headerTable;
 
 	/**
 	 * The constructor of the transition matrix.
@@ -32,7 +43,63 @@ public class StateTransitionMatrix extends InterfaceHelper {
 
 	public void initTable() {
 		table = new JTable(getTableData(), getColumnNames());
+		table.setEnabled(false);
+		TableModel model = new DefaultTableModel() {
+
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public int getColumnCount() {
+                return 1;
+            }
+
+            @Override
+            public boolean isCellEditable(int row, int col) {
+                return false;
+            }
+
+            @Override
+            public int getRowCount() {
+                return table.getRowCount();
+            }
+
+            @Override
+            public Class<?> getColumnClass(int colNum) {
+                switch (colNum) {
+                    case 0:
+                        return String.class;
+                    default:
+                        return super.getColumnClass(colNum);
+                }
+            }
+        };
+        headerTable = new JTable(model);
+        for (int i = 0; i < table.getRowCount(); i++) {
+            headerTable.setValueAt(codes.get(i), i, 0);
+        }
+        headerTable.setShowGrid(false);
+        headerTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+        headerTable.setPreferredScrollableViewportSize(new Dimension(50, 0));
+        headerTable.getColumnModel().getColumn(0).setPreferredWidth(50);
+        headerTable.getColumnModel().getColumn(0).setCellRenderer(new TableCellRenderer() {
+
+            @Override
+            public Component getTableCellRendererComponent(JTable x, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+
+                boolean selected = table.getSelectionModel().isSelectedIndex(row);
+                Component component = table.getTableHeader().getDefaultRenderer().getTableCellRendererComponent(table, value, false, false, -1, -2);
+                ((JLabel) component).setHorizontalAlignment(SwingConstants.CENTER);
+                if (selected) {
+                    component.setFont(component.getFont().deriveFont(Font.BOLD));
+                    component.setForeground(Color.red);
+                } else {
+                    component.setFont(component.getFont().deriveFont(Font.PLAIN));
+                }
+                return component;
+            }
+        });
 		scroll = new JScrollPane(table);
+		scroll.setRowHeaderView(headerTable);
 		mainPanel.add(scroll, setGrids(0, 0));
 	}
 
@@ -42,8 +109,7 @@ public class StateTransitionMatrix extends InterfaceHelper {
 
 	public String[] getColumnNames() {
 		String[] columnNames = new String[codes.size()];
-	//	columnNames[0] = "";
-		for (int i = 1; i < codes.size(); i++) {
+		for (int i = 0; i < codes.size(); i++) {
 			columnNames[i] = codes.get(i);
 		}
 		return columnNames;
@@ -53,7 +119,17 @@ public class StateTransitionMatrix extends InterfaceHelper {
 		Object[][] data = new Object[codes.size()][codes.size()];
 		for (int i = 0; i < codes.size(); i++) {
 			for (int j = 0; j < codes.size(); j++) {
-				data[i][j] = i + j;
+				if (i == j) {
+					data[i][j] = "x";
+				} else {
+					ConnectionSet current = new ConnectionSet(codes.get(i), codes.get(j));
+					Integer value = countMap.get(current);
+					if (value != null) {
+						data[i][j] = value;
+					} else {
+						data[i][j] = 0;
+					}
+				}
 			}
 		}
 		return data;
