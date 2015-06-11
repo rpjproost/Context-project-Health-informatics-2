@@ -3,6 +3,7 @@ package context.healthinformatics.sequentialdataanalysis;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import context.healthinformatics.analyse.Query;
 import context.healthinformatics.analyse.SingletonInterpreter;
@@ -14,30 +15,118 @@ import context.healthinformatics.database.SingletonDb;
  */
 public class Comparison extends Task {
 	
+	private ArrayList<Integer> values;
+	private ArrayList<Date> dates;
+	
+	/**
+	 * Constructor for Comparison.
+	 */
+	public Comparison() {
+		values = new ArrayList<Integer>();
+		dates = new ArrayList<Date>();
+	}
+	
+	private void getCreaValuesAndDates() throws SQLException {
+		ResultSet rs = SingletonDb.getDb().selectResultSet("workspace", "value, date", "beschrijving = 'Kreatinine (stat)'");
+		values = new ArrayList<Integer>();
+		dates = new ArrayList<Date>();
+		while (rs.next()) {
+			values.add(rs.getInt("value"));
+			dates.add(rs.getDate("date"));
+		}
+	}
+	
 	/**
 	 * Executes a  comparison task.
 	 * @param query An array of query words.
 	 * @throws Exception query input can be wrong.
 	 */
 	@Override
-	public void run(Query query) throws Exception {
+	public void run(Query query) throws Exception {////////////////////////////////////////////////////////////////////////
 		ArrayList<Chunk> c = SingletonInterpreter.getInterpreter().getChunks();
 		query.inc();
 		setChunks(c);
 		//handle second part
 	}
 	
-	private ArrayList<Integer> getAdvice() {
-		
+	private ArrayList<String> getAdvice() throws SQLException {
+		ArrayList<String> list = determineCreatineStatus();
+		ArrayList<Date> uniqueDates = removeDuplicateDates();
 	}
 	
-	private ArrayList<String> determineCreatineStatus() {
-		
+	private ArrayList<String> determineCreatineStatus() throws SQLException {
+		ArrayList<String> result = new ArrayList<String>();//correspondeert met dates waar alle dubble uit zijn gehaald.
+		ArrayList<String> boundaries =  calculateMeasurementBoundaries();
+		int count = 4;// omdat je pas bij de vijfde meting iets kan zeggen.
+		while (count < dates.size()) {
+			if (!dates.get(count).equals(dates.get(count + 1))) {
+				result.add(boundaries.get(count));
+				count++;
+			}
+			else {
+				while (!dates.get(count).equals(dates.get(count + 1))) {
+					count++;
+				}
+				result.add(resolveBoundaries(boundaries.get(count), boundaries.get(count - 1)));
+				count++;
+			}
+		}
+		return result;
 	}
 	
+	private ArrayList<Date> removeDuplicateDates() {
+		ArrayList<Date> list = new ArrayList<Date>();
+		Date d = dates.get(0);
+		list.add(d);
+		for (int i = 1; i < dates.size(); i++) {
+			Date curDate = dates.get(i);
+			if (!d.equals(curDate)) {
+				list.add(curDate);
+				d = curDate;
+			}
+		}
+		return list;
+	}
+	
+	private String resolveBoundaries(String s1, String s2) {
+		if (s1.equals("Safe")) {
+			return "Safe";
+		}
+		if (s1.equals("Reasonably Safe")) {
+			return "Reasonably Safe";
+		}
+		if (s1.equals("Somewhat Safe") &&  s1.equals("Safe")) {
+			return "Safe";
+		}
+		if (s1.equals("Somewhat Safe") &&  s1.equals("Reasonably Safe")) {
+			return "Reasonably Safe";
+		}
+		if (s1.equals("Somewhat Safe") &&  s1.equals("Somewhat Safe")) {
+			return "Somewhat Safe";
+		}
+		if (s1.equals("Somewhat Safe") &&  s1.equals("Concerned")) {
+			return "Concerned";
+		}
+		if (s1.equals("Concerned") &&  s1.equals("Safe")) {
+			return "Reasonably Safe";
+		}
+		if (s1.equals("Concerned") &&  s1.equals("Reasonably Safe")) {
+			return "Somewhat Safe";
+		}
+		if (s1.equals("Concerned") &&  s1.equals("Somewhat Safe")) {
+			return "Concerned";
+		}
+		if (s1.equals("Concerned") &&  s1.equals("Concerned")) {
+			return "Concerned";
+		}
+		else {
+			return null;
+		}
+	}
+
 	private ArrayList<String> calculateMeasurementBoundaries() throws SQLException {
 		ArrayList<String> result = new ArrayList<String>();
-		ArrayList<Integer> values = getCreaValues();
+		getCreaValuesAndDates();
 		ArrayList<Integer> averageValues = getValueAverages(values);
 		ArrayList<Integer> boundaries = runAlgorithm(values, averageValues);
 		for (int i = 0; i < boundaries.size(); i++) {
@@ -63,7 +152,7 @@ public class Comparison extends Task {
 		ArrayList<Integer> result = new ArrayList<Integer>();
 		int count = 0;
 		int sum = 0;
-		for (int i = 5; i < values.size(); i++) {
+		for (int i = 4; i < values.size(); i++) {
 			sum = 0;
 			for (int j = i; j >= 0; j--) {
 				sum += Math.sqrt(values.get(j) - averageValues.get(count));
@@ -74,21 +163,10 @@ public class Comparison extends Task {
 		return result;
 	}
 	
-	private ArrayList<Integer> getCreaValues() throws SQLException {
-		ResultSet rs = SingletonDb.getDb().selectResultSet("workspace", "value, date", "beschrijving = 'Kreatinine (stat)'");
-		ArrayList<Integer> values = new ArrayList<Integer>();
-		
-		while (rs.next()) {
-			values.add(rs.getInt("value"));
-			
-		}
-		return values;
-	}
-	
 	private ArrayList<Integer> getValueAverages(ArrayList<Integer> list) {
 		ArrayList<Integer> result = new ArrayList<Integer>();
 		int sum = 0;
-		for (int i = 5; i < list.size(); i++) {
+		for (int i = 4; i < list.size(); i++) {
 			sum = 0;
 			for (int j = i; j >= 0; j--) {
 				sum += list.get(i);
