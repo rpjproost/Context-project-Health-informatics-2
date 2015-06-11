@@ -74,4 +74,10 @@ public class HistogramPanel extends InterfaceHelper implements GraphPanel {
 		return histogramPanel;
 	}
 
+	@Override
+	public void updateContainer() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

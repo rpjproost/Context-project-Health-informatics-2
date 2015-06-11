@@ -87,7 +87,7 @@ public class HelpFrame extends InterfaceHelper {
 	private void setWindowListener() {
 		helpMainFrame.addWindowListener(new java.awt.event.WindowAdapter() {
 			@Override
-			public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+			public void windowClosing(WindowEvent windowEvent) {
 				helpController.setHelpFrameOpen(false);
 			}
 		});

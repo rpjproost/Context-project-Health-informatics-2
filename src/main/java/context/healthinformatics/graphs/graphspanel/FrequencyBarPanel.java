@@ -74,4 +74,10 @@ public class FrequencyBarPanel extends InterfaceHelper implements GraphPanel {
 		return frequencyBarPanel;
 	}
 
+	@Override
+	public void updateContainer() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

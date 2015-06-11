@@ -130,4 +130,14 @@ public class GraphInputInterface extends InterfaceHelper {
 				new Insets(0, 0, 0, CHECKBOXESINSETS)));
 		graphInputParentPanel.add(checkboxes, setGrids(0, 0));
 	}
+
+	/**
+	 * Updates all panels.
+	 */
+	public void update() {
+		boxPlotPanel.updateContainer();
+		frequencyPanel.updateContainer();
+		histogramPanel.updateContainer();
+		stemAndLeafPlotPanel.updateContainer();
+	}
 }

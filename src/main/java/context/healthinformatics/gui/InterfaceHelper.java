@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
+import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -18,6 +19,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+
+import context.healthinformatics.database.SingletonDb;
+import context.healthinformatics.parser.Column;
 
 /**
  * Class that defines the most methods that are needed in several interface
@@ -436,5 +440,22 @@ public class InterfaceHelper extends JPanel {
 		} else {
 			panel.setVisible(false);
 		}
+	}
+	
+	/**
+	 * @return the column names of the database.
+	 */
+	public String[] getColumnNames() {
+		String[] columnNames;
+		ArrayList<Column> columns = SingletonDb.getDb().getColumns();
+		if (columns != null) {
+			columnNames = new String[columns.size()];
+			for (int i = 0; i < columns.size(); i++) {
+				columnNames[i] = columns.get(i).getColumnName();
+			}
+		} else {
+			columnNames = new String[0];
+		}
+		return columnNames;
 	}
 }

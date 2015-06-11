@@ -34,6 +34,11 @@ public class BoxPlotPanel extends InterfaceHelper implements GraphPanel {
 		this.checkbox.addActionListener(this);
 	}
 	
+	@Override
+	public void updateContainer() {
+		container.updateY(getColumnNames());
+	}
+	
 	/**
 	 * Initialize the graph panel for the box plot.
 	 */

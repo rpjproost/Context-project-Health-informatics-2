@@ -43,6 +43,7 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	private int panelWidth;
 	private int panelHeight;
 	private JFileChooser savePopup;
+	private GraphInputInterface graphInputInterface;
 
 	/**
 	 * Constructor.
@@ -68,6 +69,7 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	@Override
 	public JPanel loadPanel() {
 		imr.updateIntermediateResult();
+		graphInputInterface.update();
 		JPanel panel = MainFrame.createPanel(MainFrame.OUTPUTTABCOLOR,
 				mf.getScreenWidth(), mf.getStatePanelSize());
 		panel.add(outputParentPanel);
@@ -116,7 +118,7 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	}
 
 	private void setGraphInputPanel() {
-		GraphInputInterface graphInputInterface = new GraphInputInterface(
+		graphInputInterface = new GraphInputInterface(
 				panelWidth, panelHeight, MainFrame.OUTPUTTABCOLOR);
 		leftPanel.add(graphInputInterface.loadPanel(), 
 				setGrids(0, 1, new Insets(0, INSETS, INSETS, 0)));

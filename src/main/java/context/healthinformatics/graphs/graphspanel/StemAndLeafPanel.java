@@ -60,8 +60,6 @@ public class StemAndLeafPanel extends InterfaceHelper implements GraphPanel {
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == checkbox) {
 			checkVisibility(checkbox, stemAndLeafPanel);
-			System.out.println("check: " + checkbox.isSelected());
-			System.out.println(stemAndLeafPanel.isVisible());
 		}
 	}
 	
@@ -71,6 +69,11 @@ public class StemAndLeafPanel extends InterfaceHelper implements GraphPanel {
 	@Override
 	public JPanel loadPanel() {
 		return stemAndLeafPanel;
+	}
+
+	@Override
+	public void updateContainer() {
+		container.updateX(getColumnNames());
 	}
 
 }

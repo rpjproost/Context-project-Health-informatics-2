@@ -12,6 +12,10 @@ public interface GraphPanel extends ActionListener {
 	int CHECKBOXHEIGHT = 25;
 	int INPUTELEMENTS = 4;
 	
+	/**
+	 * Initialize the container for the panel.
+	 */
+	void updateContainer();
 	
 	/**
 	 * @param title the name of the graph where this panel is for.
