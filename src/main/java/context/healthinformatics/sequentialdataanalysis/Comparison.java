@@ -1,10 +1,12 @@
 package context.healthinformatics.sequentialdataanalysis;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 import context.healthinformatics.analyse.Query;
 import context.healthinformatics.analyse.SingletonInterpreter;
+import context.healthinformatics.database.SingletonDb;
 
 /**
  * Class which determines the advice for patients in the ADMIRE project
@@ -22,13 +24,53 @@ public class Comparison extends Task {
 		ArrayList<Chunk> c = SingletonInterpreter.getInterpreter().getChunks();
 		query.inc();
 		setChunks(c);
-		setResult(getKreaStatData());
+		//handle second part
 	}
 	
-	private ArrayList<Chunk> getKreaStatData() throws SQLException {
-		Constraints c = new Constraints(getChunks());
-		System.out.println("get krea");
-		return c.constraintOnData("beschrijving = 'Kreatinine (stat)'");
+	private ArrayList<Integer> getAdvice() {
+		
+	}
+	
+	private ArrayList<Integer> determineCreatineStatus() {
+		
+	}
+	
+	private ArrayList<Integer> calculateMeasurementBoundaries() throws SQLException {
+		ArrayList<Integer> values = getCreaValues();
+		ArrayList<Integer> averageValues = getValueAverages(values);
+		ArrayList<Integer> result = new ArrayList<Integer>();
+		int count = 0;
+		int sum = 0;
+		for (int i = 5; i < values.size(); i++) {
+			sum = 0;
+			for (int j = i; j >= 0; j--) {
+				sum += Math.sqrt(values.get(j) - averageValues.get(count));
+			}
+			count++;
+			result.add(sum / 5);
+		}
+	}
+	
+	private ArrayList<Integer> getCreaValues() throws SQLException {
+		ResultSet rs = SingletonDb.getDb().selectResultSet("workspace", "value", "beschrijving = 'Kreatinine (stat)'");
+		ArrayList<Integer> values = new ArrayList<Integer>();
+		while (rs.next()) {
+			values.add(rs.getInt("value"));
+		}
+		return values;
+	}
+	
+	private ArrayList<Integer> getValueAverages(ArrayList<Integer> list) throws SQLException {
+		ArrayList<Integer> result = new ArrayList<Integer>();
+		int sum = 0;
+		for (int i = 5; i < list.size(); i++) {
+			sum = 0;
+			for (int j = i; j >= 0; j--) {
+				sum += list.get(i);
+			}
+			result.add(sum / 5);
+		}
+		return result;
 	}
 
 	@Override
