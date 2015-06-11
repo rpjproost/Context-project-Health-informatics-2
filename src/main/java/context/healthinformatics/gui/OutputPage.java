@@ -17,6 +17,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import context.healthinformatics.analyse.SingletonInterpreter;
+import context.healthinformatics.database.SingletonDb;
 import context.healthinformatics.graphs.GraphController;
 import context.healthinformatics.graphs.GraphInputInterface;
 import context.healthinformatics.interfacecomponents.IntermediateResults;
@@ -189,7 +191,13 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == getFileButton()) {
-			saveFileChooser(getFileButton(), "txt");
+			try {
+				fileChooser(saveFileChooser(getFileButton(), "txt"));
+			} catch (SQLException | IOException e1) {
+				JOptionPane.showMessageDialog(null,
+						"Something went wrong exporting your file!!",
+						"Export File Error", JOptionPane.WARNING_MESSAGE);
+			}
 		}
 		if (e.getSource() == updateGraphButton) {
 			try {
@@ -217,8 +225,10 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	public void fileChooser(int rVal) throws SQLException, IOException {
 		if (rVal == JFileChooser.APPROVE_OPTION) {
 			WriteToTXT write = new WriteToTXT(savePopup.getSelectedFile()
-					.getName(), savePopup.getCurrentDirectory().toString());
-			write.toString(); // TODO
+					.getAbsolutePath());
+			write.writeToFile(
+					SingletonInterpreter.getInterpreter().getChunks(),
+					SingletonDb.getDb());
 		}
 	}
 }
