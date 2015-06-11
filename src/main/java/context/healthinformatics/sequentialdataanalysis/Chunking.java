@@ -215,10 +215,17 @@ public class Chunking extends Task {
 	}
 	
 	@Override
-	public void run(Query query) throws Exception{
-		super.run(query);
-		if(isDate(query.part())) {
-			chunkOnDate(query);
+	public void run(Query query) throws Exception {
+		try {
+			super.run(query);
+		} catch (Exception e) {
+			boolean check = isDate(query.part());
+			if (check) {
+				chunkOnDate(query);
+			}
+			else {
+				throw new Exception(e.getMessage() + "/date");
+			}
 		}
 	}
 	
