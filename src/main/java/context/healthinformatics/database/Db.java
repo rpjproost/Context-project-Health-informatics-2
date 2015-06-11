@@ -10,6 +10,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import context.healthinformatics.interfacecomponents.Observable;
+import context.healthinformatics.interfacecomponents.Observer;
 import context.healthinformatics.parser.Column;
 
 /**
@@ -17,16 +19,17 @@ import context.healthinformatics.parser.Column;
  * @author Rick, 30 apr 2015.
  *
  */
-public class Db {
+public class Db implements Observer {
 
 	private String db; // db query.
 	private String dName;
-	private String pad = "C:/db/"; // default path for testing.
+	private String pad;
 	private Connection conn;
 	private Statement stmt = null;
 	private HashMap<String, ArrayList<Column>> tables;
 	private String mergeTable = "result";
 	private ArrayList<Column> columns;
+	private boolean merged = false;
 
 	/**
 	 * Constructor, sets variables and calls setupConn.
@@ -41,15 +44,12 @@ public class Db {
 	 *             the sql exception
 	 */
 	protected Db(String databaseName, String p) throws NullPointerException,
-			SQLException {
-		if (p == null || databaseName == null) {
-			throw new NullPointerException();
-		}
+	SQLException {
 		dName = databaseName;
 		pad = p;
-		File delDb = new File(pad + dName);
+		File f = new File(pad + dName);
+		removeDirectory(f);
 		tables = new HashMap<String, ArrayList<Column>>();
-		removeDirectory(delDb);
 		setupConn();
 	}
 
@@ -73,6 +73,13 @@ public class Db {
 		}
 		return res;
 	}
+
+//	public void showTables() throws Exception {
+//		String sqlIn = "SHOW TABLES;";
+//		InputStream stream = new ByteArrayInputStream(sqlIn.getBytes(StandardCharsets.UTF_8));
+//		ij.runScript(conn,stream,StandardCharsets.UTF_8.name(), System.out,"UTF-8");
+//		stream.close();
+//	}
 
 	/**
 	 * Creates new table.
@@ -249,12 +256,34 @@ public class Db {
 	}
 
 	/**
+	 * Closes connection for new project.
+	 */
+	public void closeConnection() {
+		try {
+			if (stmt != null) {
+				stmt.close();
+			}
+			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	 * Returns specified path to the database on your computer.
 	 * 
 	 * @return db path string.
 	 */
 	public String getDbPath() {
 		return pad;
+	}
+
+	/**
+	 * Returns name of database.
+	 * @return String name of database.
+	 */
+	public String getDbName() {
+		return dName;
 	}
 
 	/**
@@ -332,7 +361,7 @@ public class Db {
 		}
 		return dir.delete();
 	}
-	
+
 	/**
 	 * Gets mergeTable name.
 	 * @return String of mergeTable name.
@@ -348,7 +377,7 @@ public class Db {
 	public void setMergeTable(String mt) {
 		mergeTable = mt;
 	}
-	
+
 	/**
 	 * Sets all columns in result table.
 	 * @param col column list.
@@ -356,12 +385,41 @@ public class Db {
 	public void setColumns(ArrayList<Column> col) {
 		columns = col;
 	}
-	
+
 	/**
 	 * Get all columns in result table.
 	 * @return list with columns.
 	 */
 	public ArrayList<Column> getColumns() {
-		return columns;
+		if (columns != null) {
+			return columns;
+		}
+		return new ArrayList<Column>();
+	}
+
+	/**
+	 * if database has a merged table true.
+	 * @return true/false.
+	 */
+	public boolean isMerged() {
+		return merged;
+	}
+
+	/**
+	 * Sets boolean to true if database gets mergetable.
+	 * @param merged boolean.
+	 */
+	public void setMerged(boolean merged) {
+		this.merged = merged;
+	}
+
+	@Override
+	public void update(String param) {
+		SingletonDb.update(param);
+	}
+
+	@Override
+	public void observe(Observable o) {
+	 o.subscribe(this);
 	}
 }

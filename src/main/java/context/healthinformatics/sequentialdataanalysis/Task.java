@@ -148,6 +148,7 @@ public abstract class Task {
 			while (rs.next()) {
 				res.add(rs.getInt(mergeTable + "id"));
 			}
+			rs.close();
 		} catch (SQLException e) {
 			throw new SQLException(e);
 		}

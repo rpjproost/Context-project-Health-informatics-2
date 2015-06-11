@@ -8,6 +8,8 @@ import java.util.HashMap;
 public final class SingletonInterpreter {
 
 	private static HashMap<String, Interpreter > interpreters = new HashMap<String, Interpreter>();
+	private static Interpreter interpreter;
+	private static String project = "analyse";
 
 	/**
 	 * method to defeat the constructor.
@@ -21,15 +23,21 @@ public final class SingletonInterpreter {
 	 * @param name the name of the interpreter.
 	 * @return the Interpreter.
 	 */
-	public static synchronized Interpreter getInterpreter(String name) {
-		if (!interpreters.containsKey(name)) {
-			interpreters.put(name, createInterpreter(name));
+	private static Interpreter getInterpreter(String name) {
+		if (interpreter == null) {
+			if (!interpreters.containsKey(name)) {
+				interpreters.put(name, createInterpreter(name));
+			}
+			interpreter = interpreters.get(name);
 		}
-		return interpreters.get(name);
+		return interpreter;
 	}
 
-	private static Interpreter createInterpreter(String name) {
-		return new Interpreter(name);
+	private static synchronized Interpreter createInterpreter(String name) {
+		if (!interpreters.containsKey(name)) {
+			return new Interpreter(name);
+		}
+		return interpreters.get(name);
 	}
 	
 	/**
@@ -37,6 +45,15 @@ public final class SingletonInterpreter {
 	 * @return the Interpreter.
 	 */
 	public static Interpreter getInterpreter() {
-		return getInterpreter("analyse");
+		return getInterpreter(project);
+	}
+
+	/**
+	 * udpates the current workspace.
+	 * @param param paramter.
+	 */
+	protected static void update(String param) {
+		project = param;
+		interpreter = null;
 	}
 }

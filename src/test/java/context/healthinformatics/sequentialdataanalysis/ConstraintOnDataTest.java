@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,7 +36,7 @@ public class ConstraintOnDataTest {
 	/**
 	 * object calling the database.
 	 */
-	private Db data = SingletonDb.getDb();
+	private Db data;
 
 	private ArrayList<Chunk> chunks;
 	
@@ -48,15 +49,25 @@ public class ConstraintOnDataTest {
 	 */
 	@Before
 	public void before() throws SQLException, IOException {
+		data = SingletonDb.getDb();
+		SingletonDb.dropAll(data);
 		xmlp = new XMLParser(path + "demo.xml");
 		xmlp.parse();
 		xmlp.createDatabase();
-		
 		String[] clause = new String[1];
 		clause[0] = "meeting.createdby = 'admire2'";
 		test = new MergeTable();
 		test.merge(clause);
 		chunks = test.getChunks();
+	}
+	
+	/**
+	 * Removes chunks from interpreter.
+	 */
+	@After
+	public void after() {
+		SingletonDb.dropAll(data);
+		SingletonInterpreter.getInterpreter().setIntialChunks(null);
 	}
 	
 	/**

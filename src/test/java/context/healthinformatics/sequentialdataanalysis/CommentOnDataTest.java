@@ -1,13 +1,15 @@
 package context.healthinformatics.sequentialdataanalysis;
 
 import static org.junit.Assert.assertEquals;
-import java.sql.SQLException;
+
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.junit.After;
 import org.junit.Test;
 
+import context.healthinformatics.analyse.SingletonInterpreter;
 import context.healthinformatics.database.Db;
 import context.healthinformatics.database.MergeTable;
 import context.healthinformatics.database.SingletonDb;
@@ -39,6 +41,7 @@ public class CommentOnDataTest {
 	 */
 	@org.junit.Before
 	public void before() {
+		SingletonDb.dropAll(data);
 		chunks = new ArrayList<Chunk>();
 		Chunk c1 = new Chunk();
 		c1.setComment("A");
@@ -50,13 +53,15 @@ public class CommentOnDataTest {
 		
 		Set<String> tables = new TreeSet<String>();
 		tables.addAll(data.getTables().keySet());
-		try {
-			for (String key : tables) {
-				data.dropTable(key);
-			}
-		} catch (SQLException e) {
-			System.out.println("Something went wrong preparing db for tests.");
-		}
+	}
+	
+	/**
+	 * Removes chunks from interpreter.
+	 */
+	@After
+	public void after() {
+		SingletonDb.dropAll(data);
+		SingletonInterpreter.getInterpreter().setIntialChunks(null);
 	}
 
 	/**
@@ -78,10 +83,5 @@ public class CommentOnDataTest {
 
 		tests.setCommentOnData("value = 209");
 		assertEquals("testComment", chunks.get(1).getComment());
-
-		test.dropView("workspace");
-		data.dropTable("result");
-		data.dropTable("HospitalRecords");
-		data.dropTable("StatSensor");
 	}
 }

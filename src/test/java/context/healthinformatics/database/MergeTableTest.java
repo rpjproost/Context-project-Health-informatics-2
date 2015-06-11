@@ -12,8 +12,10 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.junit.After;
 import org.junit.Test;
 
+import context.healthinformatics.analyse.SingletonInterpreter;
 import context.healthinformatics.parser.XMLParser;
 import context.healthinformatics.sequentialdataanalysis.Chunk;
 
@@ -37,22 +39,24 @@ public class MergeTableTest {
 	/**
 	 * object calling the database.
 	 */
-	private Db data = SingletonDb.getDb();
+	private Db data;
 
 	/**
 	 * method preparing for environment for tests.
 	 */
 	@org.junit.Before
 	public void before() {
-		Set<String> tables = new TreeSet<String>();
-		tables.addAll(data.getTables().keySet());
-		try {
-			for (String key : tables) {
-				data.dropTable(key);
-			}
-		} catch (SQLException e) {
-			System.out.println("Something went wrong preparing db for tests.");
-		}
+		data = SingletonDb.getDb();
+		SingletonDb.dropAll(data);
+	}
+	
+	/**
+	 * Removes chunks from interpreter.
+	 */
+	@After
+	public void after() {
+		SingletonDb.dropAll(data);
+		SingletonInterpreter.getInterpreter().setIntialChunks(null);
 	}
 	
 	/**
@@ -80,9 +84,6 @@ public class MergeTableTest {
 			}
 		}
 		rs.close();
-		data.dropTable("result");
-		data.dropTable("HospitalRecords");
-		data.dropTable("StatSensor");
 	}
 
 	/**
@@ -104,9 +105,6 @@ public class MergeTableTest {
 			assertNotNull(rs.getDate("date"));
 		}
 		rs.close();
-		data.dropTable("result");
-		data.dropTable("HospitalRecords");
-		data.dropTable("StatSensor");
 	}
 
 	/**
@@ -129,11 +127,7 @@ public class MergeTableTest {
 		ResultSet rs = data.selectResultSet("workspace", "date", "");
 		
 		orderedByDate(rs);
-
-		test.dropView("workspace");
-		data.dropTable("result");
-		data.dropTable("HospitalRecords");
-		data.dropTable("StatSensor");
+		rs.close();
 	}
 	
 	/**
@@ -186,11 +180,7 @@ public class MergeTableTest {
 		ResultSet rs = data.selectResultSet("workspace", "date", "");
 		
 		orderedByDate(rs);
-		
-		test.dropView("workspace");
-		data.dropTable("result");
-		data.dropTable("HospitalRecords");
-		data.dropTable("StatSensor");
+		rs.close();
 	}
 	
 	/**
@@ -226,11 +216,6 @@ public class MergeTableTest {
 		for (Chunk c : chunks) {
 			assertTrue(c.getLine() > 0);
 		}
-
-		test.dropView("workspace");
-		data.dropTable("result");
-		data.dropTable("HospitalRecords");
-		data.dropTable("StatSensor");
 	}
 
 

@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.Stack;
 
+import context.healthinformatics.interfacecomponents.Observable;
+import context.healthinformatics.interfacecomponents.Observer;
 import context.healthinformatics.sequentialdataanalysis.Chunk;
 import context.healthinformatics.sequentialdataanalysis.Chunking;
 import context.healthinformatics.sequentialdataanalysis.Codes;
@@ -18,7 +20,7 @@ import context.healthinformatics.sequentialdataanalysis.Task;
 /**
  * class handling the interpreting of the user input.
  */
-public class Interpreter {
+public class Interpreter implements Observer {
 	
 	private Stack<Task> tasks;
 	private ArrayList<Chunk> firstList;
@@ -55,8 +57,6 @@ public class Interpreter {
 		}
 		sc.close();
 	}
-	
-	
 	
 	/**
 	 * method to create the correct task.
@@ -105,7 +105,6 @@ public class Interpreter {
 		
 	}
 	
-	
 	/**
 	 * setter for the initial list of chunks.
 	 * @param list list to set
@@ -113,8 +112,6 @@ public class Interpreter {
 	public void setIntialChunks(ArrayList<Chunk> list) {
 		firstList = list;
 	}
-	
-
 	
 	/**
 	 * deep coppy a list of chunks.
@@ -147,4 +144,13 @@ public class Interpreter {
 		return name;
 	}
 
+	@Override
+	public void update(String param) {
+		SingletonInterpreter.update(param);
+	}
+	
+	@Override
+	public void observe(Observable o) {
+		o.subscribe(this);
+	}
 }

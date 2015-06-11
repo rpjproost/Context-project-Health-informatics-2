@@ -103,6 +103,7 @@ public final class SqlBuilder {
 				res = max;
 			}
 		}
+		rs.close();
 		return res;
 	}
 

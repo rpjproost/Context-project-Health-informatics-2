@@ -146,6 +146,7 @@ public class ParserToDBTest {
 		for (String table : tables) {
 			data.dropTable(table);
 		}
+		SingletonDb.dropAll(data);
 	}
 	
 	/**

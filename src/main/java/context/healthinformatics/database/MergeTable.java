@@ -72,6 +72,7 @@ public class MergeTable {
 		sql.append("CREATE VIEW workspace AS SELECT * FROM  " + mergeTable
 				+ " ORDER BY ");
 		sql.append(sortingString);
+		data.setMerged(true);
 		try {
 			data.executeUpdate(sql.toString());
 		} catch (SQLException e) {
@@ -198,14 +199,11 @@ public class MergeTable {
 	 * 
 	 * @param viewName
 	 *            The name of the view to drop.
+	 * @throws SQLException if the view can't be dropped.
 	 */
-	public void dropView(String viewName) {
+	public void dropView(String viewName) throws SQLException {
 		String sql = "DROP VIEW " + viewName;
-		try {
-			data.executeUpdate(sql);
-		} catch (SQLException e) {
-			log.warning("The view: " + viewName + "could not be dropped.");
-		}
+		data.executeUpdate(sql);
 	}
 
 	/**
@@ -224,6 +222,7 @@ public class MergeTable {
 			c.setLine(line);
 			chunks.add(c);
 		}
+		rs.close();
 		return chunks;
 	}
 }

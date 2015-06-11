@@ -5,9 +5,8 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.TreeSet;
 
+import org.junit.After;
 import org.junit.Test;
 
 import context.healthinformatics.analyse.Interpreter;
@@ -43,15 +42,16 @@ public class ChunkingOnDataTest {
 	 */
 	@org.junit.Before
 	public void before() {
-		Set<String> tables = new TreeSet<String>();
-		tables.addAll(data.getTables().keySet());
-		try {
-			for (String key : tables) {
-				data.dropTable(key);
-			}
-		} catch (SQLException e) {
-			System.out.println("Something went wrong preparing db for tests.");
-		}
+		SingletonDb.dropAll(data);
+	}
+	
+	/**
+	 * Empty the interpreter.
+	 */
+	@After
+	public void after() {
+		SingletonDb.dropAll(data);
+		SingletonInterpreter.getInterpreter().setIntialChunks(null);
 	}
 
 	/**
@@ -75,11 +75,6 @@ public class ChunkingOnDataTest {
 
 		ArrayList<Chunk> x = tests.constraintOnData("groep = 2");
 		assertTrue(x.size() == res);
-
-		test.dropView("workspace");
-		data.dropTable("result");
-		data.dropTable("HospitalRecords");
-		data.dropTable("StatSensor");
 	}
 	
 	/**
@@ -104,11 +99,6 @@ public class ChunkingOnDataTest {
 		ArrayList<Chunk> c = i.getChunks();
 
 		assertTrue(c.size() == res);
-		
-		test.dropView("workspace");
-		data.dropTable("result");
-		data.dropTable("HospitalRecords");
-		data.dropTable("StatSensor");
 		i.interpret("undo");
 	}
 }
