@@ -31,13 +31,35 @@ public class Comparison extends Task {
 		
 	}
 	
-	private ArrayList<Integer> determineCreatineStatus() {
+	private ArrayList<String> determineCreatineStatus() {
 		
 	}
 	
-	private ArrayList<Integer> calculateMeasurementBoundaries() throws SQLException {
+	private ArrayList<String> calculateMeasurementBoundaries() throws SQLException {
+		ArrayList<String> result = new ArrayList<String>();
 		ArrayList<Integer> values = getCreaValues();
 		ArrayList<Integer> averageValues = getValueAverages(values);
+		ArrayList<Integer> boundaries = runAlgorithm(values, averageValues);
+		for (int i = 0; i < boundaries.size(); i++) {
+			if (boundaries.get(i) < averageValues.get(i)) {
+				result.add("Safe");
+			}
+			if (boundaries.get(i) < averageValues.get(i)
+					&& checkReasonablySafeUpperBound(boundaries, averageValues, i)) {
+				result.add("Reasonably Safe");
+			}
+			if (!checkReasonablySafeUpperBound(boundaries, averageValues, i)
+					&& checkSomewhatSafeUpperBound(boundaries, averageValues, i)) {
+				result.add("Somewhat Safe");
+			}
+			if (!checkSomewhatSafeUpperBound(boundaries, averageValues, i)) {
+				result.add("Concerned");
+			}
+		}
+		return result;
+	}
+
+	private ArrayList<Integer> runAlgorithm(ArrayList<Integer> values, ArrayList<Integer> averageValues) throws SQLException {
 		ArrayList<Integer> result = new ArrayList<Integer>();
 		int count = 0;
 		int sum = 0;
@@ -49,18 +71,21 @@ public class Comparison extends Task {
 			count++;
 			result.add(sum / 5);
 		}
+		return result;
 	}
 	
 	private ArrayList<Integer> getCreaValues() throws SQLException {
-		ResultSet rs = SingletonDb.getDb().selectResultSet("workspace", "value", "beschrijving = 'Kreatinine (stat)'");
+		ResultSet rs = SingletonDb.getDb().selectResultSet("workspace", "value, date", "beschrijving = 'Kreatinine (stat)'");
 		ArrayList<Integer> values = new ArrayList<Integer>();
+		
 		while (rs.next()) {
 			values.add(rs.getInt("value"));
+			
 		}
 		return values;
 	}
 	
-	private ArrayList<Integer> getValueAverages(ArrayList<Integer> list) throws SQLException {
+	private ArrayList<Integer> getValueAverages(ArrayList<Integer> list) {
 		ArrayList<Integer> result = new ArrayList<Integer>();
 		int sum = 0;
 		for (int i = 5; i < list.size(); i++) {
@@ -71,6 +96,22 @@ public class Comparison extends Task {
 			result.add(sum / 5);
 		}
 		return result;
+	}
+	
+	private Boolean checkReasonablySafeUpperBound(ArrayList<Integer> boundaries
+			, ArrayList<Integer> averageValues, int index) {
+		double a = averageValues.get(index) + boundaries.get(index);
+		double b = averageValues.get(index) * 1.15;
+		double max = Math.max(a, b);
+		return boundaries.get(index) < max;
+	}
+	
+	private boolean checkSomewhatSafeUpperBound(ArrayList<Integer> boundaries,
+			ArrayList<Integer> averageValues, int index) {
+		double a = averageValues.get(index) + ( 1.5 * boundaries.get(index));
+		double b = averageValues.get(index) * 1.25;
+		double max = Math.max(a, b);
+		return boundaries.get(index) < max;
 	}
 
 	@Override

@@ -66,7 +66,7 @@ public class Interpreter implements Observer {
 	 * @return the newly created task.
 	 */
 	private Task createTask(Query q) {
-		String key = q.part();
+		String key = q.part().toLowerCase();
 		String parameter = q.getParameter();
 		if (key.equals("chunk")) {
 			if (parameter != null) {
