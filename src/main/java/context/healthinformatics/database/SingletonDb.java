@@ -64,7 +64,11 @@ public final class SingletonDb {
 		}
 		MergeTable mt = new MergeTable();
 		if (data.isMerged()) {
-			mt.dropView("workspace");
+			try {
+				mt.dropView("workspace");
+			} catch (SQLException e) {
+			//do nothing for tests.
+			}
 		}
 		try {
 			data.dropTable("result");

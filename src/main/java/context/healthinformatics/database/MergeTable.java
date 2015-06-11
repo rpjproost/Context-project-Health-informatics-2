@@ -199,14 +199,11 @@ public class MergeTable {
 	 * 
 	 * @param viewName
 	 *            The name of the view to drop.
+	 * @throws SQLException if the view can't be dropped.
 	 */
-	public void dropView(String viewName) {
+	public void dropView(String viewName) throws SQLException {
 		String sql = "DROP VIEW " + viewName;
-		try {
-			data.executeUpdate(sql);
-		} catch (SQLException e) {
-			log.warning("The view: " + viewName + "could not be dropped.");
-		}
+		data.executeUpdate(sql);
 	}
 
 	/**
