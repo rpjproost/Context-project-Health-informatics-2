@@ -58,8 +58,6 @@ public class Interpreter implements Observer {
 		sc.close();
 	}
 	
-	
-	
 	/**
 	 * method to create the correct task.
 	 * @param k key to check witch task to create.
@@ -107,7 +105,6 @@ public class Interpreter implements Observer {
 		
 	}
 	
-	
 	/**
 	 * setter for the initial list of chunks.
 	 * @param list list to set
@@ -115,8 +112,6 @@ public class Interpreter implements Observer {
 	public void setIntialChunks(ArrayList<Chunk> list) {
 		firstList = list;
 	}
-	
-
 	
 	/**
 	 * deep coppy a list of chunks.
@@ -158,5 +153,4 @@ public class Interpreter implements Observer {
 	public void observe(Observable o) {
 		o.subscribe(this);
 	}
-
 }

@@ -2,8 +2,6 @@ package context.healthinformatics.analyse;
 
 import java.util.HashMap;
 
-import context.healthinformatics.interfacecomponents.Observable;
-import context.healthinformatics.interfacecomponents.Observer;
 /**
  * The SingleTonInterpreter class.
  */
