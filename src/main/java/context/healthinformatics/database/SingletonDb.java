@@ -53,6 +53,10 @@ public final class SingletonDb {
 		return data;
 	}
 
+	/**
+	 * drop everything from the given database.
+	 * @param data database to drop from.
+	 */
 	public static void dropAll(Db data) {
 		MergeTable mt = new MergeTable();
 		if (data.isMerged()) {
@@ -106,6 +110,11 @@ public final class SingletonDb {
 	 */
 	public static String getDbName() {
 		return dbName;
+	}
+
+	public static void update(String param) {
+		
+		
 	}
 
 

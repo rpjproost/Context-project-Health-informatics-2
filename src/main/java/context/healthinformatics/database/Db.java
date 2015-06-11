@@ -15,6 +15,8 @@ import java.util.HashMap;
 
 import org.apache.derby.tools.ij;
 
+import context.healthinformatics.interfacecomponents.Observable;
+import context.healthinformatics.interfacecomponents.Observer;
 import context.healthinformatics.parser.Column;
 
 /**
@@ -22,7 +24,7 @@ import context.healthinformatics.parser.Column;
  * @author Rick, 30 apr 2015.
  *
  */
-public class Db {
+public class Db implements Observer {
 
 	private String db; // db query.
 	private String dName;
@@ -412,5 +414,15 @@ public class Db {
 	 */
 	public void setMerged(boolean merged) {
 		this.merged = merged;
+	}
+
+	@Override
+	public void update(String param) {
+		SingletonDb.update(param);
+	}
+
+	@Override
+	public void observe(Observable o) {
+	 o.subscribe(this);
 	}
 }

@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import context.healthinformatics.analyse.SingletonInterpreter;
+import context.healthinformatics.database.SingletonDb;
 import context.healthinformatics.interfacecomponents.FileTree;
 import context.healthinformatics.interfacecomponents.InputPageComponents;
 import context.healthinformatics.interfacecomponents.XMLEditor;
@@ -59,6 +60,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		xmledit = new XMLEditor(this);
 		xmlController = new XMLEditorController();
 		xmlController.subscribe(SingletonInterpreter.getInterpreter());
+		xmlController.subscribe(SingletonDb.getDb());
 		
 		ipc = new InputPageComponents(mf, this);
 		checkOnFiles();
