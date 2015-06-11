@@ -17,6 +17,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import context.healthinformatics.analyse.SingletonInterpreter;
 import context.healthinformatics.graphs.BoxPlot;
 import context.healthinformatics.interfacecomponents.IntermediateResults;
 import context.healthinformatics.writer.WriteToTXT;
@@ -142,15 +143,7 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 		graphArea.setPreferredSize(new Dimension(panelWidth, mf.getStatePanelSize()
 				/ HUNDERTPROCENT * CORRECION - FIELDCORRECTION - INSETS));
 		BoxPlot bp = new BoxPlot("");
-		ArrayList<String> listOfColumns = new ArrayList<String>();
-		listOfColumns.add("time");
-		try {
-			bp.setData(listOfColumns);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			//TODO POPUP
-			e.printStackTrace();
-		}
+		
 		graphArea.add(bp.getPanel(), setGrids(0, 0));
 		rightPanel.add(graphArea, setGrids(0, 1, new Insets(0, INSETS, 0, INSETS)));
 	}

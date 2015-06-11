@@ -1,6 +1,8 @@
 package context.healthinformatics.graphs;
 
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -8,6 +10,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map.Entry;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -28,15 +33,21 @@ import context.healthinformatics.analyse.Interpreter;
 import context.healthinformatics.analyse.SingletonInterpreter;
 import context.healthinformatics.database.Db;
 import context.healthinformatics.database.SingletonDb;
+import context.healthinformatics.gui.InterfaceHelper;
 import context.healthinformatics.sequentialdataanalysis.Chunk;
 
 /**
  * Demonstration of a box-and-whisker chart using a {@link CategoryPlot}.
  */
-public class BoxPlot {
+public class BoxPlot extends InterfaceHelper implements ActionListener {
 
-	private Interpreter interpreter = SingletonInterpreter.getInterpreter();
 	private ChartPanel chartPanel;
+	private JPanel mainPanel;
+	private static final int BOX_PLOT_WIDTH = 455;
+	private static final int BOX_PLOT_HEIGHT = 600;
+	private JButton boxPlotTempRefreshButton;
+
+	private DefaultBoxAndWhiskerCategoryDataset dataset;
 
 	/**
 	 * Creates a new demo.
@@ -45,8 +56,27 @@ public class BoxPlot {
 	 *            the frame title.
 	 */
 	public BoxPlot(final String title) {
+		boxPlotTempRefreshButton = new JButton("Refresh BoxPlotWithData");
+		boxPlotTempRefreshButton.addActionListener(this);
+		mainPanel = createEmptyWithGridBagLayoutPanel();
+		mainPanel.setPreferredSize(new java.awt.Dimension(BOX_PLOT_WIDTH,
+				BOX_PLOT_HEIGHT));
+		mainPanel.add(boxPlotTempRefreshButton, setGrids(0, 1));
+	}
 
-		final BoxAndWhiskerCategoryDataset dataset = createSampleDataset();
+	/**
+	 * Get the mainPanel of the boxplot.
+	 * 
+	 * @return the panel with the boxplot
+	 */
+	public JPanel getPanel() {
+		return mainPanel;
+	}
+
+	/**
+	 * Create a botplot.
+	 */
+	public void createBoxPlot() {
 
 		final CategoryAxis xAxis = new CategoryAxis("Type");
 		final NumberAxis yAxis = new NumberAxis("Value");
@@ -61,39 +91,67 @@ public class BoxPlot {
 				new Font("SansSerif", Font.BOLD, 14), plot, true);
 		chartPanel = new ChartPanel(chart);
 		chartPanel.setPreferredSize(new java.awt.Dimension(450, 270));
+		mainPanel.add(chartPanel, setGrids(0, 0));
+		mainPanel.revalidate();
 	}
 
-	public ChartPanel getPanel() {
-		return chartPanel;
-	}
-
+	/**
+	 * Create the data set for the boxplot.
+	 * 
+	 * @param columns
+	 *            the columns for which the box plot is made
+	 * @throws Exception
+	 *             if the dtaa of the columns is not found throw exception
+	 */
 	public void setData(ArrayList<String> columns) throws Exception {
-		int line;
+		dataset = new DefaultBoxAndWhiskerCategoryDataset();
+		Interpreter interpreter = SingletonInterpreter.getInterpreter();
 		ArrayList<Chunk> chunks = interpreter.getChunks();
-		ArrayList<Double> dataList = new ArrayList<Double>();
-		for (int i = 0; i < chunks.size(); i++) {
-			for (int j = 0; j < columns.size(); j++) {
-				dataList.add(getChunkData(chunks.get(i), columns.get(i)));
+
+		for (int j = 0; j < columns.size(); j++) {
+			ArrayList<Double> dataList = new ArrayList<Double>();
+			for (int i = 0; i < chunks.size(); i++) {
+
+				dataList.add(getChunkData(chunks.get(i), columns.get(j)));
+
 			}
+			dataset.add(dataList, columns.get(j), " Type " + j);
+		}
+		createBoxPlot();
+
+	}
+
+	private double getChunkData(Chunk chunk, String column) throws Exception {
+		Db data = SingletonDb.getDb();
+		try {
+			ResultSet rs;
+			rs = data.selectResultSet("result", column,
+					"resultid = " + chunk.getLine());
+			ResultSetMetaData rsmd = rs.getMetaData();
+			String value = "";
+			if (rs.next()) {
+				value = rs.getObject(column).toString();
+			}
+
+			rs.close();
+			Double res = parseToDouble(value);
+			System.out.println(res);
+			return res;
+			// rsmd.getColumnName(i)
+			// processResultSet(rsmd.getColumnCount(), rs);
+
+		} catch (SQLException e) {
+			throw new Exception("Something went wrong creating the boxplot");
 		}
 
 	}
 
-	private double getChunkData(Chunk chunk,String column) throws Exception{
-		Db data = SingletonDb.getDb();
+	public Double parseToDouble(String value) {
 		try {
-			ResultSet rs;
-			rs = data.selectResultSet("result", column, "resultid = " + chunk.getLine());
-			
-			System.out.println(rs.getObject(column));
-			rs.close();
-			return 2.0;
-//			rsmd.getColumnName(i)
-//			processResultSet(rsmd.getColumnCount(), rs);
-			
-		
-		} catch (SQLException e) {
-			throw new Exception("Something went wrong creating the boxplot");
+			return Double.parseDouble(value);
+		} catch (NumberFormatException e) {
+			System.out.println("wut");
+			return null;
 		}
 
 	}
@@ -134,6 +192,21 @@ public class BoxPlot {
 
 		}
 		return dataset;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (e.getSource() == boxPlotTempRefreshButton) {
+			ArrayList<String> listOfColumns = new ArrayList<String>();
+			listOfColumns.add("value");
+			try {
+				setData(listOfColumns);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+
 	}
 
 }
