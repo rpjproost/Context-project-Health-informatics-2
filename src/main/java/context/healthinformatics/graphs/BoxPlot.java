@@ -43,10 +43,10 @@ public class BoxPlot extends InterfaceHelper {
 	 * Creates a new box plot.
 	 */
 	public BoxPlot() {
+		width = getScreenWidth() / 2 - FOUR * INSETS;
 		chartContainerPanel = createEmptyWithGridBagLayoutPanel();
 		chartContainerPanel.setPreferredSize(new Dimension(width,
 				BOX_PLOT_HEIGHT));
-		width = getScreenWidth() / 2 - 2 * INSETS;
 		mainPanel = createEmptyWithGridBagLayoutPanel();
 		mainPanel.setPreferredSize(new Dimension(width, BOX_PLOT_PANEL_HEIGHT));
 		mainPanel.add(chartContainerPanel, setGrids(0, 0));

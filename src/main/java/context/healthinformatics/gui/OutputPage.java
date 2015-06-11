@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import context.healthinformatics.analyse.SingletonInterpreter;
@@ -36,7 +37,7 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	private static final int BUTTONHEIGHT = 80;
 	private static final int SELECTERHEIGHT = 500;
 	private static final int SELECTERWIDTH = 600;
-	private MainFrame mf;
+//	private MainFrame mf;
 	private IntermediateResults imr;
 	private JButton exportFileButton;
 	private JButton updateGraphButton;
@@ -49,6 +50,7 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	private GraphInputInterface graphInputInterface;
 	private GraphController graphController;
 	private JPanel graphArea;
+	private JScrollPane scrollPane;
 
 	/**
 	 * Constructor.
@@ -57,9 +59,9 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	 *            is the mainframe object
 	 */
 	public OutputPage(MainFrame m) {
-		mf = m;
-		panelWidth = mf.getScreenWidth() / 2 - 2 * INSETS;
-		panelHeight = mf.getStatePanelSize() / 2 - FIELDCORRECTION;
+//		mf = m;
+		panelWidth = getScreenWidth() / 2 - 2 * INSETS;
+		panelHeight = getStatePanelSize() / 2 - FIELDCORRECTION;
 		imr = new IntermediateResults(panelWidth, panelHeight, "The Result:",
 				MainFrame.OUTPUTTABCOLOR);
 		graphController = new GraphController();
@@ -77,7 +79,7 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 		imr.updateIntermediateResult();
 		graphInputInterface.update();
 		JPanel panel = MainFrame.createPanel(MainFrame.OUTPUTTABCOLOR,
-				mf.getScreenWidth(), mf.getStatePanelSize());
+				getScreenWidth(), getStatePanelSize());
 		panel.add(outputParentPanel);
 		return panel;
 	}
@@ -101,12 +103,10 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 
 	private void initAll() {
 		outputParentPanel = createPanel(MainFrame.OUTPUTTABCOLOR,
-				mf.getScreenWidth(), mf.getStatePanelSize());
+				getScreenWidth(), getStatePanelSize());
 		outputParentPanel.setLayout(new GridBagLayout());
-		leftPanel.setPreferredSize(new Dimension(mf.getScreenWidth() / 2, mf
-				.getStatePanelSize()));
-		rightPanel.setPreferredSize(new Dimension(mf.getScreenWidth() / 2, mf
-				.getStatePanelSize()));
+		leftPanel.setPreferredSize(new Dimension(getScreenWidth() / 2, getStatePanelSize()));
+		rightPanel.setPreferredSize(new Dimension(getScreenWidth() / 2, getStatePanelSize()));
 		setLeftPanel();
 		setRightPanel();
 	}
@@ -148,14 +148,12 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	}
 
 	private void setGraphArea() {
-		graphArea = createEmptyWithGridBagLayoutPanel(MainFrame.CODETABCOLOR);
-		// TODO change color
-		graphArea.setPreferredSize(new Dimension(panelWidth, mf
-				.getStatePanelSize()
-				/ HUNDERTPROCENT
-				* CORRECION
-				- FIELDCORRECTION - INSETS));
-		rightPanel.add(graphArea,
+		int height = getStatePanelSize() / HUNDERTPROCENT * CORRECION - FIELDCORRECTION - INSETS;
+		graphArea = createContainerWithGivenSizePanel(panelWidth - 2 * INSETS, height - INSETS);
+		scrollPane = makeScrollPaneForContainerPanel(graphArea, panelWidth, height);
+		graphArea.add(graphController.getBoxPlot(), setGrids(0, 0));
+		graphArea.add(graphController.getFerquencyBar(), setGrids(0, 1));
+		rightPanel.add(scrollPane,
 				setGrids(0, 1, new Insets(0, INSETS, 0, INSETS)));
 	}
 
@@ -202,8 +200,7 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 		if (e.getSource() == updateGraphButton) {
 			try {
 				graphController.updateGraphs(graphInputInterface);
-				graphArea.add(graphController.getBoxPlot(), setGrids(0, 0));
-				rightPanel.revalidate();
+				scrollPane.revalidate();
 			} catch (NullPointerException excep) {
 				JOptionPane.showMessageDialog(null,
 						"Your input fields aren't filled in correctly!!",
