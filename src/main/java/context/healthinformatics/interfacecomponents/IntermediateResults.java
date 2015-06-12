@@ -29,7 +29,6 @@ public class IntermediateResults extends InterfaceHelper {
 	private JPanel interMediateResultParentPanel;
 	private JEditorPane displayHtmlPane = new JEditorPane();
 	private JScrollPane scroll;
-	private Interpreter interpreter = SingletonInterpreter.getInterpreter();
 
 	private int globalChunkCounter = 1;
 	private String title;
@@ -100,7 +99,7 @@ public class IntermediateResults extends InterfaceHelper {
 	 * Update the text of the intermediate result.
 	 */
 	public void updateIntermediateResult() {
-		if (interpreter.getChunks() != null) {
+		if (SingletonInterpreter.getInterpreter().getChunks() != null) {
 			globalChunkCounter = 1;
 			this.displayHtmlPane.setText(buildHtmlOfIntermediateResult());
 			this.displayHtmlPane.setCaretPosition(0);
@@ -117,7 +116,7 @@ public class IntermediateResults extends InterfaceHelper {
 	 * @return the string with the HTML
 	 */
 	private String buildHtmlOfIntermediateResult() {
-		ArrayList<Chunk> chunks = interpreter.getChunks();
+		ArrayList<Chunk> chunks = SingletonInterpreter.getInterpreter().getChunks();
 		StringBuilder buildString = new StringBuilder();
 		Db database = SingletonDb.getDb();
 		String htmlOfColumnTableRow = buildColumnsHTMLTableRow(database
