@@ -86,8 +86,6 @@ public class WriteToTXT {
 	 * @param columns
 	 *            the columns of the data
 	 * @return a the columns
-	 * @throws SQLException
-	 *             the sqlexception
 	 */
 	public String processColumnNames(ArrayList<Column> columns) {
 		StringBuffer res = new StringBuffer();
@@ -107,8 +105,6 @@ public class WriteToTXT {
 	 * @param chunks
 	 *            the list of chunks
 	 * @return a stringbuffer with the right formatted resultset
-	 * @throws SQLException
-	 *             the sql exception of the resultset
 	 */
 	public String processChunks(ArrayList<Chunk> chunks) {
 		StringBuffer str = new StringBuffer();

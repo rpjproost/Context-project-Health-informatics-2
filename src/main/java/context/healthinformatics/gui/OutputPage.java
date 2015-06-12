@@ -37,7 +37,7 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	private static final int BUTTONHEIGHT = 80;
 	private static final int SELECTERHEIGHT = 500;
 	private static final int SELECTERWIDTH = 600;
-//	private MainFrame mf;
+	// private MainFrame mf;
 	private IntermediateResults imr;
 	private JButton exportFileButton;
 	private JButton updateGraphButton;
@@ -59,7 +59,7 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	 *            is the mainframe object
 	 */
 	public OutputPage(MainFrame m) {
-//		mf = m;
+		// mf = m;
 		panelWidth = getScreenWidth() / 2 - 2 * INSETS;
 		panelHeight = getStatePanelSize() / 2 - FIELDCORRECTION;
 		imr = new IntermediateResults(panelWidth, panelHeight, "The Result:",
@@ -105,8 +105,10 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 		outputParentPanel = createPanel(MainFrame.OUTPUTTABCOLOR,
 				getScreenWidth(), getStatePanelSize());
 		outputParentPanel.setLayout(new GridBagLayout());
-		leftPanel.setPreferredSize(new Dimension(getScreenWidth() / 2, getStatePanelSize()));
-		rightPanel.setPreferredSize(new Dimension(getScreenWidth() / 2, getStatePanelSize()));
+		leftPanel.setPreferredSize(new Dimension(getScreenWidth() / 2,
+				getStatePanelSize()));
+		rightPanel.setPreferredSize(new Dimension(getScreenWidth() / 2,
+				getStatePanelSize()));
 		setLeftPanel();
 		setRightPanel();
 	}
@@ -148,11 +150,15 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	}
 
 	private void setGraphArea() {
-		int height = getStatePanelSize() / HUNDERTPROCENT * CORRECION - FIELDCORRECTION - INSETS;
-		graphArea = createContainerWithGivenSizePanel(panelWidth - 2 * INSETS, height - INSETS);
-		scrollPane = makeScrollPaneForContainerPanel(graphArea, panelWidth, height);
+		int height = getStatePanelSize() / HUNDERTPROCENT * CORRECION
+				- FIELDCORRECTION - INSETS;
+		graphArea = createContainerWithGivenSizePanel(panelWidth - 2 * INSETS,
+				height - INSETS);
+		scrollPane = makeScrollPaneForContainerPanel(graphArea, panelWidth,
+				height);
 		graphArea.add(graphController.getBoxPlot(), setGrids(0, 0));
 		graphArea.add(graphController.getFerquencyBar(), setGrids(0, 1));
+		graphArea.add(graphController.getTransitionMatrix(), setGrids(0, 2));
 		rightPanel.add(scrollPane,
 				setGrids(0, 1, new Insets(0, INSETS, 0, INSETS)));
 	}
