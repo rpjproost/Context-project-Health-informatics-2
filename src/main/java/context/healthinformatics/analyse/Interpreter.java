@@ -49,18 +49,23 @@ public class Interpreter implements Observer {
 		while (sc.hasNextLine()) {
 			Query query = new Query(sc.nextLine());
 			Task task = createTask(query);
-			String key = query.part().toLowerCase();
 			if (task != null) { //task == null if revert / undo was called
 				task.run(query);
 				tasks.push(task);
-			} else if (key.equals("undo") || key.equals("revert")) {
-				undo();
-			}
-			else if (key.equals("undoAll") || key.equals("revertAll")) {
-				undoAll();
+			} else {
+				parseUndo(query.part().toLowerCase());
 			}
 		}
 		sc.close();
+	}
+
+	private void parseUndo(String key) {
+		if (key.equals("undo") || key.equals("revert")) {
+			undo();
+		}
+		else if (key.equals("undoAll") || key.equals("revertAll")) {
+			undoAll();
+		}
 	}
 
 	/**
