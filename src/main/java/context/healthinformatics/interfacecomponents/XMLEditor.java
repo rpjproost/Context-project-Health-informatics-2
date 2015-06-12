@@ -20,7 +20,7 @@ import context.healthinformatics.writer.XMLDocument;
  * XMLEditor class makes a panel which is filled with a form to edit XML files.
  */
 public class XMLEditor extends InterfaceHelper implements ActionListener {
-
+	private static final long serialVersionUID = 1L;
 	private static final int MARGINTOP = 10;
 
 	private static final int THREE = 3;

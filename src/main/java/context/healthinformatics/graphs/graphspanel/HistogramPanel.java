@@ -14,6 +14,8 @@ import context.healthinformatics.gui.InterfaceHelper;
  * Creates a panel specific for the box plot.
  */
 public class HistogramPanel extends InterfaceHelper implements GraphPanel {
+
+	private static final long serialVersionUID = 1L;
 	private JCheckBox checkbox;
 	private JPanel histogramPanel;
 	private GraphInputContainer container;

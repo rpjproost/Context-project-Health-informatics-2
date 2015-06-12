@@ -21,6 +21,8 @@ import context.healthinformatics.gui.InterfaceHelper;
  * Create a loading screen to show the user we are processing the data.
  */
 public class LoadingScreen extends InterfaceHelper {
+
+	private static final long serialVersionUID = 1L;
 	private JFrame loadMainFrame;
 	private JPanel containerLoadPanel;
 	private JEditorPane displayHtmlPane;

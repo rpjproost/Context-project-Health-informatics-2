@@ -15,6 +15,7 @@ import context.healthinformatics.gui.InterfaceHelper;
  */
 public class TransitionaMatrixPanel extends InterfaceHelper implements GraphPanel {
 
+	private static final long serialVersionUID = 1L;
 	private JCheckBox checkbox;
 	private JPanel transitionMatrixPanel;
 	private GraphInputContainer container;

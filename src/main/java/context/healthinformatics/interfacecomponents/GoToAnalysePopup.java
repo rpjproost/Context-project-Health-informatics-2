@@ -20,6 +20,8 @@ import context.healthinformatics.writer.XMLDocument;
  */
 public class GoToAnalysePopup extends InterfaceHelper implements ActionListener {
 
+	private static final long serialVersionUID = 1L;
+
 	private static final int LOADINGSCREEN_WIDTH = 600;
 	private static final int LOADINGSCREEN_HEIGTH = 400;
 

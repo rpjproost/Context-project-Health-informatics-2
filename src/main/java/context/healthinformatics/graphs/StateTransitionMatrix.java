@@ -23,6 +23,7 @@ import context.healthinformatics.sequentialdataanalysis.Chunk;
  * The state transition matrix class.
  */
 public class StateTransitionMatrix extends InterfaceHelper {
+	private static final long serialVersionUID = 1L;
 	private static final int ROW_WIDTH = 75;
 	private static final int HEIGHT = 28;
 	private static final int MINUSTWO = -2;
