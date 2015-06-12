@@ -26,15 +26,6 @@ public class OutputPageTest {
 		op = new OutputPage(mf);
 		op.loadPanel();
 	}
-	
-	/**
-	 * Test the getButton if the string is the same as we created.
-	 */
-	@Test
-	public void getButtonTest() {
-		JButton button = op.getFileButton();
-		assertEquals(button.getText(), "Export File...");
-	}
 
 	/**
 	 * close the frames after each test.

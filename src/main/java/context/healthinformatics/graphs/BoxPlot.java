@@ -206,21 +206,4 @@ public class BoxPlot extends InterfaceHelper {
 		}
 
 	}
-
-	// @Override
-	// public void actionPerformed(ActionEvent e) {
-	// if (e.getSource() == boxPlotTempRefreshButton) {
-	// ArrayList<String> listOfColumns = new ArrayList<String>();
-	// listOfColumns.add("value");
-	// // listOfColumns.add("time");
-	// try {
-	// setDataPerChunk(listOfColumns);
-	// } catch (Exception e1) {
-	// // TODO Auto-generated catch block
-	// e1.printStackTrace();
-	// }
-	// }
-	//
-	// }
-
 }
