@@ -15,9 +15,6 @@ import context.healthinformatics.gui.InterfaceHelper;
  */
 public class AnalysePopupRowContainer extends InterfaceHelper implements
 		ActionListener {
-
-	private static final long serialVersionUID = 1L;
-
 	private static final int TEXT_FIELD_LENGTH = 10;
 	private JComboBox<String> docNameDropDown;
 	private JComboBox<String> docDropDown;

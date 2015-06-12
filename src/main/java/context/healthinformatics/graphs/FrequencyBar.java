@@ -30,7 +30,6 @@ import context.healthinformatics.gui.InterfaceHelper;
  * Creates a frequency bar.
  */
 public class FrequencyBar extends InterfaceHelper {
-	private static final long serialVersionUID = 1L;
 	private JPanel chartContainerPanel;
 	private JPanel mainPanel;
 	private static final int BOX_PLOT_PANEL_HEIGHT = 400;

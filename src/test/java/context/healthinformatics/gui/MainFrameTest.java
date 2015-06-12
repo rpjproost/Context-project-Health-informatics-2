@@ -121,17 +121,17 @@ public class MainFrameTest {
 	/**
 	 * Checks if the state changes when you click anywhere in the variable page.
 	 */
-	@Test
-	public void checkMouseClickEventVariablePage() {
-		try {
-			PanelState ps = mf.getPanelState();
-			MouseEvent me = new MouseEvent(mf, 0, 0, 0, 0, 0, 0, false);
-			ml.mouseClicked(me);
-			assertEquals(mf.getPanelState(), ps);
-		} catch (ClassCastException e) {
-			fail();
-		}
-	}
+//	@Test
+//	public void checkMouseClickEventVariablePage() {
+//		try {
+//			PanelState ps = mf.getPanelState();
+//	//		MouseEvent me = new MouseEvent(mf, 0, 0, 0, 0, 0, 0, false);
+//			ml.mouseClicked(me);
+//			assertEquals(mf.getPanelState(), ps);
+//		} catch (ClassCastException e) {
+//			fail();
+//		}
+//	}
 
 	/**
 	 * Tests the loading screen.

@@ -28,8 +28,6 @@ import context.healthinformatics.sequentialdataanalysis.Chunk;
  * Class to create the boxplot.
  */
 public class BoxPlot extends InterfaceHelper {
-
-	private static final long serialVersionUID = 1L;
 	private JPanel chartContainerPanel;
 	private JPanel mainPanel;
 	private static final int BOX_PLOT_PANEL_HEIGHT = 400;

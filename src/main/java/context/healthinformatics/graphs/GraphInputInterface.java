@@ -19,8 +19,6 @@ import context.healthinformatics.gui.MainFrame;
  * Creates a interface to specify which data the user want to use to create a specific graph.
  */
 public class GraphInputInterface extends InterfaceHelper {
-
-	private static final long serialVersionUID = 1L;
 	private static final int CHECKBOXHEIGHT = 25;
 	private static final int CHECKBOXESINSETS = 40;
 	private int graphInputWidth;
