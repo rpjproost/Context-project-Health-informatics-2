@@ -24,7 +24,7 @@ public class Chunk {
 	private int line;
 	private int sum;
 	private ResultSet rs;
-	private boolean compute = false;
+	private boolean compute;
 	private double[] computations;
 
 	/**
@@ -187,11 +187,13 @@ public class Chunk {
 	 */
 	public ArrayList<String> toArray() {
 		ArrayList<String> res = new ArrayList<String>();
+		final int comp = 3;
 		if (isCompute()) {
 			res.add("sum of values = " + computations[0]);
+			res.add("max of values = " + computations[1]);
+			res.add("min of values = " + computations[2]);
+			res.add("average of values = " + computations[comp]);
 			res.add("Childs sum = " + sum);
-		} else if (sum != Integer.MIN_VALUE) {
-			res.add(sum + "");
 			return res;
 		} else if (hasChild()) {
 			res.add("Chunk contains childs, code = " + code + " comment = "
@@ -305,35 +307,69 @@ public class Chunk {
 		this.compute = compute;
 	}
 	
+	/**
+	 * Initialize computing for a parent chunk.
+	 * @param column column to be computed.
+	 * @throws SQLException if column is not in table.
+	 */
 	public void initializeComputations(String column) throws SQLException {
+		final int comp = 4;
 		if (hasChild()) {
-			computations = new double[4];
-			Db data = SingletonDb.getDb();
-			computeSum(column, data);
+			computations = new double[comp];
 			setCompute(true);
+			this.sum = getChildren().size();
+			buildQueryCompute(column);
 		}
 	}
 	
-	public void computeSum(String column, Db data) throws SQLException {
-		double sum = 0;
+	/**
+	 * Build query for computing the column.
+	 * @param column the column to be computed.
+	 * @throws SQLException if column is not in table.
+	 */
+	public void buildQueryCompute(String column) throws SQLException {
 		StringBuilder query = new StringBuilder();
 		String prefix = "";
+		Db data = SingletonDb.getDb();
 		for (int i = 0; i < getChildren().size(); i++) {
 			query.append(prefix); query.append(data.getMergeTable()); query.append("id = "); 
 			int line = getChildren().get(i).getLine();
 			query.append(line);
 			prefix = " OR "; 
 		}
+		computeResultSet(column, query.toString(), data);
+	}
+	
+	/**
+	 * Compute the values sum/max/min/average for column.
+	 * @param column the column to be computed.
+	 * @param query query to get values in chunk.
+	 * @param data database where values are stored.
+	 * @throws SQLException if column is not in table.
+	 */
+	public void computeResultSet(String column, String query, Db data) throws SQLException {
+		double sum = 0;
+		double min = Integer.MAX_VALUE;
+		double max = Integer.MIN_VALUE;
+		int counter = 0;
 		ResultSet rs = data.selectResultSet(data.getMergeTable(), column, query.toString());
 		while (rs.next()) {
 			double value = rs.getDouble(column);
 			if (value != Integer.MIN_VALUE) {
+				if (value > max) {
+					max = value;
+				}
+				if (value < min) {
+					min = value;
+				}
+				counter++;
 				sum += value;
 			}
 		}
 		rs.close();
-		computations[0] = sum;
-		System.out.println(computations[0]);
+		final int comp = 3;
+		computations[0] = sum; computations[1] = max; computations[2] = min; 
+		computations[comp] = sum / counter;
 	}
 
 }

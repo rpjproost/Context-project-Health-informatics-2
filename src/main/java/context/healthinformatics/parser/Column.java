@@ -115,7 +115,7 @@ public class Column  implements Comparable<Column> {
 			if (columnType.toLowerCase().equals("string")) {
 				this.columnType = "varchar(150)";
 			} else if (columnType.toLowerCase().equals("integer")) {
-				this.columnType = "DOUBLE";
+				this.columnType = "INT";
 			} else if (columnType.toLowerCase().equals("date")) {
 				this.columnType = "DATE";
 			} else {
