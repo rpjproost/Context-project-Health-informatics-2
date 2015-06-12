@@ -100,15 +100,6 @@ public class ChunkTest {
 	}
 
 	/**
-	 * Tets the set sum method.
-	 */
-	@Test
-	public void testSetSum() {
-		chunk.setSum(2);
-		assertEquals(chunk.toArray().get(0), "2");
-	}
-
-	/**
 	 * Test the toString method.
 	 */
 	@Test
