@@ -1,12 +1,9 @@
 package context.healthinformatics.gui;
 
-import static org.junit.Assert.assertEquals;
 
-import javax.swing.JButton;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 /**
  * Test the Output Page.
