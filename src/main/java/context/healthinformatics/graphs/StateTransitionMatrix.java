@@ -23,8 +23,6 @@ import context.healthinformatics.sequentialdataanalysis.Chunk;
  * The state transition matrix class.
  */
 public class StateTransitionMatrix extends InterfaceHelper {
-
-	private static final long serialVersionUID = 1L;
 	private static final int ROW_WIDTH = 75;
 	private static final int HEIGHT = 28;
 	private static final int MINUSTWO = -2;
@@ -53,20 +51,22 @@ public class StateTransitionMatrix extends InterfaceHelper {
 		table = new JTable(getTableData(), getColumnNames());
 		table.setEnabled(false);
 		TableModel model = createModel();
-        headerTable = new JTable(model);
-        for (int i = 0; i < table.getRowCount(); i++) {
-            headerTable.setValueAt(codes.get(i), i, 0);
-        }
-        headerTable.setShowGrid(false);
-        headerTable.setPreferredScrollableViewportSize(new Dimension(ROW_WIDTH, 0));
-        headerTable.getColumnModel().getColumn(0).setPreferredWidth(ROW_WIDTH);
-        headerTable.getColumnModel().getColumn(0).setCellRenderer(createTableCellRenderer());
+		headerTable = new JTable(model);
+		for (int i = 0; i < table.getRowCount(); i++) {
+			headerTable.setValueAt(codes.get(i), i, 0);
+		}
+		headerTable.setShowGrid(false);
+		headerTable.setPreferredScrollableViewportSize(new Dimension(ROW_WIDTH,
+				0));
+		headerTable.getColumnModel().getColumn(0).setPreferredWidth(ROW_WIDTH);
+		headerTable.getColumnModel().getColumn(0)
+				.setCellRenderer(createTableCellRenderer());
 		scroll = new JScrollPane(table);
 		scroll.setPreferredSize(new Dimension(width, codes.size() * HEIGHT));
 		scroll.setRowHeaderView(headerTable);
 		mainPanel.add(scroll, setGrids(0, 0));
 	}
-	
+
 	/**
 	 * @return a new table model.
 	 */
@@ -75,45 +75,50 @@ public class StateTransitionMatrix extends InterfaceHelper {
 			private static final long serialVersionUID = 1L;
 
 			@Override
-            public int getColumnCount() {
-                return 1;
-            }
+			public int getColumnCount() {
+				return 1;
+			}
 
-            @Override
-            public boolean isCellEditable(int row, int col) {
-                return false;
-            }
+			@Override
+			public boolean isCellEditable(int row, int col) {
+				return false;
+			}
 
-            @Override
-            public int getRowCount() {
-                return table.getRowCount();
-            }
+			@Override
+			public int getRowCount() {
+				return table.getRowCount();
+			}
 
-            @Override
-            public Class<?> getColumnClass(int colNum) {
-                switch (colNum) {
-                    case 0:
-                        return String.class;
-                    default:
-                        return super.getColumnClass(colNum);
-                }
-            }
-        };
+			@Override
+			public Class<?> getColumnClass(int colNum) {
+				switch (colNum) {
+				case 0:
+					return String.class;
+				default:
+					return super.getColumnClass(colNum);
+				}
+			}
+		};
 	}
-	
+
 	private TableCellRenderer createTableCellRenderer() {
 		return new TableCellRenderer() {
 
-            @Override
-            public Component getTableCellRendererComponent(JTable x, Object value, 
-            		boolean isSelected, boolean hasFocus, int row, int column) {
-                Component component = table.getTableHeader().getDefaultRenderer().
-                		getTableCellRendererComponent(table, value, false, false, -1, MINUSTWO);
-                ((JLabel) component).setHorizontalAlignment(SwingConstants.CENTER);
-                component.setFont(component.getFont().deriveFont(Font.PLAIN));
-                return component;
-            }
-        };
+			@Override
+			public Component getTableCellRendererComponent(JTable x,
+					Object value, boolean isSelected, boolean hasFocus,
+					int row, int column) {
+				Component component = table
+						.getTableHeader()
+						.getDefaultRenderer()
+						.getTableCellRendererComponent(table, value, false,
+								false, -1, MINUSTWO);
+				((JLabel) component)
+						.setHorizontalAlignment(SwingConstants.CENTER);
+				component.setFont(component.getFont().deriveFont(Font.PLAIN));
+				return component;
+			}
+		};
 	}
 
 	/**
@@ -144,7 +149,8 @@ public class StateTransitionMatrix extends InterfaceHelper {
 				if (i == j) {
 					data[i][j] = "x";
 				} else {
-					ConnectionSet current = new ConnectionSet(codes.get(i), codes.get(j));
+					ConnectionSet current = new ConnectionSet(codes.get(i),
+							codes.get(j));
 					Integer value = countMap.get(current);
 					if (value != null) {
 						data[i][j] = value;
@@ -159,7 +165,9 @@ public class StateTransitionMatrix extends InterfaceHelper {
 
 	/**
 	 * Fills the matrix with the data of the chunks.
-	 * @param chunks the data.
+	 * 
+	 * @param chunks
+	 *            the data.
 	 */
 	public void fillTransitionMatrix(ArrayList<Chunk> chunks) {
 		for (int i = 0; i < chunks.size(); i++) {
@@ -179,7 +187,9 @@ public class StateTransitionMatrix extends InterfaceHelper {
 
 	/**
 	 * Process for each pointer a new value to the map.
-	 * @param currentChunk the chunk with the current pointer.
+	 * 
+	 * @param currentChunk
+	 *            the chunk with the current pointer.
 	 */
 	public void processChunkWithPointer(Chunk currentChunk) {
 		HashMap<Chunk, String> pointerMap = currentChunk.getPointer();

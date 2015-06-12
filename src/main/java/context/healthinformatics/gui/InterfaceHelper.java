@@ -27,9 +27,7 @@ import context.healthinformatics.parser.Column;
  * Class that defines the most methods that are needed in several interface
  * classes.
  */
-public class InterfaceHelper extends JPanel {
-
-	private static final long serialVersionUID = 1L;
+public class InterfaceHelper {
 
 	private int tabsX;
 	private static final int TABSY = 120;

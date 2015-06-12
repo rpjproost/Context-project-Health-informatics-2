@@ -22,7 +22,6 @@ import context.healthinformatics.sequentialdataanalysis.Chunk;
  * Panel which displays the intermediate results of the list of chunks.
  */
 public class IntermediateResults extends InterfaceHelper {
-	private static final long serialVersionUID = 1L;
 	private int intermediateResultWidth;
 	private int intermediateResultHeight;
 

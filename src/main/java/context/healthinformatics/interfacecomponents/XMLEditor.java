@@ -21,8 +21,6 @@ import context.healthinformatics.writer.XMLDocument;
  */
 public class XMLEditor extends InterfaceHelper implements ActionListener {
 
-	private static final long serialVersionUID = 1L;
-
 	private static final int MARGINTOP = 10;
 
 	private static final int THREE = 3;

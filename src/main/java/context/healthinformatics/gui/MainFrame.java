@@ -14,7 +14,6 @@ import javax.swing.JPanel;
  */
 public class MainFrame extends InterfaceHelper {
 
-	private static final long serialVersionUID = 1L;
 	private PanelState state;
 	private PanelState inputState = new InputPage(this);
 	private PanelState codeState = new CodePage(this);

@@ -28,7 +28,6 @@ import context.healthinformatics.gui.InterfaceHelper;
  * A Frame for helping the user understand the input page.
  */
 public class HelpFrame extends InterfaceHelper {
-	private static final long serialVersionUID = 1L;
 
 	private static final int FRAME_WIDTH = 600;
 	private static final int FRAME_HEIGHT = 500;
