@@ -134,8 +134,9 @@ public class XMLParser extends Parser {
 	public void createDatabase() {
 		try {
 			for (int i = 0; i < parsers.size(); i++) {
-				createTableDb(documents.get(i));
-				parsers.get(i).parse();
+				if (createTableDb(documents.get(i))) {
+					parsers.get(i).parse();	
+				}
 			}
 		} catch (IOException e) {
 			System.out.println("DB was not created!"); 
@@ -152,9 +153,10 @@ public class XMLParser extends Parser {
 		try {
 			for (int i = 0; i < indexesForParsers.size(); i++) {
 				int index = indexesForParsers.get(i);
-				createTableDb(documents.get(index));
-				parsers.get(index).parse();
-				currentData.add(documents.get(index));
+				if (createTableDb(documents.get(index))) {
+					parsers.get(index).parse();
+					currentData.add(documents.get(index));
+				}
 			}
 		} catch (IOException e) {
 			System.out.println("Table not created!");
@@ -219,12 +221,13 @@ public class XMLParser extends Parser {
 	 *             throws this if the table could not be created. This probably
 	 *             is due to the fact that the table already exists.
 	 */
-	private void createTableDb(XMLDocument xmlDocument) {
+	private boolean createTableDb(XMLDocument xmlDocument) {
 		Db data = SingletonDb.getDb();
 		try {
-			data.createTable(xmlDocument.getDocName(), xmlDocument.getColumns());
+			 return data.createTable(xmlDocument.getDocName(), xmlDocument.getColumns());
 		} catch (SQLException e) {
 			System.out.println("Table could not be created!");
+			return false;
 		}
 	}
 	
