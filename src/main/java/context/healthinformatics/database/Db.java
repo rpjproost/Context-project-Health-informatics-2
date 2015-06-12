@@ -95,6 +95,9 @@ public class Db implements Observer {
 				dropTable(tableName);
 				createTableInDb(tableName, columns);
 			}
+			else {
+				return false;
+			}
 		}
 		else {
 			createTableInDb(tableName, columns);
