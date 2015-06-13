@@ -89,8 +89,7 @@ public class Db implements Observer {
 			throws SQLException {
 		if (tables.get(tableName) != null) {
 			if (createTableAdjustedTable(tableName, columns)) {
-				MergeTable mt = new MergeTable();
-				mt.dropView("workspace");
+				dropView("workspace");
 				dropTable(mergeTable);
 				dropTable(tableName);
 				createTableInDb(tableName, columns);
@@ -115,8 +114,7 @@ public class Db implements Observer {
 	public boolean createTableInDb(String tableName, ArrayList<Column> columns)
 			throws SQLException {
 		stmt = conn.createStatement();
-		String sql = SqlBuilder.createSqlTable(tableName, columns);
-		stmt.executeUpdate(sql);
+		stmt.executeUpdate(SqlBuilder.createSqlTable(tableName, columns));
 		tables.put(tableName, columns);
 		return true;
 	}
@@ -130,7 +128,6 @@ public class Db implements Observer {
 	public boolean createTableAdjustedTable(String tableName, ArrayList<Column> columns) {
 		ArrayList<Column> c = tables.get(tableName);
 		if (c != null && !(c.equals(columns))) {
-			System.out.println("changed");
 			return true;
 		}
 		return false;
@@ -289,6 +286,18 @@ public class Db implements Observer {
 			throw new SQLException(e);
 		}
 		return res;
+	}
+	
+	/**
+	 * method for dropping a view from the database.
+	 * 
+	 * @param viewName
+	 *            The name of the view to drop.
+	 * @throws SQLException if the view can't be dropped.
+	 */
+	public void dropView(String viewName) throws SQLException {
+		String sql = "DROP VIEW " + viewName;
+		executeUpdate(sql);
 	}
 
 	/**

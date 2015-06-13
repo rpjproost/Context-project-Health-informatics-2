@@ -82,11 +82,7 @@ public class ConstraintOnDataTest {
 		i.interpret("filter data where value = 171");
 		ArrayList<Chunk> c = i.getChunks();
 		assertEquals(res, c.size());
-		
-		test.dropView("workspace");
-		data.dropTable("result");
-		data.dropTable("meeting");
-		data.dropTable("ADMIRE2");
+
 		i.interpret("undo");
 	}
 	
@@ -104,10 +100,6 @@ public class ConstraintOnDataTest {
 
 		assertEquals(res, i.getChunks().size());
 		
-		test.dropView("workspace");
-		data.dropTable("result");
-		data.dropTable("meeting");
-		data.dropTable("ADMIRE2");
 		i.interpret("undo");
 		i.interpret("undo");
 	}
