@@ -26,6 +26,7 @@ public class Chunk {
 	private ResultSet rs;
 	private boolean compute;
 	private double[] computations;
+	private double difference = Integer.MIN_VALUE;
 
 	/**
 	 * 
@@ -83,6 +84,14 @@ public class Chunk {
 	 */
 	public void setPointer(HashMap<Chunk, String> pointer) {
 		this.pointer = pointer;
+	}
+
+	/**
+	 * Returns if this chunk has connections to others.
+	 * @return true iff chunk has connection.
+	 */
+	public boolean hasConnection() {
+		return pointer.size() > 0;
 	}
 
 	/**
@@ -187,13 +196,11 @@ public class Chunk {
 	 */
 	public ArrayList<String> toArray() {
 		ArrayList<String> res = new ArrayList<String>();
-		final int comp = 3;
-		if (isCompute()) {
-			res.add("sum of values = " + computations[0]);
-			res.add("max of values = " + computations[1]);
-			res.add("min of values = " + computations[2]);
-			res.add("average of values = " + computations[comp]);
-			res.add("Childs sum = " + sum);
+		if (difference != Integer.MIN_VALUE) {
+			res.add("difference to connection " + difference);
+		}
+		else if (isCompute()) {
+			toArrayComputed(res);
 			return res;
 		} else if (hasChild()) {
 			res.add("Chunk contains childs, code = " + code + " comment = "
@@ -214,6 +221,15 @@ public class Chunk {
 			}
 		}
 		return res;
+	}
+	
+	private void toArrayComputed(ArrayList<String> res) {
+		final int comp = 3;
+		res.add("sum of values = " + computations[0]);
+		res.add("max of values = " + computations[1]);
+		res.add("min of values = " + computations[2]);
+		res.add("average of values = " + computations[comp]);
+		res.add("Childs sum = " + sum);
 	}
 
 	/**
@@ -306,7 +322,7 @@ public class Chunk {
 	public void setCompute(boolean compute) {
 		this.compute = compute;
 	}
-	
+
 	/**
 	 * Initialize computing for a parent chunk.
 	 * @param column column to be computed.
@@ -321,7 +337,7 @@ public class Chunk {
 			buildQueryCompute(column);
 		}
 	}
-	
+
 	/**
 	 * Build query for computing the column.
 	 * @param column the column to be computed.
@@ -339,7 +355,7 @@ public class Chunk {
 		}
 		computeResultSet(column, query.toString(), data);
 	}
-	
+
 	/**
 	 * Compute the values sum/max/min/average for column.
 	 * @param column the column to be computed.
@@ -352,7 +368,7 @@ public class Chunk {
 		double min = Integer.MAX_VALUE;
 		double max = Integer.MIN_VALUE;
 		int counter = 0;
-		ResultSet rs = data.selectResultSet(data.getMergeTable(), column, query.toString());
+		ResultSet rs = data.selectResultSet(data.getMergeTable(), column, query);
 		while (rs.next()) {
 			double value = rs.getDouble(column);
 			if (value != Integer.MIN_VALUE) {
@@ -372,4 +388,50 @@ public class Chunk {
 		computations[comp] = sum / counter;
 	}
 
+	/**
+	 * Computes difference on column for this chunk and its connection.
+	 * @param column value to be compared.
+	 * @throws SQLException if column is not an integer or does not exist.
+	 */
+	public void initializeDifference(String column) throws SQLException {
+		if (hasConnection()) {
+			//TODO: more pointers means more differences.
+			//differences = new int[pointer.size()];
+			computeDifferenceQuery(column);
+		}
+	}
+
+	private void computeDifferenceQuery(String column) throws SQLException {
+		StringBuilder query = new StringBuilder();
+		String prefix = " OR ";
+		Db data = SingletonDb.getDb();
+		query.append(data.getMergeTable()); query.append("id = "); query.append(getLine()); 
+		for (Chunk c : pointer.keySet()) {
+			query.append(prefix); query.append(data.getMergeTable()); query.append("id = "); 
+			query.append(c.getLine());
+		}
+		computeDifferenceResultSet(column, query.toString(), data);
+	}
+
+	private void computeDifferenceResultSet(String column, String query,
+			Db data) throws SQLException {
+		ResultSet rs = data.selectResultSet("workspace", column, query);
+		double diff = 0;
+		ArrayList<Double> diffs = new ArrayList<Double>();
+		while (rs.next()) {
+			if (rs.getDouble(column) != Integer.MIN_VALUE) {
+				diffs.add(rs.getDouble(column));
+			}
+		}
+		rs.close();
+		if (diffs.size() == 2) {
+			if (diffs.get(0) > diffs.get(1)) {
+				diff = diffs.get(0) - diffs.get(1);
+			}
+			else {
+				diff = diffs.get(1) - diffs.get(0);
+			}
+		}
+		difference = diff;
+	}
 }
