@@ -388,6 +388,8 @@ public class Chunk {
 		computations[comp] = sum / counter;
 	}
 
+	
+	//TODO: More connections in one chunk. This chunk has connections, and haschilds (what do we compute?)
 	/**
 	 * Computes difference on column for this chunk and its connection.
 	 * @param column value to be compared.
