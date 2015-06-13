@@ -129,13 +129,9 @@ public class Db implements Observer {
 	 */
 	public boolean createTableAdjustedTable(String tableName, ArrayList<Column> columns) {
 		ArrayList<Column> c = tables.get(tableName);
-		if (c != null) {
-			for (Column col : columns) {
-				if (!c.contains(col)) {
-					return true;
-				}
-			}
-			return false;
+		if (c != null && !(c.equals(columns))) {
+			System.out.println("changed");
+			return true;
 		}
 		return false;
 	}

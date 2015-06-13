@@ -44,7 +44,6 @@ public final class SqlBuilder {
 			StringBuffer res) {
 		createTableWithIndexedColumn(tableName, res);
 		createTableWithColumnsFromArrayList(columns, res);
-		//return res.toString();
 	}
 
 	/**
