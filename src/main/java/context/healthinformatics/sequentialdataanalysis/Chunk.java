@@ -416,7 +416,7 @@ public class Chunk {
 	private void computeDifferenceResultSet(String column, String query,
 			Db data) throws SQLException {
 		ResultSet rs = data.selectResultSet("workspace", column, query);
-		double diff = 0;
+		double diff = Integer.MIN_VALUE;
 		ArrayList<Double> diffs = new ArrayList<Double>();
 		while (rs.next()) {
 			if (rs.getDouble(column) != Integer.MIN_VALUE) {
@@ -431,6 +431,9 @@ public class Chunk {
 			else {
 				diff = diffs.get(1) - diffs.get(0);
 			}
+		}
+		if (diff == 0.0) {
+			setComment("No difference with connection");
 		}
 		difference = diff;
 	}
