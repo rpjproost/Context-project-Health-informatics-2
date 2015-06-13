@@ -165,13 +165,6 @@ public class GraphInputInterface extends InterfaceHelper {
 	}
 
 	/**
-	 * @return the histogramPanel
-	 */
-	protected HistogramPanel getHistogramPanel() {
-		return histogramPanel;
-	}
-
-	/**
 	 * @return the boxPlotCheckBox
 	 */
 	protected JCheckBox getBoxPlotCheckBox() {
@@ -190,13 +183,6 @@ public class GraphInputInterface extends InterfaceHelper {
 	 */
 	protected JCheckBox getTransitionMatrixCheckBox() {
 		return transitionMatrixCheckBox;
-	}
-
-	/**
-	 * @return the histogramCheckbox
-	 */
-	protected JCheckBox getHistogramCheckbox() {
-		return histogramCheckbox;
 	}
 
 	/**

@@ -1,19 +1,16 @@
 package context.healthinformatics.graphs.graphspanel;
 
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
 import context.healthinformatics.graphs.GraphInputContainer;
-import context.healthinformatics.gui.InterfaceHelper;
 
 /**
  * Creates a panel specific for the stem-and-leaf plot.
  */
-public class TransitionaMatrixPanel extends InterfaceHelper implements GraphPanel {
+public class TransitionaMatrixPanel extends GraphPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JCheckBox checkbox;
@@ -39,19 +36,11 @@ public class TransitionaMatrixPanel extends InterfaceHelper implements GraphPane
 	 */
 	@Override
 	public JPanel initGraphPanel(String title) {
-		JPanel graphPanel = createEmptyWithGridBagLayoutPanel(Color.WHITE);
-		graphPanel.setPreferredSize(new Dimension(panelWidth - 2 * INSETS, 
-				THREE * CHECKBOXHEIGHT));
-		graphPanel.setVisible(false);
-		graphPanel.add(createSubTitle(title, panelWidth, CHECKBOXHEIGHT), setGrids(0, 0));
-		graphPanel.add(makeFormRowPanelWithTextField("Graph Title:", 
-				container.getGraphTitle(), panelWidth - 2 * INSETS, CHECKBOXHEIGHT), 
-				setGrids(0, 1));
-		return graphPanel;
+		return makePanel(title, panelWidth, 2, container);
 	}
 
 	/**
-	 * Performs an action if the stem-and-leaf check-box is clicked.
+	 * Performs an action if the state transition matrix is clicked.
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {

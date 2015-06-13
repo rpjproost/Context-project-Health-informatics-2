@@ -55,6 +55,7 @@ public class GraphController {
 		} else {
 			transitionPanel.setVisible(false);
 		}
+		//TODO make this more object oriented.
 	}
 
 	/**
