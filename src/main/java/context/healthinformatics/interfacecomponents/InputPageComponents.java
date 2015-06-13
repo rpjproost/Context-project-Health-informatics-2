@@ -115,7 +115,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 	 * @param panel
 	 *            to which the projectlabel will be added.
 	 */
-	public void addProjectLabel(JPanel panel) {
+	private void addProjectLabel(JPanel panel) {
 		JLabel projectLabel = new JLabel("   Project :   ");
 		projectLabel
 				.setFont(new Font("Arial", Font.PLAIN, PROJECTLABELFONTSIZE));
@@ -127,7 +127,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 	 * @param panel
 	 *            to which the projectButton will be added.
 	 */
-	public void addProjectButton(JPanel panel) {
+	private void addProjectButton(JPanel panel) {
 		GridBagConstraints c = ip.setGrids(2, 1);
 		projectButton = ip.createButton("ADD new Project", DIMESIONWIDTH,
 				DIMESIONHEIGHT);
@@ -141,7 +141,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 	 * @param panel
 	 *            to which a remove project button will be added.
 	 */
-	public void removeProjectButton(JPanel panel) {
+	private void removeProjectButton(JPanel panel) {
 		GridBagConstraints c = ip.setGrids(THREE, 1);
 		removeProjectButton = ip.createButton("Remove Project", DIMESIONWIDTH,
 				DIMESIONHEIGHT);
@@ -166,7 +166,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 	 * @param panel
 	 *            to which the addFileButton will be added.
 	 */
-	public void addOpenFileButton(JPanel panel) {
+	private void addOpenFileButton(JPanel panel) {
 		GridBagConstraints c = ip.setGrids(0, 0);
 		openFileButton = ip.createButton("Open File", DIMESIONWIDTH,
 				DIMESIONHEIGHT);
@@ -181,7 +181,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 	 * @param panel
 	 *            to which the addHelpButton will be added.
 	 */
-	public void addHelpButton(JPanel panel) {
+	private void addHelpButton(JPanel panel) {
 		helpButton = ip.createButton("HELP", HELPBUTTONWIDTH, HELPBUTTONHEIGHT);
 		helpButton.addActionListener(this);
 		GridBagConstraints c = ip.setGrids(0, 1);
@@ -208,7 +208,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 	 * @param panel
 	 *            to which the addAnalyseButton will be added.
 	 */
-	public void addAnalyseButton(JPanel panel) {
+	private void addAnalyseButton(JPanel panel) {
 		analyseButton = ip.createButton("Save & Go to Analyse",
 				HELPBUTTONWIDTH, HELPBUTTONHEIGHT);
 		analyseButton.addActionListener(this);
@@ -218,34 +218,6 @@ public class InputPageComponents implements Serializable, ActionListener {
 				BUTTONINSETS);
 		c.anchor = GridBagConstraints.EAST;
 		panel.add(analyseButton, c);
-	}
-
-	/**
-	 * @return the analyseButton.
-	 */
-	public JButton getAnalyseButton() {
-		return analyseButton;
-	}
-
-	/**
-	 * @return the analyseButton.
-	 */
-	public JButton getProjectButton() {
-		return projectButton;
-	}
-
-	/**
-	 * @return the analyseButton.
-	 */
-	public JButton getHelpButton() {
-		return helpButton;
-	}
-
-	/**
-	 * @return the analyseButton.
-	 */
-	public JButton getOpenFileButton() {
-		return openFileButton;
 	}
 
 	/**
@@ -263,20 +235,20 @@ public class InputPageComponents implements Serializable, ActionListener {
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() == getProjectButton()) {
+		if (e.getSource() == projectButton) {
 			ip.createProject();
 		}
 		if (e.getSource() == removeProjectButton && ip.getFolder().size() > 1) {
 			handleRemoveProjectButton();
 		}
-		if (e.getSource() == getOpenFileButton()
+		if (e.getSource() == openFileButton
 				&& ip.openFileChooser() == JFileChooser.APPROVE_OPTION) {
 			ip.openFiles(ip.getFileSelecter().getSelectedFiles());
 		}
-		if (e.getSource() == getHelpButton()) {
+		if (e.getSource() == helpButton) {
 			helpController.handleHelpButton("Input Page Help");
 		}
-		if (e.getSource() == getAnalyseButton()) {
+		if (e.getSource() == analyseButton) {
 			handleAnalystButton();
 		}
 		if (e.getSource() == box) {
