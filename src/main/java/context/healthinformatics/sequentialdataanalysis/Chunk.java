@@ -398,6 +398,8 @@ public class Chunk {
 		double second = 0.0;
 		if (hasConnection()) {
 			//TODO: more pointers means more differences.
+			//Create a differences array at equal size pointer, should not be hard. 
+			//Output in to array should say which connection has what difference.
 			//differences = new int[pointer.size()];
 			//computeDifferenceQuery(column);
 			first = getValue(column);
@@ -418,49 +420,12 @@ public class Chunk {
 		}
 	}
 
-//	private void computeDifferenceQuery(String column) throws SQLException {
-//		StringBuilder query = new StringBuilder();
-//		String prefix = " OR ";
-//		Db data = SingletonDb.getDb();
-//		query.append(data.getMergeTable()); query.append("id = "); query.append(getLine()); 
-//		for (Chunk c : pointer.keySet()) {
-//			query.append(prefix); query.append(data.getMergeTable()); query.append("id = "); 
-//			query.append(c.getLine());
-//		}
-//		computeDifferenceResultSet(column, query.toString(), data);
-//	}
-//
-//	private void computeDifferenceResultSet(String column, String query,
-//			Db data) throws SQLException {
-//		ResultSet rs = data.selectResultSet("workspace", column, query);
-//		double diff = Integer.MIN_VALUE;
-//		ArrayList<Double> diffs = new ArrayList<Double>();
-//		while (rs.next()) {
-//			if (rs.getDouble(column) != Integer.MIN_VALUE) {
-//				diffs.add(rs.getDouble(column));
-//			}
-//		}
-//		rs.close();
-//		if (diffs.size() == 2) {
-//			if (diffs.get(0) > diffs.get(1)) {
-//				diff = diffs.get(0) - diffs.get(1);
-//			}
-//			else {
-//				diff = diffs.get(1) - diffs.get(0);
-//			}
-//		}
-//		if (diff == 0.0) {
-//			setComment("No difference with connection");
-//		}
-//		difference = diff;
-//	}
 
 	private double getValue(String column) throws SQLException {
-		//TODO: check if min integer en shit.
 		Db data = SingletonDb.getDb(); double value = 0.0;
 		ResultSet rs = data.selectResultSet(data.getMergeTable(), column, data.getMergeTable() 
-				+"id = " + getLine());
-		while(rs.next()) {
+				+ "id = " + getLine());
+		while (rs.next()) {
 			value = rs.getDouble(column);
 		}
 		rs.close();
