@@ -17,24 +17,29 @@ Language
 		The language has a certain form which consist of 2 or 3 sections. The first word is always the kind of operation you want to use. Some of these operations are followed by parenthesis filled with a string to use as additional input of the operation. The options are:
 	</p>
 	<ol>
-	  <li>Chunk(String)</li>
-	  <li>Code(String)</li>
-	  <li>Comment(String)</li>
-	  <li>Filter</li>
-	  <li>Connection(String)</li>
+	  <li>chunk(String)</li>
+	  <li>code(String)</li>
+	  <li>comment(String)</li>
+	  <li>filter</li>
+	  <li>compute</li>
+	  <li>connection(String)</li>
 	</ol>
 	<p>
 		The string is the code or comment you want to set, and with connection it is the String you want to associate with the connection. The string behind chunk will be the code automaticly assigned to that chunk. The second sections specifies on which part of the data you want to use your operation. There are multiple options to specify the data : 
 	</p>
 	<ol>
-	  <li>code WHERE = ...</li>
-	  <li>code WHERE equals ...</li>
-	  <li>comment WHERE = ...</li>
-	  <li>comment WHERE equals ...</li>
+	  <li>code = ...</li>
+	  <li>code equals ...</li>
+	  <li>code line = ...</li>
+	  <li>comment line = ...</li>
+	  <li>comment = ...</li>
+	  <li>comment equals ...</li>
 	  <li>data ...</li>
 	</ol>
 	<p>
-		After data you can write an SQL query, in which you can name the columns of the table from the input tab. The Connections method needs both ends of a connections, so you can specify the third section in the same way as the second section. If you want to select on a column where the row you want is empty, you can select on NULL which is the same as an empty field.When comparing with NULL you have to use the keyword "IS".
+		After data you can write an SQL query, in which you can name the columns of the table from the input tab (for example : where columnA = 2). The Connections method needs both ends of a connections, so you can specify the third section in the same way as the second section. If you want to select on a column where the row you want is empty, you can select on NULL which is the same as an empty field. When comparing with NULL you have to use the keyword "IS". The connection will be made from the result of the first selection to the result of the second conection.
+	<br/><br/>
+	Compute is an exception, because the second word is either "chunk" or "all". If it is "chunk" you will compute values per chunk, and for "all" it will be computed for  the entire data set. The third word for "compute" has to be the name of the column, you want to do the computation on. This column has to be a integer column, and cannot be a column with strings. the result will be that per chunk or all values in the column, the average, sum, minimum and the maximum will be calculated and displayed.
 	</p>
 	</body>
 </html>
@@ -44,11 +49,12 @@ Examples
 	<body>
 	<h2>Examples of queries</h2>
 	<ol>
-	  <li>Comment("important") code WHERE = "abc"</li>
-	  <li>Filter comment WHERE equals "unimportant"</li>
-	  <li>Chunk code WHERE equals "group1"</li>
-	  <li>Connect("A to Z") comment WHERE = "A" comment WHERE = "Z"</li>
-	  <li>Code("123") data WHERE value = 209</li>
+	  <li>comment("important") code = "abc"</li>
+	  <li>filter comment equals "unimportant"</li>
+	  <li>chunk code equals "group1"</li>
+	  <li>connect("A to Z") comment = "A" comment = "Z"</li>
+	  <li>code("123") data WHERE value = 209</li>
+	  <li>compute all values </li>
 	</ol>  
 	</body>
 </html>
@@ -78,7 +84,7 @@ Undo
 	<body>
 	<h2>How to go back to your previous data set.</h2>
 	<p>
-		If you have altered the data in an unintended way, you can always go back to your previois data set by entering "undo" or "revert" into the code area and pressing the ANALYSE button. Now you have the result of the previous queries back. You can go all the way back to your initial data set.
+		If you have altered the data in an unintended way, you can always go back to your previouss data set by entering "undo" or "revert" into the code area and pressing the ANALYSE button. Now you have the result of the previous queries back. You can go all the way back to your initial data set. You can also use "undoAll", which will revert the data to the initial state.
 	</p>
 	</body>
 </html>

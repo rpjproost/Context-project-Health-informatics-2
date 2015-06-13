@@ -23,6 +23,7 @@ import org.jfree.ui.Layer;
 import org.jfree.ui.RectangleAnchor;
 import org.jfree.ui.TextAnchor;
 
+import context.healthinformatics.analyse.SingletonInterpreter;
 import context.healthinformatics.gui.InterfaceHelper;
 
 /**
@@ -67,10 +68,12 @@ public class FrequencyBar extends InterfaceHelper {
 	 * 
 	 * @return The dataset.
 	 */
-	private CategoryDataset createDataset(HashMap<String, Double> frequencies) {
+	private CategoryDataset createDataset(HashMap<String, Integer> frequencies) {
 		final DefaultCategoryDataset dataset = new DefaultCategoryDataset();
-		for (Entry<String, Double> e : frequencies.entrySet()) {
-			dataset.addValue(e.getValue(), "Frequency", e.getKey());
+		for (Entry<String, Integer> e : frequencies.entrySet()) {
+			if (!e.getKey().equals("")) {
+				dataset.addValue(e.getValue(), "Frequency", e.getKey());
+			}
 		}
 		return dataset;
 	}
@@ -83,18 +86,20 @@ public class FrequencyBar extends InterfaceHelper {
 	 */
 	public void createFrequencyBar(String title) {
 		// TODO WE NEED TO ADJUST THIS TO READ THE FREQUENCY OF CODES!!!!!!!!
-		HashMap<String, Double> map = new HashMap<String, Double>();
-		final double hardcodeda = 4.0;
-		final double hardcodedb = 7.0;
-		final double hardcodedc = 5.0;
-		final double hardcodedd = 10.0;
-		final double hardcodede = 12.0;
-		map.put("a", hardcodeda);
-		map.put("b", hardcodedb);
-		map.put("c", hardcodedc);
-		map.put("d", hardcodedd);
-		map.put("e", hardcodede);
-		JFreeChart chart = createChart(title, createDataset(map));
+		// HashMap<String, Double> map = new HashMap<String, Double>();
+		// final double hardcodeda = 4.0;
+		// final double hardcodedb = 7.0;
+		// final double hardcodedc = 5.0;
+		// final double hardcodedd = 10.0;
+		// final double hardcodede = 12.0;
+		// map.put("a", hardcodeda);
+		// map.put("b", hardcodedb);
+		// map.put("c", hardcodedc);
+		// map.put("d", hardcodedd);
+		// map.put("e", hardcodede);
+		JFreeChart chart = createChart(title,
+				createDataset(SingletonInterpreter.getInterpreter()
+						.countCodes()));
 
 		mainPanel.remove(chartContainerPanel);
 		chartContainerPanel = createEmptyWithGridBagLayoutPanel();

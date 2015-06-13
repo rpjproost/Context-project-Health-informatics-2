@@ -1,12 +1,9 @@
 package context.healthinformatics.gui;
 
-import static org.junit.Assert.assertEquals;
 
-import javax.swing.JButton;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 
 /**
  * Test the Output Page.
@@ -25,15 +22,6 @@ public class OutputPageTest {
 		mf = new MainFrame();
 		op = new OutputPage(mf);
 		op.loadPanel();
-	}
-	
-	/**
-	 * Test the getButton if the string is the same as we created.
-	 */
-	@Test
-	public void getButtonTest() {
-		JButton button = op.getFileButton();
-		assertEquals(button.getText(), "Export File...");
 	}
 
 	/**

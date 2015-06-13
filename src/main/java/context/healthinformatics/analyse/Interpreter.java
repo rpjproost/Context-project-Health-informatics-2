@@ -52,13 +52,22 @@ public class Interpreter implements Observer {
 			if (task != null) { //task == null if revert / undo was called
 				task.run(query);
 				tasks.push(task);
-			} else if (query.part().equals("undo") || query.part().equals("revert")) {
-				undo();
+			} else {
+				parseUndo(query.part().toLowerCase());
 			}
 		}
 		sc.close();
 	}
-	
+
+	private void parseUndo(String key) {
+		if (key.equals("undo") || key.equals("revert")) {
+			undo();
+		}
+		else if (key.equals("undoAll") || key.equals("revertAll")) {
+			undoAll();
+		}
+	}
+
 	/**
 	 * method to create the correct task.
 	 * @param k key to check witch task to create.
@@ -133,6 +142,15 @@ public class Interpreter implements Observer {
 	private void undo() {
 		if (!tasks.isEmpty()) {
 			tasks.pop().undo();
+		}
+	}
+	
+	/**
+	 * undo all tasks.
+	 */
+	private void undoAll() {
+		while (!tasks.isEmpty()) {
+			undo();
 		}
 	}
 	
