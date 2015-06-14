@@ -17,6 +17,9 @@ import context.healthinformatics.database.MergeTable;
 import context.healthinformatics.database.SingletonDb;
 import context.healthinformatics.parser.XMLParser;
 
+/**
+ * computations test class.
+ */
 public class ComputationsTest {
 
 	/**
@@ -38,9 +41,12 @@ public class ComputationsTest {
 	 * method preparing for environment for tests.
 	 */
 	
-	private final int TWO = 2;
-	private final int THREE = 3;
+	private final int two = 2;
+	private final int three = 3;
 	
+	/**
+	 * preparing db for test.
+	 */
 	@org.junit.Before
 	public void before() {
 		SingletonDb.dropAll(data);
@@ -61,20 +67,20 @@ public class ComputationsTest {
 	}
 
 	/**
-	 * Test for creating chunked list on data constraint.
+	 * Test for computing the difference in time.
 	 * @throws IOException if files could not be read.
 	 * @throws SQLException if tables could not be created.
 	 * @throws Exception if the interpreting goes wrong.
 	 */
 	@Test
-	public void testChunkingOnData() throws IOException, SQLException, Exception {
+	public void computeDifferenceTimeTest() throws IOException, SQLException, Exception {
 		xmlp = new XMLParser(path + "twoDocs.xml");
 		xmlp.parse();
 		xmlp.createDatabase();
 		String[] clause = new String[1];
 		clause[0] = "HospitalRecords.Groep = 2";
 		MergeTable test = new MergeTable();
-		test.merge(clause);
+		test.merge(clause, "time");
 		SingletonInterpreter.getInterpreter().interpret("filter data where not time is null");
 		SingletonInterpreter.getInterpreter().interpret("code(a) data where not time is null");
 		SingletonInterpreter.getInterpreter().
@@ -87,8 +93,95 @@ public class ComputationsTest {
 		final int fourthRes = 3066;
 		assertEquals(isDif(firstRes), chunks.get(0).toArray().get(0));
 		assertEquals(isDif(seccondRes), chunks.get(1).toArray().get(0));
-		assertEquals(isDif(thirdRes), chunks.get(TWO).toArray().get(0));
-		assertEquals(isDif(fourthRes), chunks.get(THREE).toArray().get(0));
+		assertEquals(isDif(thirdRes), chunks.get(two).toArray().get(0));
+		assertEquals(isDif(fourthRes), chunks.get(three).toArray().get(0));
+	}
+	
+	
+	/**
+	 * Test for computing the difference in value.
+	 * @throws IOException if files could not be read.
+	 * @throws SQLException if tables could not be created.
+	 * @throws Exception if the interpreting goes wrong.
+	 */
+	@Test
+	public void computeDifferenceValueTest() throws IOException, SQLException, Exception {
+		xmlp = new XMLParser(path + "twoDocs.xml");
+		xmlp.parse();
+		xmlp.createDatabase();
+		String[] clause = new String[1];
+		clause[0] = "HospitalRecords.Groep = 2";
+		MergeTable test = new MergeTable();
+		test.merge(clause, "time");
+		SingletonInterpreter.getInterpreter().interpret("filter data where not time is null");
+		SingletonInterpreter.getInterpreter().interpret("code(a) data where not time is null");
+		SingletonInterpreter.getInterpreter().
+		interpret("connect(connectionNote) code = a to code = a");
+		SingletonInterpreter.getInterpreter().interpret("compute difference value");
+		ArrayList<Chunk> chunks = SingletonInterpreter.getInterpreter().getChunks();
+		final int firstRes = 11;
+		final int seccondRes = 44;
+		final int thirdRes = 111;
+		final int fourthRes = 9;
+		assertEquals(isDif(firstRes), chunks.get(0).toArray().get(0));
+		assertEquals(isDif(seccondRes), chunks.get(1).toArray().get(0));
+		assertEquals(isDif(thirdRes), chunks.get(two).toArray().get(0));
+		assertEquals(isDif(fourthRes), chunks.get(three).toArray().get(0));
+	}
+	
+	/**
+	 * Test for computations compute chunk.
+	 * @throws IOException if files could not be read.
+	 * @throws SQLException if tables could not be created.
+	 * @throws Exception if the interpreting goes wrong.
+	 */
+	@Test
+	public void computeValueTest() throws IOException, SQLException, Exception {
+		xmlp = new XMLParser(path + "twoDocs.xml");
+		xmlp.parse();
+		xmlp.createDatabase();
+		String[] clause = new String[1];
+		clause[0] = "HospitalRecords.Groep = 2";
+		MergeTable test = new MergeTable();
+		test.merge(clause, "time");
+		SingletonInterpreter.getInterpreter().interpret("filter data where not time is null");
+		SingletonInterpreter.getInterpreter().interpret("code(a) data where not time is null");
+		SingletonInterpreter.getInterpreter().
+		interpret("chunk date 1");
+		SingletonInterpreter.getInterpreter().interpret("compute chunk value");
+		ArrayList<Chunk> chunks = SingletonInterpreter.getInterpreter().getChunks();
+		final int size = 4;
+		assertEquals(size, chunks.size());
+		for (Chunk c : chunks) {
+			assertTrue(c.isCompute());
+		}
+	}
+	
+
+	/**
+	 * Test for computations compute chunk.
+	 * @throws IOException if files could not be read.
+	 * @throws SQLException if tables could not be created.
+	 * @throws Exception if the interpreting goes wrong.
+	 */
+	@Test
+	public void computeAllValueTest() throws IOException, SQLException, Exception {
+		xmlp = new XMLParser(path + "twoDocs.xml");
+		xmlp.parse();
+		xmlp.createDatabase();
+		String[] clause = new String[1];
+		clause[0] = "HospitalRecords.Groep = 2";
+		MergeTable test = new MergeTable();
+		test.merge(clause, "time");
+		SingletonInterpreter.getInterpreter().interpret("filter data where not time is null");
+		SingletonInterpreter.getInterpreter().interpret("code(a) data where not time is null");
+		SingletonInterpreter.getInterpreter().interpret("compute all value");
+		ArrayList<Chunk> chunks = SingletonInterpreter.getInterpreter().getChunks();
+		final int size = 1;
+		assertEquals(size, chunks.size());
+		for (Chunk c : chunks) {
+			assertTrue(c.isCompute());
+		}
 	}
 	
 	private String isDif(int num) {

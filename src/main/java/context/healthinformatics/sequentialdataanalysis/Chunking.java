@@ -243,7 +243,7 @@ public class Chunking extends Task {
 	protected ArrayList<Chunk> chunkOnDate(Query q) throws Exception {
 		ArrayList<Chunk> res = new ArrayList<Chunk>();
 		int days = Integer.parseInt(q.next());
-		ArrayList<Integer> sizes = intsOnDate(getStartDate(), days);
+		ArrayList<Integer> sizes = intsOnDate(getStartDate(), days - 1);
 		int chunkIndex = 0;
 		for (int i = 0; i < sizes.size(); i++) {
 			Chunk temp = new Chunk();
