@@ -62,7 +62,7 @@ public class Computations extends Task {
 			return computeDif(args.part());
 		}
 		else if (!"chunk".equals(arg)) {
-			throw new Exception("expected : chunk/all/difference, but was: " + args.part());
+			throw new Exception("expected : chunk/all/difference, but was: " + arg);
 		}
 		return  compute(args.part());
 		
