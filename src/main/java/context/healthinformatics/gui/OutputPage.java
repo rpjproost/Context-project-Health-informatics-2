@@ -64,7 +64,6 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 		panelHeight = getStatePanelSize() / 2 - FIELDCORRECTION;
 		imr = new IntermediateResults(panelWidth, panelHeight, "The Result:",
 				MainFrame.OUTPUTTABCOLOR);
-		graphController = new GraphController();
 		leftPanel = createEmptyWithGridBagLayoutPanel(MainFrame.OUTPUTTABCOLOR);
 		rightPanel = createEmptyWithGridBagLayoutPanel(MainFrame.OUTPUTTABCOLOR);
 		initComponents();
@@ -133,6 +132,7 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 				MainFrame.OUTPUTTABCOLOR);
 		leftPanel.add(graphInputInterface.loadPanel(),
 				setGrids(0, 1, new Insets(0, INSETS, INSETS, 0)));
+		graphController = new GraphController(graphInputInterface);
 	}
 
 	private void setButtonArea(JButton button, JPanel parent, int y) {
@@ -156,10 +156,7 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 				height - INSETS);
 		scrollPane = makeScrollPaneForContainerPanel(graphArea, panelWidth,
 				height);
-		graphArea = graphController.getPlot(graphArea, graphInputInterface);
-//		graphArea.add(graphController.getBoxPlot(), setGrids(0, 0));
-//		graphArea.add(graphController.getFerquencyBar(), setGrids(0, 1));
-//		graphArea.add(graphController.getTransitionMatrix(), setGrids(0, 2));
+		graphArea = graphController.getPlot(graphArea);
 		rightPanel.add(scrollPane,
 				setGrids(0, 1, new Insets(0, INSETS, 0, INSETS)));
 	}
@@ -206,7 +203,7 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 		}
 		if (e.getSource() == updateGraphButton) {
 			try {
-				graphController.updateGraphs(graphInputInterface);
+				graphController.updateGraphs();
 				scrollPane.revalidate();
 			} catch (NullPointerException excep) {
 				JOptionPane.showMessageDialog(null,

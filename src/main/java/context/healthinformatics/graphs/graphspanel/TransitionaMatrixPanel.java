@@ -5,7 +5,9 @@ import java.awt.event.ActionEvent;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
+import context.healthinformatics.analyse.SingletonInterpreter;
 import context.healthinformatics.graphs.GraphInputContainer;
+import context.healthinformatics.graphs.StateTransitionMatrix;
 import context.healthinformatics.gui.MainFrame;
 
 /**
@@ -18,6 +20,8 @@ public class TransitionaMatrixPanel extends GraphPanel {
 	private JPanel transitionMatrixPanel;
 	private GraphInputContainer container;
 	private int panelWidth;
+	private StateTransitionMatrix stm;
+	private JPanel transitionPanel;
 	
 	/**
 	 * Creates a action listener for the check-box and makes a new container for this graph panel.
@@ -26,6 +30,9 @@ public class TransitionaMatrixPanel extends GraphPanel {
 	public TransitionaMatrixPanel(int width) {
 		panelWidth = width;
 		container = new GraphInputContainer();
+		stm = new StateTransitionMatrix();
+		transitionPanel = stm.getStateTransitionMatrix();
+		transitionPanel.setVisible(false);
 		transitionMatrixPanel = initGraphPanel("State-Transition Matrix");
 		this.checkbox = createCheckBox("State-Transition Matrix", MainFrame.OUTPUTTABCOLOR);
 		this.checkbox.addActionListener(this);
@@ -74,20 +81,20 @@ public class TransitionaMatrixPanel extends GraphPanel {
 
 	@Override
 	public boolean isSelected() {
-		// TODO Auto-generated method stub
-		return false;
+		return checkbox.isSelected();
 	}
 
 	@Override
 	public void plot() {
-		// TODO Auto-generated method stub
-		
+		stm.fillTransitionMatrix(SingletonInterpreter.getInterpreter().getChunks());
+		stm.initTable();
+		transitionPanel = stm.getStateTransitionMatrix();
+		transitionPanel.setVisible(true);
 	}
 
 	@Override
 	public JPanel getGraphPanel() {
-		// TODO Auto-generated method stub
-		return new JPanel();
+		return transitionPanel;
 	}
 
 }

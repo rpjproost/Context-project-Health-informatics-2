@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
+import context.healthinformatics.graphs.FrequencyBar;
 import context.healthinformatics.graphs.GraphInputContainer;
 import context.healthinformatics.gui.MainFrame;
 
@@ -18,6 +19,8 @@ public class FrequencyBarPanel extends GraphPanel {
 	private JPanel frequencyBarPanel;
 	private GraphInputContainer container;
 	private int panelWidth;
+	private FrequencyBar frequencyBar;
+	private JPanel frequencyBarGraph;
 	
 	/**
 	 * Creates a action listener for the check-box and makes a new container for this graph panel.
@@ -26,6 +29,9 @@ public class FrequencyBarPanel extends GraphPanel {
 	public FrequencyBarPanel(int width) {
 		panelWidth = width;
 		container = new GraphInputContainer();
+		frequencyBar = new FrequencyBar();
+		frequencyBarGraph = frequencyBar.getPanel();
+		frequencyBarGraph.setVisible(false);
 		frequencyBarPanel = initGraphPanel("Frequency Bar");
 		this.checkbox = createCheckBox("Frequency Bar", MainFrame.OUTPUTTABCOLOR);
 		this.checkbox.addActionListener(this);
@@ -75,20 +81,19 @@ public class FrequencyBarPanel extends GraphPanel {
 
 	@Override
 	public boolean isSelected() {
-		// TODO Auto-generated method stub
-		return false;
+		return checkbox.isSelected();
 	}
 
 	@Override
 	public void plot() {
-		// TODO Auto-generated method stub
-		
+		frequencyBar.createFrequencyBar(container.getGraphTitleValue());
+		frequencyBarGraph = frequencyBar.getPanel();
+		frequencyBarGraph.setVisible(true);
 	}
 
 	@Override
 	public JPanel getGraphPanel() {
-		// TODO Auto-generated method stub
-		return new JPanel();
+		return frequencyBarGraph;
 	}
 
 }
