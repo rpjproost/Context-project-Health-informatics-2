@@ -366,8 +366,6 @@ public class Chunk {
 		computations[comp] = sum / counter;
 	}
 
-	
-	//TODO: More connections in one chunk. This chunk has connections, and haschilds (what do we compute?)
 	/**
 	 * Computes difference on column for this chunk and its connection.
 	 * @param column value to be compared.
@@ -377,11 +375,6 @@ public class Chunk {
 		double first = 0.0;
 		double second = 0.0;
 		if (hasConnection()) {
-			//TODO: more pointers means more differences.
-			//Create a differences array at equal size pointer, should not be hard. 
-			//Output in to array should say which connection has what difference.
-			//differences = new int[pointer.size()];
-			//computeDifferenceQuery(column);
 			first = getValue(column);
 			for (Chunk c : pointer.keySet()) {
 				second = c.getValue(column);
