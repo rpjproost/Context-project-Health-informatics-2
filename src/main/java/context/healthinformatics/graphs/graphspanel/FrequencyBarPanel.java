@@ -6,6 +6,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
 import context.healthinformatics.graphs.GraphInputContainer;
+import context.healthinformatics.gui.MainFrame;
 
 /**
  * Creates a panel specific for the box plot.
@@ -20,14 +21,13 @@ public class FrequencyBarPanel extends GraphPanel {
 	
 	/**
 	 * Creates a action listener for the check-box and makes a new container for this graph panel.
-	 * @param checkbox the check-box that is for this panel.
 	 * @param width the width for this panel.
 	 */
-	public FrequencyBarPanel(JCheckBox checkbox, int width) {
-		this.checkbox = checkbox;
+	public FrequencyBarPanel(int width) {
 		panelWidth = width;
 		container = new GraphInputContainer();
 		frequencyBarPanel = initGraphPanel("Frequency Bar");
+		this.checkbox = createCheckBox("Frequency Bar", MainFrame.OUTPUTTABCOLOR);
 		this.checkbox.addActionListener(this);
 	}
 	
@@ -66,6 +66,29 @@ public class FrequencyBarPanel extends GraphPanel {
 	@Override
 	public GraphInputContainer getGraphContainer() {
 		return container;
+	}
+	
+	@Override
+	public JCheckBox getCheckbox() {
+		return checkbox;
+	}
+
+	@Override
+	public boolean isSelected() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void plot() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public JPanel getGraphPanel() {
+		// TODO Auto-generated method stub
+		return new JPanel();
 	}
 
 }

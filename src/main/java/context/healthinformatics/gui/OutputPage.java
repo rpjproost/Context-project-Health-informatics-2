@@ -156,9 +156,10 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 				height - INSETS);
 		scrollPane = makeScrollPaneForContainerPanel(graphArea, panelWidth,
 				height);
-		graphArea.add(graphController.getBoxPlot(), setGrids(0, 0));
-		graphArea.add(graphController.getFerquencyBar(), setGrids(0, 1));
-		graphArea.add(graphController.getTransitionMatrix(), setGrids(0, 2));
+		graphArea = graphController.getPlot(graphArea, graphInputInterface);
+//		graphArea.add(graphController.getBoxPlot(), setGrids(0, 0));
+//		graphArea.add(graphController.getFerquencyBar(), setGrids(0, 1));
+//		graphArea.add(graphController.getTransitionMatrix(), setGrids(0, 2));
 		rightPanel.add(scrollPane,
 				setGrids(0, 1, new Insets(0, INSETS, 0, INSETS)));
 	}

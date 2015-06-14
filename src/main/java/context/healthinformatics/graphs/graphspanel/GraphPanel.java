@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
 
+import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
 import context.healthinformatics.graphs.GraphInputContainer;
@@ -21,7 +22,7 @@ public abstract class GraphPanel extends InterfaceHelper implements ActionListen
 	/**
 	 * Initialize the container for the panel.
 	 */
-	abstract void updateContainer();
+	public abstract void updateContainer();
 	
 	/**
 	 * @param title the name of the graph where this panel is for.
@@ -32,7 +33,12 @@ public abstract class GraphPanel extends InterfaceHelper implements ActionListen
 	/**
 	 * @return the panel with all data on it.
 	 */
-	abstract JPanel loadPanel();
+	public abstract JPanel loadPanel();
+	
+	/**
+	 * @return the checkbox of the panel
+	 */
+	public abstract JCheckBox getCheckbox();
 	
 	/**
 	 * @return the container of the graph.
@@ -59,5 +65,20 @@ public abstract class GraphPanel extends InterfaceHelper implements ActionListen
 				setGrids(0, 1));
 		return graphPanel;
 	}
+
+	/**
+	 * @return boolean if the checkbox is selected or not.
+	 */
+	public abstract boolean isSelected();
+
+	/**
+	 * plots the specific graph that belongs to the input.
+	 */
+	public abstract void plot();
+
+	/**
+	 * @return the panel of the graph itself.
+	 */
+	public abstract JPanel getGraphPanel();
 
 }
