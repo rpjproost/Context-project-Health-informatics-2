@@ -376,6 +376,43 @@ public class Chunk {
 	 * @throws SQLException if column is not an integer or does not exist.
 	 */
 	public void initializeDifference(String column) throws SQLException {
+		if (column.toLowerCase().equals("date")) {
+			timeDifference(column);
+		}
+		else {
+			integerDifference(column);
+		}
+	}
+	
+	private void timeDifference(String column) throws SQLException {
+		double first = 0.0;
+		double second = 0.0;
+		if (hasConnection()) {
+			first = getValue(column);
+			for (Chunk c : pointer.keySet()) {
+				second = c.getValue(column);
+			}
+			if (first > second && second != Integer.MIN_VALUE) {
+				convertTime(first, second);
+				difference = first - second;
+			}
+			else {
+				if (first != Integer.MIN_VALUE) {
+					convertTime(first, second);
+					difference = second - first;
+				}
+			}
+		}
+	}
+	
+	private void convertTime(double first, double second) {
+		final double hundred = 100;
+		final double sixty = 60;
+		first = ((first / hundred) * sixty) + (first % hundred);
+		second = ((second / hundred) * sixty) + (second % hundred);
+	}
+
+	private void integerDifference(String column) throws SQLException {
 		double first = 0.0;
 		double second = 0.0;
 		if (hasConnection()) {
