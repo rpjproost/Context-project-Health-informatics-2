@@ -280,6 +280,13 @@ public class Chunk {
 			return valuesOfChunk;
 		}
 	}
+	
+	/**
+	 * undo for difference.
+	 */
+	public void undoDifference() {
+		difference = Integer.MIN_VALUE;
+	}
 
 	/**
 	 * Process the result set.
