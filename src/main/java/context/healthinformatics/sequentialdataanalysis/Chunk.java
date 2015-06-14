@@ -4,8 +4,11 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 
 import context.healthinformatics.analyse.SingletonInterpreter;
 import context.healthinformatics.database.Db;
@@ -280,7 +283,7 @@ public class Chunk {
 			return valuesOfChunk;
 		}
 	}
-	
+
 	/**
 	 * undo for difference.
 	 */
@@ -394,22 +397,32 @@ public class Chunk {
 	}
 
 	private void timeDifference(String column) throws SQLException {
-		double first = 0.0;
-		double second = 0.0;
+		Db data = SingletonDb.getDb();
+		int days = 0; double first = 0.0; double second = 0.0;
+		final int twentyfour = 24; final int sixty = 60;
 		first = getValue(column);
+		Date firstDate = data.selectDate(getLine());
+		Date secondDate = null;
 		for (Chunk c : pointer.keySet()) {
 			second = c.getValue(column);
+			secondDate = data.selectDate(c.getLine());
 		}
-		if (first > second && second != Integer.MIN_VALUE) {
-			double[] res = convertTime(first, second);
-			difference = res[0] - res[1];
-		}
-		else {
-			if (first != Integer.MIN_VALUE) {
+		if (first != Integer.MIN_VALUE && second != Integer.MIN_VALUE) {
+			days = daysBetween(firstDate, secondDate);
+			//TODO: time should be sorted in database.
+			if (first > second) {
 				double[] res = convertTime(first, second);
-				difference = res[1] - res[0];
+				difference = (res[0] - res[1]) + (days * twentyfour * sixty);
+			}
+			else {
+				double[] res = convertTime(first, second);
+				difference = (res[1] - res[0]) + (days * twentyfour * sixty);
 			}
 		}
+	}
+	
+	private int daysBetween(Date first, Date second) {
+		return Days.daysBetween(new DateTime(first), new DateTime(second)).getDays();
 	}
 
 	private double[] convertTime(double first, double second) {
@@ -420,7 +433,7 @@ public class Chunk {
 		double[] res = new double[2];
 		res[0] = first; res[1] = second;
 		return res;
- 	}
+	}
 
 	private void integerDifference(String column) throws SQLException {
 		double first = 0.0;
