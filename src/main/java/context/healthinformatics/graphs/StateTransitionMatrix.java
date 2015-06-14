@@ -34,12 +34,14 @@ public class StateTransitionMatrix extends InterfaceHelper {
 	private JPanel mainPanel;
 	private JTable headerTable;
 	private int width;
+	private JLabel graphTitle;
 
 	/**
 	 * The constructor of the transition matrix.
 	 */
 	public StateTransitionMatrix() {
 		codes = new ArrayList<String>();
+		graphTitle = new JLabel();
 		countMap = new HashMap<ConnectionSet, Integer>();
 		mainPanel = createEmptyWithGridBagLayoutPanel();
 		width = getScreenWidth() / 2 - FOUR * INSETS;
@@ -47,8 +49,13 @@ public class StateTransitionMatrix extends InterfaceHelper {
 
 	/**
 	 * Initialize the table.
+	 * @param string 
 	 */
-	public void initTable() {
+	public void initTable(String string) {
+		mainPanel.remove(graphTitle);
+		graphTitle = new JLabel("State-Transition Matrix: " + string);
+		graphTitle.setFont(new Font("SansSerif", Font.BOLD, TEXTSIZE));
+		mainPanel.add(graphTitle);
 		table = new JTable(getTableData(), getColumnNames());
 		table.setEnabled(false);
 		TableModel model = createModel();
@@ -65,7 +72,7 @@ public class StateTransitionMatrix extends InterfaceHelper {
 		scroll = new JScrollPane(table);
 		scroll.setPreferredSize(new Dimension(width, codes.size() * HEIGHT));
 		scroll.setRowHeaderView(headerTable);
-		mainPanel.add(scroll, setGrids(0, 0));
+		mainPanel.add(scroll, setGrids(0, 1));
 	}
 
 	/**
@@ -171,6 +178,7 @@ public class StateTransitionMatrix extends InterfaceHelper {
 	 *            the data.
 	 */
 	public void fillTransitionMatrix(ArrayList<Chunk> chunks) {
+		countMap =  new HashMap<ConnectionSet, Integer>();
 		for (int i = 0; i < chunks.size(); i++) {
 			Chunk currentChunk = chunks.get(i);
 			if (!currentChunk.getCode().isEmpty()

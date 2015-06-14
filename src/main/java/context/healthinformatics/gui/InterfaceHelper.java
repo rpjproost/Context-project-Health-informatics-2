@@ -35,7 +35,7 @@ public class InterfaceHelper extends JPanel {
 	private static final int TABSY = 120;
 	private static final int TABTEXTFONTSIZE = 40;
 	public static final int TITLEFONT = 28;
-	private static final int TEXTSIZE = 20;
+	protected static final int TEXTSIZE = 20;
 	protected static final int THREE = 3;
 	protected static final int HUNDERTPROCENT = 100;
 	protected static final int CORRECION = 98;

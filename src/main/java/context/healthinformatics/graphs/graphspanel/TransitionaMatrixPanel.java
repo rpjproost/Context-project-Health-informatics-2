@@ -87,7 +87,7 @@ public class TransitionaMatrixPanel extends GraphPanel {
 	@Override
 	public void plot() {
 		stm.fillTransitionMatrix(SingletonInterpreter.getInterpreter().getChunks());
-		stm.initTable();
+		stm.initTable(container.getGraphTitleValue());
 		transitionPanel = stm.getStateTransitionMatrix();
 		transitionPanel.setVisible(true);
 	}
