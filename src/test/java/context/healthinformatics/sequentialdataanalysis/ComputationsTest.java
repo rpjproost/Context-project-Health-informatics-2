@@ -43,6 +43,8 @@ public class ComputationsTest {
 	
 	private final int two = 2;
 	private final int three = 3;
+	private final int four = 4;
+	private final int five = 5;
 	
 	/**
 	 * preparing db for test.
@@ -179,9 +181,15 @@ public class ComputationsTest {
 		ArrayList<Chunk> chunks = SingletonInterpreter.getInterpreter().getChunks();
 		final int size = 1;
 		assertEquals(size, chunks.size());
-		for (Chunk c : chunks) {
-			assertTrue(c.isCompute());
-		}
+		Chunk c  = chunks.get(0);
+		assertTrue(c.isCompute());
+		ArrayList<String> strings = c.toArray();
+		assertEquals(five, strings.size());
+		assertEquals("sum of values = 920.0", strings.get(0));
+		assertEquals("max of values = 242.0", strings.get(1));
+		assertEquals("min of values = 131.0", strings.get(two));
+		assertEquals("average of values = 184.0", strings.get(three));
+		assertEquals("Childs sum = 5", strings.get(four));
 	}
 	
 	private String isDif(int num) {
