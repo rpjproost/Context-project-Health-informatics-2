@@ -412,11 +412,11 @@ public class Chunk {
 			//TODO: time should be sorted in database.
 			if (first > second) {
 				double[] res = convertTime(first, second);
-				difference = (res[0] - res[1]) + (days * twentyfour * sixty);
+				difference = res[0] - res[1] + days * twentyfour * sixty;
 			}
 			else {
 				double[] res = convertTime(first, second);
-				difference = (res[1] - res[0]) + (days * twentyfour * sixty);
+				difference = res[1] - res[0] + days * twentyfour * sixty;
 			}
 		}
 	}
@@ -428,8 +428,8 @@ public class Chunk {
 	private double[] convertTime(double first, double second) {
 		final double hundred = 100;
 		final double sixty = 60;
-		first = ((Math.floor(first / hundred)) * sixty) + (first % hundred);
-		second = (Math.floor((second / hundred)) * sixty) + (second % hundred);
+		first = Math.floor(first / hundred) * sixty + first % hundred;
+		second = Math.floor(second / hundred) * sixty + second % hundred;
 		double[] res = new double[2];
 		res[0] = first; res[1] = second;
 		return res;
