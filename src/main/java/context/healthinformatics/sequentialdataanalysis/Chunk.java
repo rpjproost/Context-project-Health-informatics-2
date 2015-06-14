@@ -226,8 +226,12 @@ public class Chunk {
 	private void toArrayComputed(ArrayList<String> res) {
 		final int comp = 3;
 		res.add("sum of values = " + computations[0]);
-		res.add("max of values = " + computations[1]);
-		res.add("min of values = " + computations[2]);
+		if (computations[1] != Integer.MIN_VALUE) {
+			res.add("max of values = " + computations[1]);
+		}
+		if (computations[2] != Integer.MAX_VALUE) {
+			res.add("min of values = " + computations[2]);
+		}
 		res.add("average of values = " + computations[comp]);
 		res.add("Childs sum = " + sum);
 	}
