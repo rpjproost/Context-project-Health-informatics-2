@@ -9,11 +9,19 @@ import context.healthinformatics.analyse.SingletonInterpreter;
  * class for computing.
  */
 public class Computations extends Task {
-
+	private boolean comp = false;
+	private boolean diff = false;
+	
 	@Override
 	public ArrayList<Chunk> undo() {
-		for (Chunk c : getChunks()) {
-			c.setCompute(false);
+		if (comp) {
+			for (Chunk c : getChunks()) {
+				c.setCompute(false);
+			}
+		} else if (diff) {
+			for (Chunk c : getChunks()) {
+				c.undoDifference();
+			}
 		}
 		return null;
 	}
@@ -77,6 +85,7 @@ public class Computations extends Task {
 	}
 	
 	private ArrayList<Chunk> compute(String column) throws SQLException {
+		comp = true;
 		for (Chunk c : getChunks()) {
 			c.initializeComputations(column);
 		}
@@ -84,6 +93,7 @@ public class Computations extends Task {
 	}
 	
 	private ArrayList<Chunk> computeDif(String column) throws SQLException {
+		diff = true;
 		for (Chunk c : getChunks()) {
 			c.initializeDifference(column);
 		}
