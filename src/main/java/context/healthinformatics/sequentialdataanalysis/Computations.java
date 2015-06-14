@@ -73,8 +73,8 @@ public class Computations extends Task {
 	
 	private ArrayList<Chunk> compute(String column) throws SQLException {
 		for (Chunk c : getChunks()) {
-			c.initializeDifference(column);
-			//c.initializeComputations(column);
+			//c.initializeDifference(column);
+			c.initializeComputations(column);
 		}
 		return getChunks();
 	}
