@@ -99,24 +99,6 @@ public class XMLDocumentFormController {
 	}
 
 	/**
-	 * Check if string can be parsed to an integer.
-	 * 
-	 * @param s
-	 *            the input string
-	 * @return true if can be parsed else false
-	 */
-	private boolean isInteger(String s) {
-		try {
-			Integer.parseInt(s);
-		} catch (NumberFormatException e) {
-			return false;
-		} catch (NullPointerException e) {
-			return false;
-		}
-		return true;
-	}
-
-	/**
 	 * Check if there are empty or wrong formatted columns.
 	 * 
 	 * @param columnFieldContainer
@@ -188,9 +170,27 @@ public class XMLDocumentFormController {
 	 */
 	private boolean isEmptyTextFieldInteger(String textFieldInput) {
 		if (textFieldInput.equals("")) {
-			return !isInteger(textFieldInput);
+			return true;
 		} else {
+			return !isInteger(textFieldInput);
+		}
+	}
+
+	/**
+	 * Check if string can be parsed to an integer.
+	 * 
+	 * @param s
+	 *            the input string
+	 * @return true if can be parsed else false
+	 */
+	private boolean isInteger(String s) {
+		try {
+			Integer.parseInt(s);
+		} catch (NumberFormatException e) {
+			return false;
+		} catch (NullPointerException e) {
 			return false;
 		}
+		return true;
 	}
 }

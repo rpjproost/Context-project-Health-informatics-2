@@ -314,7 +314,6 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 					JOptionPane.WARNING_MESSAGE);
 			return true;
 		}
-
 		return errors;
 
 	}
