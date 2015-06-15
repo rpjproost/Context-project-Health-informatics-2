@@ -232,16 +232,18 @@ public class StateTransitionMatrix extends InterfaceHelper {
 	 */
 	public void fillTransitionMatrix(ArrayList<Chunk> chunks) {
 		countMap =  new HashMap<ConnectionSet, Integer>();
-		for (int i = 0; i < chunks.size(); i++) {
-			Chunk currentChunk = chunks.get(i);
-			if (!currentChunk.getCode().isEmpty()
-					&& !currentChunk.getPointer().isEmpty()) {
-				String code = currentChunk.getCode();
-				if (codes.contains(code)) {
-					processChunkWithPointer(currentChunk);
-				} else {
-					codes.add(code);
-					processChunkWithPointer(currentChunk);
+		if (chunks != null) {
+			for (int i = 0; i < chunks.size(); i++) {
+				Chunk currentChunk = chunks.get(i);
+				if (!currentChunk.getCode().isEmpty()
+						&& !currentChunk.getPointer().isEmpty()) {
+					String code = currentChunk.getCode();
+					if (codes.contains(code)) {
+						processChunkWithPointer(currentChunk);
+					} else {
+						codes.add(code);
+						processChunkWithPointer(currentChunk);
+					}
 				}
 			}
 		}

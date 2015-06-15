@@ -76,19 +76,21 @@ public class FrequencyBar extends InterfaceHelper {
 	 *            the title of the frequency bar
 	 */
 	public void createFrequencyBar(String title) {
-		JFreeChart chart = createChart(title,
-				createDataset(SingletonInterpreter.getInterpreter()
-						.countCodes()));
-
-		mainPanel.remove(chartContainerPanel);
-		chartContainerPanel = createEmptyWithGridBagLayoutPanel();
-		chartContainerPanel.setPreferredSize(new Dimension(width,
-				BOX_PLOT_HEIGHT));
-		ChartPanel chartPanel = new ChartPanel(chart);
-		chartPanel.setPreferredSize(new Dimension(width - 1, BOX_PLOT_HEIGHT));
-		chartContainerPanel.add(chartPanel, setGrids(0, 0));
-		mainPanel.add(chartContainerPanel, setGrids(0, 0));
-		mainPanel.revalidate();
+		if (SingletonInterpreter.getInterpreter().getChunks() != null) {
+			JFreeChart chart = createChart(title,
+					createDataset(SingletonInterpreter.getInterpreter()
+							.countCodes()));
+			mainPanel.remove(chartContainerPanel);
+			chartContainerPanel = createEmptyWithGridBagLayoutPanel();
+			chartContainerPanel.setPreferredSize(new Dimension(width,
+					BOX_PLOT_HEIGHT));
+			ChartPanel chartPanelTest = new ChartPanel(chart);
+			chartPanelTest.setPreferredSize(new Dimension(width - 1,
+					BOX_PLOT_HEIGHT));
+			chartContainerPanel.add(chartPanelTest, setGrids(0, 0));
+			mainPanel.add(chartContainerPanel, setGrids(0, 0));
+			mainPanel.revalidate();
+		}
 	}
 
 	/**

@@ -40,7 +40,7 @@ public class MainFrameTest {
 	 */
 	@Test
 	public void testState() {
-		PanelState outputState = new OutputPage(mf);
+		PanelState outputState = new OutputPage();
 		mf.setState(outputState);
 
 		assertEquals(mf.getPanelState(), outputState);

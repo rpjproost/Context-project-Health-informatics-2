@@ -1,4 +1,3 @@
-
 package context.healthinformatics.interfacecomponents;
 
 import java.awt.Dimension;
@@ -242,7 +241,8 @@ public class InputPageComponents implements Serializable, ActionListener {
 			handleRemoveProjectButton();
 		}
 		if (e.getSource() == openFileButton
-				&& ip.openFileChooser() == JFileChooser.APPROVE_OPTION) {
+				&& ip.openFileChooser().showOpenDialog(openFileButton)
+				== JFileChooser.APPROVE_OPTION) {
 			ip.openFiles(ip.getFileSelecter().getSelectedFiles());
 		}
 		if (e.getSource() == helpButton) {

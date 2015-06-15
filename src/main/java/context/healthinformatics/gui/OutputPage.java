@@ -33,7 +33,6 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	private static final long serialVersionUID = 1L;
 	private static final int BUTTONWIDTH = 200;
 	private static final int BUTTONHEIGHT = 80;
-	// private MainFrame mf;
 	private IntermediateResults imr;
 	private JButton exportFileButton;
 	private JButton updateGraphButton;
@@ -50,12 +49,8 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 
 	/**
 	 * Constructor.
-	 * 
-	 * @param m
-	 *            is the mainframe object
 	 */
-	public OutputPage(MainFrame m) {
-		// mf = m;
+	public OutputPage() {
 		panelWidth = getScreenWidth() / 2 - 2 * INSETS;
 		panelHeight = getStatePanelSize() / 2 - FIELDCORRECTION;
 		imr = new IntermediateResults(panelWidth, panelHeight, "The Result:",
