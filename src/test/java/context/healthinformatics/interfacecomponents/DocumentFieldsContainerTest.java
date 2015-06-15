@@ -37,7 +37,9 @@ public class DocumentFieldsContainerTest {
 	public void setUp() {
 		xmlDoc = new XMLDocument();
 		ArrayList<Column> cols = new ArrayList<Column>();
-		cols.add(new Column(2, "date", "Date"));
+		Column col = new Column(2, "date", "Date");
+		col.setColumnType("dd-MM-yyyy");
+		cols.add(col);
 		xmlDocFull = new XMLDocument("excel", "admire", ";", "src/main", 1, 1,
 				cols);
 		xmlDocNull = new XMLDocument("excel", "admire", ";", "src/main", 1, 1,
@@ -64,7 +66,7 @@ public class DocumentFieldsContainerTest {
 	@Test
 	public void testCheckIfHasEmptyFields() {
 		assertTrue(emptyDoc.checkIfHasEmptyFields());
-		assertTrue(fullDoc.checkIfHasEmptyFields());
+		assertFalse(fullDoc.checkIfHasEmptyFields());
 		assertFalse(nullDoc.checkIfHasEmptyFields());
 	}
 
@@ -107,7 +109,7 @@ public class DocumentFieldsContainerTest {
 			ColumnFieldContainer c = columns.get(i);
 			assertEquals(2, c.getColumnIDValue());
 			assertEquals("date", c.getColumnNameValue());
-			assertEquals("Date", c.getColumnTypeValue());
+			assertEquals("dd-MM-yyyy", c.getColumnDateTypeValue());
 		}
 	}
 
