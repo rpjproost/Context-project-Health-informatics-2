@@ -64,7 +64,8 @@ public class LineChart extends InterfaceHelper {
 		}
 	}
 
-	public void createBoxPlot(String title) {
+	public void createLineChart(String title) {
+		initDataset();
 		final JFreeChart chart = ChartFactory.createXYLineChart(
 				title, // chart title
 				"X", // x axis label
@@ -88,15 +89,15 @@ public class LineChart extends InterfaceHelper {
 		plot.setDomainGridlinePaint(Color.white);
 		plot.setRangeGridlinePaint(Color.white);
 
-		final XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-		renderer.setSeriesLinesVisible(0, false);
-		renderer.setSeriesShapesVisible(1, false);
-		plot.setRenderer(renderer);
+//		final XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
+//		renderer.setSeriesLinesVisible(0, false);
+//		renderer.setSeriesShapesVisible(1, false);
+//		plot.setRenderer(renderer);
 
 		// change the auto tick unit selection to integer units only...
-		final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-		rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-		// OPTIONAL CUSTOMISATION COMPLETED.
+//		final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
+//		rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
+//		// OPTIONAL CUSTOMISATION COMPLETED.
 		mainPanel.remove(chartContainerPanel);
 		chartContainerPanel.remove(chartPanelTest);
 		chartContainerPanel.setPreferredSize(new Dimension(width,

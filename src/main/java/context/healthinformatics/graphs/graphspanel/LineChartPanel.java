@@ -17,17 +17,17 @@ public class LineChartPanel extends GraphPanel {
 	private JPanel lineChartPanel;
 	private GraphInputContainer container;
 	private int panelWidth;
-	private LineChart lineCharts;
+	private LineChart lineChart;
 	private JPanel lineChartGraph;
 
 	public LineChartPanel(int width) {
 		panelWidth = width;
 		container = new GraphInputContainer();
-		lineCharts = new LineChart();
-		lineChartGraph = lineCharts.getPanel();
+		lineChart = new LineChart();
+		lineChartGraph = lineChart.getPanel();
 		lineChartGraph.setVisible(false);
 		lineChartPanel = initGraphPanel("Line Chart");
-		this.checkbox = createCheckBox("Frequency Bar",
+		this.checkbox = createCheckBox("Line Chart",
 				MainFrame.OUTPUTTABCOLOR);
 		this.checkbox.addActionListener(this);
 	}
@@ -72,7 +72,12 @@ public class LineChartPanel extends GraphPanel {
 
 	@Override
 	public void plot() {
-		// TODO Auto-generated method stub
+		lineChart.createLineChart(container.getGraphTitleValue());
+		lineChartGraph = lineChart.getPanel();
+		lineChartGraph.setVisible(true);
+//		frequencyBar.createFrequencyBar(container.getGraphTitleValue());
+//		frequencyBarGraph = frequencyBar.getPanel();
+//		frequencyBarGraph.setVisible(true)
 
 	}
 
