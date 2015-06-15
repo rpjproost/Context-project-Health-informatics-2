@@ -2,7 +2,9 @@ package context.healthinformatics.graphs;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.JPanel;
 
@@ -17,9 +19,13 @@ import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 
 import context.healthinformatics.analyse.Interpreter;
 import context.healthinformatics.analyse.SingletonInterpreter;
+import context.healthinformatics.database.Db;
+import context.healthinformatics.database.SingletonDb;
 import context.healthinformatics.gui.InterfaceHelper;
 import context.healthinformatics.sequentialdataanalysis.Chunk;
 
@@ -121,6 +127,17 @@ public class LineChart extends InterfaceHelper {
 			res.add(c.getAmountOfChilds());
 		}
 		return res;
+	}
+	
+	public int xAs() throws SQLException {
+		Interpreter interpreter = SingletonInterpreter.getInterpreter();
+		ArrayList<Chunk> chunks = interpreter.getChunks();
+		Db data = SingletonDb.getDb();
+		Date first = data.selectDate(chunks.get(0).getLine());
+		Date last = data.selectDate(chunks.get(chunks.size() - 1).getLine());
+		DateTime f = new DateTime(first);
+		DateTime l = new DateTime(last);
+		return Days.daysBetween(f, l).getDays();
 	}
 
 }
