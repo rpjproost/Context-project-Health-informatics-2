@@ -210,7 +210,7 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 		if (rVal == JFileChooser.APPROVE_OPTION) {
 			WriteToTXT write = new WriteToTXT(savePopup.getSelectedFile()
 					.getAbsolutePath());
-			write.writeToFile(
+			write.writeSPSSDataToFile(
 					SingletonInterpreter.getInterpreter().getChunks(),
 					SingletonDb.getDb());
 		}
