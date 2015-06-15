@@ -51,7 +51,8 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	public XMLEditor(InputPage inputPage) {
 		this.inputPage = inputPage;
 		this.documentFieldsContainers = new ArrayList<DocumentFieldsContainer>();
-		containerScrollPanel = createContainerWithGivenSizePanel(PARENTWIDTH, PARENTHEIGHT);
+		containerScrollPanel = createContainerWithGivenSizePanel(PARENTWIDTH,
+				PARENTHEIGHT);
 		scrollPane = makeScrollPaneForContainerPanel(containerScrollPanel,
 				PARENTWIDTH, PARENTHEIGHT);
 		addActionListeners();
@@ -303,17 +304,19 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	 * @return true if there is
 	 */
 	public boolean checkAllXMLDocumentsOnError() {
-		for (int i = 0; i < documentFieldsContainers.size(); i++) {
-			if (documentFieldsContainers.get(i).checkIfHasEmptyFields()) {
-				JOptionPane
-						.showMessageDialog(
-								null,
-								"Not all fields are filled in correctly. Check the XML Editor!",
-								"Save Error", JOptionPane.WARNING_MESSAGE);
-				return true;
-			}
+		XMLDocumentFormController xdfc = new XMLDocumentFormController(
+				documentFieldsContainers);
+		boolean errors = false;
+		try {
+			errors = xdfc.checkIfHasEmptyFields();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Save Error",
+					JOptionPane.WARNING_MESSAGE);
+			return true;
 		}
-		return false;
+
+		return errors;
+
 	}
 
 	/**
