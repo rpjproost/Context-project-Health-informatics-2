@@ -85,7 +85,7 @@ public class BoxPlot extends InterfaceHelper {
 		final CategoryPlot plot = new CategoryPlot(dataset, xAxis, yAxis,
 				renderer);
 		final JFreeChart chart = new JFreeChart("Box Plot: " + title, new Font(
-				"SansSerif", Font.BOLD, 14), plot, true);
+				"SansSerif", Font.BOLD, TEXTSIZE), plot, true);
 		mainPanel.remove(chartContainerPanel);
 		chartContainerPanel.remove(chartPanelTest);
 		chartContainerPanel.setPreferredSize(new Dimension(width,
@@ -93,7 +93,6 @@ public class BoxPlot extends InterfaceHelper {
 		chartPanelTest = new ChartPanel(chart);
 		chartPanelTest.setPreferredSize(new Dimension(width, BOX_PLOT_HEIGHT));
 		chartContainerPanel.add(chartPanelTest, setGrids(0, 0));
-
 		mainPanel.add(chartContainerPanel, setGrids(0, 0));
 		mainPanel.revalidate();
 	}

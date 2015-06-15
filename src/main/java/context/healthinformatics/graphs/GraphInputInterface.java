@@ -3,13 +3,14 @@ package context.healthinformatics.graphs;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Insets;
+import java.util.ArrayList;
 
-import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import context.healthinformatics.graphs.graphspanel.BoxPlotPanel;
 import context.healthinformatics.graphs.graphspanel.FrequencyBarPanel;
+import context.healthinformatics.graphs.graphspanel.GraphPanel;
 import context.healthinformatics.graphs.graphspanel.HistogramPanel;
 import context.healthinformatics.graphs.graphspanel.TransitionaMatrixPanel;
 import context.healthinformatics.gui.InterfaceHelper;
@@ -26,16 +27,9 @@ public class GraphInputInterface extends InterfaceHelper {
 	private int graphInputWidth;
 	private int graphInputHeight;
 	private JPanel graphInputParentPanel;
-	private JCheckBox boxPlotCheckBox;
-	private JCheckBox frequencyCheckBox;
-	private JCheckBox transitionMatrixCheckBox;
-	private JCheckBox histogramCheckbox;
-	private BoxPlotPanel boxPlotPanel;
-	private FrequencyBarPanel frequencyPanel;
-	private TransitionaMatrixPanel transitionMatrixPanel;
-	private HistogramPanel histogramPanel;
 	private JPanel containerScrollPanel;
 	private JScrollPane scrollPane;
+	private ArrayList<GraphPanel> graphPanels;
 
 	/**
 	 * Creates the interface.
@@ -44,11 +38,11 @@ public class GraphInputInterface extends InterfaceHelper {
 	 * @param color the color of the panel.
 	 */
 	public GraphInputInterface(int width, int height, Color color) {
+		graphPanels = new ArrayList<GraphPanel>();
 		graphInputWidth = width;
 		graphInputHeight = height;
 		graphInputParentPanel = createEmptyWithGridBagLayoutPanel(color);
 		graphInputParentPanel.setPreferredSize(new Dimension(graphInputWidth, graphInputHeight));
-		initCheckBoxes();
 		initPanels();
 		initScrollPane();
 		initGraphPanels();
@@ -63,25 +57,13 @@ public class GraphInputInterface extends InterfaceHelper {
 	}
 	
 	/**
-	 * Initialize all check-boxes.
-	 */
-	private void initCheckBoxes() {
-		boxPlotCheckBox = createCheckBox("Box Plot", MainFrame.OUTPUTTABCOLOR);
-		frequencyCheckBox = createCheckBox("Frequency Bar", MainFrame.OUTPUTTABCOLOR);
-		transitionMatrixCheckBox = createCheckBox("State-Transition Matrix", 
-				MainFrame.OUTPUTTABCOLOR);
-		histogramCheckbox = createCheckBox("Histogram", MainFrame.OUTPUTTABCOLOR);
-	}
-	
-	/**
 	 * Creates for each graph type a container.
 	 */
 	private void initPanels() {
-		boxPlotPanel = new BoxPlotPanel(boxPlotCheckBox, graphInputWidth);
-		frequencyPanel = new FrequencyBarPanel(frequencyCheckBox, graphInputWidth);
-		transitionMatrixPanel = new TransitionaMatrixPanel(transitionMatrixCheckBox, 
-				graphInputWidth);
-		histogramPanel = new HistogramPanel(histogramCheckbox, graphInputWidth);
+		graphPanels.add(new BoxPlotPanel(graphInputWidth));
+		graphPanels.add(new FrequencyBarPanel(graphInputWidth));
+		graphPanels.add(new TransitionaMatrixPanel(graphInputWidth));
+		graphPanels.add(new HistogramPanel(graphInputWidth));
 	}
 	
 	/**
@@ -99,13 +81,10 @@ public class GraphInputInterface extends InterfaceHelper {
 	 * Initialize for each possible graph a panel, for inputting data.
 	 */
 	private void initGraphPanels() {
-		containerScrollPanel.add(boxPlotPanel.loadPanel(), setGrids(0, 0));
-		containerScrollPanel.add(frequencyPanel.loadPanel(), 
-				setGrids(0, 1, new Insets(INSETS, 0, 0, 0)));
-		containerScrollPanel.add(transitionMatrixPanel.loadPanel(), 
-				setGrids(0, 2, new Insets(INSETS, 0, 0, 0)));
-		containerScrollPanel.add(histogramPanel.loadPanel(), 
-				setGrids(0, THREE, new Insets(INSETS, 0, 0, 0)));
+		for (int i = 0; i < graphPanels.size(); i++) {
+			containerScrollPanel.add(graphPanels.get(i).loadPanel(), 
+					setGrids(0, i, new Insets(INSETS, 0, 0, 0)));
+		}
 	}
 
 	/**
@@ -122,14 +101,10 @@ public class GraphInputInterface extends InterfaceHelper {
 	 */
 	private void initCheckBoxesToPanel() {
 		JPanel checkboxes = createPanel(MainFrame.OUTPUTTABCOLOR, graphInputWidth, CHECKBOXHEIGHT);
-		checkboxes.add(boxPlotCheckBox, setGrids(0, 0, 
-				new Insets(0, 0, 0, CHECKBOXESINSETS)));
-		checkboxes.add(frequencyCheckBox, setGrids(1, 0, 
-				new Insets(0, 0, 0, CHECKBOXESINSETS)));
-		checkboxes.add(transitionMatrixCheckBox, setGrids(2, 0, 
-				new Insets(0, 0, 0, CHECKBOXESINSETS)));
-		checkboxes.add(histogramCheckbox, setGrids(THREE, 0, 
-				new Insets(0, 0, 0, CHECKBOXESINSETS)));
+		for (int i = 0; i < graphPanels.size(); i++) {
+			checkboxes.add(graphPanels.get(i).getCheckbox(), 
+					setGrids(i, 0, new Insets(0, 0, 0, CHECKBOXESINSETS)));
+		}
 		graphInputParentPanel.add(checkboxes, setGrids(0, 0));
 	}
 
@@ -137,73 +112,15 @@ public class GraphInputInterface extends InterfaceHelper {
 	 * Updates all panels.
 	 */
 	public void update() {
-		boxPlotPanel.updateContainer();
-		frequencyPanel.updateContainer();
-		histogramPanel.updateContainer();
-		transitionMatrixPanel.updateContainer();
-	}
-	
-	/**
-	 * @return the boxPlotPanel
-	 */
-	protected BoxPlotPanel getBoxPlotPanel() {
-		return boxPlotPanel;
+		for (GraphPanel panel : graphPanels) {
+			panel.updateContainer();
+		}
 	}
 
 	/**
-	 * @return the frequencyPanel
+	 * @return the graph panels of the interface.
 	 */
-	protected FrequencyBarPanel getFrequencyPanel() {
-		return frequencyPanel;
-	}
-
-	/**
-	 * @return the stemAndLeafPlotPanel
-	 */
-	protected TransitionaMatrixPanel getTransitionMatrixPanel() {
-		return transitionMatrixPanel;
-	}
-
-	/**
-	 * @return the histogramPanel
-	 */
-	protected HistogramPanel getHistogramPanel() {
-		return histogramPanel;
-	}
-
-	/**
-	 * @return the boxPlotCheckBox
-	 */
-	protected JCheckBox getBoxPlotCheckBox() {
-		return boxPlotCheckBox;
-	}
-
-	/**
-	 * @return the frequencyCheckBox
-	 */
-	protected JCheckBox getFrequencyCheckBox() {
-		return frequencyCheckBox;
-	}
-
-	/**
-	 * @return the stemAndLeafPlotCheckBox
-	 */
-	protected JCheckBox getTransitionMatrixCheckBox() {
-		return transitionMatrixCheckBox;
-	}
-
-	/**
-	 * @return the histogramCheckbox
-	 */
-	protected JCheckBox getHistogramCheckbox() {
-		return histogramCheckbox;
-	}
-
-	/**
-	 * @param checkbox the check-box that must be checked.
-	 * @return  true if the check-box is selected else false.
-	 */
-	protected boolean isSelected(JCheckBox checkbox) {
-		return checkbox.isSelected();
+	public ArrayList<GraphPanel> getGraphPanels() {
+		return graphPanels;
 	}
 }

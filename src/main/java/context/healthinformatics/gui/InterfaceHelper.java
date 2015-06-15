@@ -10,15 +10,18 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 
+import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import context.healthinformatics.database.SingletonDb;
 import context.healthinformatics.parser.Column;
@@ -35,13 +38,15 @@ public class InterfaceHelper extends JPanel {
 	private static final int TABSY = 120;
 	private static final int TABTEXTFONTSIZE = 40;
 	public static final int TITLEFONT = 28;
-	private static final int TEXTSIZE = 20;
+	protected static final int TEXTSIZE = 20;
 	protected static final int THREE = 3;
 	protected static final int HUNDERTPROCENT = 100;
 	protected static final int CORRECION = 98;
 	protected static final int INSETS = 10;
 	protected static final int FIELDCORRECTION = 130;
 	private static final int SUBTITLEFONT = 20;
+	private static final int SELECTERHEIGHT = 500;
+	private static final int SELECTERWIDTH = 600;
 	
 	protected static final int FOUR = 4;
 
@@ -459,5 +464,25 @@ public class InterfaceHelper extends JPanel {
 			columnNames = new String[0];
 		}
 		return columnNames;
+	}
+	
+	/**
+	 * @param filter
+	 *            which file type will be saved.
+	 * @return the anwser of the filechooser.
+	 */
+	public JFileChooser saveFileChooser(String filter) {
+		JFileChooser savePopup = new JFileChooser();
+		savePopup.setMultiSelectionEnabled(true);
+		String filtername = "save as *." + filter;
+		FileNameExtensionFilter extenstionFilter = new FileNameExtensionFilter(
+				filtername, filter);
+		savePopup.setFileFilter(extenstionFilter);
+		savePopup
+				.setPreferredSize(new Dimension(SELECTERWIDTH, SELECTERHEIGHT));
+		savePopup.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		Action details = savePopup.getActionMap().get("viewTypeDetails");
+		details.actionPerformed(null);
+		return savePopup;
 	}
 }

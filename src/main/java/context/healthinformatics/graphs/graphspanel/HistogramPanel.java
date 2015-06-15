@@ -1,19 +1,17 @@
 package context.healthinformatics.graphs.graphspanel;
 
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
 import context.healthinformatics.graphs.GraphInputContainer;
-import context.healthinformatics.gui.InterfaceHelper;
+import context.healthinformatics.gui.MainFrame;
 
 /**
  * Creates a panel specific for the box plot.
  */
-public class HistogramPanel extends InterfaceHelper implements GraphPanel {
+public class HistogramPanel extends GraphPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JCheckBox checkbox;
@@ -23,14 +21,13 @@ public class HistogramPanel extends InterfaceHelper implements GraphPanel {
 	
 	/**
 	 * Creates a action listener for the check-box and makes a new container for this graph panel.
-	 * @param checkbox the check-box that is for this panel.
 	 * @param width the width for this panel.
 	 */
-	public HistogramPanel(JCheckBox checkbox, int width) {
-		this.checkbox = checkbox;
+	public HistogramPanel(int width) {
 		panelWidth = width;
 		container = new GraphInputContainer();
 		histogramPanel = initGraphPanel("Histogram");
+		this.checkbox = createCheckBox("Histogram", MainFrame.OUTPUTTABCOLOR);
 		this.checkbox.addActionListener(this);
 	}
 	
@@ -39,14 +36,7 @@ public class HistogramPanel extends InterfaceHelper implements GraphPanel {
 	 */
 	@Override
 	public JPanel initGraphPanel(String title) {
-		JPanel graphPanel = createEmptyWithGridBagLayoutPanel(Color.WHITE);
-		graphPanel.setPreferredSize(new Dimension(panelWidth - 2 * INSETS, 
-				INPUTELEMENTS * CHECKBOXHEIGHT));
-		graphPanel.setVisible(false);
-		graphPanel.add(createSubTitle(title, panelWidth, CHECKBOXHEIGHT), setGrids(0, 0));
-		graphPanel.add(makeFormRowPanelWithTextField("Graph Title:", 
-				container.getGraphTitle(), panelWidth - 2 * INSETS, CHECKBOXHEIGHT), 
-				setGrids(0, 1));
+		JPanel graphPanel = makePanel(title, panelWidth, FOUR,  container);
 		graphPanel.add(makeFormRowPanelWithComboBox("Select data for the x-as:", 
 				container.getxValue(), panelWidth - 2 * INSETS, CHECKBOXHEIGHT), 
 				setGrids(0, 2));
@@ -83,6 +73,29 @@ public class HistogramPanel extends InterfaceHelper implements GraphPanel {
 	@Override
 	public GraphInputContainer getGraphContainer() {
 		return container;
+	}
+
+	@Override
+	public JCheckBox getCheckbox() {
+		return checkbox;
+	}
+
+	@Override
+	public boolean isSelected() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void plot() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public JPanel getGraphPanel() {
+		// TODO Auto-generated method stub
+		return new JPanel();
 	}
 
 }
