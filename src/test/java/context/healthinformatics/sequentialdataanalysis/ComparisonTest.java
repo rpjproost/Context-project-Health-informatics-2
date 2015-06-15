@@ -37,7 +37,7 @@ public class ComparisonTest {
 	public void before() throws Exception {
 		data = SingletonDb.getDb();
 		SingletonDb.dropAll(data);
-		xmlp = new XMLParser(path + "ComparisonTest.xml");
+		xmlp = new XMLParser(path + "comp.xml");
 		xmlp.parse();
 		xmlp.createDatabase();
 		String[] clause = new String[1];
@@ -59,15 +59,19 @@ public class ComparisonTest {
 		Comparison c = new Comparison();
 		ip.interpret("filter data where beschrijving = 'Kreatinine (stat)'");
 		ip.interpret("filter data where value = 93");
-		ArrayList<String> chunk = ip.getChunks().get(0).toArray();
-		System.out.println(chunk.toString());
-
-		ip.interpret("undo");
+		
 		ip.interpret("undo");
 		
-		Query q = new Query("test");//na het woordt compare geen andere input.
+		ArrayList<Chunk> chunks = ip.getChunks();
+		for (Chunk ch : chunks) {
+			System.out.println(ch.toArray().toString());
+		}
+		
+		Query q = new Query("test");//na het woord compare geen andere input.
 		c.run(q);
 		//int index = c.dates.indexOf
-		//assertEquals(c.advices.get(index), "Repeat measurement tommorow");
+		assertEquals(c.advices.get(11), "Repeat measurement tommorow");
+		
+		ip.interpret("undo");
 	}
 }

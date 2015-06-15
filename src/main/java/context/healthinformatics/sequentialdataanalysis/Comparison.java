@@ -112,7 +112,7 @@ public class Comparison extends Task {
 		ArrayList<String> result = new ArrayList<String>();//correspondeert met dates waar alle dubble uit zijn gehaald.
 		ArrayList<String> boundaries =  calculateMeasurementBoundaries();
 		result.add(boundaries.get(0));// de eerste heeft geen voorganger dus die gaat er gewoon in.
-		int count = 5;// de eerste zit er in dus je begint met terugkijken bij de tweede.
+		int count = 6;// de eerste zit er in dus je begint met terugkijken bij de tweede.
 		while (count < dates.size()) {
 			if (!dates.get(count - 1).equals(dates.get(count))) {
 				result.add(boundaries.get(count));
@@ -131,9 +131,9 @@ public class Comparison extends Task {
 	
 	private void removeDuplicateAndIrrelevantDates() {
 		ArrayList<Date> list = new ArrayList<Date>();
-		Date d = dates.get(4);// begin mij 5de meting
+		Date d = dates.get(5);// begin mij 5de meting
 		list.add(d);
-		for (int i = 5; i < dates.size(); i++) {
+		for (int i = 6; i < dates.size(); i++) {
 			Date curDate = dates.get(i);
 			if (!d.equals(curDate)) {
 				list.add(curDate);
@@ -208,14 +208,14 @@ public class Comparison extends Task {
 
 	private ArrayList<Integer> runAlgorithm( ArrayList<Integer> averageValues) throws SQLException {
 		
-		assertEquals(values.size() - 4, averageValues.size());////////////////////////////////////////////////////////////////////////////////////////////
+		assertEquals(values.size() - 5, averageValues.size());////////////////////////////////////////////////////////////////////////////////////////////
 		
 		ArrayList<Integer> result = new ArrayList<Integer>();
 		int count = 0;
 		int sum = 0;
-		for (int i = 4; i < values.size(); i++) {
+		for (int i = 5; i < values.size(); i++) {
 			sum = 0;
-			for (int j = i; j > i - 5; j--) {
+			for (int j = i; j >= i - 5; j--) {
 				sum += Math.sqrt(values.get(j) - averageValues.get(count));
 			}
 			count++;
@@ -227,9 +227,9 @@ public class Comparison extends Task {
 	private ArrayList<Integer> getValueAverages(ArrayList<Integer> list) {
 		ArrayList<Integer> result = new ArrayList<Integer>();
 		int sum = 0;
-		for (int i = 4; i < list.size(); i++) {
+		for (int i = 5; i < list.size(); i++) {
 			sum = 0;
-			for (int j = i; j > i - 5; j--) {
+			for (int j = i; j >= i - 5; j--) {
 				sum += list.get(i);
 			}
 			result.add(sum / 5);

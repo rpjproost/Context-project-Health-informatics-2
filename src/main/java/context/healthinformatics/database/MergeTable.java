@@ -39,7 +39,7 @@ public class MergeTable {
 	 */
 	public void merge(String[] clause) throws SQLException {
 		mergeTables(clause);
-		mergeTablesView("date");
+		mergeTablesView("date, time");
 		Interpreter interpreter = SingletonInterpreter.getInterpreter();
 		interpreter.setIntialChunks(getChunks());
 	}
