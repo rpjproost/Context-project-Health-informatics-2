@@ -211,13 +211,12 @@ public class Comparison extends Task {
 	private ArrayList<Integer> runAlgorithm( ArrayList<Integer> averageValues) throws SQLException {
 		
 		//assertEquals(values.size() - 5, averageValues.size());////////////////////////////////////////////////////////////////////////////////////////////
-		
 		ArrayList<Integer> result = new ArrayList<Integer>();
 		int count = 0;
 		int sum = 0;
-		for (int i = 5; i < values.size(); i++) {
+		for (int i = 4; i < values.size(); i++) {
 			sum = 0;
-			for (int j = i; j >= i - 5; j--) {
+			for (int j = i; j >= i - 4; j--) {
 				sum += Math.sqrt(values.get(j) - averageValues.get(count));
 			}
 			count++;
