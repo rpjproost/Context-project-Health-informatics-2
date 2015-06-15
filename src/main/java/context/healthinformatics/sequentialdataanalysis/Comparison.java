@@ -66,7 +66,7 @@ public class Comparison extends Task {
 		
 		ArrayList<String> advices = getAdvice();
 		
-		assertEquals(dates.size(), advices.size());//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//		assertEquals(dates.size(), advices.size());//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// dates is now filled with unique dates.
 		// advices is as long as dates, and it has corresponding advices for that day.
 		
@@ -74,11 +74,15 @@ public class Comparison extends Task {
 		System.out.println(advices.toString());/////////////////////////////////////////////////////
 	}
 	
+	
+	/**
+	 * STAP 3 Advies en eventuele te nemen actie!
+	 * */
 	private ArrayList<String> getAdvice() throws SQLException {
 		ArrayList<String> statusList = determineCreatineStatus();
 		removeDuplicateAndIrrelevantDates();
 		
-		assertEquals(dates.size(), statusList.size());//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//		assertEquals(dates.size(), statusList.size());//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		ArrayList<String> result = new ArrayList<String>();
 		result.add("no advice");
@@ -87,6 +91,20 @@ public class Comparison extends Task {
 			result.add(status);
 		}
 		return result;//per day
+	}
+	
+	private void removeDuplicateAndIrrelevantDates() {
+		ArrayList<Date> list = new ArrayList<Date>();
+		Date d = dates.get(5);// begin mij 5de meting
+		list.add(d);
+		for (int i = 6; i < dates.size(); i++) {
+			Date curDate = dates.get(i);
+			if (!d.equals(curDate)) {
+				list.add(curDate);
+				d = curDate;
+			}
+		}
+		dates = list;
 	}
 	
 	private String resolveStatus(String s1, String s2) {
@@ -113,39 +131,44 @@ public class Comparison extends Task {
 		}
 	}
 	
-	private ArrayList<String> determineCreatineStatus() throws SQLException {
+	/**
+	 * EINDE STAP 3!
+	 * */
+	
+	/**
+	 * STAP 2 KREATININE STATUS!
+	 * */
+	
+	private ArrayList<String> determineCreatineStatus() throws SQLException { //TODO hier ben ik gebleven!!!
 		ArrayList<String> result = new ArrayList<String>();//correspondeert met dates waar alle dubble uit zijn gehaald.
 		ArrayList<String> boundaries =  calculateMeasurementBoundaries();
-		result.add(boundaries.get(0));// de eerste heeft geen voorganger dus die gaat er gewoon in.
-		int count = 6;// de eerste zit er in dus je begint met terugkijken bij de tweede.
-		while (count < dates.size()) {
-			if (!dates.get(count - 1).equals(dates.get(count))) {
-				result.add(boundaries.get(count));
+//		result.add(boundaries.get(0));// de eerste heeft geen voorganger dus die gaat er gewoon in.
+		int count = 1;// de eerste zit er in dus je begint met terugkijken bij de tweede.
+		Date currentDate = dates.get(5);
+		String currentBoundary = boundaries.get(0);
+		System.out.println("boundaries size: " + boundaries.size());
+		System.out.println("boudaries: " + boundaries);
+		System.out.println("Dates size: " + dates.size());
+		System.out.println("Dates: " + dates);
+		for (int i = 6; i < dates.size(); i++) {
+			if (!currentDate.equals(dates.get(i))) {
+				result.add(currentBoundary);
+				currentBoundary = boundaries.get(count);
+				currentDate = dates.get(i);
 				count++;
 			}
 			else {
-				while (dates.get(count - 1).equals(dates.get(count))) {
+				while (currentDate.equals(dates.get(i))) {
+					i++;
+					currentBoundary = resolveBoundaries(boundaries.get(count - 1), boundaries.get(count));
 					count++;
 				}
-				result.add(resolveBoundaries(boundaries.get(count - 1), boundaries.get(count)));
-				count++;
 			}
+			System.out.println("Current date: " + dates.get(i) + "; Last Date: " + dates.get(i - 1) + "; Value: " + values.get(i) + "; Boundary: " + boundaries.get(count));
 		}
+		System.out.println("result size: " + result.size());
+		System.out.println("result: " + result);
 		return result;
-	}
-	
-	private void removeDuplicateAndIrrelevantDates() {
-		ArrayList<Date> list = new ArrayList<Date>();
-		Date d = dates.get(5);// begin mij 5de meting
-		list.add(d);
-		for (int i = 6; i < dates.size(); i++) {
-			Date curDate = dates.get(i);
-			if (!d.equals(curDate)) {
-				list.add(curDate);
-				d = curDate;
-			}
-		}
-		dates = list;
 	}
 	
 	public String resolveBoundaries(String s1, String s2) {
@@ -173,7 +196,7 @@ public class Comparison extends Task {
 		if (s1.equals(concern) &&  s2.equals(reasonable)) {
 			return mild;
 		}
-		if (s1.equals(concern) &&  s2.equals("Somewhat Safe")) {
+		if (s1.equals(concern) &&  s2.equals(reasonable)) {
 			return concern;
 		}
 		if (s1.equals(concern) &&  s2.equals(concern)) {
@@ -183,6 +206,14 @@ public class Comparison extends Task {
 			return null;
 		}
 	}
+	
+	/**
+	 * EINDE STAP 2!
+	 * */
+	
+	/**
+	 * STAP 1 GRENSGEBIEDEN BEREKENINGEN!
+	 * */
 
 	private ArrayList<String> calculateMeasurementBoundaries() throws SQLException {
 		ArrayList<String> result = new ArrayList<String>();
@@ -267,6 +298,11 @@ public class Comparison extends Task {
 		double max = Math.max(a, b);
 		return max;
 	}
+	
+	/**
+	 * EINDE STAP 1!
+	 * */
+	 
 
 	@Override
 	public ArrayList<Chunk> undo() {
