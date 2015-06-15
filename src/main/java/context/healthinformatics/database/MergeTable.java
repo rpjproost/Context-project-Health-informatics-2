@@ -195,18 +195,6 @@ public class MergeTable {
 	}
 
 	/**
-	 * method for dropping a view from the database.
-	 * 
-	 * @param viewName
-	 *            The name of the view to drop.
-	 * @throws SQLException if the view can't be dropped.
-	 */
-	public void dropView(String viewName) throws SQLException {
-		String sql = "DROP VIEW " + viewName;
-		data.executeUpdate(sql);
-	}
-
-	/**
 	 * returns the workspace in chunks.
 	 * 
 	 * @return an arrayList of chunks.

@@ -175,3 +175,14 @@ Save XML file
 	</body>
 </html>
 %%
+Analyse
+<html>
+	<body>
+	<h2>Analyse you selected files :</h2>
+	<p>
+	When you are done selecting your inputted files and corresponding XML files, you can hit the "Save and go to Analyse" button. A pop-up will apear where you can
+	select pre-filters for the data. With the add button in this window you can specify a filter for a project, in which a selected column will have a specified value.
+	</p>
+	</body>
+</html>
+%%

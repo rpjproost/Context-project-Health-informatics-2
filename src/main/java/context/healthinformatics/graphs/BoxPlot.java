@@ -1,11 +1,7 @@
 package context.healthinformatics.graphs;
 
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -18,9 +14,6 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.chart.plot.Plot;
-import org.jfree.chart.plot.PlotRenderingInfo;
-import org.jfree.chart.plot.PlotState;
 import org.jfree.chart.renderer.category.BoxAndWhiskerRenderer;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 
@@ -169,7 +162,10 @@ public class BoxPlot extends InterfaceHelper {
 				listOfValues.addAll(loopThroughChunks(children.get(i), column));
 			}
 		} else {
-			listOfValues.add(getChunkData(currentChunk, column));
+			Double res = getChunkData(currentChunk, column);
+			if (res != Integer.MIN_VALUE) {
+				listOfValues.add(res);
+			}
 		}
 		return listOfValues;
 	}
@@ -210,21 +206,4 @@ public class BoxPlot extends InterfaceHelper {
 		}
 
 	}
-
-	// @Override
-	// public void actionPerformed(ActionEvent e) {
-	// if (e.getSource() == boxPlotTempRefreshButton) {
-	// ArrayList<String> listOfColumns = new ArrayList<String>();
-	// listOfColumns.add("value");
-	// // listOfColumns.add("time");
-	// try {
-	// setDataPerChunk(listOfColumns);
-	// } catch (Exception e1) {
-	// // TODO Auto-generated catch block
-	// e1.printStackTrace();
-	// }
-	// }
-	//
-	// }
-
 }

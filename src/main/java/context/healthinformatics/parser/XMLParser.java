@@ -134,11 +134,12 @@ public class XMLParser extends Parser {
 	public void createDatabase() {
 		try {
 			for (int i = 0; i < parsers.size(); i++) {
-				createTableDb(documents.get(i));
-				parsers.get(i).parse();
+				if (createTableDb(documents.get(i))) {
+					parsers.get(i).parse();	
+				}
 			}
-		} catch (SQLException | IOException e) {
-			System.out.println("DB was not created!"); // TODO exception
+		} catch (IOException e) {
+			System.out.println("DB was not created!"); 
 		}
 	}
 	
@@ -152,13 +153,13 @@ public class XMLParser extends Parser {
 		try {
 			for (int i = 0; i < indexesForParsers.size(); i++) {
 				int index = indexesForParsers.get(i);
-				createTableDb(documents.get(index));
-				parsers.get(index).parse();
-				currentData.add(documents.get(index));
+				if (createTableDb(documents.get(index))) {
+					parsers.get(index).parse();
+					currentData.add(documents.get(index));
+				}
 			}
-			dropOldTables(currentData);
-		} catch (SQLException | IOException e) {
-			System.out.println("Table not created!"); // TODO exception
+		} catch (IOException e) {
+			System.out.println("Table not created!");
 		}
 	}
 
@@ -220,51 +221,16 @@ public class XMLParser extends Parser {
 	 *             throws this if the table could not be created. This probably
 	 *             is due to the fact that the table already exists.
 	 */
-	private void createTableDb(XMLDocument xmlDocument) throws SQLException {
+	private boolean createTableDb(XMLDocument xmlDocument) {
 		Db data = SingletonDb.getDb();
 		try {
-			if (!data.getTables().containsKey(xmlDocument.getDocName())) {
-				data.createTable(xmlDocument.getDocName(), xmlDocument.getColumns());
-			}
+			 return data.createTable(xmlDocument.getDocName(), xmlDocument.getColumns());
 		} catch (SQLException e) {
-			throw new SQLException("The Table could not be created.");
+			System.out.println("Table could not be created!");
+			return false;
 		}
 	}
 	
-	/**
-	 * Drops older tables that aren't selected anymore.
-	 * @param currentData the data which now is used.
-	 * @throws SQLException will be thrown if it couldn't drop the table.
-	 */
-	private void dropOldTables(ArrayList<XMLDocument> currentData) throws SQLException {
-		Db data = SingletonDb.getDb();
-		ArrayList<String> tables = new ArrayList<String>(data.getTables().keySet());
-		try {
-			for (int i = 0; i < tables.size(); i++) {
-				if (!checkDataOnKeys(currentData, tables.get(i))) {
-					data.dropTable(tables.get(i));
-				}
-			}
-		} catch (SQLException e) {
-			throw new SQLException("Couldn't drop the table.");
-		}
-	}
-
-	/**
-	 * Checks the data on a specific string, if the name of the xml document exists return true.
-	 * @param currentData the data that will be used to check of the string will be in there.
-	 * @param string the one that must be in the data.
-	 * @return boolean if true than exists else false.
-	 */
-	private boolean checkDataOnKeys(ArrayList<XMLDocument> currentData, String string) {
-		for (int i = 0; i < currentData.size(); i++) {
-			if (currentData.get(i).getDocName().equals(string)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	/**
 	 * Get a Integer at the place of the tag in the xml. When there isn't a
 	 * Integer, it will be set on a default 1.

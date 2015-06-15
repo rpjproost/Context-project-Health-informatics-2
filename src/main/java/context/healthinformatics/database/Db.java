@@ -56,7 +56,6 @@ public class Db implements Observer {
 
 	/**
 	 * Sets up connection.
-	 * 
 	 * @throws SQLException
 	 *             if database query is incorrect.
 	 * @return true iff connection is set.
@@ -75,15 +74,8 @@ public class Db implements Observer {
 		return res;
 	}
 
-//	public void showTables() throws Exception {
-//		String sqlIn = "SHOW TABLES;";
-//		InputStream stream = new ByteArrayInputStream(sqlIn.getBytes(StandardCharsets.UTF_8));
-//		ij.runScript(conn,stream,StandardCharsets.UTF_8.name(), System.out,"UTF-8");
-//		stream.close();
-//	}
-
 	/**
-	 * Creates new table.
+	 * Creates new table with checks if table already exists.
 	 * 
 	 * @param tableName
 	 *            name for new table.
@@ -95,17 +87,50 @@ public class Db implements Observer {
 	 */
 	public boolean createTable(String tableName, ArrayList<Column> columns)
 			throws SQLException {
-		boolean res = false;
-		try {
-			stmt = conn.createStatement();
-			String sql = SqlBuilder.createSqlTable(tableName, columns);
-			stmt.executeUpdate(sql);
-			res = true;
-			tables.put(tableName, columns);
-		} catch (SQLException e) {
-			throw new SQLException(e);
+		if (tables.get(tableName) != null) {
+			if (createTableAdjustedTable(tableName, columns)) {
+				dropView("workspace");
+				dropTable(mergeTable);
+				dropTable(tableName);
+				createTableInDb(tableName, columns);
+			}
+			else {
+				return false;
+			}
 		}
-		return res;
+		else {
+			createTableInDb(tableName, columns);
+		}
+		return true;
+	}
+	
+	/**
+	 * Creates table.
+	 * @param tableName name of table to be created.
+	 * @param columns arraylist of columns to be added in table.
+	 * @return true if created without errors.
+	 * @throws SQLException iff table already exists or database does not exist.
+	 */
+	public boolean createTableInDb(String tableName, ArrayList<Column> columns)
+			throws SQLException {
+		stmt = conn.createStatement();
+		stmt.executeUpdate(SqlBuilder.createSqlTable(tableName, columns));
+		tables.put(tableName, columns);
+		return true;
+	}
+
+	/**
+	 * Checks if an existing table has changed.
+	 * @param tableName Name of table to be checked.
+	 * @param columns ArrayList of new columns.
+	 * @return true iff changed, false if still the same as previous table.
+	 */
+	public boolean createTableAdjustedTable(String tableName, ArrayList<Column> columns) {
+		ArrayList<Column> c = tables.get(tableName);
+		if (c != null && !(c.equals(columns))) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
@@ -261,6 +286,18 @@ public class Db implements Observer {
 			throw new SQLException(e);
 		}
 		return res;
+	}
+	
+	/**
+	 * method for dropping a view from the database.
+	 * 
+	 * @param viewName
+	 *            The name of the view to drop.
+	 * @throws SQLException if the view can't be dropped.
+	 */
+	public void dropView(String viewName) throws SQLException {
+		String sql = "DROP VIEW " + viewName;
+		executeUpdate(sql);
 	}
 
 	/**

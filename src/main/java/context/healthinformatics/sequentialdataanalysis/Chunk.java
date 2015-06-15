@@ -4,8 +4,11 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 
 import context.healthinformatics.analyse.SingletonInterpreter;
 import context.healthinformatics.database.Db;
@@ -24,6 +27,9 @@ public class Chunk {
 	private int line;
 	private int sum;
 	private ResultSet rs;
+	private boolean compute;
+	private double[] computations;
+	private double difference = Integer.MIN_VALUE;
 
 	/**
 	 * 
@@ -81,6 +87,14 @@ public class Chunk {
 	 */
 	public void setPointer(HashMap<Chunk, String> pointer) {
 		this.pointer = pointer;
+	}
+
+	/**
+	 * Returns if this chunk has connections to others.
+	 * @return true iff chunk has connection.
+	 */
+	public boolean hasConnection() {
+		return pointer.size() > 0;
 	}
 
 	/**
@@ -185,8 +199,11 @@ public class Chunk {
 	 */
 	public ArrayList<String> toArray() {
 		ArrayList<String> res = new ArrayList<String>();
-		if (sum != Integer.MIN_VALUE) {
-			res.add(sum + "");
+		if (difference != Integer.MIN_VALUE) {
+			res.add("difference to connection " + difference);
+		}
+		else if (isCompute()) {
+			toArrayComputed(res);
 			return res;
 		} else if (hasChild()) {
 			res.add("Chunk contains childs, code = " + code + " comment = "
@@ -205,8 +222,21 @@ public class Chunk {
 				System.out.println(e);
 				return res;
 			}
-			return res;
 		}
+		return res;
+	}
+
+	private void toArrayComputed(ArrayList<String> res) {
+		final int comp = 3;
+		res.add("sum of values = " + computations[0]);
+		if (computations[1] != Integer.MIN_VALUE) {
+			res.add("max of values = " + computations[1]);
+		}
+		if (computations[2] != Integer.MAX_VALUE) {
+			res.add("min of values = " + computations[2]);
+		}
+		res.add("average of values = " + computations[comp]);
+		res.add("Childs sum = " + sum);
 	}
 
 	/**
@@ -255,6 +285,13 @@ public class Chunk {
 	}
 
 	/**
+	 * undo for difference.
+	 */
+	public void undoDifference() {
+		difference = Integer.MIN_VALUE;
+	}
+
+	/**
 	 * Process the result set.
 	 * 
 	 * @param numColumns
@@ -284,4 +321,149 @@ public class Chunk {
 		rs.close();
 	}
 
+	/**
+	 * Returns boolean if chunk is computed.
+	 * @return true iff data is computed.
+	 */
+	public boolean isCompute() {
+		return compute;
+	}
+
+	/**
+	 * Sets boolean compute if data is being computed.
+	 * @param compute true iff data is being computed, false if normal data should be shown.
+	 */
+	public void setCompute(boolean compute) {
+		this.compute = compute;
+	}
+
+	/**
+	 * Initialize computing for a parent chunk.
+	 * @param column column to be computed.
+	 * @throws SQLException if column is not in table.
+	 */
+	public void initializeComputations(String column) throws SQLException {
+		final int comp = 4;
+		if (hasChild()) {
+			computations = new double[comp];
+			setCompute(true);
+			this.sum = getChildren().size();
+			computeChunkValues(column);
+		}
+	}
+
+	/**
+	 * Compute the values sum/max/min/average for column.
+	 * @param column the column to be computed.
+	 * @throws SQLException if column is not in table.
+	 */
+	public void computeChunkValues(String column) throws SQLException {
+		double sum = 0;
+		double min = Integer.MAX_VALUE;
+		double max = Integer.MIN_VALUE;
+		int counter = 0;
+		for (int i = 0; i < getChildren().size(); i++) {
+			double value = getChildren().get(i).getValue(column);
+			if (value != Integer.MIN_VALUE) {
+				if (value > max) {
+					max = value;
+				}
+				if (value < min) {
+					min = value;
+				}
+				counter++;
+				sum += value;
+			}
+		}
+		final int comp = 3;
+		computations[0] = sum; computations[1] = max; computations[2] = min; 
+		computations[comp] = sum / counter;
+	}
+
+	/**
+	 * Computes difference on column for this chunk and its connection.
+	 * @param column value to be compared.
+	 * @throws SQLException if column is not an integer or does not exist.
+	 */
+	public void initializeDifference(String column) throws SQLException {
+		if (hasConnection()) {
+			if (column.toLowerCase().equals("time")) {
+				timeDifference(column);
+			}
+			else {
+				integerDifference(column);
+			}
+		}
+	}
+
+	private void timeDifference(String column) throws SQLException {
+		Db data = SingletonDb.getDb();
+		int days = 0; double first = 0.0; double second = 0.0;
+		final int twentyfour = 24; final int sixty = 60;
+		first = getValue(column);
+		Date firstDate = data.selectDate(getLine());
+		Date secondDate = null;
+		for (Chunk c : pointer.keySet()) {
+			second = c.getValue(column);
+			secondDate = data.selectDate(c.getLine());
+		}
+		if (first != Integer.MIN_VALUE && second != Integer.MIN_VALUE) {
+			days = daysBetween(firstDate, secondDate);
+			//TODO: time should be sorted in database.
+			if (first > second) {
+				double[] res = convertTime(first, second);
+				difference = res[0] - res[1] + days * twentyfour * sixty;
+			}
+			else {
+				double[] res = convertTime(first, second);
+				difference = res[1] - res[0] + days * twentyfour * sixty;
+			}
+		}
+	}
+	
+	private int daysBetween(Date first, Date second) {
+		return Days.daysBetween(new DateTime(first), new DateTime(second)).getDays();
+	}
+
+	private double[] convertTime(double first, double second) {
+		final double hundred = 100;
+		final double sixty = 60;
+		first = Math.floor(first / hundred) * sixty + first % hundred;
+		second = Math.floor(second / hundred) * sixty + second % hundred;
+		double[] res = new double[2];
+		res[0] = first; res[1] = second;
+		return res;
+	}
+
+	private void integerDifference(String column) throws SQLException {
+		double first = 0.0;
+		double second = 0.0;
+		first = getValue(column);
+		for (Chunk c : pointer.keySet()) {
+			second = c.getValue(column);
+		}
+		if (first > second && second != Integer.MIN_VALUE) {
+			difference = first - second;
+		}
+		else {
+			if (first != Integer.MIN_VALUE) {
+				difference = second - first;
+			}
+		}
+		if (difference == 0.0) {
+			setComment("No difference with connection");
+		}
+	}
+
+
+	private double getValue(String column) throws SQLException {
+		Db data = SingletonDb.getDb(); double value = 0.0;
+		ResultSet rs = data.selectResultSet(data.getMergeTable(), column, data.getMergeTable() 
+				+ "id = " + getLine());
+		while (rs.next()) {
+			value = rs.getDouble(column);
+		}
+		rs.close();
+		return value;
+	}
 }

@@ -450,7 +450,7 @@ public class InterfaceHelper extends JPanel {
 	public String[] getColumnNames() {
 		String[] columnNames;
 		ArrayList<Column> columns = SingletonDb.getDb().getColumns();
-		if (columns != null) {
+		if (!columns.isEmpty()) {
 			columnNames = new String[columns.size()];
 			for (int i = 0; i < columns.size(); i++) {
 				columnNames[i] = columns.get(i).getColumnName();
