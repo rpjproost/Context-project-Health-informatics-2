@@ -1,8 +1,12 @@
 package context.healthinformatics.gui;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.util.ArrayList;
+
+import javax.swing.JFileChooser;
 
 import org.junit.After;
 import org.junit.Before;
@@ -18,6 +22,7 @@ public class InputPageTest {
 	private MainFrame mf;
 	private InputPage ip;
 	private ArrayList<ArrayList<String>> folder;
+	private String testString = "TestInputPageTest";
 
 	public static final int THREE = 3;
 
@@ -29,10 +34,14 @@ public class InputPageTest {
 		mf = new MainFrame();
 		ip = (InputPage) mf.getInputPage();
 		ip.getFileTree().initTree();
-		ArrayList<String> temp = new ArrayList<String>();
-		temp.add("(default)");
+		ArrayList<String> list1 = new ArrayList<String>();
+		ArrayList<String> list2 = new ArrayList<String>();
+		list1.add("(default)");
+		list2.add(testString);
 		folder = new ArrayList<ArrayList<String>>();
-		folder.add(temp);
+		folder.add(list1);
+		folder.add(list2);
+		ip.getXMLController().setProject("TestInputPageTest");
 	}
 
 	/**
@@ -41,7 +50,7 @@ public class InputPageTest {
 	@Test
 	public void testFillTree() {
 		ip.getFileTree().fillTree();
-		assertEquals(ip.getFileTree().getRoot().getChildCount() / 2, 1);
+		assertEquals(ip.getFileTree().getRoot().getChildCount() / 2, 2);
 	}
 
 	/**
@@ -106,8 +115,7 @@ public class InputPageTest {
 	@Test
 	public void testAddXMLFile() {
 		ip.addXmlFile("src/test/data/mergeTableFiles/twoDocs.xml");
-		assertEquals(ip.getXMLController().getProjectDocuments().isEmpty(),
-				false);
+		assertFalse(ip.getXMLController().getProjectDocuments().isEmpty());
 	}
 
 	/**
@@ -119,12 +127,33 @@ public class InputPageTest {
 		XMLDocument doc = ip.makeDocument(path);
 		assertEquals(doc.getPath(), path);
 	}
+	
+	/**
+	 * Test the load database method.
+	 */
+	@Test
+	public void testLoadDatabase() {
+		ip.addXmlFile("src/test/data/mergeTableFiles/twoDocs.xml");
+		ip.getXMLController().selectDocument("src/test/data/mergeTableFiles/inputTXT.txt");
+		ip.loadDatabase();
+	}
+	
+	/**
+	 * Test select pop-ups.
+	 */
+	@Test
+	public void testSelecter() {
+		JFileChooser actual = ip.getFileSelecter();
+		JFileChooser expected = ip.openFileChooser();
+		assertNotEquals(actual, expected);
+	}
 
 	/**
 	 * After the test the MainFrame should be closed.
 	 */
 	@After
 	public void closeMainFrame() {
+		ip.removeProject("TestInputPageTest");
 		mf.closeFrame();
 	}
 }

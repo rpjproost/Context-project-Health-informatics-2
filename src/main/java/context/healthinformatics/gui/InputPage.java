@@ -221,7 +221,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	/**
 	 * @return the anwser of the filechooser.
 	 */
-	public int openFileChooser() {
+	public JFileChooser openFileChooser() {
 		selecter = new JFileChooser();
 		selecter.setMultiSelectionEnabled(true);
 		FileNameExtensionFilter filter = new FileNameExtensionFilter(
@@ -231,7 +231,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		selecter.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		Action details = selecter.getActionMap().get("viewTypeDetails");
 		details.actionPerformed(null);
-		return selecter.showOpenDialog(leftPanel);
+		return selecter;
 	}
 
 	/**
