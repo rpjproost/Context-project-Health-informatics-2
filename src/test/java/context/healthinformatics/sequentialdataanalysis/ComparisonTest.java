@@ -39,7 +39,7 @@ public class ComparisonTest {
 	public void before() throws Exception {
 		data = SingletonDb.getDb();
 		SingletonDb.dropAll(data);
-		xmlp = new XMLParser(path + "comp.xml");
+		xmlp = new XMLParser(path + "ComparisonTest.xml");
 		xmlp.parse();
 		xmlp.createDatabase();
 		String[] clause = new String[1];
@@ -64,10 +64,10 @@ public class ComparisonTest {
 		
 		ip.interpret("undo");
 		
-		ArrayList<Chunk> chunks = ip.getChunks();
-		for (Chunk ch : chunks) {
-			System.out.println(ch.toArray().toString());
-		}
+//		ArrayList<Chunk> chunks = ip.getChunks();
+//		for (Chunk ch : chunks) {
+//			System.out.println(ch.toArray().toString());
+//		}
 		
 		Query q = new Query("test");//na het woord compare geen andere input.
 		c.run(q);

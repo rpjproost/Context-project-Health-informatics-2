@@ -214,16 +214,18 @@ public class Comparison extends Task {
 		ArrayList<Integer> result = new ArrayList<Integer>();
 		int count = 0;
 		int sum = 0;
-		for (int i = 4; i < values.size(); i++) {
+		for (int i = 4; i < 6; i++) {
 			sum = 0;
 			for (int j = i; j >= i - 4; j--) {
-				sum += Math.sqrt(values.get(j) - averageValues.get(count));
+				System.out.println("value: " + values.get(j) + " average: " + averageValues.get(count));
+				sum += Math.pow(values.get(j) - averageValues.get(count), 2);
 			}
 			count++;
-			result.add(sum / 5);
+			result.add((int) Math.sqrt(sum / 5));
 		}
+		System.out.println("algorithm: " + result);
 		return result;
-	}
+	} //TODO THIS IS CORRECT AND HANDTESTED!!
 	
 	private ArrayList<Integer> getValueAverages() {
 		ArrayList<Integer> result = new ArrayList<Integer>();
@@ -236,7 +238,7 @@ public class Comparison extends Task {
 			result.add(sum / 5);
 		}
 		return result;
-	}
+	} // TODO THIS IS CORRECT AND HANDTESTED!!
 	
 	private Boolean checkReasonablySafeUpperBound(ArrayList<Integer> boundaries
 			, ArrayList<Integer> averageValues, int index) {
