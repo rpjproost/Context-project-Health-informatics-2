@@ -150,28 +150,28 @@ public class Comparison extends Task {
 		if (s1.equals("Reasonably Safe")) {
 			return "Reasonably Safe";
 		}
-		if (s1.equals("Somewhat Safe") &&  s1.equals("Safe")) {
+		if (s1.equals("Somewhat Safe") &&  s2.equals("Safe")) {
 			return "Safe";
 		}
-		if (s1.equals("Somewhat Safe") &&  s1.equals("Reasonably Safe")) {
+		if (s1.equals("Somewhat Safe") &&  s2.equals("Reasonably Safe")) {
 			return "Reasonably Safe";
 		}
-		if (s1.equals("Somewhat Safe") &&  s1.equals("Somewhat Safe")) {
+		if (s1.equals("Somewhat Safe") &&  s2.equals("Somewhat Safe")) {
 			return "Somewhat Safe";
 		}
-		if (s1.equals("Somewhat Safe") &&  s1.equals("Concerned")) {
+		if (s1.equals("Somewhat Safe") &&  s2.equals("Concerned")) {
 			return "Concerned";
 		}
-		if (s1.equals("Concerned") &&  s1.equals("Safe")) {
+		if (s1.equals("Concerned") &&  s2.equals("Safe")) {
 			return "Reasonably Safe";
 		}
-		if (s1.equals("Concerned") &&  s1.equals("Reasonably Safe")) {
+		if (s1.equals("Concerned") &&  s2.equals("Reasonably Safe")) {
 			return "Somewhat Safe";
 		}
-		if (s1.equals("Concerned") &&  s1.equals("Somewhat Safe")) {
+		if (s1.equals("Concerned") &&  s2.equals("Somewhat Safe")) {
 			return "Concerned";
 		}
-		if (s1.equals("Concerned") &&  s1.equals("Concerned")) {
+		if (s1.equals("Concerned") &&  s2.equals("Concerned")) {
 			return "Concerned";
 		}
 		else {
