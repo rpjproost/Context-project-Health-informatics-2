@@ -5,11 +5,13 @@ import java.awt.event.ActionEvent;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
-import context.healthinformatics.graphs.FrequencyBar;
 import context.healthinformatics.graphs.GraphInputContainer;
 import context.healthinformatics.graphs.LineChart;
 import context.healthinformatics.gui.MainFrame;
 
+/**
+ * Create panel specific for the LineChart.
+ */
 public class LineChartPanel extends GraphPanel {
 
 	private static final long serialVersionUID = 1L;
@@ -20,6 +22,12 @@ public class LineChartPanel extends GraphPanel {
 	private LineChart lineChart;
 	private JPanel lineChartGraph;
 
+	/**
+	 * Creates a panel for the LineChart.
+	 * 
+	 * @param width
+	 *            the width of the panel
+	 */
 	public LineChartPanel(int width) {
 		panelWidth = width;
 		container = new GraphInputContainer();
@@ -27,8 +35,7 @@ public class LineChartPanel extends GraphPanel {
 		lineChartGraph = lineChart.getPanel();
 		lineChartGraph.setVisible(false);
 		lineChartPanel = initGraphPanel("Line Chart");
-		this.checkbox = createCheckBox("Line Chart",
-				MainFrame.OUTPUTTABCOLOR);
+		this.checkbox = createCheckBox("Line Chart", MainFrame.OUTPUTTABCOLOR);
 		this.checkbox.addActionListener(this);
 	}
 
@@ -75,9 +82,6 @@ public class LineChartPanel extends GraphPanel {
 		lineChart.createLineChart(container.getGraphTitleValue());
 		lineChartGraph = lineChart.getPanel();
 		lineChartGraph.setVisible(true);
-//		frequencyBar.createFrequencyBar(container.getGraphTitleValue());
-//		frequencyBarGraph = frequencyBar.getPanel();
-//		frequencyBarGraph.setVisible(true)
 
 	}
 
