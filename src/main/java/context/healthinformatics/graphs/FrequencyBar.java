@@ -13,6 +13,8 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.renderer.category.BarRenderer;
+import org.jfree.chart.renderer.category.StandardBarPainter;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 
@@ -78,7 +80,6 @@ public class FrequencyBar extends InterfaceHelper {
 			JFreeChart chart = createChart(title,
 					createDataset(SingletonInterpreter.getInterpreter()
 							.countCodes()));
-
 			mainPanel.remove(chartContainerPanel);
 			chartContainerPanel = createEmptyWithGridBagLayoutPanel();
 			chartContainerPanel.setPreferredSize(new Dimension(width,
@@ -105,8 +106,7 @@ public class FrequencyBar extends InterfaceHelper {
 				+ title, "Codes", "Frequency", dataset,
 				PlotOrientation.VERTICAL, false, true, false);
 		chart.setBackgroundPaint(null);
-		final CategoryPlot plot = chart.getCategoryPlot();
-		setLook(plot);
+		setLook(chart.getCategoryPlot());
 		return chart;
 	}
 
@@ -120,6 +120,8 @@ public class FrequencyBar extends InterfaceHelper {
 		plot.setBackgroundPaint(Color.lightGray);
 		plot.setDomainGridlinePaint(Color.white);
 		plot.setRangeGridlinePaint(Color.white);
+		BarRenderer barRenderer = (BarRenderer) plot.getRenderer();
+		barRenderer.setBarPainter(new StandardBarPainter());
 		// set the range axis to display integers only...
 		final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
 		rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
