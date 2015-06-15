@@ -108,13 +108,16 @@ public class BoxPlot extends InterfaceHelper {
 		Interpreter interpreter = SingletonInterpreter.getInterpreter();
 		ArrayList<Chunk> chunks = interpreter.getChunks();
 		StringBuilder buildTitle = new StringBuilder();
-		for (int j = 0; j < columns.size(); j++) {
-			buildTitle.append(" " + columns.get(j));
-			ArrayList<Double> dataList = new ArrayList<Double>();
-			for (int i = 0; i < chunks.size(); i++) {
-				dataList.addAll(loopThroughChunks(chunks.get(i), columns.get(j)));
+		if (chunks != null) {
+			for (int j = 0; j < columns.size(); j++) {
+				buildTitle.append(" " + columns.get(j));
+				ArrayList<Double> dataList = new ArrayList<Double>();
+				for (int i = 0; i < chunks.size(); i++) {
+					dataList.addAll(loopThroughChunks(chunks.get(i),
+							columns.get(j)));
+				}
+				dataset.add(dataList, columns.get(j), " Type " + j);
 			}
-			dataset.add(dataList, columns.get(j), " Type " + j);
 		}
 		plotsize = 1;
 	}
