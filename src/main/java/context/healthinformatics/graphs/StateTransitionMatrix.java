@@ -63,7 +63,7 @@ public class StateTransitionMatrix extends InterfaceHelper {
 
 	/**
 	 * Initialize the table.
-	 * @param string 
+	 * @param string the title of the matrix.
 	 */
 	public void initTable(String string) {
 		mainPanel.remove(graphTitle);
