@@ -63,6 +63,7 @@ public class DocumentFieldsContainerTest {
 	 */
 	@Test
 	public void testCheckIfHasEmptyFields() {
+		//TODO implement this tests.
 //		assertTrue(emptyDoc.checkIfHasEmptyFields());
 //		assertFalse(fullDoc.checkIfHasEmptyFields());
 //		assertFalse(nullDoc.checkIfHasEmptyFields());
@@ -86,6 +87,7 @@ public class DocumentFieldsContainerTest {
 	 */
 	@Test
 	public void testIsInteger() {
+		//TODO implements tests
 //		assertFalse(fullDoc.isInteger(null));
 //		assertFalse(fullDoc.isInteger("doc"));
 //		assertTrue(fullDoc.isInteger("9"));
