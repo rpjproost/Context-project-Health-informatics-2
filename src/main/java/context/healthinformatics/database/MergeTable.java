@@ -67,7 +67,6 @@ public class MergeTable {
 	 *            String with the the columns to sort on.
 	 */
 	protected void mergeTablesView(String sortingString) {
-		// TODO make sure this works with 1 date column.
 		StringBuilder sql = new StringBuilder();
 		sql.append("CREATE VIEW workspace AS SELECT * FROM  " + mergeTable
 				+ " ORDER BY ");

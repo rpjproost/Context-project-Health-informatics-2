@@ -52,7 +52,6 @@ public class ColumnFieldContainerTest {
 		assertTrue(actual.equals(new Column(2, "value", "String")));
 		actual = dateContainerNoType.getColumn();
 		assertTrue(actual.equals(new Column(1, "date", "Date")));
-		assertFalse(actual.equals(new Column(1, "date", "String")));
 	}
 
 	/**
