@@ -17,7 +17,7 @@ import context.healthinformatics.database.SingletonDb;
  */
 public class Comparison extends Task {
 	
-	private ArrayList<Integer> values;
+	private ArrayList<Double> values;
 	public ArrayList<Date> dates;
 	
 	public ArrayList<String> advices;////////////////////
@@ -31,20 +31,18 @@ public class Comparison extends Task {
 	 * Constructor for Comparison.
 	 */
 	public Comparison() {
-		values = new ArrayList<Integer>();
+		values = new ArrayList<Double>();
 		dates = new ArrayList<Date>();
 		
 		advices = new ArrayList<String>();//////////////////
 	}
 	
 	private void getCreaValuesAndDates() throws SQLException {
-		values = new ArrayList<Integer>();
-		dates = new ArrayList<Date>();
 		for (Chunk c : getChunks()) {
 			ResultSet rs = SingletonDb.getDb().selectResultSet("workspace"
 					, "value, date", "resultid =" + c.getLine());
 			while (rs.next()) {
-				values.add(rs.getInt("value"));
+				values.add(rs.getDouble("value"));
 				dates.add(rs.getDate("date"));
 			}
 		}
@@ -189,8 +187,8 @@ public class Comparison extends Task {
 	private ArrayList<String> calculateMeasurementBoundaries() throws SQLException {
 		ArrayList<String> result = new ArrayList<String>();
 		//getCreaValuesAndDates();
-		ArrayList<Integer> averageValues = getValueAverages();
-		ArrayList<Integer> boundaries = runAlgorithm(averageValues);
+		ArrayList<Double> averageValues = getValueAverages();
+		ArrayList<Double> boundaries = runAlgorithm(averageValues);
 		System.out.println("should be size: " + boundaries.size());
 		System.out.println("values size: " + values.size());
 //		assertEquals(averageValues.size(), boundaries.size());////////////////////////////////////////////////////////////////////////////////////////////
@@ -198,9 +196,9 @@ public class Comparison extends Task {
 		for (int i = 4; i < values.size(); i++) {
 //			System.out.println("Boundary: " + boundaries.get(i) + " Average: " + averageValues.get(i));
 			int boundaryIndex = i - 4;
-			int boundaryValue = boundaries.get(boundaryIndex);
-			int averageValue = averageValues.get(boundaryIndex);
-			int currentValue = values.get(i);
+			double boundaryValue = boundaries.get(boundaryIndex);
+			double averageValue = averageValues.get(boundaryIndex);
+			double currentValue = values.get(i);
 			if (currentValue > 0 && currentValue < averageValue) {
 				result.add(safe);
 			}
@@ -220,12 +218,12 @@ public class Comparison extends Task {
 		return result;
 	}
 
-	private ArrayList<Integer> runAlgorithm(ArrayList<Integer> averageValues) throws SQLException {
+	private ArrayList<Double> runAlgorithm(ArrayList<Double> averageValues) throws SQLException {
 		
 		//assertEquals(values.size() - 5, averageValues.size());////////////////////////////////////////////////////////////////////////////////////////////
-		ArrayList<Integer> result = new ArrayList<Integer>();
+		ArrayList<Double> result = new ArrayList<Double>();
 		int count = 0;
-		int sum = 0;
+		double sum = 0;
 		for (int i = 4; i < values.size(); i++) {
 			sum = 0;
 			for (int j = i; j >= i - 4; j--) {
@@ -233,15 +231,15 @@ public class Comparison extends Task {
 				sum += Math.pow(values.get(j) - averageValues.get(count), 2);
 			}
 			count++;
-			result.add((int) Math.sqrt(sum / 5));
+			result.add(Math.sqrt(sum / 5));
 		}
 		System.out.println("algorithm: " + result);
 		return result;
 	} //TODO THIS IS CORRECT AND HANDTESTED!!
 	
-	private ArrayList<Integer> getValueAverages() {
-		ArrayList<Integer> result = new ArrayList<Integer>();
-		int sum = 0;
+	private ArrayList<Double> getValueAverages() {
+		ArrayList<Double> result = new ArrayList<Double>();
+		double sum = 0;
 		for (int i = 4; i < values.size(); i++) {
 			sum = 0;
 			for (int j = i; j >= i - 4; j--) {
@@ -252,15 +250,15 @@ public class Comparison extends Task {
 		return result;
 	} // TODO THIS IS CORRECT AND HANDTESTED!!
 	
-	private double checkReasonablySafeUpperBound(int averageValue, int boundaryValue) {
+	private double checkReasonablySafeUpperBound(double averageValue, double boundaryValue) {
 		double a = averageValue + boundaryValue;
 		double b = averageValue * 1.15;
 		double max = Math.max(a, b);
 		return max;
 	}
 	
-	private boolean checkSomewhatSafeUpperBound(ArrayList<Integer> boundaries,
-			ArrayList<Integer> averageValues, int index) {
+	private boolean checkSomewhatSafeUpperBound(ArrayList<Double> boundaries,
+			ArrayList<Double> averageValues, int index) {
 		double a = averageValues.get(index) + ( 1.5 * boundaries.get(index));
 		double b = averageValues.get(index) * 1.25;
 		double max = Math.max(a, b);
