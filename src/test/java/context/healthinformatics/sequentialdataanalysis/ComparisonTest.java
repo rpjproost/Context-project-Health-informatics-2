@@ -59,12 +59,8 @@ public class ComparisonTest {
 	@Test
 	public void testCompare() throws Exception {
 		Comparison c = new Comparison();
-		ip.interpret("filter data where beschrijving = 'Kreatinine (stat)'");
-		ip.interpret("filter data where value = 93");
-		
-		ip.interpret("undo");
-		
-//		ArrayList<Chunk> chunks = ip.getChunks();
+		ip.interpret("filter data where beschrijving = 'Kreatinine (stat)'");		
+		ArrayList<Chunk> chunks = ip.getChunks();
 //		for (Chunk ch : chunks) {
 //			System.out.println(ch.toArray().toString());
 //		}

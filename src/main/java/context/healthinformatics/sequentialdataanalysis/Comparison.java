@@ -189,34 +189,38 @@ public class Comparison extends Task {
 		//getCreaValuesAndDates();
 		ArrayList<Double> averageValues = getValueAverages();
 		ArrayList<Double> boundaries = runAlgorithm(averageValues);
-		System.out.println("should be size: " + boundaries.size());
-		System.out.println("values size: " + values.size());
+//		System.out.println("should be size: " + boundaries.size());
+//		System.out.println("values size: " + values.size());
 //		assertEquals(averageValues.size(), boundaries.size());////////////////////////////////////////////////////////////////////////////////////////////
 		
-		for (int i = 4; i < values.size(); i++) {
-//			System.out.println("Boundary: " + boundaries.get(i) + " Average: " + averageValues.get(i));
-			int boundaryIndex = i - 4;
+		for (int i = 5; i < values.size(); i++) {
+			int boundaryIndex = i - 5;
 			double boundaryValue = boundaries.get(boundaryIndex);
 			double averageValue = averageValues.get(boundaryIndex);
 			double currentValue = values.get(i);
-			if (currentValue > 0 && currentValue < averageValue) {
+			if (currentValue > 0 && currentValue <= averageValue) {
+//				System.out.println("value: " + i + "; currentValue: " + currentValue + "; averageValue: " + averageValue + "; boundaryValue: " + boundaryValue + "; Result: " + safe);
 				result.add(safe);
 			}
-			if (currentValue > averageValue && averageValue < checkReasonablySafeUpperBound(averageValue, boundaryValue)) {
+			if (currentValue > averageValue 
+					&& currentValue <= checkReasonablySafeUpperBound(averageValue, boundaryValue)) {
+//				System.out.println("value: " + i + "; currentValue: " + currentValue + "; averageValue: " + averageValue + "; boundaryValue: " + boundaryValue + "; Upperbound: " + checkReasonablySafeUpperBound(averageValue, boundaryValue) + "; Result: " + reasonable);
 				result.add(reasonable);
 			}
-			if (averageValue > checkReasonablySafeUpperBound(averageValue, boundaryValue)
-					&& checkSomewhatSafeUpperBound(boundaries, averageValues, i)) { //TODO hier ben ik gebleven!
+			if (currentValue > checkReasonablySafeUpperBound(averageValue, boundaryValue)
+					&& currentValue <= checkSomewhatSafeUpperBound(averageValue, boundaryValue)) {
+//				System.out.println("value: " + i + "; currentValue: " + currentValue + "; averageValue: " + averageValue + "; boundaryValue: " + boundaryValue + "; Upperbound1: " + checkReasonablySafeUpperBound(averageValue, boundaryValue) + "; Upperbound2: " + checkSomewhatSafeUpperBound(averageValue, boundaryValue) + "; Result: " + mild);
 				result.add(mild);
 			}
-			if (!checkSomewhatSafeUpperBound(boundaries, averageValues, i)) {
+			if (currentValue > checkSomewhatSafeUpperBound(averageValue, boundaryValue)) {
+//				System.out.println("value: " + i + "; currentValue: " + currentValue + "; averageValue: " + averageValue + "; boundaryValue: " + boundaryValue + "; Upperbound: " + checkSomewhatSafeUpperBound(averageValue, boundaryValue) + "; Result: " + concern);
 				result.add(concern);
 			}
 		}
-		System.out.println("size of measurements: " + result.size());
-		System.out.println("measurements: " + result);
+//		System.out.println("size of measurements: " + result.size());
+//		System.out.println("measurements: " + result);
 		return result;
-	}
+	} //TODO THIS IS CORRECT AND HANDTESTED!!
 
 	private ArrayList<Double> runAlgorithm(ArrayList<Double> averageValues) throws SQLException {
 		
@@ -224,25 +228,25 @@ public class Comparison extends Task {
 		ArrayList<Double> result = new ArrayList<Double>();
 		int count = 0;
 		double sum = 0;
-		for (int i = 4; i < values.size(); i++) {
+		for (int i = 5; i < values.size(); i++) {
 			sum = 0;
-			for (int j = i; j >= i - 4; j--) {
-				System.out.println("value: " + values.get(j) + " average: " + averageValues.get(count));
+			for (int j = i - 1; j >= i - 5; j--) {
+//				System.out.println("value: " + values.get(j) + " average: " + averageValues.get(count));
 				sum += Math.pow(values.get(j) - averageValues.get(count), 2);
 			}
 			count++;
 			result.add(Math.sqrt(sum / 5));
 		}
-		System.out.println("algorithm: " + result);
+//		System.out.println("algorithm: " + result);
 		return result;
 	} //TODO THIS IS CORRECT AND HANDTESTED!!
 	
 	private ArrayList<Double> getValueAverages() {
 		ArrayList<Double> result = new ArrayList<Double>();
 		double sum = 0;
-		for (int i = 4; i < values.size(); i++) {
+		for (int i = 5; i < values.size(); i++) {
 			sum = 0;
-			for (int j = i; j >= i - 4; j--) {
+			for (int j = i - 1; j >= i - 5; j--) {
 				sum += values.get(j);
 			}
 			result.add(sum / 5);
@@ -257,12 +261,11 @@ public class Comparison extends Task {
 		return max;
 	}
 	
-	private boolean checkSomewhatSafeUpperBound(ArrayList<Double> boundaries,
-			ArrayList<Double> averageValues, int index) {
-		double a = averageValues.get(index) + ( 1.5 * boundaries.get(index));
-		double b = averageValues.get(index) * 1.25;
+	private double checkSomewhatSafeUpperBound(double averageValue, double boundaryValue) {
+		double a = averageValue + ( 1.5 * boundaryValue);
+		double b = averageValue * 1.25;
 		double max = Math.max(a, b);
-		return boundaries.get(index) < max;
+		return max;
 	}
 
 	@Override
