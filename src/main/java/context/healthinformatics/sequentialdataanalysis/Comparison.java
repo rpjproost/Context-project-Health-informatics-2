@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
+import static org.junit.Assert.assertEquals;//////////////////////////////////////////////////////////
+
 import context.healthinformatics.analyse.Query;
 import context.healthinformatics.analyse.SingletonInterpreter;
 import context.healthinformatics.database.SingletonDb;
@@ -50,20 +52,30 @@ public class Comparison extends Task {
 		//handle second part
 		getCreaValuesAndDates();
 		ArrayList<String> advices = getAdvice();
+		assertEquals(dates.size(), advices.size());//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// dates is now filled with unique dates.
 		// advices is as long as dates, and it has corresponding advices for that day.
+		
+		//output
+		System.out.println("done");
 	}
 	
 	private ArrayList<String> getAdvice() throws SQLException {
 		ArrayList<String> statusList = determineCreatineStatus();
-		removeDuplicateDates();
+		removeDuplicateAndIrrelevantDates();
+		
+		System.out.println("dates size : " + dates.size());
+		System.out.println("statuslist size : " + statusList.size());
+		
+		assertEquals(dates.size(), statusList.size());//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		
 		ArrayList<String> result = new ArrayList<String>();
 		result.add("no advice");
 		for (int i = 1; i < statusList.size(); i++) {
 			String status = resolveStatus(statusList.get(i - 1), statusList.get(i));
 			result.add(status);
 		}
-		return result;
+		return result;//per day
 	}
 	
 	private String resolveStatus(String s1, String s2) {
@@ -93,28 +105,29 @@ public class Comparison extends Task {
 	private ArrayList<String> determineCreatineStatus() throws SQLException {
 		ArrayList<String> result = new ArrayList<String>();//correspondeert met dates waar alle dubble uit zijn gehaald.
 		ArrayList<String> boundaries =  calculateMeasurementBoundaries();
-		int count = 4;// omdat je pas bij de vijfde meting iets kan zeggen.
+		result.add(boundaries.get(0));// de eerste heeft geen voorganger dus die gaat er gewoon in.
+		int count = 5;// de eerste zit er in dus je begint met terugkijken bij de tweede.
 		while (count < dates.size()) {
-			if (!dates.get(count).equals(dates.get(count + 1))) {
+			if (!dates.get(count - 1).equals(dates.get(count))) {
 				result.add(boundaries.get(count));
 				count++;
 			}
 			else {
-				while (!dates.get(count).equals(dates.get(count + 1))) {
+				while (dates.get(count - 1).equals(dates.get(count))) {
 					count++;
 				}
-				result.add(resolveBoundaries(boundaries.get(count), boundaries.get(count - 1)));
+				result.add(resolveBoundaries(boundaries.get(count - 1), boundaries.get(count)));
 				count++;
 			}
 		}
 		return result;
 	}
 	
-	private void removeDuplicateDates() {
+	private void removeDuplicateAndIrrelevantDates() {
 		ArrayList<Date> list = new ArrayList<Date>();
-		Date d = dates.get(0);
+		Date d = dates.get(4);// begin mij 5de meting
 		list.add(d);
-		for (int i = 1; i < dates.size(); i++) {
+		for (int i = 5; i < dates.size(); i++) {
 			Date curDate = dates.get(i);
 			if (!d.equals(curDate)) {
 				list.add(curDate);
@@ -164,7 +177,10 @@ public class Comparison extends Task {
 		ArrayList<String> result = new ArrayList<String>();
 		getCreaValuesAndDates();
 		ArrayList<Integer> averageValues = getValueAverages(values);
-		ArrayList<Integer> boundaries = runAlgorithm(values, averageValues);
+		ArrayList<Integer> boundaries = runAlgorithm(averageValues);
+		
+		assertEquals(averageValues.size(), boundaries.size());////////////////////////////////////////////////////////////////////////////////////////////
+		
 		for (int i = 0; i < boundaries.size(); i++) {
 			if (boundaries.get(i) < averageValues.get(i)) {
 				result.add("Safe");
@@ -184,13 +200,16 @@ public class Comparison extends Task {
 		return result;
 	}
 
-	private ArrayList<Integer> runAlgorithm(ArrayList<Integer> values, ArrayList<Integer> averageValues) throws SQLException {
+	private ArrayList<Integer> runAlgorithm( ArrayList<Integer> averageValues) throws SQLException {
+		
+		assertEquals(values.size() - 4, averageValues.size());////////////////////////////////////////////////////////////////////////////////////////////
+		
 		ArrayList<Integer> result = new ArrayList<Integer>();
 		int count = 0;
 		int sum = 0;
 		for (int i = 4; i < values.size(); i++) {
 			sum = 0;
-			for (int j = i; j >= 0; j--) {
+			for (int j = i; j > i - 5; j--) {
 				sum += Math.sqrt(values.get(j) - averageValues.get(count));
 			}
 			count++;
@@ -204,7 +223,7 @@ public class Comparison extends Task {
 		int sum = 0;
 		for (int i = 4; i < list.size(); i++) {
 			sum = 0;
-			for (int j = i; j >= 0; j--) {
+			for (int j = i; j > i - 5; j--) {
 				sum += list.get(i);
 			}
 			result.add(sum / 5);
