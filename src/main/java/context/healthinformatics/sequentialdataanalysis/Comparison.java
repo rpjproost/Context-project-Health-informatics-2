@@ -22,6 +22,11 @@ public class Comparison extends Task {
 	
 	public ArrayList<String> advices;////////////////////
 	
+	private String safe = "Safe";
+	private String reasonable = "Reasonable Safe";
+	private String mild = "Mild Concern";
+	private String concern = "Concern";
+	
 	/**
 	 * Constructor for Comparison.
 	 */
@@ -87,22 +92,22 @@ public class Comparison extends Task {
 	}
 	
 	private String resolveStatus(String s1, String s2) {
-		if (s1.equals("Reasonably Safe") &&  s2.equals("Reasonably Safe")) {
+		if (s1.equals(reasonable) &&  s2.equals(reasonable)) {
 			return "Do Nothing";
 		}
-		if (s1.equals("Reasonably Safe") &&  s2.equals("Somewhat Safe")) {
+		if (s1.equals(reasonable) &&  s2.equals(mild)) {
 			return "Repeat measurement tommorow";
 		}
-		if (s1.equals("Reasonably Safe") &&  s2.equals("Concerned")) {
+		if (s1.equals(reasonable) &&  s2.equals(concern)) {
 			return "Contact Hospital";
 		}
-		if (s1.equals("Somewhat Safe") &&  s2.equals("Safe")) {
+		if (s1.equals(mild) &&  s2.equals(safe)) {
 			return "Do Nothing";
 		}
-		if (s1.equals("Somewhat Safe") &&  s2.equals("Reasonably Safe")) {
+		if (s1.equals(mild) &&  s2.equals(reasonable)) {
 			return "Contact Hospital";
 		}
-		if (s1.equals("Concerned")) {
+		if (s1.equals(concern)) {
 			return "Follow doctors advice";
 		}
 		else {
@@ -146,35 +151,35 @@ public class Comparison extends Task {
 	}
 	
 	public String resolveBoundaries(String s1, String s2) {
-		if (s1.equals("Safe")) {
-			return "Safe";
+		if (s1.equals(safe)) {
+			return safe;
 		}
-		if (s1.equals("Reasonably Safe")) {
-			return "Reasonably Safe";
+		if (s1.equals(reasonable)) {
+			return reasonable;
 		}
-		if (s1.equals("Somewhat Safe") &&  s2.equals("Safe")) {
-			return "Safe";
+		if (s1.equals(mild) &&  s2.equals(safe)) {
+			return safe;
 		}
-		if (s1.equals("Somewhat Safe") &&  s2.equals("Reasonably Safe")) {
-			return "Reasonably Safe";
+		if (s1.equals(mild) &&  s2.equals(reasonable)) {
+			return reasonable;
 		}
-		if (s1.equals("Somewhat Safe") &&  s2.equals("Somewhat Safe")) {
-			return "Somewhat Safe";
+		if (s1.equals(mild) &&  s2.equals(mild)) {
+			return mild;
 		}
-		if (s1.equals("Somewhat Safe") &&  s2.equals("Concerned")) {
-			return "Concerned";
+		if (s1.equals(mild) &&  s2.equals(concern)) {
+			return concern;
 		}
-		if (s1.equals("Concerned") &&  s2.equals("Safe")) {
-			return "Reasonably Safe";
+		if (s1.equals(concern) &&  s2.equals(safe)) {
+			return reasonable;
 		}
-		if (s1.equals("Concerned") &&  s2.equals("Reasonably Safe")) {
-			return "Somewhat Safe";
+		if (s1.equals(concern) &&  s2.equals(reasonable)) {
+			return mild;
 		}
-		if (s1.equals("Concerned") &&  s2.equals("Somewhat Safe")) {
-			return "Concerned";
+		if (s1.equals(concern) &&  s2.equals("Somewhat Safe")) {
+			return concern;
 		}
-		if (s1.equals("Concerned") &&  s2.equals("Concerned")) {
-			return "Concerned";
+		if (s1.equals(concern) &&  s2.equals(concern)) {
+			return concern;
 		}
 		else {
 			return null;
@@ -191,18 +196,18 @@ public class Comparison extends Task {
 		
 		for (int i = 0; i < boundaries.size(); i++) {
 			if (boundaries.get(i) < averageValues.get(i)) {
-				result.add("Safe");
+				result.add(safe);
 			}
 			if (boundaries.get(i) < averageValues.get(i)
 					&& checkReasonablySafeUpperBound(boundaries, averageValues, i)) {
-				result.add("Reasonably Safe");
+				result.add(reasonable);
 			}
 			if (!checkReasonablySafeUpperBound(boundaries, averageValues, i)
 					&& checkSomewhatSafeUpperBound(boundaries, averageValues, i)) {
-				result.add("Somewhat Safe");
+				result.add(mild);
 			}
 			if (!checkSomewhatSafeUpperBound(boundaries, averageValues, i)) {
-				result.add("Concerned");
+				result.add(concern);
 			}
 		}
 		return result;
