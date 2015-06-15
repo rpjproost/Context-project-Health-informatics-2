@@ -57,5 +57,6 @@ public class GoToAnalysePopupControllerTest {
 	public void clear() {
 		File file = new File("src/main/data/savedFilters/" + projectName + ".txt");
 		file.delete();
+		controller.close();
 	}
 }
