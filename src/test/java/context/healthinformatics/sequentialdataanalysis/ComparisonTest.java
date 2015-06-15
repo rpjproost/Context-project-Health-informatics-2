@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.jfree.util.Log;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -73,5 +75,15 @@ public class ComparisonTest {
 		assertEquals(c.advices.get(11), "Repeat measurement tommorow");
 		
 		ip.interpret("undo");
+	}
+	
+	@After
+	public void after() {
+		try {
+			ip.interpret("undoAll");
+			ip.setIntialChunks(null);
+		} catch(Exception e) {
+			Log.info(e.getMessage());
+		}
 	}
 }
