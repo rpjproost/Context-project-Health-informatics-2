@@ -24,6 +24,9 @@ import context.healthinformatics.graphs.graphspanel.GraphPanel;
 import context.healthinformatics.graphs.graphspanel.TransitionaMatrixPanel;
 import context.healthinformatics.parser.XMLParser;
 
+/**
+ * Tests all possible graphs.
+ */
 @RunWith(Theories.class)
 public class GraphsTest {
 
@@ -65,6 +68,9 @@ public class GraphsTest {
 		SingletonInterpreter.getInterpreter().setIntialChunks(null);
 	}
 
+	/**
+	 * @return array list of panels that must be tested.
+	 */
 	@DataPoints
 	public static GraphPanel[] panels() {
 		BoxPlotPanel bpp = new BoxPlotPanel(WIDTH);
@@ -73,11 +79,19 @@ public class GraphsTest {
 		return new GraphPanel[] { bpp, fbp, tmp};
 	}
 
+	/**
+	 * Tests if the check-box for the panel is selected or not.
+	 * @param gp the panel to be tested.
+	 */
 	@Theory
 	public void testIsSelected(GraphPanel gp) {
 		assertFalse(gp.isSelected());
 	}
 	
+	/**
+	 * try to plot a graph without data.
+	 * @param gp the panel to be tested.
+	 */
 	@Theory
 	public void testPlotNoData(GraphPanel gp) {
 		assertFalse(gp.getGraphPanel().isVisible());
@@ -85,6 +99,13 @@ public class GraphsTest {
 		assertTrue(gp.getGraphPanel().isVisible());
 	}
 	
+	/**
+	 * try to plot with data.
+	 * @param gp the panel to be tested.
+	 * @throws IOException exception that could be thrown.
+	 * @throws SQLException exception that could be thrown.
+	 * @throws Exception exception that could be thrown.
+	 */
 	@Theory
 	public void testPlotWithData(GraphPanel gp) throws IOException, SQLException, Exception {
 		xmlp = new XMLParser(path + "twoDocs.xml");
@@ -100,12 +121,16 @@ public class GraphsTest {
 		SingletonInterpreter.getInterpreter().interpret("code (high) line = 2");
 		SingletonInterpreter.getInterpreter().interpret("code (high) line = 3");
 		SingletonInterpreter.getInterpreter().interpret("chunk code = mid");
-		SingletonInterpreter.getInterpreter().interpret("connect (low-mid) code = low to code = mid");
-		SingletonInterpreter.getInterpreter().interpret("connect (mid-high) code = mid to code = high");
-		SingletonInterpreter.getInterpreter().interpret("connect (low-high) code = low to code = high");
-		SingletonInterpreter.getInterpreter().interpret("connect (high-low) code = high to code = low");
-		SingletonInterpreter.getInterpreter().interpret("connect (mid-low) code = mid to code = low");
-		SingletonInterpreter.getInterpreter().interpret("connect (high-mid) code = high to code = mid");
+		SingletonInterpreter.getInterpreter().interpret(
+				"connect (low-mid) code = low to code = mid");
+		SingletonInterpreter.getInterpreter().interpret(
+				"connect (mid-high) code = mid to code = high");
+		SingletonInterpreter.getInterpreter().interpret(
+				"connect (low-high) code = low to code = high");
+		SingletonInterpreter.getInterpreter().interpret(
+				"connect (high-low) code = high to code = low");
+		SingletonInterpreter.getInterpreter().interpret(
+				"connect (mid-low) code = mid to code = low");
 		assertFalse(gp.getGraphPanel().isVisible());
 		gp.updateContainer();
 		gp.plot();

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 package context.healthinformatics.graphs;
 
 import java.awt.Dimension;
