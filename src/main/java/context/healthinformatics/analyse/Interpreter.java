@@ -63,7 +63,7 @@ public class Interpreter implements Observer {
 		if (key.equals("undo") || key.equals("revert")) {
 			undo();
 		}
-		else if (key.equals("undoAll") || key.equals("revertAll")) {
+		else if (key.equals("undoall") || key.equals("revertall")) {
 			undoAll();
 		}
 	}
@@ -150,7 +150,7 @@ public class Interpreter implements Observer {
 	 */
 	private void undoAll() {
 		while (!tasks.isEmpty()) {
-			undo();
+			tasks.pop().undo();
 		}
 	}
 	

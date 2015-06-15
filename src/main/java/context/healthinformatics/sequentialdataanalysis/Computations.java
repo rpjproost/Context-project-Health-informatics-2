@@ -9,11 +9,19 @@ import context.healthinformatics.analyse.SingletonInterpreter;
  * class for computing.
  */
 public class Computations extends Task {
-
+	private boolean comp = false;
+	private boolean diff = false;
+	
 	@Override
 	public ArrayList<Chunk> undo() {
-		for (Chunk c : getChunks()) {
-			c.setCompute(false);
+		if (comp) {
+			for (Chunk c : getChunks()) {
+				c.setCompute(false);
+			}
+		} else if (diff) {
+			for (Chunk c : getChunks()) {
+				c.undoDifference();
+			}
 		}
 		return null;
 	}
@@ -48,18 +56,23 @@ public class Computations extends Task {
 	public void run(Query args) throws Exception {
 		ArrayList<Chunk> chunks = SingletonInterpreter.getInterpreter().getChunks();
 		setChunks(chunks);
-		parseSecondArg(args.next());
-		ArrayList<Chunk> list = compute(args.next());
+		args.inc();
+		ArrayList<Chunk> list = parseSecondArg(args);
 		setResult(list);
 	}
 
-	private void parseSecondArg(String next) throws Exception {
-		String arg = next.toLowerCase();
+	private ArrayList<Chunk> parseSecondArg(Query args) throws Exception {
+		String arg = args.part().toLowerCase();
+		args.inc();
 		if ("all".equals(arg)) {
 			prepareForComputeAll();
-		} else if (!"chunk".equals(arg)) {
-			throw new Exception("expected : chunk/all, but was: " + next);
+		} else if ("difference".equals(arg)) {
+			return computeDif(args.part());
 		}
+		else if (!"chunk".equals(arg)) {
+			throw new Exception("expected : chunk/all/difference, but was: " + arg);
+		}
+		return  compute(args.part());
 		
 	}
 
@@ -72,8 +85,17 @@ public class Computations extends Task {
 	}
 	
 	private ArrayList<Chunk> compute(String column) throws SQLException {
+		comp = true;
 		for (Chunk c : getChunks()) {
 			c.initializeComputations(column);
+		}
+		return getChunks();
+	}
+	
+	private ArrayList<Chunk> computeDif(String column) throws SQLException {
+		diff = true;
+		for (Chunk c : getChunks()) {
+			c.initializeDifference(column);
 		}
 		return getChunks();
 	}
