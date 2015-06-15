@@ -44,7 +44,6 @@ public final class SqlBuilder {
 			StringBuffer res) {
 		createTableWithIndexedColumn(tableName, res);
 		createTableWithColumnsFromArrayList(columns, res);
-		//return res.toString();
 	}
 
 	/**
@@ -180,14 +179,15 @@ public final class SqlBuilder {
 				appendDateIntoPreparedStatement(preparedStmt, values, columns, i);
 			} else if (type.equals("int")) {
 				appendIntIntoPreparedStatement(preparedStmt, values, i);
-			} else {
+			}
+			else {
 				preparedStmt.close();
 				throw new SQLException("type of insert not recognized.");
 			}
 		}
 		return preparedStmt;
 	}
-	
+
 	/**
 	 * Inserts date into preparedStatement.
 	 * @param p PreparedStatement
@@ -202,7 +202,7 @@ public final class SqlBuilder {
 		java.sql.Date date = convertDate(values[i], dateType);
 		p.setDate(i + 1, date);
 	}
-	
+
 	/**
 	 * Inserts an integer into an preparedStatement.
 	 * @param p Preparedstatement.

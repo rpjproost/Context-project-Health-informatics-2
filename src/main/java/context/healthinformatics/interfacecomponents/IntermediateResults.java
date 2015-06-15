@@ -10,7 +10,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 
-import context.healthinformatics.analyse.Interpreter;
 import context.healthinformatics.analyse.SingletonInterpreter;
 import context.healthinformatics.database.Db;
 import context.healthinformatics.database.SingletonDb;
@@ -25,11 +24,10 @@ public class IntermediateResults extends InterfaceHelper {
 	private static final long serialVersionUID = 1L;
 	private int intermediateResultWidth;
 	private int intermediateResultHeight;
-
+	private static final int MAX_RESULTS_TO_DISPLAY = 1000;
 	private JPanel interMediateResultParentPanel;
 	private JEditorPane displayHtmlPane = new JEditorPane();
 	private JScrollPane scroll;
-	private Interpreter interpreter = SingletonInterpreter.getInterpreter();
 
 	private int globalChunkCounter = 1;
 	private String title;
@@ -37,10 +35,14 @@ public class IntermediateResults extends InterfaceHelper {
 	/**
 	 * Constructor of the IntermediateResults class.
 	 * 
-	 * @param color the color of the panel.
-	 * @param width the width of the panel.
-	 * @param height the height of this panel.
-	 * @param title the title of the panel.
+	 * @param color
+	 *            the color of the panel.
+	 * @param width
+	 *            the width of the panel.
+	 * @param height
+	 *            the height of this panel.
+	 * @param title
+	 *            the title of the panel.
 	 */
 	public IntermediateResults(int width, int height, String title, Color color) {
 		intermediateResultWidth = width;
@@ -80,7 +82,8 @@ public class IntermediateResults extends InterfaceHelper {
 		scroll = new JScrollPane(displayHtmlPane);
 		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
 		scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		scroll.setPreferredSize(new Dimension(intermediateResultWidth, intermediateResultHeight));
+		scroll.setPreferredSize(new Dimension(intermediateResultWidth,
+				intermediateResultHeight));
 		scroll.getVerticalScrollBar().setValue(0);
 	}
 
@@ -90,8 +93,7 @@ public class IntermediateResults extends InterfaceHelper {
 	private void addEverythingToMainPanel() {
 		GridBagConstraints c = setGrids(0, 0);
 		c.anchor = GridBagConstraints.LINE_START;
-		interMediateResultParentPanel.add(
-				createTitle(title), c);
+		interMediateResultParentPanel.add(createTitle(title), c);
 		interMediateResultParentPanel.add(scroll, setGrids(0, 1));
 
 	}
@@ -100,7 +102,7 @@ public class IntermediateResults extends InterfaceHelper {
 	 * Update the text of the intermediate result.
 	 */
 	public void updateIntermediateResult() {
-		if (interpreter.getChunks() != null) {
+		if (SingletonInterpreter.getInterpreter().getChunks() != null) {
 			globalChunkCounter = 1;
 			this.displayHtmlPane.setText(buildHtmlOfIntermediateResult());
 			this.displayHtmlPane.setCaretPosition(0);
@@ -117,7 +119,8 @@ public class IntermediateResults extends InterfaceHelper {
 	 * @return the string with the HTML
 	 */
 	private String buildHtmlOfIntermediateResult() {
-		ArrayList<Chunk> chunks = interpreter.getChunks();
+		ArrayList<Chunk> chunks = SingletonInterpreter.getInterpreter()
+				.getChunks();
 		StringBuilder buildString = new StringBuilder();
 		Db database = SingletonDb.getDb();
 		String htmlOfColumnTableRow = buildColumnsHTMLTableRow(database
@@ -127,6 +130,7 @@ public class IntermediateResults extends InterfaceHelper {
 				.append("<html><body><h2>Number of chunks: "
 						+ (globalChunkCounter - 1)
 						+ "</h2><table style='width:100%;'>");
+
 		buildString.append(htmlOfColumnTableRow);
 		buildString.append(htmlOfTableContent);
 
@@ -177,7 +181,11 @@ public class IntermediateResults extends InterfaceHelper {
 	 */
 	private String loopThroughChunks(ArrayList<Chunk> chunks) {
 		StringBuilder buildString = new StringBuilder();
-		for (int i = 0; i < chunks.size(); i++) {
+		int total = chunks.size();
+		if (total > MAX_RESULTS_TO_DISPLAY) {
+			total = MAX_RESULTS_TO_DISPLAY;
+		}
+		for (int i = 0; i < total; i++) {
 			Chunk currentChunk = chunks.get(i);
 			buildString.append("<tr><td>" + globalChunkCounter + "</td>");
 			globalChunkCounter++;
