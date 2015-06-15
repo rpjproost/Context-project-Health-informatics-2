@@ -156,51 +156,6 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	}
 
 	/**
-	 * Check if all fields are filled in correctly.
-	 * 
-	 * @return true if they are else false
-	 */
-	public boolean checkIfHasEmptyFields() {
-		if (getDocumentTypeValue().toLowerCase().equals("excel")) {
-			return checkIfExcelDocHasEmptyFields() || checkEmptyColumns();
-		} else {
-			return checkIfTXTDocHasEmptyFields() || checkEmptyColumns();
-		}
-	}
-
-	private boolean checkEmptyColumns() {
-		boolean emptyColumns = false;
-		for (int i = 0; i < columnFields.size(); i++) {
-			emptyColumns = columnFields.get(i).checkIfHasEmptyFields();
-		}
-		return emptyColumns;
-	}
-
-	private boolean checkIfExcelDocHasEmptyFields() {
-		if (isDocumentNameEmpty()) {
-			return true;
-		} else if (isDocumentNameEmpty()) {
-			return true;
-		} else if (isDocumentStartLineEmpty()) {
-			return true;
-		} else {
-			return isSheetEmpty();
-		}
-	}
-
-	private boolean checkIfTXTDocHasEmptyFields() {
-		if (isDocumentNameEmpty()) {
-			return true;
-		} else if (isDocumentNameEmpty()) {
-			return true;
-		} else if (isDocumentStartLineEmpty()) {
-			return true;
-		} else {
-			return isDelimiterEmpty();
-		}
-	}
-
-	/**
 	 * Get the XMLDocument with the excel values or txt/csv values.
 	 * 
 	 * @param columns
@@ -384,59 +339,6 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	 */
 	public JPanel getPanelForDocTypeSpecificInput() {
 		return panelForDocTypeSpecificInput;
-	}
-
-	/**
-	 * Check if the document name field is empty.
-	 * 
-	 * @return true if it is.
-	 */
-	public boolean isDocumentNameEmpty() {
-		return getDocumentNameValue().equals("");
-	}
-
-	/**
-	 * Check if the document path field is empty.
-	 * 
-	 * @return true if it is.
-	 */
-	public boolean isDocumentPathEmpty() {
-		return getDocumentPathValue().equals("");
-	}
-
-	/**
-	 * Check if the document startLine field is empty.
-	 * 
-	 * @return true if it is.
-	 */
-	public boolean isDocumentStartLineEmpty() {
-		return getDocumentStartLineValue() == -1;
-	}
-
-	/**
-	 * Check if the sheet field is empty.
-	 * 
-	 * @return true if it is.
-	 */
-	public boolean isSheetEmpty() {
-		if (getDocumentTypeValue().toLowerCase().equals("excel")) {
-			return getSheetValue() == -1;
-		} else {
-			return false;
-		}
-	}
-
-	/**
-	 * Check if the delimiter field is empty.
-	 * 
-	 * @return true if it is.
-	 */
-	public boolean isDelimiterEmpty() {
-		if (getDocumentTypeValue().toLowerCase().equals("excel")) {
-			return false;
-		} else {
-			return getDelimiterValue().equals("");
-		}
 	}
 
 	/**

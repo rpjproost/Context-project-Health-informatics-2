@@ -103,37 +103,6 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	}
 
 	/**
-	 * Check if all column fields are filled in correctly.
-	 * 
-	 * @return true if they are else false
-	 */
-	public boolean checkIfHasEmptyFields() {
-		if (hasDateType()) {
-			return checkIfDateColumnHasEmptyFields();
-		} else {
-			return checkIfColumnHasEmptyFields();
-		}
-	}
-
-	private boolean checkIfDateColumnHasEmptyFields() {
-		if (isColumnIDEmpty()) {
-			return true;
-		} else if (isColumnNameEmpty()) {
-			return true;
-		} else {
-			return isColumnDateTypeEmpty();
-		}
-	}
-
-	private boolean checkIfColumnHasEmptyFields() {
-		if (isColumnIDEmpty()) {
-			return true;
-		} else {
-			return isColumnNameEmpty();
-		}
-	}
-
-	/**
 	 * Set selected column type.
 	 * 
 	 * @param index
@@ -260,37 +229,6 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	 */
 	public void setDateTypePanel(JPanel dateTypePanel) {
 		this.dateTypePanel = dateTypePanel;
-	}
-
-	/**
-	 * Check if the column id field is empty.
-	 * 
-	 * @return true if it is.
-	 */
-	public boolean isColumnIDEmpty() {
-		return getColumnIDValue() == -1;
-	}
-
-	/**
-	 * Check if the column name field is empty.
-	 * 
-	 * @return true if it is.
-	 */
-	public boolean isColumnNameEmpty() {
-		return getColumnNameValue().equals("");
-	}
-
-	/**
-	 * Check if the date type field is empty.
-	 * 
-	 * @return true if it is.
-	 */
-	public boolean isColumnDateTypeEmpty() {
-		if (hasDateType()) {
-			return getColumnDateTypeValue().equals("");
-		} else {
-			return false;
-		}
 	}
 
 	@Override
