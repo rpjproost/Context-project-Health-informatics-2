@@ -36,6 +36,7 @@ public class Column  implements Comparable<Column> {
 		setColumnNumber(id);
 		setColumnName(cName);
 		setColumnType(cType);
+		dateType = null;
 	}
 
 	/**
@@ -105,6 +106,17 @@ public class Column  implements Comparable<Column> {
 	}
 
 	/**
+	 * Returns if this column is a time column.
+	 * @return true iff datetype contains Time constraint.
+	 */
+	public boolean isTime() {
+		if (dateType != null) {
+			return dateType.contains("H");	
+		}
+		return false;
+	}
+
+	/**
 	 * setter for the column type.
 	 * 
 	 * @param columnType
@@ -154,8 +166,7 @@ public class Column  implements Comparable<Column> {
 		}
 		if (o instanceof Column) {
 			Column c = (Column) o;
-			if (getColumnName().equals(c.getColumnName())
-					&& getColumnType().equals(c.getColumnType())) {
+			if (getColumnName().equals(c.getColumnName())) {
 				return true;
 			}
 		}

@@ -4,6 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import context.healthinformatics.database.Db;
 import context.healthinformatics.parser.Column;
@@ -56,6 +57,27 @@ public class WriteToTXT {
 	}
 
 	/**
+	 * Write text to file.
+	 * 
+	 * @param text
+	 *            the text of the old code area
+	 * @throws FileNotFoundException
+	 *             if file is not found
+	 * @throws UnsupportedEncodingException
+	 *             if encoding is not supported
+	 */
+	public void writeOldCodeArea(String text) throws FileNotFoundException,
+			UnsupportedEncodingException {
+		PrintWriter writer = getPrintWriter();
+		Scanner sc = new Scanner(text);
+		while (sc.hasNextLine()) {
+			writer.println(sc.nextLine());
+		}
+		sc.close();
+		writer.close();
+	}
+
+	/**
 	 * Write to file.
 	 * 
 	 * @param chunks
@@ -67,7 +89,7 @@ public class WriteToTXT {
 	 * @throws UnsupportedEncodingException
 	 *             unsupportedencodingexception
 	 */
-	public void writeToFile(ArrayList<Chunk> chunks, Db database)
+	public void writeSPSSDataToFile(ArrayList<Chunk> chunks, Db database)
 			throws FileNotFoundException, UnsupportedEncodingException {
 		PrintWriter writer = getPrintWriter();
 		writer.println("DATA LIST LIST");

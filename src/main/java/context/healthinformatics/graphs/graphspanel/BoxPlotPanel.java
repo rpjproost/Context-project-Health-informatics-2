@@ -1,36 +1,40 @@
 package context.healthinformatics.graphs.graphspanel;
 
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
+import context.healthinformatics.graphs.BoxPlot;
 import context.healthinformatics.graphs.GraphInputContainer;
-import context.healthinformatics.gui.InterfaceHelper;
+import context.healthinformatics.gui.MainFrame;
 
 /**
  * Creates a panel specific for the box plot.
  */
-public class BoxPlotPanel extends InterfaceHelper implements GraphPanel {
+public class BoxPlotPanel extends GraphPanel {
 
 	private static final long serialVersionUID = 1L;
 	private JCheckBox checkbox;
 	private JPanel boxPlotPanel;
 	private GraphInputContainer container;
 	private int panelWidth;
+	private JPanel boxPlotGraph;
+	private BoxPlot boxPlot;
 	
 	/**
 	 * Creates a action listener for the check-box and makes a new container for this graph panel.
-	 * @param checkbox the check-box that is for this panel.
 	 * @param width the width for this panel.
 	 */
-	public BoxPlotPanel(JCheckBox checkbox, int width) {
-		this.checkbox = checkbox;
+	public BoxPlotPanel(int width) {
 		panelWidth = width;
+		boxPlot = new BoxPlot();
 		container = new GraphInputContainer();
 		boxPlotPanel = initGraphPanel("Box Plot");
+		boxPlotGraph = boxPlot.getPanel();
+		boxPlotGraph.setVisible(false);
+		this.checkbox = createCheckBox("Box Plot", MainFrame.OUTPUTTABCOLOR);
 		this.checkbox.addActionListener(this);
 	}
 	
@@ -44,14 +48,7 @@ public class BoxPlotPanel extends InterfaceHelper implements GraphPanel {
 	 */
 	@Override
 	public JPanel initGraphPanel(String title) {
-		JPanel graphPanel = createEmptyWithGridBagLayoutPanel(Color.WHITE);
-		graphPanel.setPreferredSize(new Dimension(panelWidth - 2 * INSETS, 
-				INPUTELEMENTS * CHECKBOXHEIGHT));
-		graphPanel.setVisible(false);
-		graphPanel.add(createSubTitle(title, panelWidth, CHECKBOXHEIGHT), setGrids(0, 0));
-		graphPanel.add(makeFormRowPanelWithTextField("Graph Title:", 
-				container.getGraphTitle(), panelWidth - 2 * INSETS, CHECKBOXHEIGHT), 
-				setGrids(0, 1));
+		JPanel graphPanel = makePanel(title, panelWidth, FOUR, container);
 		graphPanel.add(makeFormRowPanelWithComboBox("Select data for type:", 
 				container.getxValue(), panelWidth - 2 * INSETS, CHECKBOXHEIGHT), 
 				setGrids(0, 2));
@@ -82,6 +79,36 @@ public class BoxPlotPanel extends InterfaceHelper implements GraphPanel {
 	@Override
 	public GraphInputContainer getGraphContainer() {
 		return container;
+	}
+
+	@Override
+	public JCheckBox getCheckbox() {
+		return checkbox;
+	}
+
+	@Override
+	public boolean isSelected() {
+		return checkbox.isSelected();
+	}
+
+	@Override
+	public void plot() {
+		String type = container.getSelectedColumnX();
+		ArrayList<String> columns = new ArrayList<String>();
+		columns.add(container.getSelectedColumnY());
+		if (type.equals("All")) {
+			boxPlot.setDataPerColumn(columns);
+		} else if (type.equals("Chunks")) {
+			boxPlot.setDataPerChunk(columns);
+		}
+		boxPlotGraph = boxPlot.getPanel();
+		boxPlotGraph.setVisible(true);
+		boxPlot.createBoxPlot(container.getGraphTitleValue());
+	}
+
+	@Override
+	public JPanel getGraphPanel() {
+		return boxPlotGraph;
 	}
 
 }

@@ -249,23 +249,9 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	}
 	
 	/**
-	 * @return the tree.
-	 */
-	public JTree getTree() {
-		return tree;
-	}
-	
-	/**
 	 * @return root of the project tree.
 	 */
 	public DefaultMutableTreeNode getRoot() {
 		return root;
-	}
-	
-	/**
-	 * @return model of the project tree.
-	 */
-	public DefaultTreeModel getModel() {
-		return model;
 	}
 }

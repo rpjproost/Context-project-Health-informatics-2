@@ -185,15 +185,16 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 
 	/**
 	 * Get the filter values from all rows.
+	 * @return the filter values.
 	 */
-	private void getAllFilterValues() {
+	protected String[] getAllFilterValues() {
 		String[] filterValues = new String[rows.size()];
 		for (int i = 0; i < rows.size(); i++) {
 			filterValues[i] = rows.get(i).getValues();
 		}
 		closePopUp();
 		popupController.setOpen(false);
-		popupController.handleSpecifiedFilter(filterValues);
+		return filterValues;
 	}
 
 	@Override
@@ -207,8 +208,7 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 			filterPanel.revalidate();
 		}
 		if (e.getSource() == goToAnalyse) {
-			getAllFilterValues();
-
+			popupController.handleSpecifiedFilter(getAllFilterValues());
 		}
 
 	}

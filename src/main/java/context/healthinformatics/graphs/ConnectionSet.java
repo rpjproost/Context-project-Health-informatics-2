@@ -3,7 +3,7 @@ package context.healthinformatics.graphs;
 /**
  * CLass connection set contains a connection.
  */
-public class ConnectionSet implements Comparable<ConnectionSet> {
+public class ConnectionSet {
 	private String codeFrom;
 	private String codeTo;
 
@@ -47,15 +47,7 @@ public class ConnectionSet implements Comparable<ConnectionSet> {
 			return false;
 		}
 	}
-	
-	@Override
-	public int compareTo(ConnectionSet other) {
-		if (other.getCodeFrom().equals(codeFrom) && other.getCodeTo().equals(codeTo)) {
-			return 1;
-		}
-		return 0;
-	}
-	
+
 	/**
 	 * Generates hashcode for object connection set.
 	 */
