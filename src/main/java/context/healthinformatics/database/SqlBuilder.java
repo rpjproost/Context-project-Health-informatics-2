@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import org.joda.time.DateTime;
 
 import context.healthinformatics.parser.Column;
 
@@ -68,12 +69,22 @@ public final class SqlBuilder {
 			if (i == columns.size() - 1) {
 				res.append(columns.get(i).getColumnName());
 				res.append(" ");
-				res.append(columns.get(i).getColumnType());
+				if (columns.get(i).isTime()) {
+					res.append("INT");
+				}
+				else {
+					res.append(columns.get(i).getColumnType());
+				}
 				res.append(")");
 			} else {
 				res.append(columns.get(i).getColumnName());
 				res.append(" ");
-				res.append(columns.get(i).getColumnType());
+				if (columns.get(i).isTime()) {
+					res.append("INT");
+				}
+				else {
+					res.append(columns.get(i).getColumnType());
+				}
 				res.append(",");
 			}
 		}
@@ -199,8 +210,30 @@ public final class SqlBuilder {
 	private static void appendDateIntoPreparedStatement(PreparedStatement p, String[] values, 
 			ArrayList<Column> columns, int i) throws SQLException {
 		String dateType = columns.get(i).getDateType();
-		java.sql.Date date = convertDate(values[i], dateType);
-		p.setDate(i + 1, date);
+		if (dateType.contains("H")) {
+			int time = convertTime(values[i], dateType);
+			p.setInt(i + 1, time);
+		}
+		else {
+			java.sql.Date date = convertDate(values[i], dateType);
+			p.setDate(i + 1, date);
+		}
+	}
+
+	private static int convertTime(String time, String dateT) {
+		SimpleDateFormat input = new SimpleDateFormat(dateT);
+		int res = 0;
+		try {
+			java.util.Date date = input.parse(time);
+			DateTime tijd = new DateTime(date);
+			int h = tijd.getHourOfDay();
+			int m = tijd.getMinuteOfHour();
+			String temp = "" + h + "" + m + "";
+			res = Integer.parseInt(temp);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return res;
 	}
 
 	/**
