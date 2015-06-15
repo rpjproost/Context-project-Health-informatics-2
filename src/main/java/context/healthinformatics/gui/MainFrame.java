@@ -18,7 +18,7 @@ public class MainFrame extends InterfaceHelper {
 	private PanelState state;
 	private PanelState inputState = new InputPage(this);
 	private PanelState codeState = new CodePage(this);
-	private PanelState outputState = new OutputPage(this);
+	private PanelState outputState = new OutputPage();
 
 	public static final Color INPUTTABCOLOR = null;
 	public static final Color CODETABCOLOR = Color.decode("#DAE3E6");
