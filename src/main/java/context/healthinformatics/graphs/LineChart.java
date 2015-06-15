@@ -49,10 +49,19 @@ public class LineChart extends InterfaceHelper {
 		return mainPanel;
 	}
 
+	/**
+	 * Fills a lineChart object.
+	 */
 	public void initDataset() {
 		dataset = new XYSeriesCollection();
 		final XYSeries series1 = new XYSeries("First");
 		dataset.addSeries(series1);
+		ArrayList<Integer> data = getChunkData();
+		double horizontal = 1.0;
+		for (int i : data) {
+			series1.add(horizontal, i);
+			horizontal++;
+		}
 	}
 
 	public void createBoxPlot(String title) {
@@ -99,6 +108,10 @@ public class LineChart extends InterfaceHelper {
 		mainPanel.revalidate();
 	}
 
+	/**
+	 * Gets amount of childs of a chunk and puts them in an ArrayList.
+	 * @return ArrayList of integers with amount of children in a chunk.
+	 */
 	public ArrayList<Integer> getChunkData() {
 		Interpreter interpreter = SingletonInterpreter.getInterpreter();
 		ArrayList<Chunk> chunks = interpreter.getChunks();
