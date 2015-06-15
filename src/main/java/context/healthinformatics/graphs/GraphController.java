@@ -31,6 +31,8 @@ public class GraphController extends InterfaceHelper {
 		for (GraphPanel graphPanel : panels) {
 			if (graphPanel.isSelected()) {
 				graphPanel.plot();
+			} else {
+				graphPanel.getGraphPanel().setVisible(false);
 			}
 		}
 	}

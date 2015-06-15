@@ -3,12 +3,22 @@ package context.healthinformatics.graphs;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
@@ -18,6 +28,7 @@ import javax.swing.table.TableModel;
 
 import context.healthinformatics.gui.InterfaceHelper;
 import context.healthinformatics.sequentialdataanalysis.Chunk;
+import context.healthinformatics.writer.ScreenImage;
 
 /**
  * The state transition matrix class.
@@ -35,6 +46,8 @@ public class StateTransitionMatrix extends InterfaceHelper {
 	private JTable headerTable;
 	private int width;
 	private JLabel graphTitle;
+	private JFileChooser savePopup;
+	private JPopupMenu menu = new JPopupMenu("Popup");
 
 	/**
 	 * The constructor of the transition matrix.
@@ -45,6 +58,7 @@ public class StateTransitionMatrix extends InterfaceHelper {
 		countMap = new HashMap<ConnectionSet, Integer>();
 		mainPanel = createEmptyWithGridBagLayoutPanel();
 		width = getScreenWidth() / 2 - FOUR * INSETS;
+		addItemsToPopUp();
 	}
 
 	/**
@@ -73,6 +87,45 @@ public class StateTransitionMatrix extends InterfaceHelper {
 		scroll.setPreferredSize(new Dimension(width, codes.size() * HEIGHT));
 		scroll.setRowHeaderView(headerTable);
 		mainPanel.add(scroll, setGrids(0, 1));
+		addMouseListeners();
+	}
+	
+	private void addMouseListeners() {
+		mainPanel.addMouseListener(new PopupTriggerListener());
+		scroll.addMouseListener(new PopupTriggerListener());
+		headerTable.addMouseListener(new PopupTriggerListener());
+		table.addMouseListener(new PopupTriggerListener());
+		graphTitle.addMouseListener(new PopupTriggerListener());
+	}
+	
+	private void addItemsToPopUp() {
+		JMenuItem item = new JMenuItem("Save as...");
+		item.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				savePopup = saveFileChooser("png");
+				saveImage(savePopup.showSaveDialog(table));
+				System.out.println("Save as.. Test");
+			}
+		});
+		menu.add(item);
+	}
+	
+	/**
+	 * Saves the matrix in a png file.
+	 * @param choice the choice of the user.
+	 */
+	public void saveImage(int choice) {
+		if (choice == JFileChooser.APPROVE_OPTION) {
+			BufferedImage bi = ScreenImage.createImage(mainPanel);
+			try {
+				ScreenImage.writeImage(bi, savePopup.getSelectedFile()
+						.getAbsolutePath() + ".png");
+			} catch (IOException e1) {
+				JOptionPane.showMessageDialog(null,
+						"Something went wrong exporting your Graph!!",
+						"Export Graph Error", JOptionPane.WARNING_MESSAGE);
+			}
+		}
 	}
 
 	/**
@@ -218,6 +271,38 @@ public class StateTransitionMatrix extends InterfaceHelper {
 			if (currentChunk.hasChild()) {
 				fillTransitionMatrix(currentChunk.getChildren());
 			}
+		}
+	}
+	
+	/**
+	 * Triggers the right-click pop up event.
+	 */
+	class PopupTriggerListener extends MouseAdapter {
+		/**
+		 * Triggers the event when the mouse is pressed.
+		 * @param ev the mouse event.
+		 */
+		public void mousePressed(MouseEvent ev) {
+			if (ev.isPopupTrigger()) {
+				menu.show(ev.getComponent(), ev.getX(), ev.getY());
+			}
+		}
+
+		/**
+		 * Triggers the pop up event when the mouse is released.
+		 * @param ev the mouse event.
+		 */
+		public void mouseReleased(MouseEvent ev) {
+			if (ev.isPopupTrigger()) {
+				menu.show(ev.getComponent(), ev.getX(), ev.getY());
+			}
+		}
+
+		/**
+		 * Do nothing when the mouse is clicked.
+		 * @param ev the mouse event.
+		 */
+		public void mouseClicked(MouseEvent ev) {
 		}
 	}
 

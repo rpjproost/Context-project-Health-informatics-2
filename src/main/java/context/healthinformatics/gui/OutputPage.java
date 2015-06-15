@@ -10,13 +10,11 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 
-import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import context.healthinformatics.analyse.SingletonInterpreter;
 import context.healthinformatics.database.SingletonDb;
@@ -35,8 +33,6 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 	private static final long serialVersionUID = 1L;
 	private static final int BUTTONWIDTH = 200;
 	private static final int BUTTONHEIGHT = 80;
-	private static final int SELECTERHEIGHT = 500;
-	private static final int SELECTERWIDTH = 600;
 	// private MainFrame mf;
 	private IntermediateResults imr;
 	private JButton exportFileButton;
@@ -160,7 +156,16 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 		rightPanel.add(scrollPane,
 				setGrids(0, 1, new Insets(0, INSETS, 0, INSETS)));
 	}
-
+	
+	/**
+	 * @param fileButton for which button the save file is.
+	 * @return the choice of the user.
+	 */
+	private int saveFile(JButton fileButton) {
+		savePopup = saveFileChooser("txt");
+		return savePopup.showSaveDialog(fileButton);
+	}
+	
 	/**
 	 * @return the export file button.
 	 */
@@ -168,33 +173,11 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 		return exportFileButton;
 	}
 
-	/**
-	 * @param button
-	 *            the button where the pop up is for.
-	 * @param filter
-	 *            which file type will be saved.
-	 * @return the anwser of the filechooser.
-	 */
-	public int saveFileChooser(JButton button, String filter) {
-		savePopup = new JFileChooser();
-		savePopup.setMultiSelectionEnabled(true);
-		String filtername = "save as *." + filter;
-		FileNameExtensionFilter extenstionFilter = new FileNameExtensionFilter(
-				filtername, filter);
-		savePopup.setFileFilter(extenstionFilter);
-		savePopup
-				.setPreferredSize(new Dimension(SELECTERWIDTH, SELECTERHEIGHT));
-		savePopup.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		Action details = savePopup.getActionMap().get("viewTypeDetails");
-		details.actionPerformed(null);
-		return savePopup.showSaveDialog(button);
-	}
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == getFileButton()) {
 			try {
-				fileChooser(saveFileChooser(getFileButton(), "txt"));
+				fileChooser(saveFile(getFileButton()));
 			} catch (SQLException | IOException e1) {
 				JOptionPane.showMessageDialog(null,
 						"Something went wrong exporting your file!!",
