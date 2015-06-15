@@ -11,8 +11,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import context.healthinformatics.gui.InputPage;
 import context.healthinformatics.parser.Column;
@@ -65,6 +63,7 @@ public class DocumentFieldsContainerTest {
 	 */
 	@Test
 	public void testCheckIfHasEmptyFields() {
+		//TODO implement this tests.
 //		assertTrue(emptyDoc.checkIfHasEmptyFields());
 //		assertFalse(fullDoc.checkIfHasEmptyFields());
 //		assertFalse(nullDoc.checkIfHasEmptyFields());
@@ -88,6 +87,7 @@ public class DocumentFieldsContainerTest {
 	 */
 	@Test
 	public void testIsInteger() {
+		//TODO implements tests
 //		assertFalse(fullDoc.isInteger(null));
 //		assertFalse(fullDoc.isInteger("doc"));
 //		assertTrue(fullDoc.isInteger("9"));
@@ -102,12 +102,13 @@ public class DocumentFieldsContainerTest {
 		assertEquals("admire", fullDoc.getDocumentNameValue());
 		assertEquals(",", fullDoc.getDelimiterValue());
 		assertEquals("src/main", fullDoc.getDocumentPathValue());
-		assertEquals(1, fullDoc.getSheetValue());
-		assertEquals(1, fullDoc.getDocumentStartLineValue());
+		System.out.println(fullDoc.getSheetValue());
+		assertEquals("1", fullDoc.getSheetValue());
+		assertEquals("1", fullDoc.getDocumentStartLineValue());
 		ArrayList<ColumnFieldContainer> columns = fullDoc.getColumnFields();
 		for (int i = 0; i < columns.size(); i++) {
 			ColumnFieldContainer c = columns.get(i);
-			assertEquals(2, c.getColumnIDValue());
+			assertEquals("2", c.getColumnIDValue());
 			assertEquals("date", c.getColumnNameValue());
 			assertEquals("dd-MM-yyyy", c.getColumnDateTypeValue());
 		}
