@@ -20,7 +20,7 @@ public class OutputPageTest {
 	@Before
 	public void setUp() {
 		mf = new MainFrame();
-		op = new OutputPage(mf);
+		op = new OutputPage();
 		op.loadPanel();
 	}
 

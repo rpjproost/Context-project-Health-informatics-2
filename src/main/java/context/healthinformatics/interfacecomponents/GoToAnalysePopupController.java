@@ -85,4 +85,11 @@ public class GoToAnalysePopupController {
 					"Save filters error", JOptionPane.WARNING_MESSAGE);
 		}
 	}
+	
+	/**
+	 * Close the pop-up.
+	 */
+	protected void close() {
+		currentPopUp.closePopUp();
+	}
 }
