@@ -191,35 +191,42 @@ public class Comparison extends Task {
 		//getCreaValuesAndDates();
 		ArrayList<Integer> averageValues = getValueAverages();
 		ArrayList<Integer> boundaries = runAlgorithm(averageValues);
+		System.out.println("should be size: " + boundaries.size());
+		System.out.println("values size: " + values.size());
+//		assertEquals(averageValues.size(), boundaries.size());////////////////////////////////////////////////////////////////////////////////////////////
 		
-		assertEquals(averageValues.size(), boundaries.size());////////////////////////////////////////////////////////////////////////////////////////////
-		
-		for (int i = 0; i < boundaries.size(); i++) {
-			if (boundaries.get(i) < averageValues.get(i)) {
+		for (int i = 4; i < values.size(); i++) {
+//			System.out.println("Boundary: " + boundaries.get(i) + " Average: " + averageValues.get(i));
+			int boundaryIndex = i - 4;
+			int boundaryValue = boundaries.get(boundaryIndex);
+			int averageValue = averageValues.get(boundaryIndex);
+			int currentValue = values.get(i);
+			if (currentValue > 0 && currentValue < averageValue) {
 				result.add(safe);
 			}
-			if (boundaries.get(i) < averageValues.get(i)
-					&& checkReasonablySafeUpperBound(boundaries, averageValues, i)) {
+			if (currentValue > averageValue && averageValue < checkReasonablySafeUpperBound(averageValue, boundaryValue)) {
 				result.add(reasonable);
 			}
-			if (!checkReasonablySafeUpperBound(boundaries, averageValues, i)
-					&& checkSomewhatSafeUpperBound(boundaries, averageValues, i)) {
+			if (averageValue > checkReasonablySafeUpperBound(averageValue, boundaryValue)
+					&& checkSomewhatSafeUpperBound(boundaries, averageValues, i)) { //TODO hier ben ik gebleven!
 				result.add(mild);
 			}
 			if (!checkSomewhatSafeUpperBound(boundaries, averageValues, i)) {
 				result.add(concern);
 			}
 		}
+		System.out.println("size of measurements: " + result.size());
+		System.out.println("measurements: " + result);
 		return result;
 	}
 
-	private ArrayList<Integer> runAlgorithm( ArrayList<Integer> averageValues) throws SQLException {
+	private ArrayList<Integer> runAlgorithm(ArrayList<Integer> averageValues) throws SQLException {
 		
 		//assertEquals(values.size() - 5, averageValues.size());////////////////////////////////////////////////////////////////////////////////////////////
 		ArrayList<Integer> result = new ArrayList<Integer>();
 		int count = 0;
 		int sum = 0;
-		for (int i = 4; i < 6; i++) {
+		for (int i = 4; i < values.size(); i++) {
 			sum = 0;
 			for (int j = i; j >= i - 4; j--) {
 				System.out.println("value: " + values.get(j) + " average: " + averageValues.get(count));
@@ -245,12 +252,11 @@ public class Comparison extends Task {
 		return result;
 	} // TODO THIS IS CORRECT AND HANDTESTED!!
 	
-	private Boolean checkReasonablySafeUpperBound(ArrayList<Integer> boundaries
-			, ArrayList<Integer> averageValues, int index) {
-		double a = averageValues.get(index) + boundaries.get(index);
-		double b = averageValues.get(index) * 1.15;
+	private double checkReasonablySafeUpperBound(int averageValue, int boundaryValue) {
+		double a = averageValue + boundaryValue;
+		double b = averageValue * 1.15;
 		double max = Math.max(a, b);
-		return boundaries.get(index) < max;
+		return max;
 	}
 	
 	private boolean checkSomewhatSafeUpperBound(ArrayList<Integer> boundaries,
