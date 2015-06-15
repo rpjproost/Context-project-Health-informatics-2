@@ -18,7 +18,9 @@ import context.healthinformatics.database.SingletonDb;
 public class Comparison extends Task {
 	
 	private ArrayList<Integer> values;
-	private ArrayList<Date> dates;
+	public ArrayList<Date> dates;
+	
+	public ArrayList<String> advices;////////////////////
 	
 	/**
 	 * Constructor for Comparison.
@@ -26,6 +28,8 @@ public class Comparison extends Task {
 	public Comparison() {
 		values = new ArrayList<Integer>();
 		dates = new ArrayList<Date>();
+		
+		advices = new ArrayList<String>();//////////////////
 	}
 	
 	private void getCreaValuesAndDates() throws SQLException {
@@ -47,11 +51,14 @@ public class Comparison extends Task {
 	@Override
 	public void run(Query query) throws Exception {////////////////////////////////////////////////////////////////////////
 		ArrayList<Chunk> c = SingletonInterpreter.getInterpreter().getChunks();
-		query.inc();
+		//query.inc();
 		setChunks(c);
 		
 		//handle second part
 		getCreaValuesAndDates();
+		
+		System.out.println(values.toString());//////////////////////////////////////////////////////
+		
 		ArrayList<String> advices = getAdvice();
 		
 		assertEquals(dates.size(), advices.size());//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -59,7 +66,7 @@ public class Comparison extends Task {
 		// advices is as long as dates, and it has corresponding advices for that day.
 		
 		//output
-		System.out.println("done");
+		System.out.println(advices.toString());/////////////////////////////////////////////////////
 	}
 	
 	private ArrayList<String> getAdvice() throws SQLException {

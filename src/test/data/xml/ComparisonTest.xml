@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xml>
+
+
+<document docname="meeting">
+
+<doctype>Excel</doctype>
+
+<path>src/main/data/demo/meeting.xlsx</path>
+
+<start>2</start>
+
+<sheet>1</sheet>
+
+<delimiter/>
+
+
+<column id="15">
+
+<name>date</name>
+
+<type>DATE</type>
+
+<dateFormat>dd-MM-yy</dateFormat>
+
+</column>
+
+
+<column id="14">
+
+<name>createdby</name>
+
+<type>varchar(150)</type>
+
+</column>
+
+
+<column id="3">
+
+<name>time</name>
+
+<type>varchar(150)</type>
+
+</column>
+
+
+<column id="22">
+
+<name>beschrijving</name>
+
+<type>varchar(150)</type>
+
+</column>
+
+
+<column id="6">
+
+<name>value</name>
+
+<type>Int</type>
+
+</column>
+
+
+<column id="10">
+
+<name>advice</name>
+
+<type>varchar(150)</type>
+
+</column>
+
+</document>
+
+
+<document docname="ADMIRE2">
+
+<doctype>Text</doctype>
+
+<path>src/main/data/demo/ADMIRE2.txt</path>
+
+<start>7</start>
+
+<delimiter>,</delimiter>
+
+
+<column id="2">
+
+<name>value</name>
+
+<type>Int</type>
+
+</column>
+
+
+<column id="5">
+
+<name>date</name>
+
+<type>DATE</type>
+
+<dateFormat>yyMMdd</dateFormat>
+
+</column>
+
+
+<column id="6">
+
+<name>time</name>
+
+<type>varchar(150)</type>
+
+</column>
+
+
+<column id="1">
+
+<name>beschrijving</name>
+
+<type>varchar(150)</type>
+
+</column>
+
+</document>
+
+</xml>
