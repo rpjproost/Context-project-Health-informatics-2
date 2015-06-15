@@ -16,10 +16,10 @@ import context.healthinformatics.parser.Column;
 public class ColumnFieldContainer extends InterfaceHelper implements
 		ActionListener {
 	private static final long serialVersionUID = 1L;
-	
+
 	private static final int XML_EDITOR_WIDTH = 800;
 	private static final int FORM_ELEMENT_HEIGHT = 25;
-	
+
 	private JTextField columnID;
 	private JTextField columnName;
 	private JComboBox<String> columnType;
@@ -94,8 +94,8 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	 * @return a Column Object
 	 */
 	public Column getColumn() {
-		Column col = new Column(getColumnIDValue(), getColumnNameValue(),
-				getColumnTypeValue());
+		Column col = new Column(Integer.parseInt(getColumnIDValue()),
+				getColumnNameValue(), getColumnTypeValue());
 		if (hasDateType()) {
 			col.setDateType(getColumnDateTypeValue());
 		}
@@ -117,12 +117,8 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 	 * 
 	 * @return the value
 	 */
-	public int getColumnIDValue() {
-		if (columnID.getText().equals("") || !isInteger(columnID.getText())) {
-			return -1;
-		} else {
-			return Integer.parseInt(columnID.getText());
-		}
+	public String getColumnIDValue() {
+		return columnID.getText();
 	}
 
 	/**
@@ -264,17 +260,6 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 				getDateType(), XML_EDITOR_WIDTH, FORM_ELEMENT_HEIGHT);
 		panel.add(dateTypePanel, setGrids(0, THREE));
 		panel.revalidate();
-	}
-
-	private boolean isInteger(String s) {
-		try {
-			Integer.parseInt(s);
-		} catch (NumberFormatException e) {
-			return false;
-		} catch (NullPointerException e) {
-			return false;
-		}
-		return true;
 	}
 
 	/**

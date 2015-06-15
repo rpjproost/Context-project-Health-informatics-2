@@ -306,17 +306,17 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	public boolean checkAllXMLDocumentsOnError() {
 		XMLDocumentFormController xdfc = new XMLDocumentFormController(
 				documentFieldsContainers);
-		if (xdfc.checkIfHasEmptyFields()) {
-			JOptionPane
-					.showMessageDialog(
-							null,
-							"Not all fields are filled in correctly. Check the XML Editor!",
-							"Save Error", JOptionPane.WARNING_MESSAGE);
+		boolean errors = false;
+		try {
+			errors = xdfc.checkIfHasEmptyFields();
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(), "Save Error",
+					JOptionPane.WARNING_MESSAGE);
 			return true;
-		} else {
-
-			return false;
 		}
+
+		return errors;
+
 	}
 
 	/**
