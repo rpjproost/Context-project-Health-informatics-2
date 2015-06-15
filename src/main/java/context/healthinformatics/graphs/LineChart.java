@@ -11,12 +11,9 @@ import javax.swing.JPanel;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
-import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.joda.time.DateTime;
@@ -29,8 +26,11 @@ import context.healthinformatics.database.SingletonDb;
 import context.healthinformatics.gui.InterfaceHelper;
 import context.healthinformatics.sequentialdataanalysis.Chunk;
 
+/**
+ * Class LineChart creates a line chart with data.
+ */
 public class LineChart extends InterfaceHelper {
-
+	private static final long serialVersionUID = 1L;
 	private int width;
 	private JPanel chartContainerPanel;
 	private JPanel mainPanel;
@@ -39,6 +39,9 @@ public class LineChart extends InterfaceHelper {
 	private XYSeriesCollection dataset;
 	private ChartPanel chartPanelTest;
 
+	/**
+	 * Constructor of the LineChart initializes the panels.
+	 */
 	public LineChart() {
 		width = getScreenWidth() / 2 - FOUR * INSETS;
 		chartPanelTest = new ChartPanel(new JFreeChart(new CategoryPlot()));
@@ -51,6 +54,11 @@ public class LineChart extends InterfaceHelper {
 		mainPanel.add(chartContainerPanel, setGrids(0, 0));
 	}
 
+	/**
+	 * Get the panel with the LineChart.
+	 * 
+	 * @return Main Panel with the LineChart
+	 */
 	public JPanel getPanel() {
 		return mainPanel;
 	}
@@ -70,40 +78,18 @@ public class LineChart extends InterfaceHelper {
 		}
 	}
 
+	/**
+	 * Create the line chart with data and add it to the mainPanel.
+	 * 
+	 * @param title
+	 *            the title of the chart.
+	 */
 	public void createLineChart(String title) {
 		initDataset();
-		final JFreeChart chart = ChartFactory.createXYLineChart(
-				title, // chart title
-				"X", // x axis label
-				"Y", // y axis label
-				dataset, // data
-				PlotOrientation.VERTICAL, true, // include legend
-				true, // tooltips
-				false // urls
-				);
-
-		// NOW DO SOME OPTIONAL CUSTOMISATION OF THE CHART...
-		chart.setBackgroundPaint(Color.white);
-
-		// final StandardLegend legend = (StandardLegend) chart.getLegend();
-		// legend.setDisplaySeriesShapes(true);
-
-		// get a reference to the plot for further customisation...
-		final XYPlot plot = chart.getXYPlot();
-		plot.setBackgroundPaint(Color.lightGray);
-		// plot.setAxisOffset(new Spacer(Spacer.ABSOLUTE, 5.0, 5.0, 5.0, 5.0));
-		plot.setDomainGridlinePaint(Color.white);
-		plot.setRangeGridlinePaint(Color.white);
-
-//		final XYLineAndShapeRenderer renderer = new XYLineAndShapeRenderer();
-//		renderer.setSeriesLinesVisible(0, false);
-//		renderer.setSeriesShapesVisible(1, false);
-//		plot.setRenderer(renderer);
-
-		// change the auto tick unit selection to integer units only...
-//		final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
-//		rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-//		// OPTIONAL CUSTOMISATION COMPLETED.
+		final JFreeChart chart = ChartFactory.createXYLineChart(title, "Days",
+				"Measurements", dataset, PlotOrientation.VERTICAL, true, true,
+				false);
+		initChart(chart);
 		mainPanel.remove(chartContainerPanel);
 		chartContainerPanel.remove(chartPanelTest);
 		chartContainerPanel.setPreferredSize(new Dimension(width,
@@ -115,8 +101,18 @@ public class LineChart extends InterfaceHelper {
 		mainPanel.revalidate();
 	}
 
+	private void initChart(JFreeChart chart) {
+		chart.setBackgroundPaint(Color.white);
+		final XYPlot plot = chart.getXYPlot();
+		plot.setBackgroundPaint(Color.lightGray);
+		plot.setDomainGridlinePaint(Color.white);
+		plot.setRangeGridlinePaint(Color.white);
+
+	}
+
 	/**
 	 * Gets amount of childs of a chunk and puts them in an ArrayList.
+	 * 
 	 * @return ArrayList of integers with amount of children in a chunk.
 	 */
 	public ArrayList<Integer> getChunkData() {
@@ -128,7 +124,14 @@ public class LineChart extends InterfaceHelper {
 		}
 		return res;
 	}
-	
+
+	/**
+	 * Create data for the x-as.
+	 * 
+	 * @return number of days between first and last day.
+	 * @throws SQLException
+	 *             if data is not found
+	 */
 	public int xAs() throws SQLException {
 		Interpreter interpreter = SingletonInterpreter.getInterpreter();
 		ArrayList<Chunk> chunks = interpreter.getChunks();
