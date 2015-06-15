@@ -81,7 +81,6 @@ public class ColumnTest {
 	@Test
 	public void testEqualsObject() {
 		Column noName = new Column(TWELVE, null, "List");
-		Column noType = new Column(TWELVE, "Column", null);
 		Column good = new Column(TWELVE, "Column", "List");
 		String wrongObject = "";
 		
