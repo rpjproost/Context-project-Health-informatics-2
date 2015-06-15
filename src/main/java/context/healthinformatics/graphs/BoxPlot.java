@@ -104,6 +104,7 @@ public class BoxPlot extends InterfaceHelper {
 	 *            the columns for which the box plot is made
 	 */
 	public void setDataPerColumn(ArrayList<String> columns) {
+
 		dataset = new DefaultBoxAndWhiskerCategoryDataset();
 		Interpreter interpreter = SingletonInterpreter.getInterpreter();
 		ArrayList<Chunk> chunks = interpreter.getChunks();
@@ -180,7 +181,11 @@ public class BoxPlot extends InterfaceHelper {
 					"resultid = " + chunk.getLine());
 			String value = "";
 			if (rs.next()) {
-				value = rs.getObject(column).toString();
+				if (rs.getObject(column) != null) {
+					value = rs.getObject(column).toString();
+				} else {
+					return Integer.MIN_VALUE;
+				}
 			}
 			rs.close();
 			Double res = parseToDouble(value);
@@ -190,7 +195,7 @@ public class BoxPlot extends InterfaceHelper {
 					"Something went wrong creating the boxplot",
 					"Analyse Error", JOptionPane.WARNING_MESSAGE);
 		}
-		return -1;
+		return Integer.MIN_VALUE;
 	}
 
 	/**
