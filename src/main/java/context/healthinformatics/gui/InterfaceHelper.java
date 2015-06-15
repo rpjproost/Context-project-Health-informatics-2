@@ -47,7 +47,7 @@ public class InterfaceHelper extends JPanel {
 	private static final int SUBTITLEFONT = 20;
 	private static final int SELECTERHEIGHT = 500;
 	private static final int SELECTERWIDTH = 600;
-	
+
 	protected static final int FOUR = 4;
 
 	/**
@@ -408,11 +408,14 @@ public class InterfaceHelper extends JPanel {
 		panel.setBackground(color);
 		return panel;
 	}
-	
+
 	/**
 	 * Creates a check box.
-	 * @param title the title of the check box.
-	 * @param color the color of the background of the check box.
+	 * 
+	 * @param title
+	 *            the title of the check box.
+	 * @param color
+	 *            the color of the background of the check box.
 	 * @return a check box.
 	 */
 	public JCheckBox createCheckBox(String title, Color color) {
@@ -421,11 +424,14 @@ public class InterfaceHelper extends JPanel {
 		checkbox.setFont(new Font("Arial", Font.PLAIN, TEXTSIZE));
 		return checkbox;
 	}
-	
+
 	/**
-	 * @param titleName the name of that will be shown on the screen.
-	 * @param width the width of the label with the title.
-	 * @param height the height of the label with the title.
+	 * @param titleName
+	 *            the name of that will be shown on the screen.
+	 * @param width
+	 *            the width of the label with the title.
+	 * @param height
+	 *            the height of the label with the title.
 	 * @return a subtitle in italic with a size of 20.
 	 */
 	protected JLabel createSubTitle(String titleName, int width, int height) {
@@ -434,21 +440,24 @@ public class InterfaceHelper extends JPanel {
 		title.setPreferredSize(new Dimension(width - 2 * INSETS, height));
 		return title;
 	}
-	
+
 	/**
-	 * Checks for a check-box if its selected or not.
-	 * On this basis it will determined whether the panel is visible or not.
-	 * @param checkbox the check-box that will be checked.
-	 * @param panel the panel that must be set visible or not.
+	 * Checks for a check-box if its selected or not. On this basis it will
+	 * determined whether the panel is visible or not.
+	 * 
+	 * @param checkbox
+	 *            the check-box that will be checked.
+	 * @param panel
+	 *            the panel that must be set visible or not.
 	 */
-	public void checkVisibility(JCheckBox checkbox, JPanel panel) { 
+	public void checkVisibility(JCheckBox checkbox, JPanel panel) {
 		if (checkbox.isSelected()) {
 			panel.setVisible(true);
 		} else {
 			panel.setVisible(false);
 		}
 	}
-	
+
 	/**
 	 * @return the column names of the database.
 	 */
@@ -465,7 +474,7 @@ public class InterfaceHelper extends JPanel {
 		}
 		return columnNames;
 	}
-	
+
 	/**
 	 * @param filter
 	 *            which file type will be saved.
@@ -474,15 +483,41 @@ public class InterfaceHelper extends JPanel {
 	public JFileChooser saveFileChooser(String filter) {
 		JFileChooser savePopup = new JFileChooser();
 		savePopup.setMultiSelectionEnabled(true);
-		String filtername = "save as *." + filter;
+		return setFilePopUp(savePopup, "save as *." + filter, filter);
+	}
+
+	/**
+	 * @param filter
+	 *            which file will be opened.
+	 * @return the anwser of the filechooser.
+	 */
+	public JFileChooser openFileChooser(String filter) {
+		JFileChooser popup = new JFileChooser();
+		popup.setMultiSelectionEnabled(true);
+		return setFilePopUp(popup, "*." + filter, filter);
+
+	}
+
+	/**
+	 * Method to set the file popup window.
+	 * 
+	 * @param popup
+	 *            thepopup
+	 * @param filtername
+	 *            the name of the filter
+	 * @param filter
+	 *            the filter
+	 * @return the window
+	 */
+	public JFileChooser setFilePopUp(JFileChooser popup, String filtername,
+			String filter) {
 		FileNameExtensionFilter extenstionFilter = new FileNameExtensionFilter(
 				filtername, filter);
-		savePopup.setFileFilter(extenstionFilter);
-		savePopup
-				.setPreferredSize(new Dimension(SELECTERWIDTH, SELECTERHEIGHT));
-		savePopup.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		Action details = savePopup.getActionMap().get("viewTypeDetails");
+		popup.setFileFilter(extenstionFilter);
+		popup.setPreferredSize(new Dimension(SELECTERWIDTH, SELECTERHEIGHT));
+		popup.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		Action details = popup.getActionMap().get("viewTypeDetails");
 		details.actionPerformed(null);
-		return savePopup;
+		return popup;
 	}
 }
