@@ -85,19 +85,19 @@ public class Comparison extends Task {
 	}
 	
 	private String resolveStatus(String s1, String s2) {
-		if (s1.equals("Reasonably Safe") &&  s1.equals("Reasonably Safe")) {
+		if (s1.equals("Reasonably Safe") &&  s2.equals("Reasonably Safe")) {
 			return "Do Nothing";
 		}
-		if (s1.equals("Reasonably Safe") &&  s1.equals("Somewhat Safe")) {
+		if (s1.equals("Reasonably Safe") &&  s2.equals("Somewhat Safe")) {
 			return "Repeat measurement tommorow";
 		}
-		if (s1.equals("Reasonably Safe") &&  s1.equals("Concerned")) {
+		if (s1.equals("Reasonably Safe") &&  s2.equals("Concerned")) {
 			return "Contact Hospital";
 		}
-		if (s1.equals("Somewhat Safe") &&  s1.equals("Safe")) {
+		if (s1.equals("Somewhat Safe") &&  s2.equals("Safe")) {
 			return "Do Nothing";
 		}
-		if (s1.equals("Somewhat Safe") &&  s1.equals("Reasonably Safe")) {
+		if (s1.equals("Somewhat Safe") &&  s2.equals("Reasonably Safe")) {
 			return "Contact Hospital";
 		}
 		if (s1.equals("Concerned")) {
