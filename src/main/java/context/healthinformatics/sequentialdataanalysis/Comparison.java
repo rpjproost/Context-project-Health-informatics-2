@@ -33,13 +33,15 @@ public class Comparison extends Task {
 	}
 	
 	private void getCreaValuesAndDates() throws SQLException {
-		ResultSet rs = SingletonDb.getDb().selectResultSet("workspace"
-				, "value, date", "beschrijving = 'Kreatinine (stat)'");
 		values = new ArrayList<Integer>();
 		dates = new ArrayList<Date>();
-		while (rs.next()) {
-			values.add(rs.getInt("value"));
-			dates.add(rs.getDate("date"));
+		for (Chunk c : getChunks()) {
+			ResultSet rs = SingletonDb.getDb().selectResultSet("workspace"
+					, "value, date", "resultid =" + c.getLine());
+			while (rs.next()) {
+				values.add(rs.getInt("value"));
+				dates.add(rs.getDate("date"));
+			}
 		}
 	}
 	
@@ -181,8 +183,8 @@ public class Comparison extends Task {
 
 	private ArrayList<String> calculateMeasurementBoundaries() throws SQLException {
 		ArrayList<String> result = new ArrayList<String>();
-		getCreaValuesAndDates();
-		ArrayList<Integer> averageValues = getValueAverages(values);
+		//getCreaValuesAndDates();
+		ArrayList<Integer> averageValues = getValueAverages();
 		ArrayList<Integer> boundaries = runAlgorithm(averageValues);
 		
 		assertEquals(averageValues.size(), boundaries.size());////////////////////////////////////////////////////////////////////////////////////////////
@@ -208,7 +210,7 @@ public class Comparison extends Task {
 
 	private ArrayList<Integer> runAlgorithm( ArrayList<Integer> averageValues) throws SQLException {
 		
-		assertEquals(values.size() - 5, averageValues.size());////////////////////////////////////////////////////////////////////////////////////////////
+		//assertEquals(values.size() - 5, averageValues.size());////////////////////////////////////////////////////////////////////////////////////////////
 		
 		ArrayList<Integer> result = new ArrayList<Integer>();
 		int count = 0;
@@ -224,13 +226,13 @@ public class Comparison extends Task {
 		return result;
 	}
 	
-	private ArrayList<Integer> getValueAverages(ArrayList<Integer> list) {
+	private ArrayList<Integer> getValueAverages() {
 		ArrayList<Integer> result = new ArrayList<Integer>();
 		int sum = 0;
-		for (int i = 5; i < list.size(); i++) {
+		for (int i = 4; i < values.size(); i++) {
 			sum = 0;
-			for (int j = i; j >= i - 5; j--) {
-				sum += list.get(i);
+			for (int j = i; j >= i - 4; j--) {
+				sum += values.get(j);
 			}
 			result.add(sum / 5);
 		}
