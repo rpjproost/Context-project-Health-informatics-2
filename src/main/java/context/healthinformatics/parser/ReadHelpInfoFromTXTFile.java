@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+
 import context.healthinformatics.help.HelpFrameInfoContainer;
 
 /**
@@ -26,6 +27,24 @@ public class ReadHelpInfoFromTXTFile extends Parser {
 	public ReadHelpInfoFromTXTFile(String fileName) {
 		super(fileName);
 		helpFrameInfoContainer = new ArrayList<HelpFrameInfoContainer>();
+	}
+	
+	/**
+	 * Read all lines from a text file and build a string out of it.
+	 * 
+	 * @return the string with all lines
+	 * @throws FileNotFoundException
+	 *             error file not found
+	 */
+	public String readByLine() throws FileNotFoundException {
+		this.file = openFile(this.getFileName());
+		this.sc = new Scanner(file, "UTF-8");
+		StringBuilder buildString = new StringBuilder();
+		while (sc.hasNextLine()) {
+			buildString.append(sc.nextLine());
+			buildString.append(System.getProperty("line.separator"));
+		}
+		return buildString.toString();
 	}
 
 	/**
