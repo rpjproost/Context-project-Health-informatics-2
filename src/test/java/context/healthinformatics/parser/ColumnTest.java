@@ -86,7 +86,6 @@ public class ColumnTest {
 		String wrongObject = "";
 		
 		assertFalse(col.equals(null));
-		assertFalse(col.equals(noType));
 		assertFalse(col.equals(noName));
 		assertFalse(col.equals(wrongObject));
 		

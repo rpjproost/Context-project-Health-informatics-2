@@ -315,7 +315,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 		if (db.getTables().size() > 0 && !db.getTables().containsKey("result")) {
 			MergeTable mergeTables = new MergeTable();
 			try {
-				mergeTables.merge(clause, "date");
+				mergeTables.merge(clause, "date, time");
 			} catch (SQLException e) {
 				JOptionPane.showMessageDialog(null,
 						"The files you are trying to merge can't be merged!!",
