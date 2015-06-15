@@ -29,7 +29,8 @@ public class Comparison extends Task {
 	}
 	
 	private void getCreaValuesAndDates() throws SQLException {
-		ResultSet rs = SingletonDb.getDb().selectResultSet("workspace", "value, date", "beschrijving = 'Kreatinine (stat)'");
+		ResultSet rs = SingletonDb.getDb().selectResultSet("workspace"
+				, "value, date", "beschrijving = 'Kreatinine (stat)'");
 		values = new ArrayList<Integer>();
 		dates = new ArrayList<Date>();
 		while (rs.next()) {
@@ -52,6 +53,7 @@ public class Comparison extends Task {
 		//handle second part
 		getCreaValuesAndDates();
 		ArrayList<String> advices = getAdvice();
+		
 		assertEquals(dates.size(), advices.size());//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		// dates is now filled with unique dates.
 		// advices is as long as dates, and it has corresponding advices for that day.
@@ -63,9 +65,6 @@ public class Comparison extends Task {
 	private ArrayList<String> getAdvice() throws SQLException {
 		ArrayList<String> statusList = determineCreatineStatus();
 		removeDuplicateAndIrrelevantDates();
-		
-		System.out.println("dates size : " + dates.size());
-		System.out.println("statuslist size : " + statusList.size());
 		
 		assertEquals(dates.size(), statusList.size());//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		
@@ -137,7 +136,7 @@ public class Comparison extends Task {
 		dates = list;
 	}
 	
-	private String resolveBoundaries(String s1, String s2) {
+	public String resolveBoundaries(String s1, String s2) {
 		if (s1.equals("Safe")) {
 			return "Safe";
 		}
