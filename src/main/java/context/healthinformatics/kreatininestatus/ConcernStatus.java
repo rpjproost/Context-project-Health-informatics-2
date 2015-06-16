@@ -12,22 +12,22 @@ public class ConcernStatus extends KreatinineStatus {
 
 	@Override
 	protected String getConcernAdvice() {
-		return "follow Doctor's advise";
+		return "follow doctor's advice";
 	}
-
+	
 	@Override
 	protected String getMildConcernAdvice() {
-		return "follow Doctor's advise";
+		return "follow doctor's advice";
 	}
 
 	@Override
 	protected String getReasonableAdvice() {
-		return "follow Doctor's advise";
+		return "follow doctor's advice";
 	}
 
 	@Override
 	protected String getSafeAdvice() {
-		return "follow Doctor's advise";
+		return "follow doctor's advice";
 	}
 
 

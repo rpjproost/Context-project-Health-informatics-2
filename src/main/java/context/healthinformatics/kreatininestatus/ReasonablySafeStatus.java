@@ -12,17 +12,13 @@ public class ReasonablySafeStatus extends KreatinineStatus {
 
 	@Override
 	public String getAdvice(KreatinineStatus yesterday) {
-		return yesterday.getAdvice(this);
+		return yesterday.getReasonableAdvice();
 	}
 
-	@Override
-	protected String getConcernAdvice() {
-		return "contact hospital";
-	}
 
 	@Override
 	protected String getMildConcernAdvice() {
-		return "measure again";
+		return "measure tomorrow";
 	}
 
 	@Override

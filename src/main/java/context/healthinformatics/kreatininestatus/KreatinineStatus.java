@@ -16,7 +16,9 @@ public abstract class KreatinineStatus {
 	 * gets the advise if today was concern.
 	 * @return the advise.
 	 */
-	protected abstract String getConcernAdvice();
+	protected String getConcernAdvice() {
+		return "contact hospital";
+	}
 	
 	/**
 	 * gets the advise if today was mild concern.

@@ -16,18 +16,13 @@ public class MildConcernStatus extends KreatinineStatus {
 	}
 
 	@Override
-	protected String getConcernAdvice() {
-		return "contact hospital";
-	}
-
-	@Override
 	protected String getMildConcernAdvice() {
 		return "contact hospital";
 	}
 
 	@Override
 	protected String getReasonableAdvice() {
-		return "measure again tommorrow";
+		return "measure tomorrow";
 	}
 
 	@Override

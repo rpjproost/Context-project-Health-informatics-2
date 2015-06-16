@@ -17,22 +17,22 @@ public class NullStatus extends KreatinineStatus {
 
 	@Override
 	protected String getConcernAdvice() {
-		return null;
+		return "null, not measured";
 	}
 
 	@Override
 	protected String getMildConcernAdvice() {
-		return null;
+		return "null, not measured";
 	}
 
 	@Override
 	protected String getReasonableAdvice() {
-		return null;
+		return "null, not measured";
 	}
 
 	@Override
 	protected String getSafeAdvice() {
-		return null;
+		return "null, not measured";
 	}
 
 	@Override
@@ -50,7 +50,11 @@ public class NullStatus extends KreatinineStatus {
 		return this;
 	}
 	
+	/**
+	 * to string, returns empty string.
+	 * @return empty string.
+	 */
 	public String toString() {
-		return null;
+		return "";
 	}
 }
