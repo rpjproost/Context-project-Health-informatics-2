@@ -23,10 +23,12 @@ import context.healthinformatics.kreatininestatus.SafeStatus;
 public class Comparison extends Task {
 
 	private ArrayList<Double> values;
-	public ArrayList<Date> dates;
-
-	public ArrayList<String> advices;// //////////////////
+	private ArrayList<Date> dates;
 	private ArrayList<String> kreatinine;
+	
+	private ArrayList<KreatinineStatus> status;
+	private ArrayList<KreatinineStatus> boundaries;
+	private ArrayList<String> advices;
 
 	/**
 	 * Constructor for Comparison.
@@ -35,7 +37,6 @@ public class Comparison extends Task {
 		values = new ArrayList<Double>();
 		dates = new ArrayList<Date>();
 		kreatinine = new ArrayList<String>();
-		advices = new ArrayList<String>();// ////////////////
 	}
 
 	private void getCreaValuesAndDates() throws SQLException {
@@ -70,6 +71,9 @@ public class Comparison extends Task {
 		System.out.println(values.toString());// ////////////////////////////////////////////////////
 
 		ArrayList<String> advices = getAdvice();
+		for (int i = 0; i < values.size(); i++) {
+			System.out.println(i + "     " + values.get(i) + "     " + boundaries.get(i) + "     " + dates.get(i) + "     " + status.get(i) + "     " + kreatinine.get(i) + "     " + advices.get(i));
+		}
 
 		// dates is now filled with unique dates.
 		// advices is as long as dates, and it has corresponding advices for
@@ -83,26 +87,32 @@ public class Comparison extends Task {
 	 * STAP 3 Advies en eventuele te nemen actie!
 	 * */
 	private ArrayList<String> getAdvice() throws SQLException {
-		ArrayList<KreatinineStatus> statusList = determineCreatineStatus();
-//		removeDuplicateAndIrrelevantDates();
+		determineCreatineStatus();
 		Date currentDate = dates.get(5);
 		KreatinineStatus yesterdayStatus = new SafeStatus();
-		ArrayList<String> result = new ArrayList<String>();
-		for (int i = 0; i < statusList.size(); i++) {
+		advices = new ArrayList<String>();
+		for (int i = 0; i < status.size(); i++) {
 			if (i < 5) {
-				result.add(statusList.get(i).toString());
+				advices.add(status.get(i).toString());
+			} else {
+				if (!dates.get(i).equals(currentDate)) {
+					currentDate = dates.get(i);
+					yesterdayStatus = getNextStatus(i - 1);
+				}
+				advices.add(status.get(i).getAdvice(yesterdayStatus));
 			}
-			System.out.println("currentDate: " + currentDate);
 		}
-//		result.add("no advice");
-//		for (int i = 1; i < statusList.size(); i++) {
-//			String status = resolveStatus(statusList.get(i - 1),
-//					statusList.get(i));
-//			result.add(status);
-//		}
-		System.out.println("advices size:" + result.size());
-		System.out.println("advices: " + result);
-		return result;// per day
+		System.out.println("advices size:" + advices.size());
+		System.out.println("advices: " + advices);
+		return advices;// per day
+	}
+	
+	private KreatinineStatus getNextStatus(int index) {
+		KreatinineStatus nextStatus = status.get(index);
+		if (nextStatus instanceof NullStatus) {
+			return getNextStatus(index - 1);
+		}
+		return nextStatus;
 	}
 
 	private void removeDuplicateAndIrrelevantDates() {
@@ -128,7 +138,7 @@ public class Comparison extends Task {
 	 * */
 
 	private ArrayList<KreatinineStatus> determineCreatineStatus() throws SQLException {
-		ArrayList<KreatinineStatus> result = new ArrayList<KreatinineStatus>();
+		status = new ArrayList<KreatinineStatus>();
 		ArrayList<KreatinineStatus> boundaries = calculateMeasurementBoundaries();
 		System.out.println("boundaries size: " + boundaries.size());
 		System.out.println("boudaries: " + boundaries);
@@ -144,15 +154,15 @@ public class Comparison extends Task {
 //						+ "; Kreatinine equals: " + !kreatinine.get(i + 1).equals("Kreatinine2 (stat)"));
 			if (!dates.get(i).equals(dates.get(i + 1))
 					|| !kreatinine.get(i + 1).equals("Kreatinine2 (stat)")) {
-				result.add(boundaries.get(i).getStatus(new NullStatus()));
+				status.add(boundaries.get(i).getStatus(new NullStatus()));
 			} else {
-				result.add(boundaries.get(i).getStatus(boundaries.get(i + 1)));
+				status.add(boundaries.get(i).getStatus(boundaries.get(i + 1)));
 			}
 		}
-		result.add(boundaries.get(boundaries.size() - 1).getStatus(new NullStatus()));
-		System.out.println("status size: " + result.size());
-		System.out.println("status: " + result);
-		return result;
+		status.add(boundaries.get(boundaries.size() - 1).getStatus(new NullStatus()));
+		System.out.println("status size: " + status.size());
+		System.out.println("status: " + status);
+		return status;
 	}
 
 	/**
@@ -165,39 +175,39 @@ public class Comparison extends Task {
 
 	private ArrayList<KreatinineStatus> calculateMeasurementBoundaries()
 			throws SQLException {
-		ArrayList<KreatinineStatus> result = new ArrayList<KreatinineStatus>();
+		boundaries = new ArrayList<KreatinineStatus>();
 		ArrayList<Double> averageValues = getValueAverages();
 		ArrayList<Double> boundaries = runAlgorithm(averageValues);
 		for (int i = 0; i < values.size(); i++) {
 			if (i < 5) {
-				result.add(new NullStatus());
+				this.boundaries.add(new NullStatus());
 			} else {
 				int boundaryIndex = i - 5;
 				double boundaryValue = boundaries.get(boundaryIndex);
 				double averageValue = averageValues.get(boundaryIndex);
 				double currentValue = values.get(i);
 				if (currentValue > 0 && currentValue <= averageValue) {
-					result.add(new SafeStatus());
+					this.boundaries.add(new SafeStatus());
 				}
 				if (currentValue > averageValue
 						&& currentValue <= checkReasonablySafeUpperBound(
 								averageValue, boundaryValue)) {
-					result.add(new ReasonablySafeStatus());
+					this.boundaries.add(new ReasonablySafeStatus());
 				}
 				if (currentValue > checkReasonablySafeUpperBound(averageValue,
 						boundaryValue)
 						&& currentValue <= checkSomewhatSafeUpperBound(
 								averageValue, boundaryValue)) {
-					result.add(new MildConcernStatus());
+					this.boundaries.add(new MildConcernStatus());
 				}
 				if (currentValue > checkSomewhatSafeUpperBound(averageValue,
 						boundaryValue)) {
-					result.add(new ConcernStatus());
+					this.boundaries.add(new ConcernStatus());
 				}
 			}
 		}
 		// System.out.println("measurements: " + result);
-		return result;
+		return this.boundaries;
 	} // TODO THIS IS CORRECT AND HANDTESTED!!
 
 	private ArrayList<Double> runAlgorithm(ArrayList<Double> averageValues)
@@ -247,6 +257,10 @@ public class Comparison extends Task {
 		double b = averageValue * 1.25;
 		double max = Math.max(a, b);
 		return max;
+	}
+	
+	public ArrayList<String> getAdvices() {
+		return advices;
 	}
 
 	/**
