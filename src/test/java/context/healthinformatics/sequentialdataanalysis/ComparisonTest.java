@@ -2,6 +2,8 @@ package context.healthinformatics.sequentialdataanalysis;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
+
 import org.jfree.util.Log;
 import org.junit.After;
 import org.junit.Before;
@@ -38,9 +40,9 @@ public class ComparisonTest {
 		xmlp.parse();
 		xmlp.createDatabase();
 		String[] clause = new String[1];
-		clause[0] = "meeting.createdby = 'admire2'";
+		clause[0] = "meeting.createdby = ''";
 		test = new MergeTable();
-		test.merge(clause, "itemid");
+		test.merge(clause/*, "itemid"*/);
 		
 		ip = SingletonInterpreter.getInterpreter();		
 	}
@@ -53,9 +55,14 @@ public class ComparisonTest {
 	 */
 	@Test
 	public void testCompare() throws Exception {
+//        ArrayList<Chunk> chunks = ip.getChunks();
+//        for (Chunk ch : chunks) {
+//        	System.out.println(ch.toArray().toString());
+//        }
+
 		Comparison c = new Comparison();
-		ip.interpret("filter data where beschrijving = 'Kreatinine (stat)' "
-				+ "OR beschrijving = 'Kreatinine2 (stat)'");		
+//		ip.interpret("filter data where beschrijving = 'Kreatinine (stat)' "
+//				+ "OR beschrijving = 'Kreatinine2 (stat)'");		
 		
 		Query q = new Query("test"); //TODO usefull query
 		c.run(q);
@@ -66,7 +73,7 @@ public class ComparisonTest {
 		assertEquals(c.getAdvices().get(nothingAdvice), "nothing extra");
 		assertEquals(c.getAdvices().get(measureAdvice), "measure tomorrow");
 		
-		ip.interpret("undo");
+//		ip.interpret("undo");
 	}
 	
 	/**

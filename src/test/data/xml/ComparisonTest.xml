@@ -8,5 +8,5 @@
 		<name>itemid</name>
 		<type>Int</type>
 	</column></document>
-
+<document docname="ADMIRE2"><doctype>Text</doctype><path>src/main/data/demo/ADMIRE2.txt</path><start>7</start><delimiter>,</delimiter><column id="2"><name>value</name><type>Int</type></column><column id="5"><name>date</name><type>DATE</type><dateFormat>yyMMdd</dateFormat></column><column id="6"><name>time</name><type>Int</type></column><column id="1"><name>beschrijving</name><type>varchar(150)</type></column></document>
 </xml>

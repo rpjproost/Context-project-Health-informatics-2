@@ -25,11 +25,14 @@ public class Comparison extends Task {
 	
 	private ArrayList<Double> values;
 	private ArrayList<Date> dates;
-	private ArrayList<String> kreatinine;
+	private ArrayList<String> creatine;
 	
 	private ArrayList<KreatinineStatus> status;
 	private ArrayList<KreatinineStatus> borderAreas;
 	private ArrayList<String> advices;
+
+	private Date currentDate;
+	private KreatinineStatus yesterdayStatus;
 
 	/**
 	 * Constructor for Comparison.
@@ -37,7 +40,7 @@ public class Comparison extends Task {
 	public Comparison() {
 		values = new ArrayList<Double>();
 		dates = new ArrayList<Date>();
-		kreatinine = new ArrayList<String>();
+		creatine = new ArrayList<String>();
 	}
 
 	private void getCreaValuesAndDates() throws SQLException {
@@ -47,7 +50,7 @@ public class Comparison extends Task {
 			while (rs.next()) {
 				values.add(rs.getDouble("value"));
 				dates.add(rs.getDate("date"));
-				kreatinine.add(rs.getString("beschrijving"));
+				creatine.add(rs.getString("beschrijving"));
 			}
 		}
 	}
@@ -70,8 +73,8 @@ public class Comparison extends Task {
 		for (int i = 0; i < values.size(); i++) {
 			System.out.println(i + "     " + values.get(i) + "     " + borderAreas.get(i) 
 					+ "     " + dates.get(i) + "     " + status.get(i) + "     " 
-					+ kreatinine.get(i) + "     " + advices.get(i));
-		}
+					+ creatine.get(i) + "     " + advices.get(i));
+		} //TODO remove syso
 	}
 
 	/**
@@ -79,16 +82,16 @@ public class Comparison extends Task {
 	 * */
 	private void getAdvice() {
 		determineCreatineStatus();
-		Date currentDate = dates.get(FIVE);
-		KreatinineStatus yesterdayStatus = new SafeStatus();
+		currentDate = dates.get(FIVE);
+		yesterdayStatus = new SafeStatus();
 		advices = new ArrayList<String>();
 		for (int i = 0; i < status.size(); i++) {
 			if (i < FIVE) {
 				advices.add(status.get(i).toString());
 			} else {
 				if (!dates.get(i).equals(currentDate)) {
-					currentDate = dates.get(i);
 					yesterdayStatus = getNextStatus(i - 1);
+					currentDate = dates.get(i);
 				}
 				advices.add(status.get(i).getAdvice(yesterdayStatus));
 			}
@@ -98,7 +101,11 @@ public class Comparison extends Task {
 	private KreatinineStatus getNextStatus(int index) {
 		KreatinineStatus nextStatus = status.get(index);
 		if (nextStatus instanceof NullStatus) {
-			return getNextStatus(index - 1);
+			if (currentDate.equals(dates.get(index))) {
+				return getNextStatus(index - 1);
+			} else {
+				return yesterdayStatus;
+			}
 		}
 		return nextStatus;
 	}
@@ -114,9 +121,10 @@ public class Comparison extends Task {
 	private void determineCreatineStatus() {
 		status = new ArrayList<KreatinineStatus>();
 		calculateBorderAreaForCreatine();
+		generateCreatineDescription();
 		for (int i = 0; i < borderAreas.size() - 1; i++) {
 			if (!dates.get(i).equals(dates.get(i + 1))
-					|| !kreatinine.get(i + 1).equals("Kreatinine2 (stat)")) {
+					|| !creatine.get(i + 1).equals("Kreatinine2 (stat)")) {
 				status.add(borderAreas.get(i).getStatus(new NullStatus()));
 			} else {
 				status.add(borderAreas.get(i).getStatus(borderAreas.get(i + 1)));
@@ -124,10 +132,25 @@ public class Comparison extends Task {
 		}
 		status.add(borderAreas.get(borderAreas.size() - 1).getStatus(new NullStatus()));
 	}
+	
+	private void generateCreatineDescription() {
+		for (int i = 0; i < creatine.size() - 1; i++) {
+			KreatinineStatus currentStatus = borderAreas.get(i);
+			if ((currentStatus instanceof MildConcernStatus 
+					|| currentStatus instanceof ConcernStatus) 
+					&& dates.get(i).equals(dates.get(i + 1))
+					&& !creatine.get(i + 1).contains("(stat)")) {
+				System.out.println("Setting 2: " + borderAreas.get(i));
+				creatine.set(i + 1, "Kreatinine2 (stat)");
+				i++;
+			}
+		}
+	}
 
 	/**
 	 * EINDE STAP 2!
 	 * */
+
 
 	/**
 	 * STAP 1 GRENSGEBIEDEN BEREKENINGEN!
