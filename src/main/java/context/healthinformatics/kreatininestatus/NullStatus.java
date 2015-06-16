@@ -50,11 +50,13 @@ public class NullStatus extends KreatinineStatus {
 		return this;
 	}
 	
+
 	/**
 	 * to string, returns empty string.
-	 * @return empty string.
+	 * @return NULL string.
 	 */
+	@Override
 	public String toString() {
-		return "";
+		return "NULL";
 	}
 }

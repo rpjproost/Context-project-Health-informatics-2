@@ -44,7 +44,7 @@ public class StatusTest {
 	 * @return all parameters.
 	 */
 	 @Parameterized.Parameters
-	  public static Collection testData() {
+	  public static Collection<Object[]> testData() {
 	      return Arrays.asList(new Object[][] {
 	         { safe, nul, safe},
 	         { safe, conc, safe },
@@ -81,9 +81,9 @@ public class StatusTest {
 	@Test
 	public void statustest() {
 		KreatinineStatus temp = first.getStatus(second);
-		if (!expected.toString().equals(temp.toString())) {
+//		if (!expected.toString().equals(temp.toString())) {
 			System.out.println(first + " " + second + " " + expected);
-		}
+//		}
 		assertEquals(expected.toString(), temp.toString());
 	}
 
