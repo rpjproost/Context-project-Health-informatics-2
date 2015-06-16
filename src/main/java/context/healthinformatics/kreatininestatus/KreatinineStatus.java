@@ -1,18 +1,9 @@
 package context.healthinformatics.kreatininestatus;
 
-import java.util.Date;
 /**
  * abstract class containing the Crea value.
  */
 public abstract class KreatinineStatus {
-	/**
-	 * date of this advise.
-	 */
-	private Date date;
-	/**
-	 * the value of this Status.
-	 */
-	private double value;
 
 	/**
 	 * Method to generate the advise over 2 days.
@@ -65,37 +56,5 @@ public abstract class KreatinineStatus {
 	 * @return the status.
 	 */
 	protected abstract KreatinineStatus getStatus(MildConcernStatus firstStatus);
-	
-	/**
-	 * setter for date.
-	 * @param date date to set.
-	 */
-	protected void setDate(Date date) {
-		this.date = date;
-	}
-	
-	/**
-	 * setter for value.
-	 * @param value value to set.
-	 */
-	protected void setValue(double value) {
-		this.value = value;
-	}
-	
-	/**
-	 * getter for date.
-	 * @return the date.
-	 */
-	public Date getDate() {
-		return date;
-	}
-	
-	/**
-	 * getter for value.
-	 * @return the value.
-	 */
-	public double getValue() {
-		return value;
-	}
 	
 }

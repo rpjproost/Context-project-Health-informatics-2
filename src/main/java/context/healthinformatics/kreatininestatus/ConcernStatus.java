@@ -1,7 +1,5 @@
 package context.healthinformatics.kreatininestatus;
 
-import java.util.Date;
-
 /**
  * concernStatus class.
  */
@@ -9,13 +7,8 @@ public class ConcernStatus extends KreatinineStatus {
 
 	/**
 	 * constructor.
-	 * @param date date of the status.
-	 * @param value value of the status.
 	 */
-	public ConcernStatus(Date date, double value) {
-		setDate(date);
-		setValue(value);
-	}
+	public ConcernStatus() { }
 
 	@Override
 	protected String getConcernAdvice() {
@@ -56,7 +49,7 @@ public class ConcernStatus extends KreatinineStatus {
 
 	@Override
 	protected KreatinineStatus getStatus(MildConcernStatus firstStatus) {
-		return firstStatus;
+		return this;
 	}
 	
 	/**
