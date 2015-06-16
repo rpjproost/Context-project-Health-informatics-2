@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import javax.swing.JPanel;
 
@@ -38,6 +39,7 @@ public class LineChart extends InterfaceHelper {
 	private static final int LINECHART_HEIGHT = 350;
 	private XYSeriesCollection dataset;
 	private ChartPanel chartPanelTest;
+	private DateTime f;
 
 	/**
 	 * Constructor of the LineChart initializes the panels.
@@ -50,7 +52,7 @@ public class LineChart extends InterfaceHelper {
 				LINECHART_HEIGHT));
 		mainPanel = createEmptyWithGridBagLayoutPanel();
 		mainPanel
-				.setPreferredSize(new Dimension(width, LINECHART_PANEL_HEIGHT));
+		.setPreferredSize(new Dimension(width, LINECHART_PANEL_HEIGHT));
 		mainPanel.add(chartContainerPanel, setGrids(0, 0));
 	}
 
@@ -66,17 +68,17 @@ public class LineChart extends InterfaceHelper {
 	/**
 	 * Fills a lineChart object.
 	 */
-	public void initDataset() {
-		dataset = new XYSeriesCollection();
-		final XYSeries series1 = new XYSeries("First");
-		dataset.addSeries(series1);
-		ArrayList<Integer> data = getChunkData();
-		double horizontal = 1.0;
-		for (int i : data) {
-			series1.add(horizontal, i);
-			horizontal++;
+		public void initDataset() {
+			dataset = new XYSeriesCollection();
+			final XYSeries series1 = new XYSeries("First");
+			dataset.addSeries(series1);
+			ArrayList<Integer> data = getChunkData();
+			double horizontal = 1.0;
+			for (int i : data) {
+				series1.add(horizontal, i);
+				horizontal++;
+			}
 		}
-	}
 
 	/**
 	 * Create the line chart with data and add it to the mainPanel.
@@ -138,9 +140,59 @@ public class LineChart extends InterfaceHelper {
 		Db data = SingletonDb.getDb();
 		Date first = data.selectDate(chunks.get(0).getLine());
 		Date last = data.selectDate(chunks.get(chunks.size() - 1).getLine());
-		DateTime f = new DateTime(first);
+		f = new DateTime(first);
 		DateTime l = new DateTime(last);
 		return Days.daysBetween(f, l).getDays();
+	}
+
+	/**
+	 * Returns integer of how many days it differs from first.
+	 * @param actual date to be checked.
+	 * @return difference in integer.
+	 */
+	public int differsFromDate(DateTime actual) {
+		return Days.daysBetween(f, actual).getDays();
+	}
+
+	/**
+	 * getData for dates.
+	 * @return on what date entered value in hashmap.
+	 * @throws SQLException database exception.
+	 */
+	public HashMap<Integer, Double> getData() throws SQLException {
+		Interpreter interpreter = SingletonInterpreter.getInterpreter();
+		ArrayList<Chunk> chunks = interpreter.getChunks();
+		HashMap<Integer, Double> res = new HashMap<Integer, Double>();
+		Db data = SingletonDb.getDb();
+		for (Chunk c : chunks) {
+			int difference = differsFromDate(new DateTime(data.selectDate(c.getLine())));
+			double value = c.getValue("value");
+			res.put(difference, value);
+		}
+		return res;
+	}
+
+	/**
+	 * new method for initializing data on dates.
+	 */
+	public void initDatasetOnDate() {
+		try {
+			dataset = new XYSeriesCollection();
+			final XYSeries series1 = new XYSeries("First");
+			dataset.addSeries(series1);
+			HashMap<Integer, Double>  data = getData();
+			for (int i = 0; i < xAs(); i++) {
+				if (data.get(i) == null) {
+					series1.add(i, 0.0);
+				}
+				else {
+					series1.add(i, data.get(i));
+				}
+			}
+		}
+		catch (Exception e) {
+
+		}
 	}
 
 }

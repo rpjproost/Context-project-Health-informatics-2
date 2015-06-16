@@ -463,8 +463,13 @@ public class Chunk {
 		}
 	}
 
-
-	private double getValue(String column) throws SQLException {
+	/**
+	 * Gets column value of this chunk.
+	 * @param column column to select.
+	 * @return value of the column.
+	 * @throws SQLException if column not found or is not a double.
+	 */
+	public double getValue(String column) throws SQLException {
 		Db data = SingletonDb.getDb(); double value = 0.0;
 		ResultSet rs = data.selectResultSet(data.getMergeTable(), column, data.getMergeTable() 
 				+ "id = " + getLine());
