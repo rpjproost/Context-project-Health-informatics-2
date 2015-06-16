@@ -49,4 +49,8 @@ public class NullStatus extends KreatinineStatus {
 	protected KreatinineStatus getStatus(MildConcernStatus firstStatus) {
 		return this;
 	}
+	
+	public String toString() {
+		return null;
+	}
 }
