@@ -50,7 +50,8 @@ public class NullStatus extends KreatinineStatus {
 		return this;
 	}
 	
+	@Override
 	public String toString() {
-		return null;
+		return "NULL";
 	}
 }
