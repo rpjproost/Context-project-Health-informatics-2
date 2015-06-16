@@ -123,7 +123,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	/**
 	 * Creates a clear project with a standard project default.
 	 */
-	private void runClearedProject() {
+	void runClearedProject() {
 		ft = new FileTree(mf, this);
 		xmlController.setProject("(default)");
 		addComboItem("(default)");
@@ -221,7 +221,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	/**
 	 * @return the anwser of the filechooser.
 	 */
-	public int openFileChooser() {
+	public JFileChooser openFileChooser() {
 		selecter = new JFileChooser();
 		selecter.setMultiSelectionEnabled(true);
 		FileNameExtensionFilter filter = new FileNameExtensionFilter(
@@ -231,7 +231,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		selecter.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		Action details = selecter.getActionMap().get("viewTypeDetails");
 		details.actionPerformed(null);
-		return selecter.showOpenDialog(leftPanel);
+		return selecter;
 	}
 
 	/**
@@ -255,13 +255,6 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 */
 	public FileTree getFileTree() {
 		return ft;
-	}
-
-	/**
-	 * @return the left panel.
-	 */
-	public JPanel getLeftPanel() {
-		return leftPanel;
 	}
 
 	/**
@@ -290,13 +283,6 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 */
 	public ArrayList<ArrayList<String>> getFolder() {
 		return folder;
-	}
-
-	/**
-	 * @return selecter.
-	 */
-	public JFileChooser getSelecter() {
-		return selecter;
 	}
 
 	/**
@@ -353,7 +339,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 * @param path
 	 *            the source of the xml file.
 	 */
-	private void addXmlFile(String path) {
+	void addXmlFile(String path) {
 		XMLParser parser = new XMLParser(path);
 		try {
 			parser.parse();
@@ -379,9 +365,9 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 * 
 	 * @param path
 	 *            the path to a file.
-	 * @return
+	 * @return the current xml document.
 	 */
-	private XMLDocument makeDocument(String path) {
+	XMLDocument makeDocument(String path) {
 		XMLDocument current = new XMLDocument();
 		current.setPath(path);
 		return current;

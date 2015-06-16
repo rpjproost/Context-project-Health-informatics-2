@@ -85,7 +85,7 @@ public class BoxPlot extends InterfaceHelper {
 		final CategoryPlot plot = new CategoryPlot(dataset, xAxis, yAxis,
 				renderer);
 		final JFreeChart chart = new JFreeChart("Box Plot: " + title, new Font(
-				"SansSerif", Font.BOLD, 14), plot, true);
+				"SansSerif", Font.BOLD, TEXTSIZE), plot, true);
 		mainPanel.remove(chartContainerPanel);
 		chartContainerPanel.remove(chartPanelTest);
 		chartContainerPanel.setPreferredSize(new Dimension(width,
@@ -93,7 +93,6 @@ public class BoxPlot extends InterfaceHelper {
 		chartPanelTest = new ChartPanel(chart);
 		chartPanelTest.setPreferredSize(new Dimension(width, BOX_PLOT_HEIGHT));
 		chartContainerPanel.add(chartPanelTest, setGrids(0, 0));
-
 		mainPanel.add(chartContainerPanel, setGrids(0, 0));
 		mainPanel.revalidate();
 	}
@@ -109,13 +108,16 @@ public class BoxPlot extends InterfaceHelper {
 		Interpreter interpreter = SingletonInterpreter.getInterpreter();
 		ArrayList<Chunk> chunks = interpreter.getChunks();
 		StringBuilder buildTitle = new StringBuilder();
-		for (int j = 0; j < columns.size(); j++) {
-			buildTitle.append(" " + columns.get(j));
-			ArrayList<Double> dataList = new ArrayList<Double>();
-			for (int i = 0; i < chunks.size(); i++) {
-				dataList.addAll(loopThroughChunks(chunks.get(i), columns.get(j)));
+		if (chunks != null) {
+			for (int j = 0; j < columns.size(); j++) {
+				buildTitle.append(" " + columns.get(j));
+				ArrayList<Double> dataList = new ArrayList<Double>();
+				for (int i = 0; i < chunks.size(); i++) {
+					dataList.addAll(loopThroughChunks(chunks.get(i),
+							columns.get(j)));
+				}
+				dataset.add(dataList, columns.get(j), " Type " + j);
 			}
-			dataset.add(dataList, columns.get(j), " Type " + j);
 		}
 		plotsize = 1;
 	}

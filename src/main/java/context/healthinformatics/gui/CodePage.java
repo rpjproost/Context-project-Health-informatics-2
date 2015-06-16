@@ -7,6 +7,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.Serializable;
 
 import javax.swing.AbstractAction;
@@ -14,6 +16,7 @@ import javax.swing.ActionMap;
 import javax.swing.BorderFactory;
 import javax.swing.InputMap;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -26,6 +29,8 @@ import context.healthinformatics.analyse.Interpreter;
 import context.healthinformatics.analyse.SingletonInterpreter;
 import context.healthinformatics.help.HelpController;
 import context.healthinformatics.interfacecomponents.IntermediateResults;
+import context.healthinformatics.writer.WriteToTXT;
+import context.healthinformatics.parser.ReadHelpInfoFromTXTFile;
 
 /**
  * Class which represents one of the states for the variabel panel in the
@@ -47,14 +52,14 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	private JPanel leftPanel;
 	private JPanel rightPanel;
 	private JButton analyseButton;
-	private JButton goBackButton;
-	private JButton goToOutputPageButton;
+	private JButton importScriptButton;
+	private JButton saveScriptButon;
 	private JButton helpButton;
 	private HelpController helpController;
 	private JScrollPane scrollWithTextArea;
 	private JScrollPane scrollBarForOldCodeArea;
 	private IntermediateResults imr;
-
+	private JFileChooser savePopup;
 	private int panelWidth;
 	private int panelHeight;
 
@@ -105,11 +110,11 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	}
 
 	private void initButtons() {
-		goBackButton = createButton("Go Back", ANALYZEBUTTONWIDTH,
+		importScriptButton = createButton("Import Script", ANALYZEBUTTONWIDTH,
 				ANALYZEBUTTONHEIGHT);
 		analyseButton = createButton("Analyse", ANALYZEBUTTONWIDTH,
 				ANALYZEBUTTONHEIGHT);
-		goToOutputPageButton = createButton("Go to Output", ANALYZEBUTTONWIDTH,
+		saveScriptButon = createButton("Save Script", ANALYZEBUTTONWIDTH,
 				ANALYZEBUTTONHEIGHT);
 		helpButton = createButton("Help", ANALYZEBUTTONWIDTH,
 				ANALYZEBUTTONHEIGHT);
@@ -156,7 +161,7 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	}
 
 	/**
-	 * Init the textarea to display the old code.
+	 * Init the TextArea to display the old code.
 	 */
 	private void initOldCodeArea() {
 		oldCodeArea = creatTextArea();
@@ -171,9 +176,9 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	 * Set all button action listeners.
 	 */
 	private void initButtonActionListeners() {
-		goBackButton.addActionListener(this);
+		importScriptButton.addActionListener(this);
 		analyseButton.addActionListener(this);
-		goToOutputPageButton.addActionListener(this);
+		saveScriptButon.addActionListener(this);
 		helpButton.addActionListener(this);
 	}
 
@@ -198,7 +203,7 @@ public class CodePage extends InterfaceHelper implements PanelState,
 		setCodeInputArea();
 		setOldCodeAreaTitle();
 		setOldCodeArea();
-		setButtonArea(leftPanel, goBackButton, analyseButton, FOUR);
+		setButtonArea(leftPanel, importScriptButton, saveScriptButon, FOUR);
 		codePageParentpanel.add(leftPanel, setGrids(0, 0));
 	}
 
@@ -215,7 +220,8 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	 * Sets the code input area.
 	 */
 	private void setCodeInputArea() {
-		leftPanel.add(scrollWithTextArea, setGrids(0, 1, new Insets(0, INSETS, INSETS, INSETS)));
+		leftPanel.add(scrollWithTextArea,
+				setGrids(0, 1, new Insets(0, INSETS, INSETS, INSETS)));
 	}
 
 	/**
@@ -240,12 +246,17 @@ public class CodePage extends InterfaceHelper implements PanelState,
 
 	/**
 	 * Sets a specific button area for the code page.
-	 * @param parent the side of the screen where it should be set.
-	 * @param leftButton the left button on the screen.
-	 * @param rightButton the right button on the screen.
-	 * @param position which height the entire area should be.
+	 * 
+	 * @param parent
+	 *            the side of the screen where it should be set.
+	 * @param leftButton
+	 *            the left button on the screen.
+	 * @param rightButton
+	 *            the right button on the screen.
+	 * @param position
+	 *            which height the entire area should be.
 	 */
-	private void setButtonArea(JPanel parent, JButton leftButton, 
+	private void setButtonArea(JPanel parent, JButton leftButton,
 			JButton rightButton, int position) {
 		JPanel buttonArea = createPanel(MainFrame.CODETABCOLOR,
 				mf.getScreenWidth() / 2, FIELDCORRECTION);
@@ -262,8 +273,7 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	 *            the panel which the go back button will added to.
 	 */
 	private void setLeftButton(JPanel panel, JButton button) {
-		panel.add(button,
-				setGrids(0, 0, new Insets(INSETS, INSETS, INSETS, 0)));
+		panel.add(button, setGrids(0, 0, new Insets(INSETS, INSETS, INSETS, 0)));
 	}
 
 	/**
@@ -286,8 +296,7 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	 *            which the analyze button will be added to.
 	 */
 	private void setRightButton(JPanel panel, JButton button) {
-		panel.add(button,
-				setGrids(2, 0, new Insets(INSETS, 0, INSETS, INSETS)));
+		panel.add(button, setGrids(2, 0, new Insets(INSETS, 0, INSETS, INSETS)));
 	}
 
 	/**
@@ -296,7 +305,7 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	private void setRightPanelWithOldIntermediateResult() {
 		rightPanel.add(imr.loadPanel(), setGrids(0, 0));
 		codePageParentpanel.add(rightPanel, setGrids(1, 0));
-		setButtonArea(rightPanel, helpButton, goToOutputPageButton, 1);
+		setButtonArea(rightPanel, analyseButton, helpButton, 1);
 	}
 
 	/**
@@ -324,17 +333,80 @@ public class CodePage extends InterfaceHelper implements PanelState,
 		if (e.getSource() == analyseButton) {
 			analyseCodeArea();
 		}
-		if (e.getSource() == goBackButton) {
-			mf.setState(mf.getInputPage());
-			mf.reloadStatePanel();
+		if (e.getSource() == importScriptButton) {
+			try {
+				importScript(openFile(importScriptButton));
+			} catch (FileNotFoundException e1) {
+				JOptionPane.showMessageDialog(null,
+						"Something went wrong importing your file!!",
+						"Import Script Error", JOptionPane.WARNING_MESSAGE);
+			}
 		}
-		if (e.getSource() == goToOutputPageButton) {
-			mf.setState(mf.getOutputPage());
-			mf.reloadStatePanel();
+		if (e.getSource() == saveScriptButon) {
+			handleSaveScript();
 		}
 		if (e.getSource() == helpButton) {
 			helpController.handleHelpButton("Code Page Help");
 		}
+	}
 
+	/**
+	 * Handle the SaveScript button.
+	 */
+	private void handleSaveScript() {
+		try {
+			fileChooser(saveFile(saveScriptButon));
+		} catch (IOException e1) {
+			JOptionPane.showMessageDialog(null,
+					"Something went wrong exporting your file!!",
+					"Save Script Error", JOptionPane.WARNING_MESSAGE);
+		}
+	}
+
+	/**
+	 * @param fileButton
+	 *            for which button the save file is.
+	 * @return the choice of the user.
+	 */
+	private int saveFile(JButton fileButton) {
+		savePopup = saveFileChooser("txt");
+		return savePopup.showSaveDialog(fileButton);
+	}
+
+	private int openFile(JButton fileButton) {
+		savePopup = openFileChooser("txt");
+		return savePopup.showOpenDialog(fileButton);
+	}
+
+	/**
+	 * Decide of there must be written to a file or doing nothing.
+	 * 
+	 * @param rVal
+	 *            the number of which button is chosen.
+	 * @throws IOException
+	 *             if the parsing of the xmlDocument goes wrong.
+	 */
+	public void fileChooser(int rVal) throws IOException {
+		if (rVal == JFileChooser.APPROVE_OPTION) {
+			WriteToTXT write = new WriteToTXT(savePopup.getSelectedFile()
+					.getAbsolutePath());
+			write.writeOldCodeArea(oldCodeArea.getText());
+		}
+	}
+
+	/**
+	 * Import the script from a text file.
+	 * 
+	 * @param rVal
+	 *            if has chosen.
+	 * @throws FileNotFoundException
+	 *             if file is not found exception
+	 */
+	public void importScript(int rVal) throws FileNotFoundException {
+		if (rVal == JFileChooser.APPROVE_OPTION) {
+			ReadHelpInfoFromTXTFile textParser = new ReadHelpInfoFromTXTFile(
+					savePopup.getSelectedFile().getAbsolutePath());
+			codeTextArea.append(textParser.readByLine());
+		}
 	}
 }
