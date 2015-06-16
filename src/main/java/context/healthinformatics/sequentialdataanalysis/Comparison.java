@@ -140,7 +140,6 @@ public class Comparison extends Task {
 					|| currentStatus instanceof ConcernStatus) 
 					&& dates.get(i).equals(dates.get(i + 1))
 					&& !creatine.get(i + 1).contains("(stat)")) {
-				System.out.println("Setting 2: " + borderAreas.get(i));
 				creatine.set(i + 1, "Kreatinine2 (stat)");
 				i++;
 			}
