@@ -5,7 +5,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;//////////////////////////////////////////////////////////
 import context.healthinformatics.analyse.Query;
 import context.healthinformatics.analyse.SingletonInterpreter;
 import context.healthinformatics.database.SingletonDb;
@@ -22,12 +21,14 @@ import context.healthinformatics.kreatininestatus.SafeStatus;
  */
 public class Comparison extends Task {
 
+	private static final int FIVE = 5;
+	
 	private ArrayList<Double> values;
 	private ArrayList<Date> dates;
 	private ArrayList<String> kreatinine;
 	
 	private ArrayList<KreatinineStatus> status;
-	private ArrayList<KreatinineStatus> boundaries;
+	private ArrayList<KreatinineStatus> borderAreas;
 	private ArrayList<String> advices;
 
 	/**
@@ -60,39 +61,29 @@ public class Comparison extends Task {
 	 *             query input can be wrong.
 	 */
 	@Override
-	public void run(Query query) throws Exception {// //////////////////////////////////////////////////////////////////////
+	public void run(Query query) throws Exception {
 		ArrayList<Chunk> c = SingletonInterpreter.getInterpreter().getChunks();
-		// query.inc();
 		setChunks(c);
-
-		// handle second part
+		//TODO initialize query to set up this formula.
 		getCreaValuesAndDates();
-
-		System.out.println(values.toString());// ////////////////////////////////////////////////////
-
-		ArrayList<String> advices = getAdvice();
+		getAdvice();
 		for (int i = 0; i < values.size(); i++) {
-			System.out.println(i + "     " + values.get(i) + "     " + boundaries.get(i) + "     " + dates.get(i) + "     " + status.get(i) + "     " + kreatinine.get(i) + "     " + advices.get(i));
+			System.out.println(i + "     " + values.get(i) + "     " + borderAreas.get(i) 
+					+ "     " + dates.get(i) + "     " + status.get(i) + "     " 
+					+ kreatinine.get(i) + "     " + advices.get(i));
 		}
-
-		// dates is now filled with unique dates.
-		// advices is as long as dates, and it has corresponding advices for
-		// that day.
-
-		// output
-//		System.out.println(advices.toString());// ///////////////////////////////////////////////////
 	}
 
 	/**
 	 * STAP 3 Advies en eventuele te nemen actie!
 	 * */
-	private ArrayList<String> getAdvice() throws SQLException {
+	private void getAdvice() {
 		determineCreatineStatus();
-		Date currentDate = dates.get(5);
+		Date currentDate = dates.get(FIVE);
 		KreatinineStatus yesterdayStatus = new SafeStatus();
 		advices = new ArrayList<String>();
 		for (int i = 0; i < status.size(); i++) {
-			if (i < 5) {
+			if (i < FIVE) {
 				advices.add(status.get(i).toString());
 			} else {
 				if (!dates.get(i).equals(currentDate)) {
@@ -102,9 +93,6 @@ public class Comparison extends Task {
 				advices.add(status.get(i).getAdvice(yesterdayStatus));
 			}
 		}
-		System.out.println("advices size:" + advices.size());
-		System.out.println("advices: " + advices);
-		return advices;// per day
 	}
 	
 	private KreatinineStatus getNextStatus(int index) {
@@ -115,20 +103,6 @@ public class Comparison extends Task {
 		return nextStatus;
 	}
 
-	private void removeDuplicateAndIrrelevantDates() {
-		ArrayList<Date> list = new ArrayList<Date>();
-		Date d = dates.get(5);// begin mij 5de meting
-		list.add(d);
-		for (int i = 6; i < dates.size(); i++) {
-			Date curDate = dates.get(i);
-			if (!d.equals(curDate)) {
-				list.add(curDate);
-				d = curDate;
-			}
-		}
-		dates = list;
-	}
-
 	/**
 	 * EINDE STAP 3!
 	 * */
@@ -137,32 +111,18 @@ public class Comparison extends Task {
 	 * STAP 2 KREATININE STATUS!
 	 * */
 
-	private ArrayList<KreatinineStatus> determineCreatineStatus() throws SQLException {
+	private void determineCreatineStatus() {
 		status = new ArrayList<KreatinineStatus>();
-		ArrayList<KreatinineStatus> boundaries = calculateMeasurementBoundaries();
-		System.out.println("boundaries size: " + boundaries.size());
-		System.out.println("boudaries: " + boundaries);
-//		System.out.println("Dates size: " + dates.size());
-//		System.out.println("Dates: " + dates);
-//		System.out.println("Kreatinine size: " + kreatinine.size());
-//		System.out.println("Kreatinine: " + kreatinine);
-		for (int i = 0; i < boundaries.size() - 1; i++) {
-//				System.out.println("Current date: " + dates.get(i) + "; Next Date: " + dates.get(i + 1) 
-//						+ "; Boundary: " + boundaries.get(i) + "; Next Boundary: " + boundaries.get(i + 1)
-//						+ "; Kreatinine: " + kreatinine.get(i) + "; Next Kreatinine: " + kreatinine.get(i + 1));
-//				System.out.println("Dates equals: " + !dates.get(i).equals(dates.get(i + 1))
-//						+ "; Kreatinine equals: " + !kreatinine.get(i + 1).equals("Kreatinine2 (stat)"));
+		calculateBorderAreaForCreatine();
+		for (int i = 0; i < borderAreas.size() - 1; i++) {
 			if (!dates.get(i).equals(dates.get(i + 1))
 					|| !kreatinine.get(i + 1).equals("Kreatinine2 (stat)")) {
-				status.add(boundaries.get(i).getStatus(new NullStatus()));
+				status.add(borderAreas.get(i).getStatus(new NullStatus()));
 			} else {
-				status.add(boundaries.get(i).getStatus(boundaries.get(i + 1)));
+				status.add(borderAreas.get(i).getStatus(borderAreas.get(i + 1)));
 			}
 		}
-		status.add(boundaries.get(boundaries.size() - 1).getStatus(new NullStatus()));
-		System.out.println("status size: " + status.size());
-		System.out.println("status: " + status);
-		return status;
+		status.add(borderAreas.get(borderAreas.size() - 1).getStatus(new NullStatus()));
 	}
 
 	/**
@@ -173,92 +133,91 @@ public class Comparison extends Task {
 	 * STAP 1 GRENSGEBIEDEN BEREKENINGEN!
 	 * */
 
-	private ArrayList<KreatinineStatus> calculateMeasurementBoundaries()
-			throws SQLException {
-		boundaries = new ArrayList<KreatinineStatus>();
+	private void calculateBorderAreaForCreatine() {
+		borderAreas = new ArrayList<KreatinineStatus>();
 		ArrayList<Double> averageValues = getValueAverages();
 		ArrayList<Double> boundaries = runAlgorithm(averageValues);
 		for (int i = 0; i < values.size(); i++) {
-			if (i < 5) {
-				this.boundaries.add(new NullStatus());
+			if (i < FIVE) {
+				this.borderAreas.add(new NullStatus());
 			} else {
-				int boundaryIndex = i - 5;
+				int boundaryIndex = i - FIVE;
 				double boundaryValue = boundaries.get(boundaryIndex);
 				double averageValue = averageValues.get(boundaryIndex);
 				double currentValue = values.get(i);
-				if (currentValue > 0 && currentValue <= averageValue) {
-					this.boundaries.add(new SafeStatus());
-				}
-				if (currentValue > averageValue
-						&& currentValue <= checkReasonablySafeUpperBound(
-								averageValue, boundaryValue)) {
-					this.boundaries.add(new ReasonablySafeStatus());
-				}
-				if (currentValue > checkReasonablySafeUpperBound(averageValue,
-						boundaryValue)
-						&& currentValue <= checkSomewhatSafeUpperBound(
-								averageValue, boundaryValue)) {
-					this.boundaries.add(new MildConcernStatus());
-				}
-				if (currentValue > checkSomewhatSafeUpperBound(averageValue,
-						boundaryValue)) {
-					this.boundaries.add(new ConcernStatus());
-				}
+				setBorderArea(currentValue, averageValue, boundaryValue);
 			}
 		}
-		// System.out.println("measurements: " + result);
-		return this.boundaries;
-	} // TODO THIS IS CORRECT AND HANDTESTED!!
+	}
 
-	private ArrayList<Double> runAlgorithm(ArrayList<Double> averageValues)
-			throws SQLException {
+	private void setBorderArea(double currentValue, double averageValue, double boundaryValue) {
+		if (currentValue > 0 && currentValue <= averageValue) {
+			borderAreas.add(new SafeStatus());
+		}
+		if (currentValue > averageValue
+				&& currentValue <= checkReasonablySafeUpperBound(
+						averageValue, boundaryValue)) {
+			borderAreas.add(new ReasonablySafeStatus());
+		}
+		if (currentValue > checkReasonablySafeUpperBound(averageValue,
+				boundaryValue)
+				&& currentValue <= checkMildConcernUpperBound(
+						averageValue, boundaryValue)) {
+			borderAreas.add(new MildConcernStatus());
+		}
+		if (currentValue > checkMildConcernUpperBound(averageValue,
+				boundaryValue)) {
+			borderAreas.add(new ConcernStatus());
+		}
+	}
+
+	private ArrayList<Double> runAlgorithm(ArrayList<Double> averageValues) {
 
 		ArrayList<Double> result = new ArrayList<Double>();
 		int count = 0;
 		double sum = 0;
-		for (int i = 5; i < values.size(); i++) {
+		for (int i = FIVE; i < values.size(); i++) {
 			sum = 0;
-			for (int j = i - 1; j >= i - 5; j--) {
-				// System.out.println("value: " + values.get(j) + " average: " +
-				// averageValues.get(count));
+			for (int j = i - 1; j >= i - FIVE; j--) {
 				sum += Math.pow(values.get(j) - averageValues.get(count), 2);
 			}
 			count++;
-			result.add(Math.sqrt(sum / 5));
+			result.add(Math.sqrt(sum / FIVE));
 		}
-		// System.out.println("algorithm: " + result);
 		return result;
-	} // TODO THIS IS CORRECT AND HANDTESTED!!
+	}
 
 	private ArrayList<Double> getValueAverages() {
 		ArrayList<Double> result = new ArrayList<Double>();
 		double sum = 0;
-		for (int i = 5; i < values.size(); i++) {
+		for (int i = FIVE; i < values.size(); i++) {
 			sum = 0;
-			for (int j = i - 1; j >= i - 5; j--) {
+			for (int j = i - 1; j >= i - FIVE; j--) {
 				sum += values.get(j);
 			}
-			result.add(sum / 5);
+			result.add(sum / FIVE);
 		}
 		return result;
-	} // TODO THIS IS CORRECT AND HANDTESTED!!
-
-	private double checkReasonablySafeUpperBound(double averageValue,
-			double boundaryValue) {
-		double a = averageValue + boundaryValue;
-		double b = averageValue * 1.15;
-		double max = Math.max(a, b);
-		return max;
 	}
 
-	private double checkSomewhatSafeUpperBound(double averageValue,
-			double boundaryValue) {
-		double a = averageValue + (1.5 * boundaryValue);
-		double b = averageValue * 1.25;
-		double max = Math.max(a, b);
-		return max;
+	private double checkReasonablySafeUpperBound(double averageValue, double boundaryValue) {
+		final double maxUpperPercentage = 1.15;
+		double a = averageValue + boundaryValue;
+		double b = averageValue * maxUpperPercentage;
+		return Math.max(a, b);
+	}
+
+	private double checkMildConcernUpperBound(double averageValue,	double boundaryValue) {
+		final double maxUpperBoundary = 1.5;
+		final double maxUpperPercentage = 1.25;
+		double a = averageValue + (maxUpperBoundary * boundaryValue);
+		double b = averageValue * maxUpperPercentage;
+		return Math.max(a, b);
 	}
 	
+	/**
+	 * @return the list of all advices.
+	 */
 	public ArrayList<String> getAdvices() {
 		return advices;
 	}

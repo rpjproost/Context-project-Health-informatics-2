@@ -2,11 +2,6 @@ package context.healthinformatics.sequentialdataanalysis;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-
 import org.jfree.util.Log;
 import org.junit.After;
 import org.junit.Before;
@@ -32,7 +27,7 @@ public class ComparisonTest {
 	private MergeTable test;
 
 	/**
-	 * Before each method
+	 * Before each method.
 	 * @throws Exception 
 	 */
 	@Before
@@ -59,28 +54,30 @@ public class ComparisonTest {
 	@Test
 	public void testCompare() throws Exception {
 		Comparison c = new Comparison();
-		ip.interpret("filter data where beschrijving = 'Kreatinine (stat)' OR beschrijving = 'Kreatinine2 (stat)'");		
-//		ArrayList<Chunk> chunks = ip.getChunks();
-//		for (Chunk ch : chunks) {
-//			System.out.println(ch.toArray().toString());
-//		}
+		ip.interpret("filter data where beschrijving = 'Kreatinine (stat)' "
+				+ "OR beschrijving = 'Kreatinine2 (stat)'");		
 		
-		Query q = new Query("test");//na het woord compare geen andere input.
+		Query q = new Query("test"); //TODO usefull query
 		c.run(q);
-//		int index = c.dates.indexOf
+		
+		final int nothingAdvice = 8;
+		final int measureAdvice = 60;
 		assertEquals(c.getAdvices().get(1), "NULL");
-		assertEquals(c.getAdvices().get(8), "nothing extra");
-		assertEquals(c.getAdvices().get(60), "measure tomorrow");
+		assertEquals(c.getAdvices().get(nothingAdvice), "nothing extra");
+		assertEquals(c.getAdvices().get(measureAdvice), "measure tomorrow");
 		
 		ip.interpret("undo");
 	}
 	
+	/**
+	 * Cleans up the interpreter.
+	 */
 	@After
 	public void after() {
 		try {
 			ip.interpret("undoAll");
 			ip.setIntialChunks(null);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			Log.info(e.getMessage());
 		}
 	}
