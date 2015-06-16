@@ -189,6 +189,7 @@ public class BoxPlot extends InterfaceHelper {
 			}
 			rs.close();
 			Double res = parseToDouble(value);
+			//TODO FIX WHEN VALUES CANNOT BE PARSED TO DOUBLE + CLEANUP THIS CLASS
 			return res;
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(null,
