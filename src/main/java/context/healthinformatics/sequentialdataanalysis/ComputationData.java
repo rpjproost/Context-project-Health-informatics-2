@@ -188,7 +188,7 @@ public final class ComputationData {
 	}
 
 	/**
-	 * Sets computed on true;
+	 * Sets computed on true.
 	 * @param computed true.
 	 */
 	public static void setComputed(boolean computed) {
