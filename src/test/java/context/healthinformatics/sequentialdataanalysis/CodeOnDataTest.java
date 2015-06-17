@@ -64,7 +64,7 @@ public class CodeOnDataTest {
 	 * @throws Exception e
 	 */
 	@Test
-	public void testCodesOnData() throws Exception {
+	public void codesOnDataTest() throws Exception {
 		xmlp = new XMLParser(path + "twoDocs.xml");
 		xmlp.parse();
 		xmlp.createDatabase();
@@ -77,6 +77,6 @@ public class CodeOnDataTest {
 		tests.setChunks(chunks);
 		
 		tests.setCodeOnData("value = 209");
-		assertEquals("test", chunks.get(1).getCode());
+		assertEquals("test", chunks.get(0).getCode());
 	}
 }
