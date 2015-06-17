@@ -479,4 +479,13 @@ public class Chunk {
 		rs.close();
 		return value;
 	}
+	
+	/**
+	 * gets the average value computed of this chunk.
+	 * @return double of average value computed.
+	 */
+	public double getAverageValue() {
+		final int comp = 3;
+		return computations[comp];
+	}
 }

@@ -24,12 +24,12 @@ public final class ComputationData {
 	private static int days;
 	private static ArrayList<String> names;
 	public static final int DIVIDE = 10;
-	
+
 	private ComputationData() {
-		
+
 	}
-	
-	
+
+
 	/**
 	 * Initializes class first time computation is run.
 	 */
@@ -59,14 +59,33 @@ public final class ComputationData {
 		}
 		else {
 			for (Chunk c : chunks) {
-				int difference = differsFromDate(new DateTime(database.selectDate(c.getLine())));
-				double value = c.getValue(column);
-				value = value / DIVIDE;
-				res.put(difference, value);
+				if (c.hasChild()) {
+					computeDiffAndValueChild(column, database, c, res);
+				}
+				else {
+					computeDiffAndValue(column, database, c, res);
+				}
 			}
 			names.add(name + "* 10");
 		}
 		data.add(res);
+	}
+
+	private static void computeDiffAndValue(String column, Db database, Chunk c,
+			HashMap<Integer, Double> res) throws SQLException {
+		int difference = differsFromDate(new DateTime(database.selectDate(c.getLine())));
+		double value = c.getValue(column);
+		value = value / DIVIDE;
+		res.put(difference, value);
+	}
+	
+	private static void computeDiffAndValueChild(String column, Db database, Chunk c,
+			HashMap<Integer, Double> res) throws SQLException {
+		c.initializeComputations(column);
+		double value = c.getAverageValue();
+		int difference = differsFromDate(new DateTime(
+				database.selectDate(c.getChildren().get(0).getLine())));
+		res.put(difference, value);
 	}
 
 	/**
