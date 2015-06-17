@@ -1,7 +1,13 @@
 package context.healthinformatics.sequentialdataanalysis;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+
+import context.healthinformatics.analyse.Query;
+import context.healthinformatics.database.Db;
+import context.healthinformatics.database.SingletonDb;
 
 /**
  * The Class Codes.
@@ -167,5 +173,42 @@ public class Codes extends Task {
 		oldCodes.add(getChunks().get(i - 1).getCode());
 		getChunks().get(i - 1).setCode(code);
 		return getChunks();
+	}
+	
+	@Override
+	public void run(Query query) throws Exception {
+		try {
+			super.run(query);
+		} catch (Exception e) {
+			if (query.part().equals("date")) {
+				setCodeDate();
+			}
+			else {
+				throw new Exception(e.getMessage() + "/date");
+			}
+		}
+	}
+	
+	private void setCodeDate() throws SQLException {
+		Db data = SingletonDb.getDb();
+		for (Chunk c : getChunks()) {
+			if (c.hasChild()) {
+				for (Chunk child : c.getChildren()) {
+					Date date = data.selectDate(child.getLine());
+					String day = new SimpleDateFormat("EEEE").format(date);
+					changedChunks.add(child);
+					oldCodes.add(child.getCode());
+					child.setCode(day);
+				}
+			}
+			else {
+				Date date = data.selectDate(c.getLine());
+				String day = new SimpleDateFormat("EEEE").format(date);
+				changedChunks.add(c);
+				oldCodes.add(c.getCode());
+				c.setCode(day);
+			}
+		}
+		setResult(getChunks());
 	}
 }
