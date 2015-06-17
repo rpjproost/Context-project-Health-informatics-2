@@ -11,7 +11,6 @@ import javax.swing.JScrollPane;
 import context.healthinformatics.graphs.graphspanel.BoxPlotPanel;
 import context.healthinformatics.graphs.graphspanel.FrequencyBarPanel;
 import context.healthinformatics.graphs.graphspanel.GraphPanel;
-import context.healthinformatics.graphs.graphspanel.HistogramPanel;
 import context.healthinformatics.graphs.graphspanel.LineChartPanel;
 import context.healthinformatics.graphs.graphspanel.TransitionaMatrixPanel;
 import context.healthinformatics.gui.InterfaceHelper;
@@ -64,7 +63,6 @@ public class GraphInputInterface extends InterfaceHelper {
 		graphPanels.add(new BoxPlotPanel(graphInputWidth));
 		graphPanels.add(new FrequencyBarPanel(graphInputWidth));
 		graphPanels.add(new TransitionaMatrixPanel(graphInputWidth));
-		graphPanels.add(new HistogramPanel(graphInputWidth));
 		graphPanels.add(new LineChartPanel(graphInputWidth));
 	}
 	

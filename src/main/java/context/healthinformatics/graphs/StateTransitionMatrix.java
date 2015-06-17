@@ -47,7 +47,7 @@ public class StateTransitionMatrix extends InterfaceHelper {
 	private JScrollPane scroll;
 	private JPanel mainPanel;
 	private JPanel tableContainerPanel;
-	// private JTable headerTable;
+	private JTable headerTable;
 	private int width;
 	private JLabel graphTitle;
 	private JFileChooser savePopup;
@@ -84,11 +84,9 @@ public class StateTransitionMatrix extends InterfaceHelper {
 		graphTitle = new JLabel("State-Transition Matrix: " + string);
 		graphTitle.setFont(new Font("SansSerif", Font.BOLD, TEXTSIZE));
 		tableContainerPanel.add(graphTitle, setGrids(0, 0));
-		
 		table = new JTable(getTableData(), getColumnNames());
-	//	table.setEnabled(false);
 		TableModel model = createModel();
-		JTable headerTable = new JTable(model);
+		headerTable = new JTable(model);
 		for (int i = 0; i < table.getRowCount(); i++) {
 			headerTable.setValueAt(codes.get(i), i, 0);
 		}
@@ -110,7 +108,7 @@ public class StateTransitionMatrix extends InterfaceHelper {
 	private void addMouseListeners() {
 		mainPanel.addMouseListener(new PopupTriggerListener());
 		scroll.addMouseListener(new PopupTriggerListener());
-		// headerTable.addMouseListener(new PopupTriggerListener());
+		headerTable.addMouseListener(new PopupTriggerListener());
 		table.addMouseListener(new PopupTriggerListener());
 		graphTitle.addMouseListener(new PopupTriggerListener());
 	}
@@ -251,6 +249,7 @@ public class StateTransitionMatrix extends InterfaceHelper {
 	 */
 	public void fillTransitionMatrix(ArrayList<Chunk> chunks) {
 		countMap = new HashMap<ConnectionSet, Integer>();
+		codes = new ArrayList<String>();
 		if (chunks != null) {
 			addChunksToMap(SingletonInterpreter.getInterpreter().getChunks());
 		}
@@ -278,7 +277,7 @@ public class StateTransitionMatrix extends InterfaceHelper {
 	 * @param currentChunk
 	 *            the chunk with the current pointer.
 	 */
-	public void processChunkWithPointer(Chunk currentChunk) {
+	private void processChunkWithPointer(Chunk currentChunk) {
 		HashMap<Chunk, String> pointerMap = currentChunk.getPointer();
 		for (Entry<Chunk, String> e : pointerMap.entrySet()) {
 			String currentCodeFromPointer = e.getKey().getCode();
@@ -292,9 +291,6 @@ public class StateTransitionMatrix extends InterfaceHelper {
 				countMap.put(currentSet, value);
 			} else {
 				countMap.put(currentSet, 1);
-			}
-			if (currentChunk.hasChild()) {
-				fillTransitionMatrix(currentChunk.getChildren());
 			}
 		}
 	}
