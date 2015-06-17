@@ -18,6 +18,7 @@ import context.healthinformatics.database.SingletonDb;
  *
  */
 public final class ComputationData {
+	private static boolean computed = false;
 	private static ArrayList<HashMap<Integer, Double>> data;
 	private static DateTime f;
 	private static Date firstDate;
@@ -35,6 +36,7 @@ public final class ComputationData {
 	 */
 	public static void init() {
 		if (data == null) {
+			setComputed(true);
 			data = new ArrayList<HashMap<Integer, Double>>();
 			names = new ArrayList<String>();
 		}
@@ -175,5 +177,21 @@ public final class ComputationData {
 		if (d > days) {
 			days = d;
 		}
+	}
+
+	/**
+	 * Returns if there are computations.
+	 * @return true iff there are computations.
+	 */
+	public static boolean isComputed() {
+		return computed;
+	}
+
+	/**
+	 * Sets computed on true;
+	 * @param computed true.
+	 */
+	public static void setComputed(boolean computed) {
+		ComputationData.computed = computed;
 	}
 }
