@@ -58,5 +58,10 @@ public abstract class KreatinineStatus {
 	 * @return the status.
 	 */
 	protected abstract KreatinineStatus getStatus(MildConcernStatus firstStatus);
+
+	/**
+	 * @return if the user needs to re-measure with the status or not.
+	 */
+	public abstract String needToReMeasure();
 	
 }

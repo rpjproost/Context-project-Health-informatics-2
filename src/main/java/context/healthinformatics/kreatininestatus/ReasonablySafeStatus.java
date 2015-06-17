@@ -54,4 +54,9 @@ public class ReasonablySafeStatus extends KreatinineStatus {
 		return "Reasonably safe";
 	}
 
+	@Override
+	public String needToReMeasure() {
+		return "No";
+	}
+
 }

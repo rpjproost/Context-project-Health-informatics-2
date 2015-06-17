@@ -53,4 +53,9 @@ public class MildConcernStatus extends KreatinineStatus {
 		return "Mild concern";
 	}
 
+	@Override
+	public String needToReMeasure() {
+		return "Yes";
+	}
+
 }

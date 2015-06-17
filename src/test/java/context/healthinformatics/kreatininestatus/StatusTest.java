@@ -9,6 +9,7 @@ import java.util.Collection;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 /**
  * tests for status generation (second part of algorithm).
  */
@@ -43,7 +44,7 @@ public class StatusTest {
 	 * all parameters.
 	 * @return all parameters.
 	 */
-	 @Parameterized.Parameters
+	 @Parameters
 	  public static Collection<Object[]> testData() {
 	      return Arrays.asList(new Object[][] {
 	         { safe, nul, safe},
@@ -81,9 +82,6 @@ public class StatusTest {
 	@Test
 	public void statustest() {
 		KreatinineStatus temp = first.getStatus(second);
-		if (!expected.toString().equals(temp.toString())) {
-			System.out.println(first + " " + second + " " + expected);
-		}
 		assertEquals(expected.toString(), temp.toString());
 	}
 

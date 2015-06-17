@@ -9,6 +9,7 @@ import java.util.Collection;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 
 /**
  * class for testing advise.
@@ -50,7 +51,7 @@ public class AdviseTest {
 	 * all parameters.
 	 * @return all parameters.
 	 */
-	 @Parameterized.Parameters
+	 @Parameters
 	  public static Collection<Object[]> testData() {
 	      return Arrays.asList(new Object[][] {
 	         { safe, nul, nulString},
@@ -88,10 +89,6 @@ public class AdviseTest {
 		@Test
 		public void statustest() {
 			String temp = today.getAdvice(yesterday);
-			if (expected != null && !expected.toString().equals(temp)) {
-				System.out.println(today + ", " + yesterday);
-				System.out.println("expected: " + expected + " actual: " + temp);
-			}
 			assertEquals(expected, temp);
 		}
 }

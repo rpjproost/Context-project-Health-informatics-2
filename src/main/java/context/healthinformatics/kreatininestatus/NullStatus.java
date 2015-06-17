@@ -59,4 +59,9 @@ public class NullStatus extends KreatinineStatus {
 	public String toString() {
 		return "NULL";
 	}
+
+	@Override
+	public String needToReMeasure() {
+		return toString();
+	}
 }
