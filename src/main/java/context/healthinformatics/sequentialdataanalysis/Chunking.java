@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import context.healthinformatics.analyse.Query;
+import context.healthinformatics.database.Db;
 import context.healthinformatics.database.SingletonDb;
 
 /**
@@ -18,6 +19,7 @@ public class Chunking extends Task {
 	private Chunk temp;
 	private String code = "";
 	private int indexcheck = 0;
+	private ArrayList<Chunk> newChunks = new ArrayList<Chunk>();
 	/**
 	 * Constructor for chunking.
 	 */
@@ -222,7 +224,9 @@ public class Chunking extends Task {
 		} catch (Exception e) {
 			boolean check = isDate(query.part());
 			if (check) {
-				setResult(chunkOnDate(query));
+				//setResult(chunkOnDate(query));
+				chunkOnDate(query);
+				setResult(newChunks);
 			}
 			else {
 				throw new Exception(e.getMessage() + "/date");
@@ -299,6 +303,39 @@ public class Chunking extends Task {
 	 * @return the number of chunks between that.
 	 */
 	protected int getPeriod(Date start, Date end) {
+		Db data = SingletonDb.getDb();
+		for (Chunk c : getChunks()) {
+			if (c.hasChild()) {
+				for (Chunk child : c.getChildren()) {
+					try {
+						Date childDate = data.selectDate(child.getLine());
+						if (childDate.before(end) && childDate.after(start)) {
+							newChunks.add(child);
+						}
+						else {
+							break;
+						}
+					} catch (SQLException e) {
+						break;
+					}
+					
+				}
+			}
+			else {
+				Date cDate;
+				try {
+					cDate = data.selectDate(c.getLine());
+					if (cDate.before(end) && cDate.after(start)) {
+						newChunks.add(c);
+					}
+					else {
+						break;
+					}
+				} catch (SQLException e) {
+						break;
+				}
+			}
+		}
 		String s = "date BETWEEN '" + convertDate(start) + "' AND '" + convertDate(end) + "'";
 		try {
 			return getLinesFromData(s).size();
