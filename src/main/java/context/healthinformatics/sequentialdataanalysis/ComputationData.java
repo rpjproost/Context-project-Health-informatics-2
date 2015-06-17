@@ -29,7 +29,7 @@ public class ComputationData {
 
 	public static void createHashMap(String column, String name) throws SQLException {
 		init();
-		days = xAs();
+		setDays(xAs());
 		Interpreter interpreter = SingletonInterpreter.getInterpreter();
 		ArrayList<Chunk> chunks = interpreter.getChunks();
 		HashMap<Integer, Double> res = new HashMap<Integer, Double>();
@@ -115,5 +115,22 @@ public class ComputationData {
 	 */
 	public static ArrayList<String> getNames() {
 		return names;
+	}
+
+	/**
+	 * Returns biggest difference in days.
+	 * @return Integer how many days there should be on the x-as.
+	 */
+	public static int getDays() {
+		return days;
+	}
+
+	private static void setDays(int d) {
+		if (d > days) {
+			if (days != 0) {
+				System.out.println(d - days);
+			}
+			days = d;
+		}
 	}
 }

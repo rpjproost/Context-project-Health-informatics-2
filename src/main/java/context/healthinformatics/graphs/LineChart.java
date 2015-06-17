@@ -184,7 +184,7 @@ public class LineChart extends InterfaceHelper {
 		for (HashMap<Integer, Double> x : data) {
 			final XYSeries s = new XYSeries(names.get(counter));
 			dataset.addSeries(s);
-			int size = ComputationData.days;
+			int size = ComputationData.getDays();
 			for (int i = 0; i < size; i++) {
 				if (x.get(i) == null) {
 					s.add(i, 0.0);
