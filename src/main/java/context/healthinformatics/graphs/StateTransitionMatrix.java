@@ -26,6 +26,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 
+import context.healthinformatics.analyse.SingletonInterpreter;
 import context.healthinformatics.gui.InterfaceHelper;
 import context.healthinformatics.sequentialdataanalysis.Chunk;
 import context.healthinformatics.writer.ScreenImage;
@@ -38,12 +39,15 @@ public class StateTransitionMatrix extends InterfaceHelper {
 	private static final int ROW_WIDTH = 75;
 	private static final int HEIGHT = 28;
 	private static final int MINUSTWO = -2;
+	private static final int STATE_TRANSITION_PANEL_HEIGHT = 400;
+	private static final int STATE_TRANSITION_TABLE_HEIGHT = 350;
 	private ArrayList<String> codes;
 	private HashMap<ConnectionSet, Integer> countMap;
 	private JTable table;
 	private JScrollPane scroll;
 	private JPanel mainPanel;
-	private JTable headerTable;
+	private JPanel tableContainerPanel;
+	// private JTable headerTable;
 	private int width;
 	private JLabel graphTitle;
 	private JFileChooser savePopup;
@@ -53,27 +57,38 @@ public class StateTransitionMatrix extends InterfaceHelper {
 	 * The constructor of the transition matrix.
 	 */
 	public StateTransitionMatrix() {
-		codes = new ArrayList<String>();
-		graphTitle = new JLabel();
-		countMap = new HashMap<ConnectionSet, Integer>();
-		mainPanel = createEmptyWithGridBagLayoutPanel();
 		width = getScreenWidth() / 2 - FOUR * INSETS;
+		codes = new ArrayList<String>();
+		countMap = new HashMap<ConnectionSet, Integer>();
+		tableContainerPanel = createEmptyWithGridBagLayoutPanel();
+		tableContainerPanel.setPreferredSize(new Dimension(width,
+				STATE_TRANSITION_TABLE_HEIGHT));
+		mainPanel = createEmptyWithGridBagLayoutPanel();
+		mainPanel.setPreferredSize(new Dimension(width,
+				STATE_TRANSITION_PANEL_HEIGHT));
+		mainPanel.add(tableContainerPanel, setGrids(0, 0));
 		addItemsToPopUp();
 	}
 
 	/**
 	 * Initialize the table.
-	 * @param string the title of the matrix.
+	 * 
+	 * @param string
+	 *            the title of the matrix.
 	 */
-	public void initTable(String string) {
-		mainPanel.remove(graphTitle);
+	public void createStateTransitionMatrix(String string) {
+		mainPanel.remove(tableContainerPanel);
+		tableContainerPanel = createEmptyWithGridBagLayoutPanel();
+		tableContainerPanel.setPreferredSize(new Dimension(width,
+				STATE_TRANSITION_TABLE_HEIGHT));
 		graphTitle = new JLabel("State-Transition Matrix: " + string);
 		graphTitle.setFont(new Font("SansSerif", Font.BOLD, TEXTSIZE));
-		mainPanel.add(graphTitle);
+		tableContainerPanel.add(graphTitle, setGrids(0, 0));
+		
 		table = new JTable(getTableData(), getColumnNames());
-		table.setEnabled(false);
+	//	table.setEnabled(false);
 		TableModel model = createModel();
-		headerTable = new JTable(model);
+		JTable headerTable = new JTable(model);
 		for (int i = 0; i < table.getRowCount(); i++) {
 			headerTable.setValueAt(codes.get(i), i, 0);
 		}
@@ -86,18 +101,20 @@ public class StateTransitionMatrix extends InterfaceHelper {
 		scroll = new JScrollPane(table);
 		scroll.setPreferredSize(new Dimension(width, codes.size() * HEIGHT));
 		scroll.setRowHeaderView(headerTable);
-		mainPanel.add(scroll, setGrids(0, 1));
+		tableContainerPanel.add(scroll, setGrids(0, 1));
+		mainPanel.add(tableContainerPanel, setGrids(0, 0));
+		mainPanel.revalidate();
 		addMouseListeners();
 	}
-	
+
 	private void addMouseListeners() {
 		mainPanel.addMouseListener(new PopupTriggerListener());
 		scroll.addMouseListener(new PopupTriggerListener());
-		headerTable.addMouseListener(new PopupTriggerListener());
+		// headerTable.addMouseListener(new PopupTriggerListener());
 		table.addMouseListener(new PopupTriggerListener());
 		graphTitle.addMouseListener(new PopupTriggerListener());
 	}
-	
+
 	private void addItemsToPopUp() {
 		JMenuItem item = new JMenuItem("Save as...");
 		item.addActionListener(new ActionListener() {
@@ -109,10 +126,12 @@ public class StateTransitionMatrix extends InterfaceHelper {
 		});
 		menu.add(item);
 	}
-	
+
 	/**
 	 * Saves the matrix in a png file.
-	 * @param choice the choice of the user.
+	 * 
+	 * @param choice
+	 *            the choice of the user.
 	 */
 	public void saveImage(int choice) {
 		if (choice == JFileChooser.APPROVE_OPTION) {
@@ -231,19 +250,23 @@ public class StateTransitionMatrix extends InterfaceHelper {
 	 *            the data.
 	 */
 	public void fillTransitionMatrix(ArrayList<Chunk> chunks) {
-		countMap =  new HashMap<ConnectionSet, Integer>();
+		countMap = new HashMap<ConnectionSet, Integer>();
 		if (chunks != null) {
-			for (int i = 0; i < chunks.size(); i++) {
-				Chunk currentChunk = chunks.get(i);
-				if (!currentChunk.getCode().isEmpty()
-						&& !currentChunk.getPointer().isEmpty()) {
-					String code = currentChunk.getCode();
-					if (codes.contains(code)) {
-						processChunkWithPointer(currentChunk);
-					} else {
-						codes.add(code);
-						processChunkWithPointer(currentChunk);
-					}
+			addChunksToMap(SingletonInterpreter.getInterpreter().getChunks());
+		}
+	}
+
+	private void addChunksToMap(ArrayList<Chunk> chunks) {
+		for (int i = 0; i < chunks.size(); i++) {
+			Chunk currentChunk = chunks.get(i);
+			if (!currentChunk.getCode().isEmpty()
+					&& !currentChunk.getPointer().isEmpty()) {
+				String code = currentChunk.getCode();
+				if (codes.contains(code)) {
+					processChunkWithPointer(currentChunk);
+				} else {
+					codes.add(code);
+					processChunkWithPointer(currentChunk);
 				}
 			}
 		}
@@ -275,14 +298,16 @@ public class StateTransitionMatrix extends InterfaceHelper {
 			}
 		}
 	}
-	
+
 	/**
 	 * Triggers the right-click pop up event.
 	 */
 	class PopupTriggerListener extends MouseAdapter {
 		/**
 		 * Triggers the event when the mouse is pressed.
-		 * @param ev the mouse event.
+		 * 
+		 * @param ev
+		 *            the mouse event.
 		 */
 		public void mousePressed(MouseEvent ev) {
 			if (ev.isPopupTrigger()) {
@@ -292,7 +317,9 @@ public class StateTransitionMatrix extends InterfaceHelper {
 
 		/**
 		 * Triggers the pop up event when the mouse is released.
-		 * @param ev the mouse event.
+		 * 
+		 * @param ev
+		 *            the mouse event.
 		 */
 		public void mouseReleased(MouseEvent ev) {
 			if (ev.isPopupTrigger()) {
@@ -302,7 +329,9 @@ public class StateTransitionMatrix extends InterfaceHelper {
 
 		/**
 		 * Do nothing when the mouse is clicked.
-		 * @param ev the mouse event.
+		 * 
+		 * @param ev
+		 *            the mouse event.
 		 */
 		public void mouseClicked(MouseEvent ev) {
 		}

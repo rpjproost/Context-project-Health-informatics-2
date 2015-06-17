@@ -66,10 +66,10 @@ public class BoxPlot extends InterfaceHelper {
 	}
 
 	/**
-	 * Create a botplot.
+	 * Create a BoxPlot.
 	 * 
 	 * @param title
-	 *            the title of the boxplot
+	 *            the title of the BoxPlot
 	 */
 	public void createBoxPlot(String title) {
 
