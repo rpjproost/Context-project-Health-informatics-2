@@ -98,6 +98,18 @@ public class CodesTest {
 	}
 	
 	/**
+	 * Test if the chunk with comment "CommentB" will have its code set to the correct code.
+	 */
+	@Test
+	public void testSetCodeOnContainsComment() {
+		Codes codes = new Codes("test");
+		codes.setChunks(chunks);
+		codes.setCodeOnContainsComment("CommentB");
+		assertEquals("", chunks.get(0).getCode());
+		assertEquals("test", chunks.get(1).getCode());
+	}
+	
+	/**
 	 * Test if the chunk with code "old" will have its code set to the "new" code.
 	 */
 	@Test

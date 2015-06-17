@@ -91,6 +91,21 @@ public class Comments extends Task {
 			}
 		}
 	}
+	
+	/**
+	 * Method which replaces the comment for all chunks which have a certain comment.
+	 * @param previousComment the chunk has to have.
+	 */
+	public void setCommentOnContainsComment(String previousComment) {
+		for (int i = 0; i < getChunks().size(); i++) {
+			Chunk c = getChunks().get(i);
+			if (c.getComment().contains(previousComment)) {
+				oldComments.add(c.getComment());
+				changedChunks.add(c);
+				c.setComment(comment);
+			}
+		}
+	}
 
 	/**
 	 * Method that sets the comment for all chunks which
@@ -141,6 +156,7 @@ public class Comments extends Task {
 
 	@Override
 	protected ArrayList<Chunk> constraintOnContainsComment(String comment) {
+		setCommentOnContainsComment(comment);
 		return null;
 	}
 

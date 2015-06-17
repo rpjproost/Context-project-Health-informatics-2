@@ -91,6 +91,17 @@ public class CommentsTest {
 		c.setCommentOnComment("A");
 		assertEquals(c3.getComment(), "B");
 	}
+	
+	/**
+	 * Test if a comment is replaced on chunk with an existing comment.
+	 */
+	@Test
+	public void testsetCommentOnContainsComment() {
+		Comments c = new Comments("B");
+		c.setChunks(chunks);
+		c.setCommentOnContainsComment("A");
+		assertEquals(c3.getComment(), "B");
+	}
 
 	/**
 	 * Try to add a comment to a non existent line.
