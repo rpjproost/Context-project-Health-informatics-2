@@ -35,7 +35,7 @@ public class ComputationsTest {
 	/**
 	 * object calling the database.
 	 */
-	private Db data = SingletonDb.getDb();
+	private Db data;
 
 	/**
 	 * method preparing for environment for tests.
@@ -46,12 +46,16 @@ public class ComputationsTest {
 	private final int four = 4;
 	private final int five = 5;
 	
+	private String oldSpace = SingletonDb.getDbName();
 	/**
 	 * preparing db for test.
 	 */
 	@org.junit.Before
 	public void before() {
+		SingletonDb.getDb().update("computationsTest");
+		data = SingletonDb.getDb();
 		SingletonDb.dropAll(data);
+		SingletonInterpreter.getInterpreter().update("computationsTest");
 	}
 	
 	/**
@@ -66,6 +70,8 @@ public class ComputationsTest {
 			Log.info("undoAll failed.");
 		}
 		SingletonInterpreter.getInterpreter().setIntialChunks(null);
+		SingletonInterpreter.getInterpreter().update(oldSpace);
+		SingletonDb.getDb().update(oldSpace);
 	}
 
 	/**
