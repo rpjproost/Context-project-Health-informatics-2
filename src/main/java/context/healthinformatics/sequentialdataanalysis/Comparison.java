@@ -34,6 +34,7 @@ public class Comparison extends Task {
 
 	private Date currentDate;
 	private KreatinineStatus yesterdayStatus;
+	private String runOn;
 
 	/**
 	 * Constructor for Comparison.
@@ -48,9 +49,9 @@ public class Comparison extends Task {
 	private void getCreaValuesAndDates() throws SQLException {
 		for (Chunk c : getChunks()) {
 			ResultSet rs = SingletonDb.getDb().selectResultSet("workspace",
-					"value, date, beschrijving", "resultid =" + c.getLine());
+					runOn + ", date, beschrijving", "resultid =" + c.getLine());
 			while (rs.next()) {
-				values.add(rs.getDouble("value"));
+				values.add(rs.getDouble(runOn));
 				dates.add(rs.getDate("date"));
 				creatine.add(rs.getString("beschrijving"));
 			}
@@ -72,21 +73,32 @@ public class Comparison extends Task {
 		Task filter = new Constraints();
 		filter.setChunks(SingletonInterpreter.getInterpreter().getChunks());
 		ArrayList<Chunk> filterResult = filter.constraintOnCode(parameter);
-//        ArrayList<Chunk> c = SingletonInterpreter.getInterpreter().getChunks();
-//        setChunks(c);
-		for (Chunk ch : filterResult) {
-			System.out.println(ch.toArray().toString());
-		}
-		
-		//TODO initialize query to set up this formula.
-//		getCreaValuesAndDates();
-//		getAdvice();
-//		for (int i = 0; i < values.size(); i++) {
-//			System.out.println(i + "     " + values.get(i) + "     " + borderAreas.get(i) 
-//					+ "     " + remeasures.get(i) + "     " + dates.get(i) 
-//					+ "     " + status.get(i) + "     " 
-//					+ creatine.get(i) + "     " + advices.get(i));
-//		} //TODO remove syso
+		setChunks(filterResult);
+		query.inc();
+		runOn = query.next();
+		getCreaValuesAndDates();
+		getAdvice();
+		setAdviceAsComment();
+	}
+
+	private void setAdviceAsComment() {
+		Task comment = new Comments("");
+		ArrayList<Chunk> chunks = getChunks();
+		comment.setChunks(chunks);
+		String splitter = "; ";
+		for (int i = 0; i < values.size(); i++) {
+			StringBuilder builder = new StringBuilder();
+			builder.append(borderAreas.get(i) + splitter);
+			builder.append(remeasures.get(i) + splitter);
+			builder.append(status.get(i) + splitter);
+			builder.append(advices.get(i));
+			((Comments) comment).setCommentByLine(chunks.get(i).getLine(), builder.toString());
+			
+			System.out.println(i + "     " + values.get(i) + "     " + borderAreas.get(i) 
+					+ "     " + remeasures.get(i) + "     " + dates.get(i) 
+					+ "     " + status.get(i) + "     " 
+					+ creatine.get(i) + "     " + advices.get(i));
+		} //TODO remove syso
 	}
 
 	/**
