@@ -69,8 +69,8 @@ public class Comparison extends Task {
 	public void run(Query query) throws Exception {
 		query.inc(2);
 		String parameter = query.next();
-		System.out.println(parameter);
 		Task filter = new Constraints();
+		filter.setChunks(SingletonInterpreter.getInterpreter().getChunks());
 		ArrayList<Chunk> filterResult = filter.constraintOnCode(parameter);
 //        ArrayList<Chunk> c = SingletonInterpreter.getInterpreter().getChunks();
 //        setChunks(c);
