@@ -69,17 +69,17 @@ public class LineChart extends InterfaceHelper {
 	/**
 	 * Fills a lineChart object.
 	 */
-		public void initDatasetOld() {
-			dataset = new XYSeriesCollection();
-			final XYSeries series1 = new XYSeries("First");
-			dataset.addSeries(series1);
-			ArrayList<Integer> data = getChunkData();
-			double horizontal = 1.0;
-			for (int i : data) {
-				series1.add(horizontal, i);
-				horizontal++;
-			}
+	public void initDatasetOld() {
+		dataset = new XYSeriesCollection();
+		final XYSeries series1 = new XYSeries("First");
+		dataset.addSeries(series1);
+		ArrayList<Integer> data = getChunkData();
+		double horizontal = 1.0;
+		for (int i : data) {
+			series1.add(horizontal, i);
+			horizontal++;
 		}
+	}
 
 	/**
 	 * Create the line chart with data and add it to the mainPanel.
@@ -177,23 +177,25 @@ public class LineChart extends InterfaceHelper {
 	 * new method for initializing data on dates.
 	 */
 	public void initDataset() {
-		dataset = new XYSeriesCollection();
-		int counter = 0;
-		ArrayList<HashMap<Integer, Double>> data = ComputationData.getData();
-		ArrayList<String> names = ComputationData.getNames();
-		for (HashMap<Integer, Double> x : data) {
-			final XYSeries s = new XYSeries(names.get(counter));
-			dataset.addSeries(s);
-			int size = ComputationData.getDays();
-			for (int i = 0; i < size; i++) {
-				if (x.get(i) == null) {
-					s.add(i, 0.0);
+		if (ComputationData.isComputed()) {
+			dataset = new XYSeriesCollection();
+			int counter = 0;
+			ArrayList<HashMap<Integer, Double>> data = ComputationData.getData();
+			ArrayList<String> names = ComputationData.getNames();
+			for (HashMap<Integer, Double> x : data) {
+				final XYSeries s = new XYSeries(names.get(counter));
+				dataset.addSeries(s);
+				int size = ComputationData.getDays();
+				for (int i = 0; i < size; i++) {
+					if (x.get(i) == null) {
+						s.add(i, 0.0);
+					}
+					else {
+						s.add(i, x.get(i));
+					}
 				}
-				else {
-					s.add(i, x.get(i));
-				}
+				counter++;
 			}
-			counter++;
 		}
 	}
 

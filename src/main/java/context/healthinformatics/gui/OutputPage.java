@@ -180,14 +180,8 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 			}
 		}
 		if (e.getSource() == updateGraphButton) {
-	//		try {
 				graphController.updateGraphs();
 				scrollPane.revalidate();
-//			} catch (NullPointerException excep) {
-//				JOptionPane.showMessageDialog(null,
-//						"Your input fields aren't filled in correctly!!",
-//						"Graph Error", JOptionPane.WARNING_MESSAGE);
-//			}
 		}
 	}
 

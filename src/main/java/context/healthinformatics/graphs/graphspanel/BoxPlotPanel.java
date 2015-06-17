@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 
 import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import context.healthinformatics.graphs.BoxPlot;
@@ -22,10 +23,13 @@ public class BoxPlotPanel extends GraphPanel {
 	private int panelWidth;
 	private JPanel boxPlotGraph;
 	private BoxPlot boxPlot;
-	
+
 	/**
-	 * Creates a action listener for the check-box and makes a new container for this graph panel.
-	 * @param width the width for this panel.
+	 * Creates a action listener for the check-box and makes a new container for
+	 * this graph panel.
+	 * 
+	 * @param width
+	 *            the width for this panel.
 	 */
 	public BoxPlotPanel(int width) {
 		panelWidth = width;
@@ -37,24 +41,26 @@ public class BoxPlotPanel extends GraphPanel {
 		this.checkbox = createCheckBox("Box Plot", MainFrame.OUTPUTTABCOLOR);
 		this.checkbox.addActionListener(this);
 	}
-	
+
 	@Override
 	public void updateContainer() {
 		container.updateY(getColumnNames());
 	}
-	
+
 	/**
 	 * Initialize the graph panel for the box plot.
 	 */
 	@Override
 	public JPanel initGraphPanel(String title) {
 		JPanel graphPanel = makePanel(title, panelWidth, FOUR, container);
-		graphPanel.add(makeFormRowPanelWithComboBox("Select data for type:", 
-				container.getxValue(), panelWidth - 2 * INSETS, CHECKBOXHEIGHT), 
-				setGrids(0, 2));
-		graphPanel.add(makeFormRowPanelWithComboBox("Select column for values:", 
-				container.getyValue(), panelWidth - 2 * INSETS, CHECKBOXHEIGHT), 
-				setGrids(0, THREE));
+		graphPanel.add(
+				makeFormRowPanelWithComboBox("Select data for type:",
+						container.getxValue(), panelWidth - 2 * INSETS,
+						CHECKBOXHEIGHT), setGrids(0, 2));
+		graphPanel.add(
+				makeFormRowPanelWithComboBox("Select column for values:",
+						container.getyValue(), panelWidth - 2 * INSETS,
+						CHECKBOXHEIGHT), setGrids(0, THREE));
 		return graphPanel;
 	}
 
@@ -67,7 +73,7 @@ public class BoxPlotPanel extends GraphPanel {
 			checkVisibility(checkbox, boxPlotPanel);
 		}
 	}
-	
+
 	/**
 	 * @return the panel with all data.
 	 */
@@ -96,10 +102,15 @@ public class BoxPlotPanel extends GraphPanel {
 		String type = container.getSelectedColumnX();
 		ArrayList<String> columns = new ArrayList<String>();
 		columns.add(container.getSelectedColumnY());
-		if (type.equals("All")) {
-			boxPlot.setDataPerColumn(columns);
-		} else if (type.equals("Chunks")) {
-			boxPlot.setDataPerChunk(columns);
+		try {
+			if (type.equals("All")) {
+				boxPlot.setDataPerColumn(columns);
+			} else if (type.equals("Chunks")) {
+				boxPlot.setDataPerChunk(columns);
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(),
+					"Error creating BoxPlot!", JOptionPane.WARNING_MESSAGE);
 		}
 		boxPlotGraph = boxPlot.getPanel();
 		boxPlotGraph.setVisible(true);

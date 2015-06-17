@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import org.jfree.chart.ChartPanel;
@@ -102,8 +101,10 @@ public class BoxPlot extends InterfaceHelper {
 	 * 
 	 * @param columns
 	 *            the columns for which the box plot is made
+	 * @throws Exception
+	 *             exception of wrong number or no data
 	 */
-	public void setDataPerColumn(ArrayList<String> columns) {
+	public void setDataPerColumn(ArrayList<String> columns) throws Exception {
 
 		dataset = new DefaultBoxAndWhiskerCategoryDataset();
 		Interpreter interpreter = SingletonInterpreter.getInterpreter();
@@ -128,8 +129,10 @@ public class BoxPlot extends InterfaceHelper {
 	 * 
 	 * @param columns
 	 *            the columns which we need the data from
+	 * @throws Exception
+	 *             exception of wrong number or no data
 	 */
-	public void setDataPerChunk(ArrayList<String> columns) {
+	public void setDataPerChunk(ArrayList<String> columns) throws Exception {
 		dataset = new DefaultBoxAndWhiskerCategoryDataset();
 		Interpreter interpreter = SingletonInterpreter.getInterpreter();
 		ArrayList<Chunk> chunks = interpreter.getChunks();
@@ -154,9 +157,10 @@ public class BoxPlot extends InterfaceHelper {
 	 * @param column
 	 *            the column of the chunk we need
 	 * @return the values or values if the chunk has childs
+	 * @throws Exception
 	 */
 	private ArrayList<Double> loopThroughChunks(Chunk currentChunk,
-			String column) {
+			String column) throws Exception {
 		ArrayList<Double> listOfValues = new ArrayList<Double>();
 
 		if (currentChunk.hasChild()) {
@@ -173,12 +177,11 @@ public class BoxPlot extends InterfaceHelper {
 		return listOfValues;
 	}
 
-	private double getChunkData(Chunk chunk, String column) {
+	private double getChunkData(Chunk chunk, String column) throws Exception {
 		Db data = SingletonDb.getDb();
 		try {
-			ResultSet rs;
-			rs = data.selectResultSet("result", column,
-					"resultid = " + chunk.getLine());
+			ResultSet rs = data.selectResultSet("result", column, "resultid = "
+					+ chunk.getLine());
 			String value = "";
 			if (rs.next()) {
 				if (rs.getObject(column) != null) {
@@ -188,15 +191,10 @@ public class BoxPlot extends InterfaceHelper {
 				}
 			}
 			rs.close();
-			Double res = parseToDouble(value);
-			//TODO FIX WHEN VALUES CANNOT BE PARSED TO DOUBLE + CLEANUP THIS CLASS
-			return res;
-		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(null,
-					"Something went wrong creating the boxplot",
-					"Analyse Error", JOptionPane.WARNING_MESSAGE);
+			return parseToDouble(value);
+		} catch (SQLException | NumberFormatException e) {
+			throw new Exception(e.getMessage());
 		}
-		return Integer.MIN_VALUE;
 	}
 
 	/**
@@ -204,14 +202,19 @@ public class BoxPlot extends InterfaceHelper {
 	 * 
 	 * @param value
 	 *            the value
+	 * @throws NumberFormatException
+	 *             the exception if value cannot be parsed to double
 	 * @return double of the string
 	 */
-	public Double parseToDouble(String value) {
+	public Double parseToDouble(String value) throws NumberFormatException {
+		Double res = Double.MIN_VALUE;
 		try {
-			return Double.parseDouble(value);
+			res = Double.parseDouble(value);
 		} catch (NumberFormatException e) {
-			return null;
+			throw new NumberFormatException(
+					"The selected Column is not a number and cannot be plotted!");
 		}
+		return res;
 
 	}
 }
