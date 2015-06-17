@@ -11,7 +11,7 @@ import context.healthinformatics.analyse.SingletonInterpreter;
 public class Computations extends Task {
 	private boolean comp = false;
 	private boolean diff = false;
-	
+
 	@Override
 	public ArrayList<Chunk> undo() {
 		if (comp) {
@@ -46,12 +46,12 @@ public class Computations extends Task {
 	protected ArrayList<Chunk> constraintOnContainsComment(String comment) {
 		return getChunks();
 	}
-	
+
 	@Override
 	protected ArrayList<Chunk> constraintOnLine(String line) {
 		return getChunks();
 	}
-	
+
 	@Override
 	public void run(Query args) throws Exception {
 		ArrayList<Chunk> chunks = SingletonInterpreter.getInterpreter().getChunks();
@@ -75,8 +75,8 @@ public class Computations extends Task {
 		else if (!"chunk".equals(arg)) {
 			throw new Exception("expected : chunk/all/difference, but was: " + arg);
 		}
-		return  compute(args.part());
-		
+		return  compute(args.part(), args);
+
 	}
 
 	private ArrayList<Chunk> computeData(String column, String name) throws SQLException {
@@ -91,15 +91,21 @@ public class Computations extends Task {
 		chunks.add(temp);
 		setChunks(chunks);
 	}
-	
-	private ArrayList<Chunk> compute(String column) throws SQLException {
+
+	private ArrayList<Chunk> compute(String column, Query args) throws SQLException {
 		comp = true;
-		for (Chunk c : getChunks()) {
-			c.initializeComputations(column);
+		if (column.equals("times")) {
+			ComputationData.createHashMap(column, args.next());
+			return getChunks();
 		}
-		return getChunks();
+		else {
+			for (Chunk c : getChunks()) {
+				c.initializeComputations(column);
+			}
+			return getChunks();
+		}
 	}
-	
+
 	private ArrayList<Chunk> computeDif(String column) throws SQLException {
 		diff = true;
 		for (Chunk c : getChunks()) {

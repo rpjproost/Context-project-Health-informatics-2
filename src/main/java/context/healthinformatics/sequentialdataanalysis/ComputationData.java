@@ -46,7 +46,7 @@ public class ComputationData {
 			}
 		}
 		data.add(res);
-		names.add(name);
+		names.add(name + "* 10");
 	}
 
 	public static void createTimesMeasured(ArrayList<Chunk> chunks, HashMap<Integer, Double> res) throws SQLException {

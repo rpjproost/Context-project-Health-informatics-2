@@ -69,7 +69,7 @@ public class LineChart extends InterfaceHelper {
 	/**
 	 * Fills a lineChart object.
 	 */
-		public void initDatasett() {
+		public void initDatasetOld() {
 			dataset = new XYSeriesCollection();
 			final XYSeries series1 = new XYSeries("First");
 			dataset.addSeries(series1);
