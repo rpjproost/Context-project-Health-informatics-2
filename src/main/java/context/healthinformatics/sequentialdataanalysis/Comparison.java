@@ -65,6 +65,10 @@ public class Comparison extends Task {
 	 */
 	@Override
 	public void run(Query query) throws Exception {
+		query.inc(2);
+		String code = query.next();
+		query.inc();
+		String parameter = query.next();
 		ArrayList<Chunk> c = SingletonInterpreter.getInterpreter().getChunks();
 		setChunks(c);
 		//TODO initialize query to set up this formula.

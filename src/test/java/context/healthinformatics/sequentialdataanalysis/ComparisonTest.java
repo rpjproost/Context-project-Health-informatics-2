@@ -57,7 +57,7 @@ public class ComparisonTest {
 		ip.interpret("filter data where beschrijving = 'Kreatinine (stat)' "
 				+ "OR beschrijving = 'Kreatinine2 (stat)'");
 		
-		Query q = new Query("test"); //TODO usefull query
+		Query q = new Query("compare meeting on value"); //TODO usefull query
 		c.run(q);
 		
 		final int nothingAdvice = 8;
