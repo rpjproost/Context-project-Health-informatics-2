@@ -79,12 +79,11 @@ public class Comparison extends Task {
 		getCreaValuesAndDates();
 		getAdvice();
 		setAdviceAsComment();
+		setResult(SingletonInterpreter.getInterpreter().getChunks());
 	}
 
 	private void setAdviceAsComment() {
-		Task comment = new Comments("");
 		ArrayList<Chunk> chunks = getChunks();
-		comment.setChunks(chunks);
 		String splitter = "; ";
 		for (int i = 0; i < values.size(); i++) {
 			StringBuilder builder = new StringBuilder();
@@ -92,13 +91,8 @@ public class Comparison extends Task {
 			builder.append(remeasures.get(i) + splitter);
 			builder.append(status.get(i) + splitter);
 			builder.append(advices.get(i));
-			((Comments) comment).setCommentByLine(chunks.get(i).getLine(), builder.toString());
-			
-			System.out.println(i + "     " + values.get(i) + "     " + borderAreas.get(i) 
-					+ "     " + remeasures.get(i) + "     " + dates.get(i) 
-					+ "     " + status.get(i) + "     " 
-					+ creatine.get(i) + "     " + advices.get(i));
-		} //TODO remove syso
+			chunks.get(i).setComment(builder.toString());
+		} 
 	}
 
 	/**
