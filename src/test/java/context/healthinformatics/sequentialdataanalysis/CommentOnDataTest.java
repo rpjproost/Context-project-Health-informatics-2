@@ -69,7 +69,7 @@ public class CommentOnDataTest {
 	 * @throws Exception 
 	 */
 	@Test
-	public void testChunkingOnData() throws Exception {
+	public void commentOnDataTest() throws Exception {
 		xmlp = new XMLParser(path + "twoDocs.xml");
 		xmlp.parse();
 		xmlp.createDatabase();
@@ -82,6 +82,6 @@ public class CommentOnDataTest {
 		tests.setChunks(chunks);
 
 		tests.setCommentOnData("value = 209");
-		assertEquals("testComment", chunks.get(1).getComment());
+		assertEquals("testComment", chunks.get(0).getComment());
 	}
 }

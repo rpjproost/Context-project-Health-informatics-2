@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -296,7 +297,15 @@ public class InputPageComponents implements Serializable, ActionListener {
 			public void run() {
 				ip.loadDatabase();
 				mergeTables(clauses);
-				ls.displayMessage("Almost done we are loading the results for you!");
+				Random r = new Random(System.currentTimeMillis());
+				double rand = r.nextDouble();
+				final double chance = 0.01;
+				if (rand >= chance) {
+					ls.displayMessage("Almost done we are loading the results for you!");
+				}
+				else {
+					ls.displayMessage("This should work!");
+				}
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
