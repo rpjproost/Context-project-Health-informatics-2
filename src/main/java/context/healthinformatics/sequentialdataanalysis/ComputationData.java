@@ -173,9 +173,6 @@ public final class ComputationData {
 
 	private static void setDays(int d) {
 		if (d > days) {
-			if (days != 0) {
-				System.out.println(d - days);
-			}
 			days = d;
 		}
 	}
