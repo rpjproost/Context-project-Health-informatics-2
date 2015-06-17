@@ -223,12 +223,14 @@ public final class SqlBuilder {
 	private static int convertTime(String time, String dateT) {
 		SimpleDateFormat input = new SimpleDateFormat(dateT);
 		int res = 0;
+		final int hundred = 100;
 		try {
 			java.util.Date date = input.parse(time);
 			DateTime tijd = new DateTime(date);
 			int h = tijd.getHourOfDay();
 			int m = tijd.getMinuteOfHour();
-			String temp = "" + h + "" + m + "";
+			int timeToString = h * hundred + m;
+			String temp = timeToString + "";
 			res = Integer.parseInt(temp);
 		} catch (ParseException e) {
 			e.printStackTrace();
