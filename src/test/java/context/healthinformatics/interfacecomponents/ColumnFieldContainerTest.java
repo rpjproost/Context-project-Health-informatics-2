@@ -55,23 +55,6 @@ public class ColumnFieldContainerTest {
 	}
 
 	/**
-	 * Test method for checking for empty fields.
-	 */
-	@Test
-	public void testCheckIfHasEmptyFields() {
-/*		ColumnFieldContainer dateContainerNoID = new ColumnFieldContainer(
-				new Column(-1, "datum", "Date"));
-		ColumnFieldContainer dateContainerNoName = new ColumnFieldContainer(
-				new Column(2, "", "Date"));*/
-/*		assertTrue(emptyContainer.checkIfHasEmptyFields());
-		assertFalse(dateContainerWithType.checkIfHasEmptyFields());
-		assertTrue(dateContainerNoType.checkIfHasEmptyFields());
-		assertFalse(correctContainer.checkIfHasEmptyFields());
-		assertTrue(dateContainerNoID.checkIfHasEmptyFields());
-		assertTrue(dateContainerNoName.checkIfHasEmptyFields());*/
-	}
-
-	/**
 	 * Test method for set the panels.
 	 */
 	@Test
@@ -98,15 +81,4 @@ public class ColumnFieldContainerTest {
 		dateContainerWithType.setColumnType(2);
 		assertTrue(dateContainerWithType.getDateTypePanel().isVisible());
 	}
-
-	/**
-	 * Test method for is column id empty.
-	 */
-	@Test
-	public void testIsColumnIDEmpty() {
-/*		assertTrue(dateContainerNoType.isColumnDateTypeEmpty());
-		assertFalse(dateContainerWithType.isColumnDateTypeEmpty());
-		assertFalse(correctContainer.isColumnDateTypeEmpty());*/
-	}
-
 }
