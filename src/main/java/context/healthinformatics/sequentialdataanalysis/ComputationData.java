@@ -17,13 +17,19 @@ import context.healthinformatics.database.SingletonDb;
  * Class for computing and storing computations.
  *
  */
-public class ComputationData {
+public final class ComputationData {
 	private static ArrayList<HashMap<Integer, Double>> data;
 	private static DateTime f;
 	private static Date firstDate;
-	public static int days;
+	private static int days;
 	private static ArrayList<String> names;
-
+	public static final int DIVIDE = 10;
+	
+	private ComputationData() {
+		
+	}
+	
+	
 	/**
 	 * Initializes class first time computation is run.
 	 */
@@ -49,17 +55,18 @@ public class ComputationData {
 		Db database = SingletonDb.getDb();
 		if (name.equals("times")) {
 			createTimesMeasured(chunks, res);
+			names.add(name);
 		}
 		else {
 			for (Chunk c : chunks) {
 				int difference = differsFromDate(new DateTime(database.selectDate(c.getLine())));
 				double value = c.getValue(column);
-				value = value / 10;
+				value = value / DIVIDE;
 				res.put(difference, value);
 			}
+			names.add(name + "* 10");
 		}
 		data.add(res);
-		names.add(name + "* 10");
 	}
 
 	/**
@@ -68,7 +75,8 @@ public class ComputationData {
 	 * @param res the result hashmap to be filled.
 	 * @throws SQLException Date can not be found by chunk.
 	 */
-	public static void createTimesMeasured(ArrayList<Chunk> chunks, HashMap<Integer, Double> res) throws SQLException {
+	public static void createTimesMeasured(ArrayList<Chunk> chunks, HashMap<Integer, Double> res)
+			throws SQLException {
 		Db database = SingletonDb.getDb();
 		for (Chunk c : chunks) {
 			double value = c.getChildren().size();
