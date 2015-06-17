@@ -41,7 +41,7 @@ public class InputPageTest {
 		folder = new ArrayList<ArrayList<String>>();
 		folder.add(list1);
 		folder.add(list2);
-		ip.getXMLController().setProject("TestInputPageTest");
+		ip.getXMLController().setProject(testString);
 	}
 
 	/**
@@ -135,7 +135,7 @@ public class InputPageTest {
 	public void testLoadDatabase() {
 		ip.addXmlFile("src/test/data/mergeTableFiles/twoDocs.xml");
 		ip.getXMLController().selectDocument("src/test/data/mergeTableFiles/inputTXT.txt");
-		ip.loadDatabase();
+		ip.getInputPageComponent().handleSpecifiedFilter(new String[0]);
 	}
 	
 	/**
@@ -153,7 +153,7 @@ public class InputPageTest {
 	 */
 	@After
 	public void closeMainFrame() {
-		ip.removeProject("TestInputPageTest");
+		ip.removeProject(testString);
 		mf.closeFrame();
 	}
 }
