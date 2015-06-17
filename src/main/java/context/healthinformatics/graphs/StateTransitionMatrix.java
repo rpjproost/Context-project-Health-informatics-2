@@ -255,6 +255,12 @@ public class StateTransitionMatrix extends InterfaceHelper {
 		}
 	}
 
+	/**
+	 * Add the chunks to the HashMap.
+	 * 
+	 * @param chunks
+	 *            the chunks
+	 */
 	private void addChunksToMap(ArrayList<Chunk> chunks) {
 		for (int i = 0; i < chunks.size(); i++) {
 			Chunk currentChunk = chunks.get(i);
