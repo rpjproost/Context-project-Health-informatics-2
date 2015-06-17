@@ -61,7 +61,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		xmlController = new XMLEditorController();
 		xmlController.subscribe(SingletonInterpreter.getInterpreter());
 		xmlController.subscribe(SingletonDb.getDb());
-		
+
 		ipc = new InputPageComponents(mf, this);
 		checkOnFiles();
 	}
@@ -72,11 +72,11 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	private void checkOnFiles() {
 		File directory = new File("src/main/data/savedXML/");
 		File[] listOfFiles = directory.listFiles();
-		if (listOfFiles.length > 0) {
-			foundFiles(listOfFiles);
-		} else {
-			runClearedProject();
-		}
+			if (listOfFiles != null && listOfFiles.length > 0) {
+				foundFiles(listOfFiles);
+			} else {
+				runClearedProject();
+			}
 	}
 
 	/**
