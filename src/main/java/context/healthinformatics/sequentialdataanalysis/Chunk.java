@@ -25,7 +25,7 @@ public class Chunk {
 	private String comment;
 	private ArrayList<Chunk> chunks;
 	private int line;
-	private int sum;
+	private int amountOfChilds;
 	private ResultSet rs;
 	private boolean compute;
 	private double[] computations;
@@ -39,7 +39,7 @@ public class Chunk {
 		pointer = new HashMap<Chunk, String>();
 		comment = "";
 		code = "";
-		sum = Integer.MIN_VALUE;
+		amountOfChilds = Integer.MIN_VALUE;
 	}
 
 	/**
@@ -140,8 +140,16 @@ public class Chunk {
 	 * @param i
 	 *            sum to set.
 	 */
-	public void setSum(int i) {
-		sum = i;
+	public void setAmountOfChilds(int i) {
+		amountOfChilds = i;
+	}
+	
+	/**
+	 * Returns amount of children.
+	 * @return integer of amount of children.
+	 */
+	public int getAmountOfChilds() {
+		return amountOfChilds;
 	}
 
 	/**
@@ -236,7 +244,7 @@ public class Chunk {
 			res.add("min of values = " + computations[2]);
 		}
 		res.add("average of values = " + computations[comp]);
-		res.add("Childs sum = " + sum);
+		res.add("Childs sum = " + amountOfChilds);
 	}
 
 	/**
@@ -347,7 +355,7 @@ public class Chunk {
 		if (hasChild()) {
 			computations = new double[comp];
 			setCompute(true);
-			this.sum = getChildren().size();
+			this.amountOfChilds = getChildren().size();
 			computeChunkValues(column);
 		}
 	}
@@ -455,8 +463,13 @@ public class Chunk {
 		}
 	}
 
-
-	private double getValue(String column) throws SQLException {
+	/**
+	 * Gets column value of this chunk.
+	 * @param column column to select.
+	 * @return value of the column.
+	 * @throws SQLException if column not found or is not a double.
+	 */
+	public double getValue(String column) throws SQLException {
 		Db data = SingletonDb.getDb(); double value = 0.0;
 		ResultSet rs = data.selectResultSet(data.getMergeTable(), column, data.getMergeTable() 
 				+ "id = " + getLine());
@@ -465,5 +478,14 @@ public class Chunk {
 		}
 		rs.close();
 		return value;
+	}
+	
+	/**
+	 * gets the average value computed of this chunk.
+	 * @return double of average value computed.
+	 */
+	public double getAverageValue() {
+		final int comp = 3;
+		return computations[comp];
 	}
 }
