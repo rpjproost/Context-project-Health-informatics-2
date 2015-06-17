@@ -54,10 +54,10 @@ public class ComparisonTest {
 	@Test
 	public void testCompare() throws Exception {
 		Comparison c = new Comparison();
-		ip.interpret("filter data where beschrijving = 'Kreatinine (stat)' "
+		ip.interpret("code(meas) data where beschrijving = 'Kreatinine (stat)' "
 				+ "OR beschrijving = 'Kreatinine2 (stat)'");
 		
-		Query q = new Query("compare meeting on value"); //TODO usefull query
+		Query q = new Query("compare code = meas on value"); //TODO usefull query
 		c.run(q);
 		
 		final int nothingAdvice = 8;

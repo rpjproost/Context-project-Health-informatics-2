@@ -26,6 +26,7 @@ public class Comparison extends Task {
 	private ArrayList<Double> values;
 	private ArrayList<Date> dates;
 	private ArrayList<String> creatine;
+	private ArrayList<String> remeasures;
 	
 	private ArrayList<KreatinineStatus> status;
 	private ArrayList<KreatinineStatus> borderAreas;
@@ -41,6 +42,7 @@ public class Comparison extends Task {
 		values = new ArrayList<Double>();
 		dates = new ArrayList<Date>();
 		creatine = new ArrayList<String>();
+		remeasures = new ArrayList<String>();
 	}
 
 	private void getCreaValuesAndDates() throws SQLException {
@@ -67,16 +69,24 @@ public class Comparison extends Task {
 	public void run(Query query) throws Exception {
 		query.inc(2);
 		String parameter = query.next();
+		System.out.println(parameter);
 		Task filter = new Constraints();
 		ArrayList<Chunk> filterResult = filter.constraintOnCode(parameter);
+//        ArrayList<Chunk> c = SingletonInterpreter.getInterpreter().getChunks();
+//        setChunks(c);
+		for (Chunk ch : filterResult) {
+			System.out.println(ch.toArray().toString());
+		}
+		
 		//TODO initialize query to set up this formula.
-		getCreaValuesAndDates();
-		getAdvice();
-		for (int i = 0; i < values.size(); i++) {
-			System.out.println(i + "     " + values.get(i) + "     " + borderAreas.get(i) 
-					+ "     " + dates.get(i) + "     " + status.get(i) + "     " 
-					+ creatine.get(i) + "     " + advices.get(i));
-		} //TODO remove syso
+//		getCreaValuesAndDates();
+//		getAdvice();
+//		for (int i = 0; i < values.size(); i++) {
+//			System.out.println(i + "     " + values.get(i) + "     " + borderAreas.get(i) 
+//					+ "     " + remeasures.get(i) + "     " + dates.get(i) 
+//					+ "     " + status.get(i) + "     " 
+//					+ creatine.get(i) + "     " + advices.get(i));
+//		} //TODO remove syso
 	}
 
 	/**
@@ -131,8 +141,18 @@ public class Comparison extends Task {
 			} else {
 				status.add(borderAreas.get(i).getStatus(borderAreas.get(i + 1)));
 			}
+			addReMeasurementsNeeded(i);
 		}
 		status.add(borderAreas.get(borderAreas.size() - 1).getStatus(new NullStatus()));
+		addReMeasurementsNeeded(borderAreas.size() - 1);
+	}
+	
+	private void addReMeasurementsNeeded(int index) {
+		if (creatine.get(index).equals("Kreatinine2 (stat)")) {
+			remeasures.add(new NullStatus().needToReMeasure());
+		} else {
+			remeasures.add(borderAreas.get(index).needToReMeasure());
+		}
 	}
 	
 	private void generateCreatineDescription() {
