@@ -1,14 +1,10 @@
 package context.healthinformatics.interfacecomponents;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
-
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,23 +20,20 @@ import context.healthinformatics.writer.XMLDocument;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class XMLDocumentFormControllerTest {
-	private DocumentFieldsContainer emptyDoc;
 	private DocumentFieldsContainer fullDoc;
 	private DocumentFieldsContainer nullDoc;
-	private XMLDocument xmlDoc;
 	private XMLDocument xmlDocFull;
 	private XMLDocument xmlDocNull;
 	private ArrayList<DocumentFieldsContainer> listOfDocuments;
 	private XMLDocument tempXMLDocument;
 
-	XMLEditor edit = new XMLEditor(mock(InputPage.class));
+	private XMLEditor edit = new XMLEditor(mock(InputPage.class));
 
 	/**
 	 * Set up some documents to work with.
 	 */
 	@Before
 	public void setUp() {
-		xmlDoc = new XMLDocument();
 		ArrayList<Column> cols = new ArrayList<Column>();
 		Column col = new Column(2, "date", "Date");
 		col.setColumnType("dd-MM-yyyy");
@@ -49,13 +42,16 @@ public class XMLDocumentFormControllerTest {
 				cols);
 		xmlDocNull = new XMLDocument("excel", "admire", ";", "src/main", 1, 1,
 				new ArrayList<Column>());
-		emptyDoc = new DocumentFieldsContainer(xmlDoc, edit);
 		fullDoc = new DocumentFieldsContainer(xmlDocFull, edit);
 		nullDoc = new DocumentFieldsContainer(xmlDocNull, edit);
 		listOfDocuments = new ArrayList<DocumentFieldsContainer>();
 
 	}
 
+	/**
+	 * Test a correct document.
+	 * @throws Exception shouldnt throw an exception
+	 */
 	@Test
 	public void testCorrectListOfDocuments() throws Exception {
 		listOfDocuments.add(fullDoc);
@@ -64,6 +60,10 @@ public class XMLDocumentFormControllerTest {
 		assertFalse(controller.checkIfHasEmptyFields());
 	}
 
+	/**
+	 * Test a correct list of documents which is empty.
+	 * @throws Exception shouldnt throw an exception
+	 */
 	@Test
 	public void testCorrectEmptyListOfDocuments() throws Exception {
 		XMLDocumentFormController controller = new XMLDocumentFormController(
@@ -71,6 +71,10 @@ public class XMLDocumentFormControllerTest {
 		assertFalse(controller.checkIfHasEmptyFields());
 	}
 
+	/**
+	 * Test a null document.
+	 * @throws Exception shouldnt throw an exception
+	 */
 	@Test
 	public void testCorrectListOfNullDocuments() throws Exception {
 		listOfDocuments.add(nullDoc);
@@ -79,6 +83,10 @@ public class XMLDocumentFormControllerTest {
 		assertFalse(controller.checkIfHasEmptyFields());
 	}
 
+	/**
+	 * Test doc type is empty.
+	 * @throws Exception should throw exception with doc type is empty
+	 */
 	@Test
 	public void testEmptyDocType() throws Exception {
 		tempXMLDocument = new XMLDocument("", "admire", ";", "src/main", 1, 1,
@@ -91,6 +99,10 @@ public class XMLDocumentFormControllerTest {
 		assertFalse(controller.checkIfHasEmptyFields());
 	}
 
+	/**
+	 * Test doc name is empty.
+	 * @throws Exception should throw exception with doc name is empty
+	 */
 	@Test(expected = Exception.class)
 	public void testEmptyDocName() throws Exception {
 		ArrayList<DocumentFieldsContainer> mockedList = new ArrayList<DocumentFieldsContainer>();
@@ -109,6 +121,10 @@ public class XMLDocumentFormControllerTest {
 		controller.checkIfHasEmptyFields();
 	}
 
+	/**
+	 * Test Doc path is empty.
+	 * @throws Exception should throw exception with doc path is empty
+	 */
 	@Test(expected = Exception.class)
 	public void testEmptyDocPath() throws Exception {
 		ArrayList<DocumentFieldsContainer> mockedList = new ArrayList<DocumentFieldsContainer>();
@@ -127,6 +143,10 @@ public class XMLDocumentFormControllerTest {
 		controller.checkIfHasEmptyFields();
 	}
 
+	/**
+	 * Test doc start line is empty.
+	 * @throws Exception should throw exception wih doc path is empty
+	 */
 	@Test(expected = Exception.class)
 	public void testEmptyDocStartLine() throws Exception {
 		ArrayList<DocumentFieldsContainer> mockedList = new ArrayList<DocumentFieldsContainer>();
@@ -145,6 +165,10 @@ public class XMLDocumentFormControllerTest {
 		controller.checkIfHasEmptyFields();
 	}
 
+	/**
+	 * Test Empty Doc sheet.
+	 * @throws Exception should throw exception with empty doc sheet
+	 */
 	@Test(expected = Exception.class)
 	public void testEmptyDocSheet() throws Exception {
 		ArrayList<DocumentFieldsContainer> mockedList = new ArrayList<DocumentFieldsContainer>();
@@ -163,6 +187,10 @@ public class XMLDocumentFormControllerTest {
 		controller.checkIfHasEmptyFields();
 	}
 
+	/**|
+	 * Test empty delimiter.
+	 * @throws Exception should throw exception with empty delimiter
+	 */
 	@Test(expected = Exception.class)
 	public void testEmptyDelimiter() throws Exception {
 		ArrayList<DocumentFieldsContainer> mockedList = new ArrayList<DocumentFieldsContainer>();
@@ -181,6 +209,10 @@ public class XMLDocumentFormControllerTest {
 		controller.checkIfHasEmptyFields();
 	}
 
+	/**
+	 * Test with not number for Start line.
+	 * @throws Exception throws exception for wrong start line
+	 */
 	@Test(expected = Exception.class)
 	public void testWrongFormattedStartLine() throws Exception {
 		ArrayList<DocumentFieldsContainer> mockedList = new ArrayList<DocumentFieldsContainer>();
@@ -199,6 +231,10 @@ public class XMLDocumentFormControllerTest {
 		controller.checkIfHasEmptyFields();
 	}
 
+	/**
+	 * Test sheet with wrong formatted number.
+	 * @throws Exception should throw error 
+	 */
 	@Test(expected = Exception.class)
 	public void testWrongFormattedSheet() throws Exception {
 		ArrayList<DocumentFieldsContainer> mockedList = new ArrayList<DocumentFieldsContainer>();
@@ -244,13 +280,13 @@ public class XMLDocumentFormControllerTest {
 //		controller.checkIfHasEmptyFields();
 //	}
 
-	@Test(expected = Exception.class)
-	public void testEmptyColumnName() {
-
-	}
-
-	@Test(expected = Exception.class)
-	public void testEmptyColumnDateType() {
-
-	}
+//	@Test(expected = Exception.class)
+//	public void testEmptyColumnName() {
+//
+//	}
+//
+//	@Test(expected = Exception.class)
+//	public void testEmptyColumnDateType() {
+//
+//	}
 }
