@@ -35,7 +35,7 @@ public class XMLDocumentFormController {
 				DocumentFieldsContainer docFieldContainer = documentsFromForm
 						.get(i);
 				try {
-					hasEmptyFields = checkIfExcelDocHasEmptyFields(docFieldContainer)
+					hasEmptyFields = checkIfDocHasEmptyFields(docFieldContainer)
 							|| checkEmptyColumns(docFieldContainer
 									.getColumnFields());
 				} catch (Exception e) {
@@ -56,7 +56,7 @@ public class XMLDocumentFormController {
 	 * @throws Exception
 	 *             with message where it goes wrong
 	 */
-	private boolean checkIfExcelDocHasEmptyFields(
+	private boolean checkIfDocHasEmptyFields(
 			DocumentFieldsContainer docFieldContainer) throws Exception {
 		if (isEmptyTextField(docFieldContainer.getDocumentNameValue())) {
 			throw new Exception("Document name is empty!");
@@ -139,7 +139,7 @@ public class XMLDocumentFormController {
 		if (isEmptyTextFieldInteger(columnField.getColumnIDValue())) {
 			throw new Exception("Column id is empty or not a number!");
 		} else if (isEmptyTextField(columnField.getColumnNameValue())) {
-			throw new Exception("Column value is empty!");
+			throw new Exception("Column name is empty!");
 		} else {
 			if (columnField.hasDateType()
 					&& isEmptyTextField(columnField.getColumnDateTypeValue())) {
