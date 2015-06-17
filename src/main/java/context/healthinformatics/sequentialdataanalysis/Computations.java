@@ -75,7 +75,7 @@ public class Computations extends Task {
 		else if (!"chunk".equals(arg)) {
 			throw new Exception("expected : chunk/all/difference, but was: " + arg);
 		}
-		return  compute(args.part(), args);
+		return  compute(args.part());
 
 	}
 
@@ -92,10 +92,10 @@ public class Computations extends Task {
 		setChunks(chunks);
 	}
 
-	private ArrayList<Chunk> compute(String column, Query args) throws SQLException {
+	private ArrayList<Chunk> compute(String column) throws SQLException {
 		comp = true;
 		if (column.equals("times")) {
-			ComputationData.createHashMap(column, args.next());
+			ComputationData.createHashMap(column, "times");
 			return getChunks();
 		}
 		else {

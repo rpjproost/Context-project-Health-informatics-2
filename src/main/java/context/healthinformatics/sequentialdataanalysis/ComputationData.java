@@ -13,6 +13,10 @@ import context.healthinformatics.analyse.SingletonInterpreter;
 import context.healthinformatics.database.Db;
 import context.healthinformatics.database.SingletonDb;
 
+/**
+ * Class for computing and storing computations.
+ *
+ */
 public class ComputationData {
 	private static ArrayList<HashMap<Integer, Double>> data;
 	private static DateTime f;
@@ -20,6 +24,9 @@ public class ComputationData {
 	public static int days;
 	private static ArrayList<String> names;
 
+	/**
+	 * Initializes class first time computation is run.
+	 */
 	public static void init() {
 		if (data == null) {
 			data = new ArrayList<HashMap<Integer, Double>>();
@@ -27,6 +34,12 @@ public class ComputationData {
 		}
 	}
 
+	/**
+	 * Creates a hashMap with computed value and difference in date.
+	 * @param column Value to be checked
+	 * @param name name of the computation
+	 * @throws SQLException iff data can not be found at a chunk.
+	 */
 	public static void createHashMap(String column, String name) throws SQLException {
 		init();
 		setDays(xAs());
@@ -49,6 +62,12 @@ public class ComputationData {
 		names.add(name + "* 10");
 	}
 
+	/**
+	 * Sets children size in a HashMap with difference in date measured by first child.
+	 * @param chunks the list of chunks to be checked.
+	 * @param res the result hashmap to be filled.
+	 * @throws SQLException Date can not be found by chunk.
+	 */
 	public static void createTimesMeasured(ArrayList<Chunk> chunks, HashMap<Integer, Double> res) throws SQLException {
 		Db database = SingletonDb.getDb();
 		for (Chunk c : chunks) {
