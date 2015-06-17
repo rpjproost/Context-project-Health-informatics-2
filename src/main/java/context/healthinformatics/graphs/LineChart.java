@@ -26,6 +26,7 @@ import context.healthinformatics.database.Db;
 import context.healthinformatics.database.SingletonDb;
 import context.healthinformatics.gui.InterfaceHelper;
 import context.healthinformatics.sequentialdataanalysis.Chunk;
+import context.healthinformatics.sequentialdataanalysis.ComputationData;
 
 /**
  * Class LineChart creates a line chart with data.
@@ -68,7 +69,7 @@ public class LineChart extends InterfaceHelper {
 	/**
 	 * Fills a lineChart object.
 	 */
-		public void initDataset() {
+		public void initDatasett() {
 			dataset = new XYSeriesCollection();
 			final XYSeries series1 = new XYSeries("First");
 			dataset.addSeries(series1);
@@ -175,23 +176,24 @@ public class LineChart extends InterfaceHelper {
 	/**
 	 * new method for initializing data on dates.
 	 */
-	public void initDatasetOnDate() {
-		try {
-			dataset = new XYSeriesCollection();
-			final XYSeries series1 = new XYSeries("First");
-			dataset.addSeries(series1);
-			HashMap<Integer, Double>  data = getData();
-			for (int i = 0; i < xAs(); i++) {
-				if (data.get(i) == null) {
-					series1.add(i, 0.0);
+	public void initDataset() {
+		dataset = new XYSeriesCollection();
+		int counter = 0;
+		ArrayList<HashMap<Integer, Double>> data = ComputationData.getData();
+		ArrayList<String> names = ComputationData.getNames();
+		for (HashMap<Integer, Double> x : data) {
+			final XYSeries s = new XYSeries(names.get(counter));
+			dataset.addSeries(s);
+			int size = ComputationData.days;
+			for (int i = 0; i < size; i++) {
+				if (x.get(i) == null) {
+					s.add(i, 0.0);
 				}
 				else {
-					series1.add(i, data.get(i));
+					s.add(i, x.get(i));
 				}
 			}
-		}
-		catch (Exception e) {
-
+			counter++;
 		}
 	}
 

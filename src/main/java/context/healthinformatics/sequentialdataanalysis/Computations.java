@@ -69,11 +69,19 @@ public class Computations extends Task {
 		} else if ("difference".equals(arg)) {
 			return computeDif(args.part());
 		}
+		else if ("data".equals(arg)) {
+			return computeData(args.part(), args.next());
+		}
 		else if (!"chunk".equals(arg)) {
 			throw new Exception("expected : chunk/all/difference, but was: " + arg);
 		}
 		return  compute(args.part());
 		
+	}
+
+	private ArrayList<Chunk> computeData(String column, String name) throws SQLException {
+		ComputationData.createHashMap(column, name);
+		return getChunks();
 	}
 
 	private void prepareForComputeAll() {
