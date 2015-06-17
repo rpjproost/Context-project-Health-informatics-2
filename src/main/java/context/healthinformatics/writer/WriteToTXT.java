@@ -42,7 +42,6 @@ public class WriteToTXT {
 		if (!fileName.endsWith(".txt")) {
 			fileName += ".txt";
 		}
-		System.out.println(fileName);
 		try {
 			writer = new PrintWriter(fileName, "UTF-8");
 		} catch (FileNotFoundException e) {
