@@ -21,6 +21,7 @@ import context.healthinformatics.database.SingletonDb;
 import context.healthinformatics.graphs.graphspanel.BoxPlotPanel;
 import context.healthinformatics.graphs.graphspanel.FrequencyBarPanel;
 import context.healthinformatics.graphs.graphspanel.GraphPanel;
+import context.healthinformatics.graphs.graphspanel.LineChartPanel;
 import context.healthinformatics.graphs.graphspanel.TransitionaMatrixPanel;
 import context.healthinformatics.parser.XMLParser;
 
@@ -76,7 +77,8 @@ public class GraphsTest {
 		BoxPlotPanel bpp = new BoxPlotPanel(WIDTH);
 		FrequencyBarPanel fbp = new FrequencyBarPanel(WIDTH);
 		TransitionaMatrixPanel tmp = new TransitionaMatrixPanel(WIDTH);
-		return new GraphPanel[] { bpp, fbp, tmp};
+		LineChartPanel line = new LineChartPanel(WIDTH);
+		return new GraphPanel[] {bpp, fbp, tmp, line};
 	}
 
 	/**
@@ -131,6 +133,7 @@ public class GraphsTest {
 				"connect (high-low) code = high to code = low");
 		SingletonInterpreter.getInterpreter().interpret(
 				"connect (mid-low) code = mid to code = low");
+		SingletonInterpreter.getInterpreter().interpret("compute chunk value");
 		assertFalse(gp.getGraphPanel().isVisible());
 		gp.updateContainer();
 		gp.plot();
