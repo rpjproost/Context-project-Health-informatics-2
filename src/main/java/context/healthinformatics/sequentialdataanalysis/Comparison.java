@@ -257,32 +257,27 @@ public class Comparison extends Task {
 	@Override
 	protected ArrayList<Chunk> constraintOnData(String whereClause)
 			throws SQLException {
-		// TODO Auto-generated method stub
-		return null;
+		return getChunks();
 	}
 
 	@Override
 	protected ArrayList<Chunk> constraintOnCode(String code) {
-		// TODO Auto-generated method stub
-		return null;
+		return getChunks();
 	}
 
 	@Override
 	protected ArrayList<Chunk> constraintOnEqualsComment(String comment) {
-		// TODO Auto-generated method stub
-		return null;
+		return getChunks();
 	}
 
 	@Override
 	protected ArrayList<Chunk> constraintOnContainsComment(String comment) {
-		// TODO Auto-generated method stub
-		return null;
+		return getChunks();
 	}
 
 	@Override
 	protected ArrayList<Chunk> constraintOnLine(String line) {
-		// TODO Auto-generated method stub
-		return null;
+		return getChunks();
 	}
 
 }
