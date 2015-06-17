@@ -59,17 +59,6 @@ public class DocumentFieldsContainerTest {
 	}
 
 	/**
-	 * Tests if the correct boolean is thrown for the empty field check.
-	 */
-	@Test
-	public void testCheckIfHasEmptyFields() {
-		//TODO implement this tests.
-//		assertTrue(emptyDoc.checkIfHasEmptyFields());
-//		assertFalse(fullDoc.checkIfHasEmptyFields());
-//		assertFalse(nullDoc.checkIfHasEmptyFields());
-	}
-
-	/**
 	 * test if the correct document is returned.
 	 */
 	@Test
@@ -83,17 +72,6 @@ public class DocumentFieldsContainerTest {
 	}
 
 	/**
-	 * Tests if the is integer method works properly.
-	 */
-	@Test
-	public void testIsInteger() {
-		//TODO implements tests
-//		assertFalse(fullDoc.isInteger(null));
-//		assertFalse(fullDoc.isInteger("doc"));
-//		assertTrue(fullDoc.isInteger("9"));
-	}
-
-	/**
 	 * Tests if all get data methods are working.
 	 */
 	@Test
@@ -102,7 +80,6 @@ public class DocumentFieldsContainerTest {
 		assertEquals("admire", fullDoc.getDocumentNameValue());
 		assertEquals(",", fullDoc.getDelimiterValue());
 		assertEquals("src/main", fullDoc.getDocumentPathValue());
-		System.out.println(fullDoc.getSheetValue());
 		assertEquals("1", fullDoc.getSheetValue());
 		assertEquals("1", fullDoc.getDocumentStartLineValue());
 		ArrayList<ColumnFieldContainer> columns = fullDoc.getColumnFields();
@@ -112,18 +89,6 @@ public class DocumentFieldsContainerTest {
 			assertEquals("date", c.getColumnNameValue());
 			assertEquals("dd-MM-yyyy", c.getColumnDateTypeValue());
 		}
-	}
-
-	/**
-	 * Test the is empty methods.
-	 */
-	@Test
-	public void testIsEmptyMethods() {
-		//TODO 
-/*		assertFalse(fullDoc.isDelimiterEmpty());
-		assertTrue(emptyDoc.isDelimiterEmpty());
-		assertFalse(emptyDoc.isSheetEmpty());
-		assertFalse(emptyDoc.isDocumentPathEmpty());*/
 	}
 
 	/**
