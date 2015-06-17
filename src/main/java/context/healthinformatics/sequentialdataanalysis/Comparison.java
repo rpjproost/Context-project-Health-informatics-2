@@ -35,6 +35,8 @@ public class Comparison extends Task {
 	private Date currentDate;
 	private KreatinineStatus yesterdayStatus;
 	private String runOn;
+	
+	private ArrayList<String> oldComments;
 
 	/**
 	 * Constructor for Comparison.
@@ -44,6 +46,7 @@ public class Comparison extends Task {
 		dates = new ArrayList<Date>();
 		creatine = new ArrayList<String>();
 		remeasures = new ArrayList<String>();
+		oldComments = new ArrayList<String>();
 	}
 
 	private void getCreaValuesAndDates() throws SQLException {
@@ -86,6 +89,7 @@ public class Comparison extends Task {
 		ArrayList<Chunk> chunks = getChunks();
 		String splitter = "; ";
 		for (int i = 0; i < values.size(); i++) {
+			oldComments.add(chunks.get(i).getComment());
 			StringBuilder builder = new StringBuilder();
 			builder.append(borderAreas.get(i) + splitter);
 			builder.append(remeasures.get(i) + splitter);
@@ -278,7 +282,9 @@ public class Comparison extends Task {
 
 	@Override
 	public ArrayList<Chunk> undo() {
-		// TODO Auto-generated method stub
+		for (int i = 0; i < oldComments.size(); i++) {
+			getChunks().get(i).setComment(oldComments.get(i));
+		}
 		return null;
 	}
 
