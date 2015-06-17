@@ -46,8 +46,8 @@ public class XMLDocument {
 	}
 
 	/**
-	 * Creates an empty XMLDocument.
-	 * Integers are set to 1, String to "" and column is auto-generated with one date column.
+	 * Creates an empty XMLDocument. Integers are set to 1, String to "" and
+	 * column is auto-generated with one date column.
 	 */
 	public XMLDocument() {
 		this.startLine = 1;
@@ -70,24 +70,10 @@ public class XMLDocument {
 	}
 
 	/**
-	 * @param docType the docType to set
-	 */
-	public void setDocType(String docType) {
-		this.docType = docType;
-	}
-
-	/**
 	 * @return the docName
 	 */
 	public String getDocName() {
 		return docName;
-	}
-
-	/**
-	 * @param docName the docName to set
-	 */
-	public void setDocName(String docName) {
-		this.docName = docName;
 	}
 
 	/**
@@ -98,13 +84,6 @@ public class XMLDocument {
 	}
 
 	/**
-	 * @param delimiter the delimiter to set
-	 */
-	public void setDelimiter(String delimiter) {
-		this.delimiter = delimiter;
-	}
-
-	/**
 	 * @return the path
 	 */
 	public String getPath() {
@@ -112,7 +91,10 @@ public class XMLDocument {
 	}
 
 	/**
-	 * @param path the path to set
+	 * Set the path of the document.
+	 * 
+	 * @param path
+	 *            the path to set
 	 */
 	public void setPath(String path) {
 		this.path = path;
@@ -126,13 +108,6 @@ public class XMLDocument {
 	}
 
 	/**
-	 * @param startLine the startLine to set
-	 */
-	public void setStartLine(int startLine) {
-		this.startLine = startLine;
-	}
-
-	/**
 	 * @return the sheet
 	 */
 	public int getSheet() {
@@ -140,23 +115,9 @@ public class XMLDocument {
 	}
 
 	/**
-	 * @param sheet the sheet to set
-	 */
-	public void setSheet(int sheet) {
-		this.sheet = sheet;
-	}
-
-	/**
 	 * @return the columns
 	 */
 	public ArrayList<Column> getColumns() {
 		return columns;
-	}
-
-	/**
-	 * @param columns the columns to set
-	 */
-	public void setColumns(ArrayList<Column> columns) {
-		this.columns = columns;
 	}
 }
