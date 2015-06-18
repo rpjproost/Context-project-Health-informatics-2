@@ -276,7 +276,7 @@ public class XMLParser extends Parser {
 	/**
 	 * @return document name.
 	 */
-	public String getDocName() {
+	private String getDocName() {
 		return docName;
 	}
 
@@ -295,7 +295,7 @@ public class XMLParser extends Parser {
 	 * 
 	 * @return the delimiter.
 	 */
-	public String getDelimiter() {
+	private String getDelimiter() {
 		return delimiter;
 	}
 
@@ -314,7 +314,7 @@ public class XMLParser extends Parser {
 	 * 
 	 * @return a source path as String.
 	 */
-	public String getPath() {
+	private String getPath() {
 		return path;
 	}
 
@@ -333,7 +333,7 @@ public class XMLParser extends Parser {
 	 * 
 	 * @return the start line.
 	 */
-	public int getStartLine() {
+	private int getStartLine() {
 		return startLine;
 	}
 
@@ -350,7 +350,7 @@ public class XMLParser extends Parser {
 	/**
 	 * @return ArrayList with created Columns.
 	 */
-	public ArrayList<Column> getColumns() {
+	private ArrayList<Column> getColumns() {
 		return columns;
 	}
 
@@ -359,7 +359,7 @@ public class XMLParser extends Parser {
 	 * 
 	 * @return sheet number
 	 */
-	public int getSheet() {
+	private int getSheet() {
 		return sheet;
 	}
 
@@ -369,7 +369,7 @@ public class XMLParser extends Parser {
 	 * @param sheet
 	 *            sheetNumber to set.
 	 */
-	public void setSheet(int sheet) {
+	private void setSheet(int sheet) {
 		this.sheet = sheet;
 	}
 
@@ -385,7 +385,7 @@ public class XMLParser extends Parser {
 	 * Getter for doctype.
 	 * @return the docType
 	 */
-	public String getDocType() {
+	private String getDocType() {
 		return docType;
 	}
 
@@ -394,7 +394,7 @@ public class XMLParser extends Parser {
 	 * @param docType
 	 *            the docType to set
 	 */
-	public void setDocType(String docType) {
+	private void setDocType(String docType) {
 		this.docType = docType;
 	}
 }

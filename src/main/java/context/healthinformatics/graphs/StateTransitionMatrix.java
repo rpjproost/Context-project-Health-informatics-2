@@ -118,7 +118,7 @@ public class StateTransitionMatrix extends InterfaceHelper {
 		item.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				savePopup = saveFileChooser("png");
-				saveImage(savePopup.showSaveDialog(table));
+				saveImage(savePopup, savePopup.showSaveDialog(table));
 				System.out.println("Save as.. Test");
 			}
 		});
@@ -127,15 +127,15 @@ public class StateTransitionMatrix extends InterfaceHelper {
 
 	/**
 	 * Saves the matrix in a png file.
-	 * 
+	 * @param chooser the chooser where you must check.
 	 * @param choice
 	 *            the choice of the user.
 	 */
-	public void saveImage(int choice) {
+	public void saveImage(JFileChooser chooser, int choice) {
 		if (choice == JFileChooser.APPROVE_OPTION) {
 			BufferedImage bi = ScreenImage.createImage(mainPanel);
 			try {
-				ScreenImage.writeImage(bi, savePopup.getSelectedFile()
+				ScreenImage.writeImage(bi, chooser.getSelectedFile()
 						.getAbsolutePath() + ".png");
 			} catch (IOException e1) {
 				JOptionPane.showMessageDialog(null,

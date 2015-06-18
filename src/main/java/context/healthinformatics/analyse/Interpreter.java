@@ -13,6 +13,7 @@ import context.healthinformatics.sequentialdataanalysis.Chunking;
 import context.healthinformatics.sequentialdataanalysis.Codes;
 import context.healthinformatics.sequentialdataanalysis.Comments;
 import context.healthinformatics.sequentialdataanalysis.Comparison;
+import context.healthinformatics.sequentialdataanalysis.ComputationData;
 import context.healthinformatics.sequentialdataanalysis.Computations;
 import context.healthinformatics.sequentialdataanalysis.Connections;
 import context.healthinformatics.sequentialdataanalysis.Constraints;
@@ -66,6 +67,9 @@ public class Interpreter implements Observer {
 		}
 		else if (key.equals("undoall") || key.equals("revertall")) {
 			undoAll();
+		}
+		else if (key.equals("undocomputation")) {
+			ComputationData.undo();
 		}
 	}
 

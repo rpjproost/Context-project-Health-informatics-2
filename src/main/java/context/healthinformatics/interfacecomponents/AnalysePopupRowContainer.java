@@ -1,5 +1,6 @@
 package context.healthinformatics.interfacecomponents;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -11,13 +12,15 @@ import javax.swing.JTextField;
 import context.healthinformatics.gui.InterfaceHelper;
 
 /**
- * Class to contain a row of the analyse popup.
+ * Class to contain a row of the Analyse popup.
  */
 public class AnalysePopupRowContainer extends InterfaceHelper implements
 		ActionListener {
 
 	private static final long serialVersionUID = 1L;
 
+	private static final int ROW_WIDTH = 350;
+	private static final int ROW_HEIGHT = 30;
 	private static final int TEXT_FIELD_LENGTH = 10;
 	private JComboBox<String> docNameDropDown;
 	private JComboBox<String> docDropDown;
@@ -43,6 +46,7 @@ public class AnalysePopupRowContainer extends InterfaceHelper implements
 
 	private void initAnalysePopupRow() {
 		filterRow = createEmptyWithGridBagLayoutPanel();
+		filterRow.setPreferredSize(new Dimension(ROW_WIDTH, ROW_HEIGHT));
 		docNameDropDown = new JComboBox<>(docNames);
 		docNameDropDown.addActionListener(this);
 		docDropDown = new JComboBox<>(columnNames.get(docNames[0]));

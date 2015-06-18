@@ -3,8 +3,12 @@ package context.healthinformatics.graphs;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
+
+import javax.swing.JCheckBox;
 
 import org.jfree.util.Log;
 import org.junit.After;
@@ -91,17 +95,6 @@ public class GraphsTest {
 	}
 	
 	/**
-	 * try to plot a graph without data.
-	 * @param gp the panel to be tested.
-	 */
-	@Theory
-	public void testPlotNoData(GraphPanel gp) {
-		assertFalse(gp.getGraphPanel().isVisible());
-		gp.plot();
-		assertTrue(gp.getGraphPanel().isVisible());
-	}
-	
-	/**
 	 * try to plot with data.
 	 * @param gp the panel to be tested.
 	 * @throws IOException exception that could be thrown.
@@ -138,6 +131,22 @@ public class GraphsTest {
 		gp.updateContainer();
 		gp.plot();
 		assertTrue(gp.getGraphPanel().isVisible());
+	}
+	
+	/**
+	 * Tests the action event that belongs to the panel.
+	 * @param gp the panel to be tested.
+	 */
+	@Theory
+	public void testCheckVisibility(GraphPanel gp) {
+		JCheckBox checkbox = gp.getCheckbox();
+		ActionListener action = checkbox.getActionListeners()[0];
+		ActionEvent event = new ActionEvent(checkbox, 0, "");
+		action.actionPerformed(event);
+		checkbox.setSelected(true);
+		action.actionPerformed(event);
+		ActionEvent wrongevent = new ActionEvent(gp.loadPanel(), 0, "");
+		action.actionPerformed(wrongevent);
 	}
 
 }
