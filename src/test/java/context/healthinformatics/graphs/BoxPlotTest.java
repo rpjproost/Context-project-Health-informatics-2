@@ -15,6 +15,9 @@ import context.healthinformatics.database.MergeTable;
 import context.healthinformatics.database.SingletonDb;
 import context.healthinformatics.parser.XMLParser;
 
+/**
+ * Specific tests for the boxplot.
+ */
 public class BoxPlotTest {
 
 	/**
@@ -57,6 +60,10 @@ public class BoxPlotTest {
 		SingletonInterpreter.getInterpreter().setIntialChunks(null);
 	}
 
+	/**
+	 * Tests set data with column for box plot.
+	 * @throws Exception possible error of interpreter.
+	 */
 	@Test
 	public void testSetDataPerColumn() throws Exception {
 		ArrayList<String> data = new ArrayList<String>();
@@ -67,6 +74,10 @@ public class BoxPlotTest {
 		assertNotNull(boxplot.getPanel());
 	}
 
+	/**
+	 * Tests set data with per chunk for box plot.
+	 * @throws Exception possible error of interpreter.
+	 */
 	@Test
 	public void testSetDataPerChunk() throws Exception {
 		ArrayList<String> data = new ArrayList<String>();
@@ -79,7 +90,7 @@ public class BoxPlotTest {
 	}
 	
 	/**
-	 * Writes all line for the interpreter.
+	 * Writes all lines for the interpreter.
 	 * @throws Exception could be thrown.
 	 */
 	private void writeInterpret() throws Exception {

@@ -116,7 +116,7 @@ public class StateTransitionMatrixTest {
 	}
 	
 	/**
-	 * Writes all line for the interpreter.
+	 * Writes all lines for the interpreter.
 	 * @throws Exception could be thrown.
 	 */
 	private void writeInterpret() throws Exception {
