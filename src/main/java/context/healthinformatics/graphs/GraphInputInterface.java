@@ -11,14 +11,14 @@ import javax.swing.JScrollPane;
 import context.healthinformatics.graphs.graphspanel.BoxPlotPanel;
 import context.healthinformatics.graphs.graphspanel.FrequencyBarPanel;
 import context.healthinformatics.graphs.graphspanel.GraphPanel;
-import context.healthinformatics.graphs.graphspanel.HistogramPanel;
 import context.healthinformatics.graphs.graphspanel.LineChartPanel;
 import context.healthinformatics.graphs.graphspanel.TransitionaMatrixPanel;
 import context.healthinformatics.gui.InterfaceHelper;
 import context.healthinformatics.gui.MainFrame;
 
 /**
- * Creates a interface to specify which data the user want to use to create a specific graph.
+ * Creates a interface to specify which data the user want to use to create a
+ * specific graph.
  */
 public class GraphInputInterface extends InterfaceHelper {
 
@@ -34,16 +34,21 @@ public class GraphInputInterface extends InterfaceHelper {
 
 	/**
 	 * Creates the interface.
-	 * @param width the width of the panel.
-	 * @param height the height of the panel.
-	 * @param color the color of the panel.
+	 * 
+	 * @param width
+	 *            the width of the panel.
+	 * @param height
+	 *            the height of the panel.
+	 * @param color
+	 *            the color of the panel.
 	 */
 	public GraphInputInterface(int width, int height, Color color) {
 		graphPanels = new ArrayList<GraphPanel>();
 		graphInputWidth = width;
 		graphInputHeight = height;
 		graphInputParentPanel = createEmptyWithGridBagLayoutPanel(color);
-		graphInputParentPanel.setPreferredSize(new Dimension(graphInputWidth, graphInputHeight));
+		graphInputParentPanel.setPreferredSize(new Dimension(graphInputWidth,
+				graphInputHeight));
 		initPanels();
 		initScrollPane();
 		initGraphPanels();
@@ -56,7 +61,7 @@ public class GraphInputInterface extends InterfaceHelper {
 	public JPanel loadPanel() {
 		return graphInputParentPanel;
 	}
-	
+
 	/**
 	 * Creates for each graph type a container.
 	 */
@@ -64,27 +69,26 @@ public class GraphInputInterface extends InterfaceHelper {
 		graphPanels.add(new BoxPlotPanel(graphInputWidth));
 		graphPanels.add(new FrequencyBarPanel(graphInputWidth));
 		graphPanels.add(new TransitionaMatrixPanel(graphInputWidth));
-		graphPanels.add(new HistogramPanel(graphInputWidth));
 		graphPanels.add(new LineChartPanel(graphInputWidth));
 	}
-	
+
 	/**
 	 * Initialize a scroll panel for all possible graph panels.
 	 */
 	private void initScrollPane() {
-		containerScrollPanel = createContainerWithGivenSizePanel(graphInputWidth, 
-				graphInputHeight - CHECKBOXHEIGHT);
+		containerScrollPanel = createContainerWithGivenSizePanel(
+				graphInputWidth, graphInputHeight - CHECKBOXHEIGHT);
 		containerScrollPanel.setBackground(Color.WHITE);
 		scrollPane = makeScrollPaneForContainerPanel(containerScrollPanel,
-				graphInputWidth, graphInputHeight - CHECKBOXHEIGHT); 
+				graphInputWidth, graphInputHeight - CHECKBOXHEIGHT);
 	}
-	
+
 	/**
 	 * Initialize for each possible graph a panel, for inputting data.
 	 */
 	private void initGraphPanels() {
 		for (int i = 0; i < graphPanels.size(); i++) {
-			containerScrollPanel.add(graphPanels.get(i).loadPanel(), 
+			containerScrollPanel.add(graphPanels.get(i).loadPanel(),
 					setGrids(0, i, new Insets(INSETS, 0, 0, 0)));
 		}
 	}
@@ -98,13 +102,14 @@ public class GraphInputInterface extends InterfaceHelper {
 	}
 
 	/**
-	 * Initialize all different check-boxes to one panel.
-	 * That one panel will be set on the main panel.
+	 * Initialize all different check-boxes to one panel. That one panel will be
+	 * set on the main panel.
 	 */
 	private void initCheckBoxesToPanel() {
-		JPanel checkboxes = createPanel(MainFrame.OUTPUTTABCOLOR, graphInputWidth, CHECKBOXHEIGHT);
+		JPanel checkboxes = createPanel(MainFrame.OUTPUTTABCOLOR,
+				graphInputWidth, CHECKBOXHEIGHT);
 		for (int i = 0; i < graphPanels.size(); i++) {
-			checkboxes.add(graphPanels.get(i).getCheckbox(), 
+			checkboxes.add(graphPanels.get(i).getCheckbox(),
 					setGrids(i, 0, new Insets(0, 0, 0, CHECKBOXESINSETS)));
 		}
 		graphInputParentPanel.add(checkboxes, setGrids(0, 0));
