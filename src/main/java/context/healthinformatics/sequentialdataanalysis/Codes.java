@@ -100,6 +100,26 @@ public class Codes extends Task {
 			throw e;
 		}
 	}
+	
+	/**
+	 * Method which sets the code of every chunk with the comment : comment, to code.
+	 * @param comment comment to set the code on.
+	 */
+	public void setCodeOnContainsComment(String comment) {
+		try {
+			for (int i = 0; i < getChunks().size(); i++) {
+				Chunk chunk = getChunks().get(i);
+				if (chunk.getComment().contains(comment)) {
+					oldCodes.add(chunk.getCode());
+					changedChunks.add(chunk);
+					chunk.setCode(code);
+					
+				}
+			}
+		} catch (Exception e) {
+			throw e;
+		}
+	}
 
 	/**
 	 * Method which replaces the code of every chunk with the code : previousCode, to code.
@@ -163,6 +183,7 @@ public class Codes extends Task {
 
 	@Override
 	protected ArrayList<Chunk> constraintOnContainsComment(String comment) {
+		setCodeOnContainsComment(comment);
 		return getChunks();
 	}
 
