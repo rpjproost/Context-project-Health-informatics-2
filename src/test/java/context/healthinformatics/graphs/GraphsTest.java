@@ -91,17 +91,6 @@ public class GraphsTest {
 	}
 	
 	/**
-	 * try to plot a graph without data.
-	 * @param gp the panel to be tested.
-	 */
-	@Theory
-	public void testPlotNoData(GraphPanel gp) {
-		assertFalse(gp.getGraphPanel().isVisible());
-		gp.plot();
-		assertTrue(gp.getGraphPanel().isVisible());
-	}
-	
-	/**
 	 * try to plot with data.
 	 * @param gp the panel to be tested.
 	 * @throws IOException exception that could be thrown.
