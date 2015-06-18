@@ -70,8 +70,9 @@ Operators
 		When the second word is data it has to be followed by first the name of the column on which you want to compute. This will not be visible in the intermediate result but it will be displayed in the graph section of the Output Tab. Therefore the fourth word is the name of the chart.
 		When you have previously made chunks, the different computations wil be done for the chunks. Additionally, you can go to the graphs in Output Tab and "line chart" for example, to see the result as a graph.
 		Before you can use "difference" as the second word. you first have to make a connection. Then you can specify a column as the third word, which causes the difference between the two ends of the connection to be calculated for that column.
-		This difference is not visible in the intermediate result, but it can be visualised in a line-chart in the output tab.
-		As last option you can also use : </br>
+		This difference is not visible in the intermediate result, but it can be visualised in a line-chart in the output tab. After you have computed the difference you can
+		also select on the differece. for example : <br/> code(a) difference 10<br/> This will set code "a" at every chunk with difference 10.<br/><br/>
+		Lastly,there is one other option you can also use : </br>
 		compute chunk times</br>
 		This will calculate the number of chunks in a chunk.
 	</p> 
