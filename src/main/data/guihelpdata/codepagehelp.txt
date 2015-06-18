@@ -31,7 +31,9 @@ Language
 	  <li>compare</li>
 	</ol>
 	<p>
-		The string is the code or comment you want to set, and with connection it is the String you want to associate with the connection. The string behind chunk will be the code automaticly assigned to that chunk. The second sections specifies on which part of the data you want to use your operation. There are multiple options to specify the data : 
+		The string is the code or comment you want to set, and with connection it is the String you want to associate with the connection. The string behind chunk will be the code automaticly assigned to that chunk. For more information on some of the operators, look at the operators help section.
+		</br></br>
+		The second sections specifies on which part of the data you want to use your operation. There are multiple options to specify the data : 
 	</p>
 	<ol>
 	  <li>code = ...</li>
@@ -44,24 +46,57 @@ Language
 	</ol>
 	<p>
 		After data you can write an SQL query, in which you can name the columns of the table from the input tab (for example : where columnA = 2).When a
-		columns should equal a string you have to surrond the string with single-quotes. You can also use other SQL keywords like : AND, OR, BETWEEN and for a not-operator you can use respectively smaller-then and larger-then character concatenated.<br/> The Connections method needs both ends of a connections, so you can specify the third section in the same way as the second section. If you want to select on a column where the row you want is empty, you can select NULL which is the same as an empty field. When comparing with NULL you have to use the keyword "IS". The connection will be made from the result of the first selection to the result of the second conection.
-		<br/><br/>
-		Compute and compare are exceptions, because the second word for Compute is either "chunk", "all" or "data". If it is "chunk" you will compute the sum, min, max, average of the values in the column "value" for every chunk in the intermediate result. With "all", these values will be computed for all entries in the entire data set. The third word for "compute" has to be the name of the column, you want to do the computation on. This column has to be a integer column, and cannot be a column with strings. the result will be that either per chunk or for all values in the column, the average, sum, minimum and the maximum will be calculated and displayed.
-		When the second word is data it has to be followed by first the name of the column on which you want to compute. This will not be visible in the intermediate result but it will be displayed in the graph section of the Output Tab. Therefore the fourth word is the name of the chart. When you have previously made chunks, the different computations wil be done for the chunks. Additionally, you can go to the graphs in Output Tab and "line chart" for example, to see the result as a graph.
-		<br/><br/> 
-		Compare is special because it is specifically for the ADMIRE project. The compare operation uses creatine value you generate advice for the patients of the ADMIRE project.
-		The first word is "compare", followed by the slection by line, code or comment. The third section is "on value", where value is the name of the column that you want to use as
-		input for the advice algoritm. In the ADMIRE files this name is "value". The result will be that the comment will be 4 comma seperated values. The first one is the status of the first measurements. The second one is the
-		advice to measure agian that day which is YES or NO. The third one is the status of that day, and the fourth one is the advice, which also takes yesterdays
-		status into consideration.
+		columns should equal a string you have to surrond the string with single-quotes. You can also use other SQL keywords like : AND, OR, BETWEEN and for a not-operator you can use respectively smaller-then and larger-then character concatenated.
+		<br/>
+		If you want to select on a column where the row you want is empty, you can select NULL which is the same as an empty field. When comparing with NULL you have to use the keyword "IS".
+		The connection will be made from the result of the first selection to the result of the second conection.
 	</p>
 	<p>
 		To come back to the first example of this explanation, "Comment(a)" is the first section of the query to specify the operation, and "line = 1" is the section to specify where the comment has to go.
+		Another example would be : </br> code(a) comment = b </br> This query would set the code "a" on all chunks and lines with comment equal to b.
 			
 	</p>
 	</body>
 </html>
 %%
+Operators
+<html>
+	<body>
+	<h2>Closer look at operators</h2>
+	<h3>compute</h3>
+	<p>
+		The second word for Compute is either "chunk", "all" or "data". If it is "chunk" you will compute the sum, min, max, average of the values in the column "value" for every chunk in the intermediate result. With "all", these values will be computed for all entries in the entire data set. The third word for "compute" has to be the name of the column, you want to do the computation on. This column has to be a integer column, and cannot be a column with strings. the result will be that either per chunk or for all values in the column, the average, sum, minimum and the maximum will be calculated and displayed.
+		When the second word is data it has to be followed by first the name of the column on which you want to compute. This will not be visible in the intermediate result but it will be displayed in the graph section of the Output Tab. Therefore the fourth word is the name of the chart. When you have previously made chunks, the different computations wil be done for the chunks. Additionally, you can go to the graphs in Output Tab and "line chart" for example, to see the result as a graph.
+	</p> 
+	<h3>compare</h3>
+	<p>
+		Compare is special because it is specifically for the ADMIRE project. The compare operation uses creatine value you generate advice for the patients of the ADMIRE project.
+		The first word is "compare", followed by the slection by line, code or comment. The third section is "on value", where value is the name of the column that you want to use as
+		input for the advice algoritm. In the ADMIRE files this name is "value". The result will be that the comment will be 4 comma seperated values. The first one is the status of the first measurements. The second one is the
+		advice to measure again that day which is YES or NO. The third one is the status of that day, and the fourth one is the advice, which also takes yesterdays
+		status into consideration.
+	</p>
+	<h3>connection</h3>
+	<p>
+		The Connections method needs both ends of a connections, so you can specify the third section in the same way as the second section.
+		<br/>
+		For example : Connect(b) code = a line = 3
+		<br/>
+		In this query connect is the operator, b is the string asociated with the connection, the origin of the connections is selcted by "code = a",
+		and the destination is selected bij "line = 3". The result is here that a connection is made from chunks and lines with  code equal to a, to line 3.	
+	</p>
+	<h3>chunk</h3>
+	<p>
+		Chunk will group certain lines together, that have a certain attribute. for example : </br>
+		chunk(a) data where value < 200 </br>
+		This will chunk all lines with value lower than 200 together and give that chunk a code of "a".
+		</br></br>
+		Chunk comment = a</br>
+		This query will chunk all lines and chunk together, that have comment "a".
+	</p>
+	</body>
+</html>
+%
 Examples
 <html>
 	<body>
