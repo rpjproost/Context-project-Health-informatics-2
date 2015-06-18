@@ -24,7 +24,7 @@ public class Chunking extends Task {
 	 * Constructor for chunking.
 	 */
 	public Chunking() {	}
-	
+
 	/**
 	 * Chunking with parameter.
 	 * @param parameter code for new chunks.
@@ -32,7 +32,7 @@ public class Chunking extends Task {
 	public Chunking(String parameter) {
 		code = parameter;
 	}
-	
+
 	/**
 	 * Create chunks on constraint data.
 	 * @param whereClause for sql query.
@@ -124,7 +124,7 @@ public class Chunking extends Task {
 		addLastElementToChunks(res);
 		return res;
 	}
-	
+
 	/**
 	 * Add chunk to new Chunk in new ArrayList if it contains comment.
 	 * @param curChunk Chunk to be checked on constraint.
@@ -216,7 +216,7 @@ public class Chunking extends Task {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	@Override
 	public void run(Query query) throws Exception {
 		try {
@@ -233,11 +233,11 @@ public class Chunking extends Task {
 			}
 		}
 	}
-	
+
 	private boolean isDate(String s) {
 		return "date".equals(s);
 	}
-	
+
 	/**
 	 * Chunks the data repeatedly on dates.
 	 * @param q Query to run.
@@ -247,7 +247,7 @@ public class Chunking extends Task {
 	protected ArrayList<Chunk> chunkOnDate(Query q) throws Exception {
 		ArrayList<Chunk> res = new ArrayList<Chunk>();
 		int days = Integer.parseInt(q.next());
-		ArrayList<Integer> sizes = intsOnDate(getStartDate(), days - 1);
+		ArrayList<Integer> sizes = intsOnDate(getStartDate(), days);
 		int chunkIndex = 0;
 		for (int i = 0; i < sizes.size(); i++) {
 			Chunk temp = new Chunk();
@@ -259,7 +259,7 @@ public class Chunking extends Task {
 		}
 		return res;
 	}
-	
+
 	private Date getStartDate() throws SQLException {
 		Chunk chunk = getChunks().get(0);
 		while (chunk.hasChild()) {
@@ -273,29 +273,82 @@ public class Chunking extends Task {
 	 * @param start Start date of the method
 	 * @param days number of days to chunk.
 	 * @return list with the sizes of the chunks.
+	 * @throws SQLException 
 	 */
-	protected ArrayList<Integer> intsOnDate(Date start, int days) {
+	protected ArrayList<Integer> intsOnDate(Date start, int days) throws SQLException {
 		ArrayList<Integer> res = new ArrayList<Integer>();
 		int size = 0;
 		Calendar c = Calendar.getInstance();
+		c.setTime(start);
 		Date startDate = start;
 		Date endDate = null;
-		int numChunks;
-		c.setTime(start);
-		while (size < getChunks().size()) {
-			c.add(Calendar.DAY_OF_MONTH, days);
+		//Toegevoegd:
+		Date end = getLastDate();
+		while (startDate.before(end)) {
+			c.add(c.DAY_OF_MONTH, days);
 			endDate = c.getTime();
-			numChunks  = getPeriod(startDate, endDate);
-			if (numChunks > 0) {
-				res.add(numChunks);
-			}
-			c.add(Calendar.DAY_OF_MONTH, 1);
-			startDate = c.getTime();
-			size += numChunks;
+			setUpNewChunks(startDate, endDate);
+			startDate = endDate;
 		}
 		return res;
 	}
-	
+
+	private Date getLastDate() throws SQLException {
+		Db data = SingletonDb.getDb();
+		Chunk lastChunk = getChunks().get(getChunks().size() - 1);
+		if (lastChunk.hasChild()) {
+			int size = lastChunk.getAmountOfChilds();
+			return data.selectDate(lastChunk.getChildren().get(size - 1).getLine());
+		}
+		else {
+			return data.selectDate(lastChunk.getLine());
+		}
+	}
+
+	private void setUpNewChunks(Date start, Date end) {
+		System.out.println(indexcheck);
+		Db data = SingletonDb.getDb();
+		Chunk res = new Chunk();
+		Date before = new Date(start.getTime() - 1 * 24 * 3600 * 1000);
+		Date after = new Date(end.getTime() + 1 * 24 * 3600 * 1000);
+		for (int i = indexcheck; i < getChunks().size(); i++) {
+			Chunk c = getChunks().get(i);
+			if (c.hasChild()) {
+				for (Chunk child : c.getChildren()) {
+					try {
+						Date childDate = data.selectDate(child.getLine());
+						if (childDate.before(after) && childDate.after(start)) {
+							newChunks.add(child);
+						}
+						else {
+							System.out.println("not between dates");
+						}
+					} catch (SQLException e) {
+						break;
+					}
+				}
+			}
+			else {
+				Date cDate;
+				try {
+					cDate = data.selectDate(c.getLine());
+					if (cDate.before(after) && cDate.after(before)) {
+						res.setChunk(c);
+						indexcheck++;
+					}
+					else {
+						break;
+					}
+				} catch (SQLException e) {
+					break;
+				}
+			}
+		}
+		if (res.hasChild()) {
+			newChunks.add(res);
+		}
+	}
+
 	/**
 	 * returns the number of chunks between the given dates.
 	 * @param start start date;
@@ -303,39 +356,6 @@ public class Chunking extends Task {
 	 * @return the number of chunks between that.
 	 */
 	protected int getPeriod(Date start, Date end) {
-		Db data = SingletonDb.getDb();
-		for (Chunk c : getChunks()) {
-			if (c.hasChild()) {
-				for (Chunk child : c.getChildren()) {
-					try {
-						Date childDate = data.selectDate(child.getLine());
-						if (childDate.before(end) && childDate.after(start)) {
-							newChunks.add(child);
-						}
-						else {
-							break;
-						}
-					} catch (SQLException e) {
-						break;
-					}
-					
-				}
-			}
-			else {
-				Date cDate;
-				try {
-					cDate = data.selectDate(c.getLine());
-					if (cDate.before(end) && cDate.after(start)) {
-						newChunks.add(c);
-					}
-					else {
-						break;
-					}
-				} catch (SQLException e) {
-						break;
-				}
-			}
-		}
 		String s = "date BETWEEN '" + convertDate(start) + "' AND '" + convertDate(end) + "'";
 		try {
 			return getLinesFromData(s).size();
@@ -343,7 +363,7 @@ public class Chunking extends Task {
 			return 0;
 		}
 	}
-	
+
 	private String convertDate(Date date) {
 		return new SimpleDateFormat("yyyy-MM-dd").format(date);
 	}

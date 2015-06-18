@@ -417,7 +417,6 @@ public class Chunk {
 		}
 		if (first != Integer.MIN_VALUE && second != Integer.MIN_VALUE) {
 			days = daysBetween(firstDate, secondDate);
-			//TODO: time should be sorted in database.
 			if (first > second) {
 				double[] res = convertTime(first, second);
 				difference = res[0] - res[1] + days * twentyfour * sixty;
