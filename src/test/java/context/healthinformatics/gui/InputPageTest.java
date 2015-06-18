@@ -39,7 +39,9 @@ public class InputPageTest {
 	 */
 	@Before
 	public void createFrame() {
-		SingletonDb.dropAll(data);
+		if (data != null) {
+			SingletonDb.dropAll(data);
+		}
 		mf = new MainFrame();
 		ip = (InputPage) mf.getInputPage();
 		ip.getFileTree().initTree();
@@ -58,11 +60,10 @@ public class InputPageTest {
 	 */
 	@After
 	public void after() {
-		SingletonDb.dropAll(data);
 		try {
+			SingletonDb.dropAll(data);
 			SingletonInterpreter.getInterpreter().interpret("undoAll");
 		} catch (Exception e) {
-			Log.info("undoAll failed.");
 		}
 		SingletonInterpreter.getInterpreter().setIntialChunks(null);
 	}
