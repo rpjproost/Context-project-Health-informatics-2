@@ -8,11 +8,13 @@ import java.util.ArrayList;
 
 import javax.swing.JFileChooser;
 
+import org.jfree.util.Log;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import context.healthinformatics.analyse.SingletonInterpreter;
+import context.healthinformatics.database.Db;
 import context.healthinformatics.database.SingletonDb;
 import context.healthinformatics.writer.XMLDocument;
 
@@ -25,6 +27,10 @@ public class InputPageTest {
 	private InputPage ip;
 	private ArrayList<ArrayList<String>> folder;
 	private String testString = "TestInputPageTest";
+	/**
+	 * object calling the database.
+	 */
+	private Db data = SingletonDb.getDb();
 
 	public static final int THREE = 3;
 
@@ -33,6 +39,7 @@ public class InputPageTest {
 	 */
 	@Before
 	public void createFrame() {
+		SingletonDb.dropAll(data);
 		mf = new MainFrame();
 		ip = (InputPage) mf.getInputPage();
 		ip.getFileTree().initTree();
@@ -44,6 +51,20 @@ public class InputPageTest {
 		folder.add(list1);
 		folder.add(list2);
 		ip.getXMLController().setProject(testString);
+	}
+	
+	/**
+	 * Empty the interpreter.
+	 */
+	@After
+	public void after() {
+		SingletonDb.dropAll(data);
+		try {
+			SingletonInterpreter.getInterpreter().interpret("undoAll");
+		} catch (Exception e) {
+			Log.info("undoAll failed.");
+		}
+		SingletonInterpreter.getInterpreter().setIntialChunks(null);
 	}
 
 	/**
