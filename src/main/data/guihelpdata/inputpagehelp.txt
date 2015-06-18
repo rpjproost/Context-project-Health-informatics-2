@@ -3,6 +3,7 @@ Add Project
 <html>
 	<body>
 	<h2>To add a project follow the following steps:</h2>
+	<p>A project is a collection of files that belong together, ansd putting them in a project keeps files organised.</p> 
 	<ol>
 	  <li>You have to click on the button with the text "ADD new Project". This is in the left corner of the screen.</li>
 	  <li>A pop-up will appear</li>
@@ -29,6 +30,7 @@ Switch Project
 <html>
 	<body>
 	<h2>You can switch between project in two different ways:</h2>
+	<p>When you go to another project, the files of all projects will be saved so you can use them again next time you work with that project</p> 
 	<ol>
 	  <li>Click on de drop down element in the top left corner of the screen and select the project you want to switch too.</li>
 	  <li>In the file selection section select the project name of the project you want to work with.</li>
