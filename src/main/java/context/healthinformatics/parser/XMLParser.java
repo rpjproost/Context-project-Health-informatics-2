@@ -149,13 +149,12 @@ public class XMLParser extends Parser {
 	 * which refers to the correct parser in the list of parsers.
 	 */
 	public void createTables(ArrayList<Integer> indexesForParsers) {
-		ArrayList<XMLDocument> currentData = new ArrayList<XMLDocument>();
+		SingletonDb.dropAll(SingletonDb.getDb());
 		try {
 			for (int i = 0; i < indexesForParsers.size(); i++) {
 				int index = indexesForParsers.get(i);
 				if (createTableDb(documents.get(index))) {
 					parsers.get(index).parse();
-					currentData.add(documents.get(index));
 				}
 			}
 		} catch (IOException e) {
