@@ -248,7 +248,7 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	/**
 	 * @return root of the project tree.
 	 */
-	public DefaultMutableTreeNode getRoot() {
+	private DefaultMutableTreeNode getRoot() {
 		return root;
 	}
 }

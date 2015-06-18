@@ -12,6 +12,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import context.healthinformatics.analyse.SingletonInterpreter;
+import context.healthinformatics.database.SingletonDb;
 import context.healthinformatics.writer.XMLDocument;
 
 /**
@@ -42,16 +44,6 @@ public class InputPageTest {
 		folder.add(list1);
 		folder.add(list2);
 		ip.getXMLController().setProject(testString);
-	}
-
-	/**
-	 * Checks if the tree is filled correctly.
-	 */
-	@Test
-	public void testFillTree() {
-		ip.getFileTree().fillTree();
-		int actual = ip.getFileTree().getRoot().getChildCount() / 2;
-		assertEquals(ip.getFileTree().getRoot().getChildCount() / 2, actual);
 	}
 
 	/**
@@ -131,12 +123,16 @@ public class InputPageTest {
 	
 	/**
 	 * Test the load database method.
+	 * @throws Exception could be thrown.
 	 */
 	@Test
-	public void testLoadDatabase() {
+	public void testLoadDatabase() throws Exception {
 		ip.addXmlFile("src/test/data/mergeTableFiles/twoDocs.xml");
 		ip.getXMLController().selectDocument("src/test/data/mergeTableFiles/inputTXT.txt");
 		ip.getInputPageComponent().handleSpecifiedFilter(new String[0]);
+		SingletonDb.dropAll(SingletonDb.getDb());
+		SingletonInterpreter.getInterpreter().interpret("undoall");
+		SingletonInterpreter.getInterpreter().setIntialChunks(null);
 	}
 	
 	/**
