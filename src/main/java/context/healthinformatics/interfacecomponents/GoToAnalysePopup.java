@@ -10,6 +10,8 @@ import java.util.HashMap;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JRootPane;
+import javax.swing.JScrollPane;
 
 import context.healthinformatics.gui.InterfaceHelper;
 import context.healthinformatics.writer.XMLDocument;
@@ -21,9 +23,11 @@ import context.healthinformatics.writer.XMLDocument;
 public class GoToAnalysePopup extends InterfaceHelper implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
-
-	private static final int LOADINGSCREEN_WIDTH = 600;
-	private static final int LOADINGSCREEN_HEIGTH = 400;
+	private static final int FILTERSCREEN_WIDTH = 400;
+	private static final int FILTERSCREEN_HEIGTH = 220;
+	private static final int ELEMENT_WIDTH = 390;
+	private static final int FILTER_PANEL_HEIGHT = 120;
+	private static final int BUTTON_PANEL_HEIGHT = 50;
 
 	private JFrame popupMainFrame;
 	private JPanel mainPanel;
@@ -37,6 +41,8 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 	private JButton goToAnalyse;
 	private JButton removeFilter;
 	private JPanel buttonPanel;
+
+	private JScrollPane scroll;
 
 	private GoToAnalysePopupController popupController;
 
@@ -57,9 +63,11 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 		initDropDownMenus(selectedDocs);
 
 		filterPanel = createEmptyWithGridBagLayoutPanel();
-
+		scroll = new JScrollPane(filterPanel);
+		scroll.setPreferredSize(new Dimension(ELEMENT_WIDTH,
+				FILTER_PANEL_HEIGHT));
 		mainPanel = createEmptyWithGridBagLayoutPanel();
-		mainPanel.add(filterPanel, setGrids(0, 0));
+		mainPanel.add(scroll, setGrids(0, 0));
 		mainPanel.add(buttonPanel, setGrids(0, 1));
 		popupMainFrame.add(mainPanel);
 		setWindowListener();
@@ -105,13 +113,15 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 	}
 
 	/**
-	 * Initialise the buttons with action listeners.
+	 * Initialize the buttons with action listeners.
 	 */
 	private void initButtons() {
 		buttonPanel = createEmptyWithGridBagLayoutPanel();
-		addFilter = new JButton("Add pre filter");
-		goToAnalyse = new JButton("Save Settings & Go to analyse");
-		removeFilter = new JButton("Remove pre filter");
+		buttonPanel.setPreferredSize(new Dimension(ELEMENT_WIDTH,
+				BUTTON_PANEL_HEIGHT));
+		addFilter = new JButton("Add filter");
+		goToAnalyse = new JButton("Go to analyse");
+		removeFilter = new JButton("Remove filter");
 		addFilter.addActionListener(this);
 		goToAnalyse.addActionListener(this);
 		removeFilter.addActionListener(this);
@@ -124,9 +134,9 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 	 * Setup the mainframe for the loadingScreen.
 	 */
 	private void setupTheLoadingMainFrame() {
-		popupMainFrame = new JFrame("We are loading your data to analyse");
-		popupMainFrame.setPreferredSize(new Dimension(LOADINGSCREEN_WIDTH,
-				LOADINGSCREEN_HEIGTH));
+		popupMainFrame = new JFrame("Adjust pre filters");
+		popupMainFrame.setPreferredSize(new Dimension(FILTERSCREEN_WIDTH,
+				FILTERSCREEN_HEIGTH));
 		popupMainFrame.pack();
 		popupMainFrame.setVisible(true);
 		popupMainFrame.setResizable(false);
@@ -135,6 +145,7 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 				- popupMainFrame.getSize().width / 2, dim.height / 2
 				- popupMainFrame.getSize().height / 2);
 		popupMainFrame.setVisible(true);
+		popupMainFrame.getRootPane().setWindowDecorationStyle(JRootPane.NONE);
 	}
 
 	/**
@@ -152,10 +163,8 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 	 *            the saved filters
 	 */
 	public void setFilters(ArrayList<String[]> filters) {
-		int counter = 0;
 		for (int i = 0; i < filters.size(); i++) {
 			if (docNames.contains(filters.get(i)[0])) {
-				counter++;
 				AnalysePopupRowContainer popupRowContainer = new AnalysePopupRowContainer(
 						docNames.toArray(new String[docNames.size()]),
 						columnNames);
@@ -165,9 +174,6 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 				filterPanel.add(rows.get(rows.size() - 1).getPanelOfRow(),
 						setGrids(0, rows.size() - 1));
 			}
-		}
-		if (counter == 0) {
-			addEmptyFilter();
 		}
 		filterPanel.revalidate();
 	}
@@ -185,6 +191,7 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 
 	/**
 	 * Get the filter values from all rows.
+	 * 
 	 * @return the filter values.
 	 */
 	protected String[] getAllFilterValues() {
@@ -204,8 +211,9 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 		}
 		if (e.getSource() == removeFilter && rows.size() > 0) {
 			JPanel panel = rows.remove(rows.size() - 1).getPanelOfRow();
+			panel.setVisible(false);
 			filterPanel.remove(panel);
-			filterPanel.revalidate();
+			scroll.revalidate();
 		}
 		if (e.getSource() == goToAnalyse) {
 			popupController.handleSpecifiedFilter(getAllFilterValues());

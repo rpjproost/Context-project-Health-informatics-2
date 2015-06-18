@@ -97,7 +97,6 @@ public class HelpFrame extends InterfaceHelper {
 	 * Get the help frame to the front of the screen.
 	 */
 	public void getToFront() {
-		System.out.println("IK OWRDT NAAR VOREN GEHAALD");
 		helpMainFrame.toFront();
 	}
 

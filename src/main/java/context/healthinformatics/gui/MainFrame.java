@@ -5,6 +5,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Random;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -156,8 +157,30 @@ public class MainFrame extends InterfaceHelper {
 	public void makeFrame() {
 		f = new JFrame();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setTitle("PRODUCT NAME");
+		String[] arr = { "WI", "RI", "JE", "AR", "PA" };
+		f.setTitle(shuffleArray(arr));
 		f.setExtendedState(JFrame.MAXIMIZED_BOTH);
+	}
+
+	/**
+	 * Creates the title of the program consisting of the first two letters of
+	 * our names.
+	 * 
+	 * @param ar
+	 *            the array with first two letters
+	 * @return the title
+	 */
+	static String shuffleArray(String[] ar) {
+		Random rnd = new Random();
+		StringBuilder title = new StringBuilder();
+		for (int i = ar.length - 1; i >= 0; i--) {
+			int index = rnd.nextInt(i + 1);
+			String a = ar[index];
+			ar[index] = ar[i];
+			ar[i] = a;
+			title.append(ar[i]);
+		}
+		return title.toString();
 	}
 
 	/**
@@ -186,7 +209,7 @@ public class MainFrame extends InterfaceHelper {
 
 		@Override
 		public void mouseClicked(MouseEvent e) {
-			//Do nothing
+			// Do nothing
 		}
 
 		@Override
@@ -204,17 +227,17 @@ public class MainFrame extends InterfaceHelper {
 
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			//Do nothing
+			// Do nothing
 		}
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
-			//Do nothing
+			// Do nothing
 		}
 
 		@Override
 		public void mouseExited(MouseEvent e) {
-			//Do nothing
+			// Do nothing
 		}
 	}
 }
