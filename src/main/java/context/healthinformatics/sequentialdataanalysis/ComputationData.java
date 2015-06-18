@@ -194,4 +194,14 @@ public final class ComputationData {
 	public static void setComputed(boolean computed) {
 		ComputationData.computed = computed;
 	}
+
+
+	/**
+	 * Undo computations.
+	 */
+	public static void undo() {
+		setComputed(false);
+		data = new ArrayList<HashMap<Integer, Double>>();
+		names = new ArrayList<String>();
+	}
 }
