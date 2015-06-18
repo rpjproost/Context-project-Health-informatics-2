@@ -3,12 +3,13 @@ Add Project
 <html>
 	<body>
 	<h2>To add a project follow the following steps:</h2>
+	<p>A project is a collection of files that belong together, ansd putting them in a project keeps files organised.</p> 
 	<ol>
 	  <li>You have to click on the button with the text "ADD new Project". This is in the left corner of the screen.</li>
 	  <li>A pop-up will appear</li>
 	  <li>Fill in the name of your new project in the text field of the pop-up.</li>
 	  <li>Click on "OK" if you filled in your project name.</li>
-	  <li>A new Project will appear in the File Selection area!</li>
+	  <li>A new Project will appear in the File Selection area</li>
 	</ol>  
 	</body>
 </html>
@@ -29,6 +30,7 @@ Switch Project
 <html>
 	<body>
 	<h2>You can switch between project in two different ways:</h2>
+	<p>When you go to another project, the files of all projects will be saved so you can use them again next time you work with that project</p> 
 	<ol>
 	  <li>Click on de drop down element in the top left corner of the screen and select the project you want to switch too.</li>
 	  <li>In the file selection section select the project name of the project you want to work with.</li>
@@ -74,7 +76,7 @@ Edit XML
 	<ul>
 		<li>the number of the column. This is also an Integer from 1 to n. Where 1 indicates the first column</li>
 		<li>the name of the column</li>
-	    <li>select the type of column: A <i>String</i> <i>int</i> or <i></i>Date</li>
+	    	<li>select the type of column: A <i>String(sequence of characters)</i> <i>int(whole numbers)</i> or <i></i>Date</li>
 	</ul> 
 	If the column is a Date you have to specify the date type. There is extra info about how to specify this date type in the set <b>Set DateType</b> section. 
 	</p>
@@ -89,7 +91,7 @@ Add Column
 	  <li>Click on the button "Add new Column".</li>
 	  <li>A new column will appear on the bottom of the XMLDocument.</li>
 	  <li>Fill in the empty fields and select the column type.</li>
-	  <li>You successfully added a new Column!:)</li>
+	  <li>You successfully added a new Column</li>
 	</ol>  
 	</body>
 </html>

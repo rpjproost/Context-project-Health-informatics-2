@@ -4,7 +4,8 @@ The input code Area
 	<body>
 	<h2>What is the input code area?</h2>
 	<p>
-		The input code area is an textfield in which you can enter queries. These queries have to be specified in a language which is described at the next help button.You can enter one or multiple queries on one or multiple lines. These will be excecuted in sequential order, which means that the second queries will be excecuted on the resulting data of the first query.<br/><br/> When you are done specifying the queries you can hit the ANALYSE button to make the program procces the queries.
+		The input code area is a textfield in which you can enter queries. These queries have to be specified in a language which is described at the language help button.You can enter one or multiple queries on one or multiple lines. When you want to write a second query on the next line you can use SHIFT + ENTER to go to the nex line.
+		These will be excecuted in sequential order, which means that the second queries will be excecuted on the resulting data set of the first query.<br/><br/> When you are done specifying the queries you can hit the ANALYSE button or press enter to make the program procces the queries.
 	</p>
 	</body>
 </html>
@@ -13,6 +14,10 @@ Language
 <html>
 	<body>
 	<h2>How does the language work</h2>
+	<p>
+		The language allows user to transform the data, while only needing a small number of words per query. for example : <br/><br/> comment(a) line = 1 <br/> This query
+		sets the comment "a" at line 1.
+	</p>
 	<p>
 		The language has a certain form which consist of 2 or 3 sections. The first word is always the kind of operation you want to use. Some of these operations are followed by parenthesis filled with a string to use as additional input of the operation. The options are:
 	</p>
@@ -23,38 +28,98 @@ Language
 	  <li>filter</li>
 	  <li>compute</li>
 	  <li>connection(String)</li>
+	  <li>compare</li>
 	</ol>
 	<p>
-		The string is the code or comment you want to set, and with connection it is the String you want to associate with the connection. The string behind chunk will be the code automaticly assigned to that chunk. The second sections specifies on which part of the data you want to use your operation. There are multiple options to specify the data : 
+		The string is the code or comment you want to set, and with connection it is the String you want to associate with the connection. The string behind chunk will be the code automaticly assigned to that chunk. For more information on some of the operators, look at the operators help section.
+		</br></br>
+		The second sections specifies on which part of the data you want to use your operation. There are multiple options to specify the data : 
 	</p>
 	<ol>
 	  <li>code = ...</li>
 	  <li>code equals ...</li>
-	  <li>code line = ...</li>
+	  <li>line = ...</li>
 	  <li>comment line = ...</li>
 	  <li>comment = ...</li>
 	  <li>comment equals ...</li>
+	  <li>comment contains ...</li>
 	  <li>data ...</li>
 	</ol>
 	<p>
-		After data you can write an SQL query, in which you can name the columns of the table from the input tab (for example : where columnA = 2). The Connections method needs both ends of a connections, so you can specify the third section in the same way as the second section. If you want to select on a column where the row you want is empty, you can select on NULL which is the same as an empty field. When comparing with NULL you have to use the keyword "IS". The connection will be made from the result of the first selection to the result of the second conection.
-	<br/><br/>
-	Compute is an exception, because the second word is either "chunk" or "all". If it is "chunk" you will compute values per chunk, and for "all" it will be computed for  the entire data set. The third word for "compute" has to be the name of the column, you want to do the computation on. This column has to be a integer column, and cannot be a column with strings. the result will be that per chunk or all values in the column, the average, sum, minimum and the maximum will be calculated and displayed.
+		After data you can write an SQL query, in which you can name the columns of the table from the input tab (for example : where columnA = 2).When a
+		columns should equal a string you have to surrond the string with single-quotes. You can also use other SQL keywords like : AND, OR, BETWEEN and for a not-operator you can use respectively smaller-then and larger-then character concatenated.
+		<br/>
+		If you want to select on a column where the row you want is empty, you can select NULL which is the same as an empty field. When comparing with NULL you have to use the keyword "IS".
+		The connection will be made from the result of the first selection to the result of the second conection.
+	</p>
+	<p>
+		To come back to the first example of this explanation, "Comment(a)" is the first section of the query to specify the operation, and "line = 1" is the section to specify where the comment has to go.
+		Another example would be : </br> code(a) comment = b </br> This query would set the code "a" on all chunks and lines with comment equal to b.
+			
 	</p>
 	</body>
 </html>
 %%
+Operators
+<html>
+	<body>
+	<h2>Closer look at operators</h2>
+	<h3>compute</h3>
+	<p>
+		The second word for Compute is either "chunk", "all", "data" or "difference". If it is "chunk" you will compute the sum, min, max, average of the values in the column "value" for every chunk in the intermediate result. With "all", these values will be computed for all entries in the entire data set. The third word for "compute" has to be the name of the column, you want to do the computation on. This column has to be a integer column, and cannot be a column with strings. the result will be that either per chunk or for all values in the column, the average, sum, minimum and the maximum will be calculated and displayed.
+		When the second word is data it has to be followed by first the name of the column on which you want to compute. This will not be visible in the intermediate result but it will be displayed in the graph section of the Output Tab. Therefore the fourth word is the name of the chart.
+		When you have previously made chunks, the different computations wil be done for the chunks. Additionally, you can go to the graphs in Output Tab and "line chart" for example, to see the result as a graph.
+		Before you can use "difference" as the second word. you first have to make a connection. Then you can specify a column as the third word, which causes the difference between the two ends of the connection to be calculated for that column.
+		This difference is not visible in the intermediate result, but it can be visualised in a line-chart in the output tab. After you have computed the difference you can
+		also select on the differece. for example : <br/> code(a) difference 10<br/> This will set code "a" at every chunk with difference 10.<br/><br/>
+		Lastly,there is one other option you can also use : </br>
+		compute chunk times</br>
+		This will calculate the number of chunks in a chunk.
+	</p> 
+	<h3>compare</h3>
+	<p>
+		Compare is special because it is specifically for the ADMIRE project. The compare operation uses creatine value you generate advice for the patients of the ADMIRE project.
+		The first word is "compare", followed by the slection by line, code or comment. The third section is "on value", where value is the name of the column that you want to use as
+		input for the advice algoritm. In the ADMIRE files this name is "value". The result will be that the comment will be 4 comma seperated values. The first one is the status of the first measurements. The second one is the
+		advice to measure again that day which is YES or NO. The third one is the status of that day, and the fourth one is the advice, which also takes yesterdays
+		status into consideration.
+	</p>
+	<h3>connection</h3>
+	<p>
+		The Connections method needs both ends of a connections, so you can specify the third section in the same way as the second section.
+		<br/>
+		For example : Connect(b) code = a line = 3
+		<br/>
+		In this query connect is the operator, b is the string asociated with the connection, the origin of the connections is selcted by "code = a",
+		and the destination is selected bij "line = 3". The result is here that a connection is made from chunks and lines with  code equal to a, to line 3.	
+	</p>
+	<h3>chunk</h3>
+	<p>
+		Chunk will group certain lines together, that have a certain attribute. for example : </br>
+		chunk(a) data where value < 200 </br>
+		This will chunk all lines with value lower than 200 together and give that chunk a code of "a".
+		</br></br>
+		Chunk comment = a</br>
+		This query will chunk all lines and chunk together, that have comment "a".
+	</p>
+	</body>
+</html>
+%
 Examples
 <html>
 	<body>
 	<h2>Examples of queries</h2>
 	<ol>
-	  <li>comment("important") code = "abc"</li>
-	  <li>filter comment equals "unimportant"</li>
-	  <li>chunk code equals "group1"</li>
-	  <li>connect("A to Z") comment = "A" comment = "Z"</li>
-	  <li>code("123") data WHERE value = 209</li>
-	  <li>compute all values </li>
+	  <li>code(important) comment contains a.<br/><br/> This query sets the code "important" on every line and chunk whose comment contains "a"<br/><br/></li>
+	  <li>chunk(a) data where beschrijving = 'Crea' <br/><br/> This query makes a chunk of all lines where the beschrijving-column is equal to "Crea", and sets the code of that chunk to "a".<br/><br/></li>
+	  <li>comment(important) code = abc <br/><br/> This query sets the comment "important" on every line or chunk where the code is "abc".<br/><br/></li>
+	  <li>code(important) line = 1.<br/><br/> This query sets the code "important" on line 1<br/><br/></li>
+	  <li>filter comment equals unimportant <br/><br/> This query remove all lines and chunks where the comment does not equal "unimportant".<br/><br/></li>
+	  <li>connect(A to Z) comment = A comment = Z <br/><br/> This query connects all lines and chunks with comment "A" to all lines and chunks with comment "Z", and associates the string "A to Z" with this connection.<br/><br/></li>
+	  <li>code(123) data WHERE value = 209 <br/><br/> This query sets the code "123" on every line where the value column is equal to 209<br/><br/></li>
+	  <li>compute all values <br/><br/> This query will put all lines in a chunk, and for that chunk calculate the min, max, average and sum of the values in the value column.<br/><br/></li>
+	  <li>compute data values lineOfValues<br/><br/> THe result in this query is not visible in the intermediate result.
+	      However, you can go to graphs section in Output Tab, click "line-chart", give the chart a name and click "Update Graph" to show a graph of the values.<br/><br/></li>
 	</ol>  
 	</body>
 </html>
@@ -64,7 +129,13 @@ Intermediate Result
 	<body>
 	<h2>What is the intermediate result textfield</h2>
 	<p>
-		After filling in queries in the code area and the user presses the ANALYSE button, the intermediate result area shows the data after the the queries have been excecuted on the current data set. Before the first query this area will contain all data available after the file selection in the InputPage tab. After every time the ANALYSE button is pressed, the  intermediate data field will contain the resulting data after the queries.
+		After filling in queries in the code area and the user presses the ANALYSE button or presses ENTER, the intermediate result area shows the data after the the queries have been excecuted on the current data set. Before the first query this area will contain all data available after the file selection in the Input Tab.
+		After every time the ANALYSE button is pressed, the intermediate data field will contain the resulting data after the queries. Connection will not have a visible change to the intermediate result.
+	</p>
+	<br/><br/>
+	<p>
+		Of the intermediate result, the first three columns are line, code and comment. A line of data can be selected by either of these three columns by specifing what they must equal to(line = ..., code = ..., comment = ...).
+		the rest of the columns are from the input data, so these can be referenced by using the data keyword (code(a) data where columnA = 1).
 	</p>
 	</body>
 </html>
@@ -79,12 +150,22 @@ Used Code
 	</body>
 </html>
 %%
+Save and import scripts
+<html>
+	<body>
+	<h2>What do the "Safe Script" and "Import Script" buttons do</h2>
+	<p>
+		When you press the "Safe Script" button, the queries in the used code section will be written to a text file. When you click on the "Import Script" button, you can load the previously saved script or any other text file with correct queries in it. These queries will be loaded into the code area so you can use them again.
+	</p>
+	</body>
+</html>
+%%
 Undo
 <html>
 	<body>
 	<h2>How to go back to your previous data set.</h2>
 	<p>
-		If you have altered the data in an unintended way, you can always go back to your previouss data set by entering "undo" or "revert" into the code area and pressing the ANALYSE button. Now you have the result of the previous queries back. You can go all the way back to your initial data set. You can also use "undoAll", which will revert the data to the initial state.
+		If you have altered the data in an unintended way, you can always go back to your previous data set by entering "undo" or "revert" into the code area and pressing the ANALYSE button. Now you have the result of the previous queries back. You can go all the way back to your initial data set. You can also use "undoall" or "revertall", which will revert the data to the initial state.
 	</p>
 	</body>
 </html>
