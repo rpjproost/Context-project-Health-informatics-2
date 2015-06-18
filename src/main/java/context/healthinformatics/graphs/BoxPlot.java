@@ -16,7 +16,6 @@ import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.renderer.category.BoxAndWhiskerRenderer;
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
 
-import context.healthinformatics.analyse.Interpreter;
 import context.healthinformatics.analyse.SingletonInterpreter;
 import context.healthinformatics.database.Db;
 import context.healthinformatics.database.SingletonDb;
@@ -107,8 +106,7 @@ public class BoxPlot extends InterfaceHelper {
 	public void setDataPerColumn(ArrayList<String> columns) throws Exception {
 
 		dataset = new DefaultBoxAndWhiskerCategoryDataset();
-		Interpreter interpreter = SingletonInterpreter.getInterpreter();
-		ArrayList<Chunk> chunks = interpreter.getChunks();
+		ArrayList<Chunk> chunks = SingletonInterpreter.getInterpreter().getChunks();
 		StringBuilder buildTitle = new StringBuilder();
 		if (chunks != null) {
 			for (int j = 0; j < columns.size(); j++) {
@@ -134,18 +132,20 @@ public class BoxPlot extends InterfaceHelper {
 	 */
 	public void setDataPerChunk(ArrayList<String> columns) throws Exception {
 		dataset = new DefaultBoxAndWhiskerCategoryDataset();
-		Interpreter interpreter = SingletonInterpreter.getInterpreter();
-		ArrayList<Chunk> chunks = interpreter.getChunks();
+		ArrayList<Chunk> chunks = SingletonInterpreter.getInterpreter().getChunks();
 		StringBuilder buildTitle = new StringBuilder();
-		for (int j = 0; j < columns.size(); j++) {
-			buildTitle.append(" " + columns.get(j));
-			for (int i = 0; i < chunks.size(); i++) {
-				ArrayList<Double> dataList = new ArrayList<Double>();
-				dataList.addAll(loopThroughChunks(chunks.get(i), columns.get(j)));
-				dataset.add(dataList, columns.get(j), " Type " + i);
+		if (chunks != null) {
+			for (int j = 0; j < columns.size(); j++) {
+				buildTitle.append(" " + columns.get(j));
+				for (int i = 0; i < chunks.size(); i++) {
+					ArrayList<Double> dataList = new ArrayList<Double>();
+					dataList.addAll(loopThroughChunks(chunks.get(i),
+							columns.get(j)));
+					dataset.add(dataList, columns.get(j), " Type " + i);
+				}
 			}
+			plotsize = chunks.size();
 		}
-		plotsize = chunks.size();
 	}
 
 	/**

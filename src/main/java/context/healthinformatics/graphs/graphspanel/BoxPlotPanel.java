@@ -83,11 +83,6 @@ public class BoxPlotPanel extends GraphPanel {
 	}
 
 	@Override
-	public GraphInputContainer getGraphContainer() {
-		return container;
-	}
-
-	@Override
 	public JCheckBox getCheckbox() {
 		return checkbox;
 	}
