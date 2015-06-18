@@ -116,13 +116,16 @@ public class MergeTable {
 	 */
 	protected void insertTables(Set<String> tableNames, String[] clause) {
 		for (String key : tableNames) {
-			String tableClause = "";
+			StringBuilder tableClause = new StringBuilder();
+			String prefix = "";
 			for (int i = 0; i < clause.length; i++) {
 				if (clause[i].contains(key)) {
-					tableClause = clause[i];
+					tableClause.append(prefix);
+					tableClause.append(clause[i]);
+					prefix = ", ";
 				}
 			}
-			insertTable(key, data.getTables().get(key), tableClause);
+			insertTable(key, data.getTables().get(key), tableClause.toString());
 		}
 	}
 
