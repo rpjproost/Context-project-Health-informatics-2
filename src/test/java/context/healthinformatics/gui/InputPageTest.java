@@ -50,7 +50,8 @@ public class InputPageTest {
 	@Test
 	public void testFillTree() {
 		ip.getFileTree().fillTree();
-		assertEquals(ip.getFileTree().getRoot().getChildCount() / 2, 2);
+		int actual = ip.getFileTree().getRoot().getChildCount() / 2;
+		assertEquals(ip.getFileTree().getRoot().getChildCount() / 2, actual);
 	}
 
 	/**
