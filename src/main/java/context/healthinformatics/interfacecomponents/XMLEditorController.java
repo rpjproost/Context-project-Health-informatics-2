@@ -270,6 +270,14 @@ public class XMLEditorController implements Observable {
 	public String getFileLocation() {
 		return "src/main/data/savedXML/" + project + ".xml";
 	}
+	
+	/**
+	 * @return the path to where projects filters will be saved and opened.
+	 */
+	public String getFilterFileLocation() {
+		return "src/main/data/savedFilters/" + project + ".txt";
+	}
+
 
 	/**
 	 * Saves multiple files in a xml from the project the user is working in.
@@ -288,6 +296,8 @@ public class XMLEditorController implements Observable {
 	 */
 	public void removeProject(String project) {
 		File file = new File(getFileLocation());
+		File filterFile = new File(getFilterFileLocation());
+		filterFile.delete();
 		boolean deleted = file.delete();
 		if (deleted) {
 			allDocs.remove(project);

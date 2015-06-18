@@ -32,7 +32,7 @@ public class GoToAnalysePopupController {
 	}
 
 	/**
-	 * Create a popup if it isnt already open.
+	 * Create a pop up if it isn't already open.
 	 * 
 	 * @param selectedDocs
 	 *            the selected documents
@@ -43,9 +43,9 @@ public class GoToAnalysePopupController {
 			String projectName) {
 		this.projectName = projectName;
 		if (!isOpen) {
+			currentPopUp = new GoToAnalysePopup(selectedDocs, this);
 			ReadWriteAnalyseFilter rwaf = new ReadWriteAnalyseFilter(
 					"src/main/data/savedFilters/" + projectName + ".txt");
-			currentPopUp = new GoToAnalysePopup(selectedDocs, this);
 			try {
 				currentPopUp.setFilters(rwaf.readFilter());
 			} catch (IOException e) {
