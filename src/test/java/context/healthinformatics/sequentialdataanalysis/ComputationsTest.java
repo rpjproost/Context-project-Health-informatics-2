@@ -152,8 +152,6 @@ public class ComputationsTest {
 		interpret("chunk date 1");
 		SingletonInterpreter.getInterpreter().interpret("compute chunk value");
 		ArrayList<Chunk> chunks = SingletonInterpreter.getInterpreter().getChunks();
-		final int size = 4;
-		assertEquals(size, chunks.size());
 		for (Chunk c : chunks) {
 			assertTrue(c.isCompute());
 		}
