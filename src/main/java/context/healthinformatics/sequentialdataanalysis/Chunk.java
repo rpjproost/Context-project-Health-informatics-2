@@ -487,4 +487,8 @@ public class Chunk {
 		final int comp = 3;
 		return computations[comp];
 	}
+	
+	public double getDifference() {
+			return difference;
+	}
 }

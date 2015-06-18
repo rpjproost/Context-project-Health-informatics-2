@@ -204,12 +204,30 @@ public class Codes extends Task {
 			if (query.part().equals("date")) {
 				setCodeDate();
 			}
+			else if (query.part().equals("difference")) {
+				setCodeOndifference(query.next());
+			}
 			else {
 				throw new Exception(e.getMessage() + "/date");
 			}
 		}
 	}
 	
+	private void setCodeOndifference(String number) {
+		for (Chunk c : getChunks()) {
+			if (c.getDifference() != Integer.MIN_VALUE) {
+				double smallerThan = Integer.parseInt(number);
+				if (c.getDifference() < smallerThan) {
+					changedChunks.add(c);
+					oldCodes.add(c.getCode());
+					c.setCode(code);
+				}
+			}
+		}
+		setResult(getChunks());
+		
+	}
+
 	private void setCodeDate() throws SQLException {
 		Db data = SingletonDb.getDb();
 		for (Chunk c : getChunks()) {
