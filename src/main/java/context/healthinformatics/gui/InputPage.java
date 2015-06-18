@@ -113,7 +113,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		xmlController.setProject(project);
 		xmlController.setDocumentsInProject(docsOfFile);
 		folder.add(xmlController.breakDownXMLDocumentsIntoNames(docsOfFile));
-		ft = new FileTree(mf, this);
+		ft = new FileTree(this);
 		ipc.getComboBox().addItem(project);
 		ipc.getComboBox().setSelectedItem(project);
 		xmlController.loadProject(xmledit);
@@ -124,7 +124,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 * Creates a clear project with a standard project default.
 	 */
 	void runClearedProject() {
-		ft = new FileTree(mf, this);
+		ft = new FileTree(this);
 		xmlController.setProject("(default)");
 		addComboItem("(default)");
 	}
@@ -134,7 +134,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 */
 	public JPanel loadPanel() {
 		JPanel containerPanel = createPanel(MainFrame.INPUTTABCOLOR,
-				mf.getScreenWidth(), mf.getStatePanelSize());
+				getScreenWidth(), getStatePanelSize());
 		leftPanel = createLeftPanel();
 		JPanel rightPanel = createRightPanel();
 		containerPanel.add(leftPanel);
@@ -147,9 +147,9 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 * 
 	 * @return the left panel
 	 */
-	public JPanel createLeftPanel() {
+	private JPanel createLeftPanel() {
 		JPanel leftPanel = createPanel(MainFrame.INPUTTABCOLOR,
-				mf.getScreenWidth() / 2, mf.getStatePanelSize());
+				getScreenWidth() / 2, getStatePanelSize());
 		leftPanel.add(ipc.loadProjectSelection(), setGrids(0, 0));
 		leftPanel.add(ft.loadFolder(), setGrids(0, 1));
 		GridBagConstraints c = setGrids(0, 2);
@@ -164,9 +164,9 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 * 
 	 * @return the right panel
 	 */
-	public JPanel createRightPanel() {
+	private JPanel createRightPanel() {
 		JPanel rightPanel = createPanel(MainFrame.INPUTTABCOLOR,
-				mf.getScreenWidth() / 2, mf.getStatePanelSize());
+				getScreenWidth() / 2, getStatePanelSize());
 		rightPanel.add(xmledit.loadPanel(), setGrids(0, 0));
 		rightPanel.add(ipc.loadAnalyzeButtonSection(), setGrids(0, 1));
 		return rightPanel;
