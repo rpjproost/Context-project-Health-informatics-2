@@ -68,11 +68,6 @@ public class LineChartPanel extends GraphPanel {
 	}
 
 	@Override
-	GraphInputContainer getGraphContainer() {
-		return container;
-	}
-
-	@Override
 	public boolean isSelected() {
 		return checkbox.isSelected();
 	}

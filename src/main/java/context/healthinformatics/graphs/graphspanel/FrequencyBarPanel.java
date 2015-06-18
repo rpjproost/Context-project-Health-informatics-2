@@ -68,11 +68,6 @@ public class FrequencyBarPanel extends GraphPanel {
 		// TODO Auto-generated method stub
 		
 	}
-
-	@Override
-	public GraphInputContainer getGraphContainer() {
-		return container;
-	}
 	
 	@Override
 	public JCheckBox getCheckbox() {

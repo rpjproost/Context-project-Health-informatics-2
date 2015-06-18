@@ -41,11 +41,6 @@ public abstract class GraphPanel extends InterfaceHelper implements ActionListen
 	public abstract JCheckBox getCheckbox();
 	
 	/**
-	 * @return the container of the graph.
-	 */
-	abstract GraphInputContainer getGraphContainer();
-	
-	/**
 	 * Makes a field for the title of a graph and sets the title of panel itself.
 	 * @param title the title of the panel.
 	 * @param panelWidth the width of the panel.
