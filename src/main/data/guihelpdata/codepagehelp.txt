@@ -46,7 +46,8 @@ Language
 		After data you can write an SQL query, in which you can name the columns of the table from the input tab (for example : where columnA = 2).When a
 		columns should equal a string you have to surrond the string with single-quotes. You can also use other SQL keywords like : AND, OR, BETWEEN and for a not-operator you can use respectively smaller-then and larger-then character concatenated.<br/> The Connections method needs both ends of a connections, so you can specify the third section in the same way as the second section. If you want to select on a column where the row you want is empty, you can select NULL which is the same as an empty field. When comparing with NULL you have to use the keyword "IS". The connection will be made from the result of the first selection to the result of the second conection.
 		<br/><br/>
-		Compute and compare are exceptions, because the second word for Compute is either "chunk", "all" or "data"????????. If it is "chunk" you will compute values for every chunk in the intermediate result, and with "all" it will be computed for all entries in the entire data set. The third word for "compute" has to be the name of the column, you want to do the computation on. This column has to be a integer column, and cannot be a column with strings. the result will be that either per chunk or for all values in the column, the average, sum, minimum and the maximum will be calculated and displayed.
+		Compute and compare are exceptions, because the second word for Compute is either "chunk", "all" or "data". If it is "chunk" you will compute the sum, min, max, average of the values in the column "value" for every chunk in the intermediate result. With "all", these values will be computed for all entries in the entire data set. The third word for "compute" has to be the name of the column, you want to do the computation on. This column has to be a integer column, and cannot be a column with strings. the result will be that either per chunk or for all values in the column, the average, sum, minimum and the maximum will be calculated and displayed.
+		When the second word is data it has to be followed by first the name of the column on which you want to compute. This will not be visible in the intermediate result but it will be displayed in the graph section of the Output Tab. Therefore the fourth word is the name of the chart. When you have previously made chunks, the different computations wil be done for the chunks. Additionally, you can go to the graphs in Output Tab and "line chart" for example, to see the result as a graph.
 		<br/><br/> 
 		Compare is special because it is specifically for the ADMIRE project. The compare operation uses creatine value you generate advice for the patients of the ADMIRE project.
 		The first word is "compare", followed by the slection by line, code or comment. The third section is "on value", where value is the name of the column that you want to use as
@@ -55,7 +56,7 @@ Language
 		status into consideration.
 	</p>
 	<p>
-		To come back at the first example of this explanation, "Comment(a)" is the first section of the query to specify the operation, and "line = 1" is the section to specify where the comment has to go.
+		To come back to the first example of this explanation, "Comment(a)" is the first section of the query to specify the operation, and "line = 1" is the section to specify where the comment has to go.
 			
 	</p>
 	</body>
@@ -73,6 +74,8 @@ Examples
 	  <li>connect(A to Z) comment = A comment = Z <br/><br/> This query connects all lines and chunks with comment "A" to all lines and chunks with comment "Z", and associates the string "A to Z" with this connection.<br/><br/></li>
 	  <li>code(123) data WHERE value = 209 <br/><br/> This query sets the code "123" on every line where the value column is equal to 209<br/><br/></li>
 	  <li>compute all values <br/><br/> This query will put all lines in a chunk, and for that chunk calculate the min, max, average and sum of the values in the value column.<br/><br/></li>
+	  <li>compute data values lineOfValues<br/><br/> THe result in this query is not visible in the intermediate result.
+	      However, you can go to graphs section in Output Tab, click "line-chart", give the chart a name and click "Update Graph" to show a graph of the values.<br/><br/></li>
 	</ol>  
 	</body>
 </html>
