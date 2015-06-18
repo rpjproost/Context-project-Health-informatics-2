@@ -196,6 +196,9 @@ public final class ComputationData {
 	}
 
 
+	/**
+	 * Undo computations.
+	 */
 	public static void undo() {
 		setComputed(false);
 		data = new ArrayList<HashMap<Integer, Double>>();
