@@ -61,6 +61,12 @@ public class Computations extends Task {
 		setResult(list);
 	}
 
+	/**
+	 * Extra interpreter for computations.
+	 * @param args Query from interpreter.
+	 * @return Result of computations.
+	 * @throws Exception if query is not formatted right.
+	 */
 	private ArrayList<Chunk> parseSecondArg(Query args) throws Exception {
 		String arg = args.part().toLowerCase();
 		args.inc();
@@ -79,11 +85,22 @@ public class Computations extends Task {
 
 	}
 
+	/**
+	 * Computes value of a column of a chunk.
+	 * Average of child chunks or just value of chunk.
+	 * @param column column to be computed.
+	 * @param name name of computation.
+	 * @return list of chunks.
+	 * @throws SQLException Column does not exist.
+	 */
 	private ArrayList<Chunk> computeData(String column, String name) throws SQLException {
 		ComputationData.createHashMap(column, name);
 		return getChunks();
 	}
 
+	/**
+	 * Sets all chunks in one chunk to compute average/sum/etc.
+	 */
 	private void prepareForComputeAll() {
 		ArrayList<Chunk> chunks = new ArrayList<Chunk>();
 		Chunk temp = new Chunk();
@@ -92,6 +109,12 @@ public class Computations extends Task {
 		setChunks(chunks);
 	}
 
+	/**
+	 * Computes average/sum/etc per chunk.
+	 * @param column column to be computed.
+	 * @return list of computed chunks.
+	 * @throws SQLException Column does not exist in database.
+	 */
 	private ArrayList<Chunk> compute(String column) throws SQLException {
 		comp = true;
 		if (column.equals("times")) {
@@ -106,6 +129,12 @@ public class Computations extends Task {
 		}
 	}
 
+	/**
+	 * Compute difference per chunk.
+	 * @param column column to be computed
+	 * @return list of chunks computed.
+	 * @throws SQLException Column does not exist in database.
+	 */
 	private ArrayList<Chunk> computeDif(String column) throws SQLException {
 		diff = true;
 		for (Chunk c : getChunks()) {
