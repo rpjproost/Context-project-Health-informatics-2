@@ -11,7 +11,7 @@ import context.healthinformatics.parser.Column;
 import context.healthinformatics.sequentialdataanalysis.Chunk;
 
 /**
- * Class which output txt file for spss. Spss text file format:
+ * Class which output TXT file for SPSS. SPSS text file format:
  * http://www.ats.ucla.edu/stat/spss/modules/input.htm
  */
 public class WriteToTXT {
@@ -21,37 +21,41 @@ public class WriteToTXT {
 	 * Constructor for writetoTXT.
 	 * 
 	 * @param fileName
-	 *            the filename of the txtfile
+	 *            the filename of the TXT file
 	 */
 	public WriteToTXT(String fileName) {
 		this.fileName = fileName;
 	}
 
 	/**
-	 * Try to setup new printwriter at specified path with charset UTF-8.
+	 * Try to setup new PrintWriter at specified path with CharSet UTF-8.
 	 * 
-	 * @return the printwriter.
+	 * @return the PrintWriter.
 	 * @throws FileNotFoundException
 	 *             FileNotFoundException
-	 * @throws UnsupportedEncodingException
-	 *             unsupportedEncodingException
 	 */
-	public PrintWriter getPrintWriter() throws FileNotFoundException,
-			UnsupportedEncodingException {
-		PrintWriter writer = null;
+	private PrintWriter getPrintWriter() throws FileNotFoundException {
 		if (!fileName.endsWith(".txt")) {
 			fileName += ".txt";
 		}
+		return write(null);
+	}
+
+	/**
+	 * Try to write to the specified file.
+	 * 
+	 * @param writer
+	 *            the writer
+	 * @return the writer
+	 * @throws FileNotFoundException
+	 */
+	private PrintWriter write(PrintWriter writer) throws FileNotFoundException {
 		try {
 			writer = new PrintWriter(fileName, "UTF-8");
-		} catch (FileNotFoundException e) {
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {
 			throw new FileNotFoundException(
 					"The path to write to is not found!");
-		} catch (UnsupportedEncodingException e) {
-			throw new UnsupportedEncodingException(
-					"The encoding for the write to file is not supported!");
 		}
-
 		return writer;
 	}
 
@@ -82,14 +86,12 @@ public class WriteToTXT {
 	 * @param chunks
 	 *            the chunks to write to file
 	 * @param database
-	 *            the database to get the columnnames
+	 *            the database to get the column names
 	 * @throws FileNotFoundException
-	 *             filenotfoundexception
-	 * @throws UnsupportedEncodingException
-	 *             unsupportedencodingexception
+	 *             FileNotFoundException
 	 */
 	public void writeSPSSDataToFile(ArrayList<Chunk> chunks, Db database)
-			throws FileNotFoundException, UnsupportedEncodingException {
+			throws FileNotFoundException {
 		PrintWriter writer = getPrintWriter();
 		writer.println("DATA LIST LIST");
 		writer.println("/ " + processColumnNames(database.getColumns()));
@@ -108,7 +110,7 @@ public class WriteToTXT {
 	 *            the columns of the data
 	 * @return a the columns
 	 */
-	public String processColumnNames(ArrayList<Column> columns) {
+	private String processColumnNames(ArrayList<Column> columns) {
 		StringBuffer res = new StringBuffer();
 		for (int i = 1; i < columns.size(); i++) {
 			if (i == columns.size() - 1) {
@@ -125,9 +127,9 @@ public class WriteToTXT {
 	 * 
 	 * @param chunks
 	 *            the list of chunks
-	 * @return a stringbuffer with the right formatted resultset
+	 * @return a String with the right formatted ResultSet
 	 */
-	public String processChunks(ArrayList<Chunk> chunks) {
+	private String processChunks(ArrayList<Chunk> chunks) {
 		StringBuffer str = new StringBuffer();
 		for (int i = 0; i < chunks.size(); i++) {
 			Chunk chunk = chunks.get(i);
