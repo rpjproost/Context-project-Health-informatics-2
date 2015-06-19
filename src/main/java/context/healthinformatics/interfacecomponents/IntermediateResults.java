@@ -176,7 +176,6 @@ public class IntermediateResults extends InterfaceHelper {
 		StringBuilder buildString = new StringBuilder();
 		for (int i = 0; i < setMaxNumberOfDisplay(chunks); i++) {
 			Chunk currentChunk = chunks.get(i);
-
 			if (currentChunk.hasChild()) {
 				buildString.append("<tr><td>" + globalChunkCounter + "</td>");
 				globalChunkCounter++;
