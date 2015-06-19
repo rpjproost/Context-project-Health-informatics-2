@@ -1,6 +1,5 @@
 package context.healthinformatics.analyse;
 
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -19,7 +18,6 @@ import context.healthinformatics.sequentialdataanalysis.Connections;
 import context.healthinformatics.sequentialdataanalysis.Constraints;
 import context.healthinformatics.sequentialdataanalysis.Task;
 
-
 /**
  * class handling the interpreting of the user input.
  */
@@ -28,6 +26,7 @@ public class Interpreter implements Observer {
 	private Stack<Task> tasks;
 	private ArrayList<Chunk> firstList;
 	private String name;
+	
 	/**
 	 * constructor for the Interpreter.
 	 * @param name name of this interpreter.
@@ -47,11 +46,10 @@ public class Interpreter implements Observer {
 	 */
 	public void interpret(String code) throws Exception {
 		Scanner sc = new Scanner(code);
-		
 		while (sc.hasNextLine()) {
 			Query query = new Query(sc.nextLine());
 			Task task = createTask(query);
-			if (task != null) { //task == null if revert / undo was called
+			if (task != null) {
 				task.run(query);
 				tasks.push(task);
 			} else {
@@ -60,7 +58,11 @@ public class Interpreter implements Observer {
 		}
 		sc.close();
 	}
-
+	
+	/**
+	 * Parses the undo option.
+	 * @param key the keyword that should contain an undo. 
+	 */
 	private void parseUndo(String key) {
 		if (key.equals("undo") || key.equals("revert")) {
 			undo();
@@ -75,6 +77,7 @@ public class Interpreter implements Observer {
 
 	/**
 	 * method to create the correct task.
+	 * task == null if revert / undo was called
 	 * @param k key to check witch task to create.
 	 * @param parameter parameter for the task.
 	 * @return the newly created task.
@@ -132,7 +135,7 @@ public class Interpreter implements Observer {
 	}
 	
 	/**
-	 * deep coppy a list of chunks.
+	 * deep copy a list of chunks.
 	 * @param list list to copy.
 	 * @return the copy.
 	 */
@@ -171,11 +174,17 @@ public class Interpreter implements Observer {
 		return name;
 	}
 
+	/**
+	 * Updates the singleton of the interpreter.
+	 */
 	@Override
 	public void update(String param) {
 		SingletonInterpreter.update(param);
 	}
 	
+	/**
+	 * observes if there is anything changes in project switching.
+	 */
 	@Override
 	public void observe(Observable o) {
 		o.subscribe(this);
