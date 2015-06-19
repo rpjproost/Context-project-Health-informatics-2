@@ -220,7 +220,7 @@ public class Codes extends Task {
 				setCodeDate();
 			}
 			else if (query.part().equals("difference")) {
-				setCodeOndifference(query.next());
+				setCodeOnDifference(query.next());
 			}
 			else {
 				throw new Exception(e.getMessage() + "/date");
@@ -232,7 +232,7 @@ public class Codes extends Task {
 	 * Sets code when difference smaller than number.
 	 * @param number integer of difference constraint.
 	 */
-	private void setCodeOndifference(String number) {
+	private void setCodeOnDifference(String number) {
 		for (Chunk c : getChunks()) {
 			if (c.getDifference() != Integer.MIN_VALUE) {
 				double smallerThan = Integer.parseInt(number);
@@ -244,7 +244,6 @@ public class Codes extends Task {
 			}
 		}
 		setResult(getChunks());
-		
 	}
 
 	/**
