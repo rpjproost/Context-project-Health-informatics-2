@@ -105,7 +105,8 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	 */
 	private void initComponents() {
 		initButtons();
-		initTextFields();
+		initCodeArea();
+		initOldCodeArea();
 		initButtonActionListeners();
 	}
 
@@ -118,14 +119,6 @@ public class CodePage extends InterfaceHelper implements PanelState,
 				ANALYZEBUTTONHEIGHT);
 		helpButton = createButton("Help", ANALYZEBUTTONWIDTH,
 				ANALYZEBUTTONHEIGHT);
-	}
-
-	/**
-	 * Initialise the textfields.
-	 */
-	private void initTextFields() {
-		initCodeArea();
-		initOldCodeArea();
 	}
 
 	/**
@@ -152,7 +145,6 @@ public class CodePage extends InterfaceHelper implements PanelState,
 		ActionMap actions = codeTextArea.getActionMap();
 		actions.put(TEXT_SUBMIT, new AbstractAction() {
 			private static final long serialVersionUID = 1L;
-
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				analyseCodeArea();
@@ -235,7 +227,7 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	}
 
 	/**
-	 * Sets a area to shown whoch codes the users used.
+	 * Sets a area to shown which codes the users used.
 	 */
 	private void setOldCodeArea() {
 		JPanel oldCodePanel = createPanel(Color.WHITE, panelWidth, panelHeight);
@@ -268,7 +260,6 @@ public class CodePage extends InterfaceHelper implements PanelState,
 
 	/**
 	 * Sets the go back button to a specific panel.
-	 * 
 	 * @param panel
 	 *            the panel which the go back button will added to.
 	 */
@@ -278,9 +269,7 @@ public class CodePage extends InterfaceHelper implements PanelState,
 
 	/**
 	 * Sets empty panel between the buttons.
-	 * 
-	 * @param panel
-	 *            which the empty panel will be added to.
+	 * @param panel which the empty panel will be added to.
 	 */
 	private void setEmptyPanel(JPanel panel) {
 		JPanel emptyPanel = createPanel(MainFrame.CODETABCOLOR,
@@ -291,16 +280,14 @@ public class CodePage extends InterfaceHelper implements PanelState,
 
 	/**
 	 * Sets a analyze button to the specific panel.
-	 * 
-	 * @param panel
-	 *            which the analyze button will be added to.
+	 * @param panel which the analyze button will be added to.
 	 */
 	private void setRightButton(JPanel panel, JButton button) {
 		panel.add(button, setGrids(2, 0, new Insets(INSETS, 0, INSETS, INSETS)));
 	}
 
 	/**
-	 * Set the rightpanel.
+	 * Set the right panel.
 	 */
 	private void setRightPanelWithOldIntermediateResult() {
 		rightPanel.add(imr.loadPanel(), setGrids(0, 0));
@@ -309,7 +296,7 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	}
 
 	/**
-	 * Analyse the inputted query from the code area.
+	 * Analyze the query that was entered into the code area.
 	 */
 	private void analyseCodeArea() {
 		interpreter = SingletonInterpreter.getInterpreter();
@@ -380,13 +367,11 @@ public class CodePage extends InterfaceHelper implements PanelState,
 
 	/**
 	 * Decide of there must be written to a file or doing nothing.
-	 * 
-	 * @param rVal
-	 *            the number of which button is chosen.
+	 * @param rVal the number of which button is chosen.
 	 * @throws IOException
 	 *             if the parsing of the xmlDocument goes wrong.
 	 */
-	public void fileChooser(int rVal) throws IOException {
+	private void fileChooser(int rVal) throws IOException {
 		if (rVal == JFileChooser.APPROVE_OPTION) {
 			WriteToTXT write = new WriteToTXT(savePopup.getSelectedFile()
 					.getAbsolutePath());
@@ -396,13 +381,11 @@ public class CodePage extends InterfaceHelper implements PanelState,
 
 	/**
 	 * Import the script from a text file.
-	 * 
-	 * @param rVal
-	 *            if has chosen.
+	 * @param rVal if has chosen.
 	 * @throws FileNotFoundException
 	 *             if file is not found exception
 	 */
-	public void importScript(int rVal) throws FileNotFoundException {
+	private void importScript(int rVal) throws FileNotFoundException {
 		if (rVal == JFileChooser.APPROVE_OPTION) {
 			ReadHelpInfoFromTXTFile textParser = new ReadHelpInfoFromTXTFile(
 					savePopup.getSelectedFile().getAbsolutePath());

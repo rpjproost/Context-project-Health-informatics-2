@@ -23,7 +23,7 @@ import context.healthinformatics.parser.XMLParser;
 import context.healthinformatics.writer.XMLDocument;
 
 /**
- * Class which represents one of the states for the variabel panel in the
+ * Class which represents one of the states for the variable panel in the
  * mainFrame.
  */
 public class InputPage extends InterfaceHelper implements PanelState,
@@ -50,9 +50,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 
 	/**
 	 * Constructor.
-	 * 
-	 * @param m
-	 *            is the mainframe object
+	 * @param m is the mainframe object
 	 */
 	public InputPage(MainFrame m) {
 		mf = m;
@@ -61,13 +59,12 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		xmlController = new XMLEditorController();
 		xmlController.subscribe(SingletonInterpreter.getInterpreter());
 		xmlController.subscribe(SingletonDb.getDb());
-
 		ipc = new InputPageComponents(mf, this);
 		checkOnFiles();
 	}
 
 	/**
-	 * 
+	 * Check whether there are existing projects.
 	 */
 	private void checkOnFiles() {
 		File directory = new File("src/main/data/savedXML/");
@@ -81,9 +78,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 
 	/**
 	 * Founded files will be parsed and will be added to the interface.
-	 * 
-	 * @param listOfFiles
-	 *            list of files that are found by java.
+	 * @param listOfFiles list of files that are found by java.
 	 */
 	private void foundFiles(File[] listOfFiles) {
 		for (int i = 0; i < listOfFiles.length; i++) {
@@ -103,11 +98,8 @@ public class InputPage extends InterfaceHelper implements PanelState,
 
 	/**
 	 * Sets all saved values in all components that are involved.
-	 * 
-	 * @param project
-	 *            the project which should be added.
-	 * @param docsOfFile
-	 *            all files that are belongs to the project.
+	 * @param project the project which should be added.
+	 * @param docsOfFile all files that are belongs to the project.
 	 */
 	private void runOldProject(String project, ArrayList<XMLDocument> docsOfFile) {
 		xmlController.setProject(project);
@@ -123,7 +115,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	/**
 	 * Creates a clear project with a standard project default.
 	 */
-	void runClearedProject() {
+	protected void runClearedProject() {
 		ft = new FileTree(this);
 		xmlController.setProject("(default)");
 		addComboItem("(default)");
@@ -144,7 +136,6 @@ public class InputPage extends InterfaceHelper implements PanelState,
 
 	/**
 	 * Create the left panel of the input page.
-	 * 
 	 * @return the left panel
 	 */
 	private JPanel createLeftPanel() {
@@ -161,7 +152,6 @@ public class InputPage extends InterfaceHelper implements PanelState,
 
 	/**
 	 * Create the right panel of the input page.
-	 * 
 	 * @return the right panel
 	 */
 	private JPanel createRightPanel() {
@@ -174,7 +164,6 @@ public class InputPage extends InterfaceHelper implements PanelState,
 
 	/**
 	 * Method which creates the list of projects.
-	 * 
 	 * @return list of projects.
 	 */
 	public String[] getProjects() {
@@ -186,8 +175,8 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	}
 
 	/**
-	 * Method which asks the user to enter a new PROJECTS :, and inserts it in
-	 * the combobox.
+	 * Method which asks the user to enter a new project and inserts it in
+	 * the comboBox.
 	 */
 	public void createProject() {
 		String newProject = (String) JOptionPane.showInputDialog(leftPanel,
@@ -204,11 +193,9 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	/**
 	 * Method which asks the user to enter a new PROJECTS :, and inserts it in
 	 * the ComboBox.
-	 * 
-	 * @param project
-	 *            is the name of the project.
+	 * @param project is the name of the project.
 	 */
-	public void addComboItem(String project) {
+	protected void addComboItem(String project) {
 		ArrayList<String> list = new ArrayList<String>();
 		list.add(project);
 		folder.add(list);
@@ -236,10 +223,8 @@ public class InputPage extends InterfaceHelper implements PanelState,
 
 	/**
 	 * Method which finds the project in the folder.
-	 * 
 	 * @return index of project.
-	 * @param s
-	 *            is string of project.
+	 * @param s is string of project.
 	 */
 	public int findFolderProject(String s) {
 		for (int i = 0; i < folder.size(); i++) {
@@ -294,11 +279,9 @@ public class InputPage extends InterfaceHelper implements PanelState,
 
 	/**
 	 * Method which adds a project to the folder and FileTree.
-	 * 
-	 * @param path
-	 *            is the path of the added file.
+	 * @param path is the path of the added file.
 	 */
-	public void addFile(String path) {
+	protected void addFile(String path) {
 		int project = findFolderProject((String) ipc.getComboBox()
 				.getSelectedItem());
 		if (folder.size() > 0 && project >= 0 && !path.equals("")
@@ -310,36 +293,43 @@ public class InputPage extends InterfaceHelper implements PanelState,
 
 	/**
 	 * Open files and adds them to the tree.
-	 * 
-	 * @param files
-	 *            all files that should be added.
+	 * @param files all files that should be added.
 	 */
 	public void openFiles(File[] files) {
 		for (int i = 0; i < files.length; i++) {
 			String path = files[i].getPath();
 			XMLDocument currentDoc = makeDocument(path);
 			if (!path.endsWith("xml")) {
-				if (xmlController.getDocument(path) == null) {
-					addDocumentAndShowInEditor(currentDoc);
-					addFile(files[i].getName());
-				} else {
-					JOptionPane.showMessageDialog(null,
-							"No project created yet, or no file specified, "
-									+ "or file already in project!");
-				}
+				checkForXmlDocument(files, i, path, currentDoc);
 			} else {
 				addXmlFile(path);
 			}
 		}
 	}
+	
+	/**
+	 * Method which check if there is a document in the xmlController.
+	 * @param files the array of files.
+	 * @param index, the index in the loop.
+	 * @param path, the path from the file.
+	 * @param currentDoc the current document.
+	 */
+	private void checkForXmlDocument(File[] files, int index, String path, XMLDocument currentDoc) {
+		if (xmlController.getDocument(path) == null) {
+			addDocumentAndShowInEditor(currentDoc);
+			addFile(files[index].getName());
+		} else {
+			JOptionPane.showMessageDialog(null,
+					"No project created yet, or no file specified, "
+							+ "or file already in project!");
+		}
+	}
 
 	/**
-	 * Adds a xml file to the file tree and to the editor.
-	 * 
-	 * @param path
-	 *            the source of the xml file.
+	 * Adds a XML file to the file tree and to the editor.
+	 * @param path the source of the XML file.
 	 */
-	void addXmlFile(String path) {
+	protected void addXmlFile(String path) {
 		XMLParser parser = new XMLParser(path);
 		try {
 			parser.parse();
@@ -348,26 +338,33 @@ public class InputPage extends InterfaceHelper implements PanelState,
 		}
 		ArrayList<XMLDocument> internDocs = parser.getDocuments();
 		for (int i = 0; i < internDocs.size(); i++) {
-			if (xmlController.getDocument(internDocs.get(i).getPath()) == null) {
-				XMLDocument current = internDocs.get(i);
-				addDocumentAndShowInEditor(current);
-				addFile(xmlController.obtainFileName(current.getPath()));
-			} else {
-				JOptionPane.showMessageDialog(null,
-						"No project created yet, or no file specified, "
-								+ "or file already in project!");
-			}
+			proccesXmlFile(internDocs, i);
+		}
+	}
+	
+	/**
+	 * Method which processes the XML file.
+	 * @param internDocs
+	 * @param index
+	 */
+	private void proccesXmlFile(ArrayList<XMLDocument> internDocs, int index) {
+		if (xmlController.getDocument(internDocs.get(index).getPath()) == null) {
+			XMLDocument current = internDocs.get(index);
+			addDocumentAndShowInEditor(current);
+			addFile(xmlController.obtainFileName(current.getPath()));
+		} else {
+			JOptionPane.showMessageDialog(null,
+					"No project created yet, or no file specified, "
+							+ "or file already in project!");
 		}
 	}
 
 	/**
 	 * Adds the file with a path to all documents.
-	 * 
-	 * @param path
-	 *            the path to a file.
+	 * @param path the path to a file.
 	 * @return the current xml document.
 	 */
-	XMLDocument makeDocument(String path) {
+	protected XMLDocument makeDocument(String path) {
 		XMLDocument current = new XMLDocument();
 		current.setPath(path);
 		return current;
@@ -375,9 +372,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 
 	/**
 	 * Adds document to all documents and show it, if it isn't already loaded.
-	 * 
-	 * @param doc
-	 *            the xml document to be added.
+	 * @param doc the xml document to be added.
 	 */
 	private void addDocumentAndShowInEditor(XMLDocument doc) {
 		xmlController.addDocument(doc);
@@ -386,9 +381,7 @@ public class InputPage extends InterfaceHelper implements PanelState,
 
 	/**
 	 * Removes a project from all devices.
-	 * 
-	 * @param project
-	 *            the project that must be removed.
+	 * @param project the project that must be removed.
 	 */
 	public void removeProject(String project) {
 		int index = findFolderProject(project);
