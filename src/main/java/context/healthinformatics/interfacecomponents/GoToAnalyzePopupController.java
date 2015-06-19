@@ -11,7 +11,7 @@ import context.healthinformatics.writer.ReadWriteAnalyseFilter;
 import context.healthinformatics.writer.XMLDocument;
 
 /**
- * Class to handle the popup.
+ * Class to handle the PopUp.
  */
 public class GoToAnalyzePopupController {
 	private InputPageComponents ipc;
@@ -43,25 +43,35 @@ public class GoToAnalyzePopupController {
 			String projectName) {
 		this.projectName = projectName;
 		if (!isOpen) {
-			currentPopUp = new GoToAnalyzePopup(selectedDocs, this);
-			ReadWriteAnalyseFilter rwaf = new ReadWriteAnalyseFilter(
-					"src/main/data/savedFilters/" + projectName + ".txt");
-			try {
-				currentPopUp.setFilters(rwaf.readFilter());
-			} catch (IOException e) {
-				currentPopUp.addEmptyFilter();
-			}
-			setOpen(true);
+			openNewPopup(selectedDocs);
 		} else {
 			currentPopUp.getToFront();
 		}
 	}
 
 	/**
-	 * Set if the popup is open or not.
+	 * Open a new analyze PopUp.
+	 * 
+	 * @param selectedDocs
+	 *            the selected documents
+	 */
+	private void openNewPopup(ArrayList<XMLDocument> selectedDocs) {
+		currentPopUp = new GoToAnalyzePopup(selectedDocs, this);
+		ReadWriteAnalyseFilter rwaf = new ReadWriteAnalyseFilter(
+				"src/main/data/savedFilters/" + projectName + ".txt");
+		try {
+			currentPopUp.setFilters(rwaf.readFilter());
+		} catch (IOException e) {
+			currentPopUp.addEmptyFilter();
+		}
+		setOpen(true);
+	}
+
+	/**
+	 * Set if the PopUp is open or not.
 	 * 
 	 * @param isOpen
-	 *            false if it isnt else true
+	 *            false if it isn't else true
 	 */
 	public void setOpen(boolean isOpen) {
 		this.isOpen = isOpen;
@@ -85,7 +95,7 @@ public class GoToAnalyzePopupController {
 					"Save filters error", JOptionPane.WARNING_MESSAGE);
 		}
 	}
-	
+
 	/**
 	 * Close the pop-up.
 	 */
