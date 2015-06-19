@@ -8,7 +8,7 @@ public class ConnectionSet {
 	private String codeTo;
 
 	/**
-	 * Constructor of the Connectionset.
+	 * Constructor of the ConnectionSet.
 	 * 
 	 * @param codeFrom
 	 *            the code from

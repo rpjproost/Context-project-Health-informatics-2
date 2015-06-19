@@ -23,22 +23,24 @@ import context.healthinformatics.gui.InterfaceHelper;
 import context.healthinformatics.sequentialdataanalysis.Chunk;
 
 /**
- * Class to create the boxplot.
+ * Class to create the BoxPlot.
  */
 public class BoxPlot extends InterfaceHelper {
 
 	private static final long serialVersionUID = 1L;
+
 	private JPanel chartContainerPanel;
 	private JPanel mainPanel;
+	private ChartPanel chartPanel;
+
 	private static final int BOX_PLOT_PANEL_HEIGHT = 400;
 	private static final int BOX_PLOT_HEIGHT = 350;
 	private static final int PLOTSMEANINVISIBLE = 5;
 
 	private int width;
+	private int plotsize;
 
 	private DefaultBoxAndWhiskerCategoryDataset dataset;
-	private int plotsize;
-	private ChartPanel chartPanelTest;
 
 	/**
 	 * Creates a new box plot.
@@ -46,19 +48,33 @@ public class BoxPlot extends InterfaceHelper {
 	public BoxPlot() {
 		plotsize = 0;
 		width = getScreenWidth() / 2 - FOUR * INSETS;
-		chartPanelTest = new ChartPanel(new JFreeChart(new CategoryPlot()));
+		chartPanel = new ChartPanel(new JFreeChart(new CategoryPlot()));
+		initChartContainerPanel();
+		initMainPanel();
+	}
+
+	/**
+	 * Initialize the chart container panel for the BoxPlot.
+	 */
+	private void initChartContainerPanel() {
 		chartContainerPanel = createEmptyWithGridBagLayoutPanel();
 		chartContainerPanel.setPreferredSize(new Dimension(width,
 				BOX_PLOT_HEIGHT));
+	}
+
+	/**
+	 * Initialize the main panel for the BoxPlot.
+	 */
+	private void initMainPanel() {
 		mainPanel = createEmptyWithGridBagLayoutPanel();
 		mainPanel.setPreferredSize(new Dimension(width, BOX_PLOT_PANEL_HEIGHT));
 		mainPanel.add(chartContainerPanel, setGrids(0, 0));
 	}
 
 	/**
-	 * Get the mainPanel of the boxplot.
+	 * Get the mainPanel of the BoxPlot.
 	 * 
-	 * @return the panel with the boxplot
+	 * @return the panel with the BoxPlot
 	 */
 	public JPanel getPanel() {
 		return mainPanel;
@@ -71,8 +87,24 @@ public class BoxPlot extends InterfaceHelper {
 	 *            the title of the BoxPlot
 	 */
 	public void createBoxPlot(String title) {
+		JFreeChart chart = createChart(title);
+		mainPanel.remove(chartContainerPanel);
+		chartContainerPanel.remove(chartPanel);
+		chartPanel = new ChartPanel(chart);
+		chartPanel.setPreferredSize(new Dimension(width, BOX_PLOT_HEIGHT));
+		chartContainerPanel.add(chartPanel, setGrids(0, 0));
+		mainPanel.add(chartContainerPanel, setGrids(0, 0));
+		mainPanel.revalidate();
+	}
 
-		final CategoryAxis xAxis = new CategoryAxis("Type");
+	/**
+	 * Create the chart.
+	 * 
+	 * @param title
+	 *            the title of the chart
+	 * @return the chart
+	 */
+	private JFreeChart createChart(String title) {
 		final NumberAxis yAxis = new NumberAxis("Value");
 		yAxis.setAutoRangeIncludesZero(false);
 		final BoxAndWhiskerRenderer renderer = new BoxAndWhiskerRenderer();
@@ -80,34 +112,45 @@ public class BoxPlot extends InterfaceHelper {
 		if (plotsize < PLOTSMEANINVISIBLE) {
 			renderer.setMeanVisible(false);
 		}
-		final CategoryPlot plot = new CategoryPlot(dataset, xAxis, yAxis,
-				renderer);
-		final JFreeChart chart = new JFreeChart("Box Plot: " + title, new Font(
-				"SansSerif", Font.BOLD, TEXTSIZE), plot, true);
-		mainPanel.remove(chartContainerPanel);
-		chartContainerPanel.remove(chartPanelTest);
-		chartContainerPanel.setPreferredSize(new Dimension(width,
-				BOX_PLOT_HEIGHT));
-		chartPanelTest = new ChartPanel(chart);
-		chartPanelTest.setPreferredSize(new Dimension(width, BOX_PLOT_HEIGHT));
-		chartContainerPanel.add(chartPanelTest, setGrids(0, 0));
-		mainPanel.add(chartContainerPanel, setGrids(0, 0));
-		mainPanel.revalidate();
+		final CategoryPlot plot = new CategoryPlot(dataset, new CategoryAxis(
+				"Type"), yAxis, renderer);
+		return new JFreeChart("Box Plot: " + title, new Font("SansSerif",
+				Font.BOLD, TEXTSIZE), plot, true);
 	}
 
 	/**
-	 * Create the data set for the boxplot.
+	 * Create the data set for the BoxPlot.
 	 * 
 	 * @param columns
 	 *            the columns for which the box plot is made
+	 * @param type
+	 *            the type of how to plot the BoxPlot
 	 * @throws Exception
 	 *             exception of wrong number or no data
 	 */
-	public void setDataPerColumn(ArrayList<String> columns) throws Exception {
-
+	public void setDataBoxPlot(ArrayList<String> columns, String type)
+			throws Exception {
 		dataset = new DefaultBoxAndWhiskerCategoryDataset();
-		ArrayList<Chunk> chunks = SingletonInterpreter.getInterpreter().getChunks();
+		ArrayList<Chunk> chunks = SingletonInterpreter.getInterpreter()
+				.getChunks();
 		StringBuilder buildTitle = new StringBuilder();
+		if (type.equals("All")) {
+			setDataPerColumn(columns, chunks, buildTitle);
+		} else if (type.equals("Chunks")) {
+			setDataPerChunk(columns, chunks, buildTitle);
+		}
+	}
+
+	/**
+	 * Create a Data Set per Column.
+	 * 
+	 * @param columns
+	 *            the columns which we need the data from
+	 * @throws Exception
+	 *             exception of wrong number or no data
+	 */
+	private void setDataPerColumn(ArrayList<String> columns,
+			ArrayList<Chunk> chunks, StringBuilder buildTitle) throws Exception {
 		if (chunks != null) {
 			for (int j = 0; j < columns.size(); j++) {
 				buildTitle.append(" " + columns.get(j));
@@ -118,22 +161,21 @@ public class BoxPlot extends InterfaceHelper {
 				}
 				dataset.add(dataList, columns.get(j), " Type " + j);
 			}
+			plotsize = 1;
 		}
-		plotsize = 1;
+
 	}
 
 	/**
-	 * Create a dataset per chunk.
+	 * Create a Data Set per chunk.
 	 * 
 	 * @param columns
 	 *            the columns which we need the data from
 	 * @throws Exception
 	 *             exception of wrong number or no data
 	 */
-	public void setDataPerChunk(ArrayList<String> columns) throws Exception {
-		dataset = new DefaultBoxAndWhiskerCategoryDataset();
-		ArrayList<Chunk> chunks = SingletonInterpreter.getInterpreter().getChunks();
-		StringBuilder buildTitle = new StringBuilder();
+	private void setDataPerChunk(ArrayList<String> columns,
+			ArrayList<Chunk> chunks, StringBuilder buildTitle) throws Exception {
 		if (chunks != null) {
 			for (int j = 0; j < columns.size(); j++) {
 				buildTitle.append(" " + columns.get(j));
@@ -156,18 +198,15 @@ public class BoxPlot extends InterfaceHelper {
 	 *            the chunk which we are looking at.=
 	 * @param column
 	 *            the column of the chunk we need
-	 * @return the values or values if the chunk has childs
+	 * @return the values or values if the chunk has children
 	 * @throws Exception
+	 *             Exception with message
 	 */
 	private ArrayList<Double> loopThroughChunks(Chunk currentChunk,
 			String column) throws Exception {
 		ArrayList<Double> listOfValues = new ArrayList<Double>();
-
 		if (currentChunk.hasChild()) {
-			ArrayList<Chunk> children = currentChunk.getChildren();
-			for (int i = 0; i < children.size(); i++) {
-				listOfValues.addAll(loopThroughChunks(children.get(i), column));
-			}
+			listOfValues.addAll(processChunkWithChildren(currentChunk, column));
 		} else {
 			Double res = getChunkData(currentChunk, column);
 			if (res != Integer.MIN_VALUE) {
@@ -177,28 +216,76 @@ public class BoxPlot extends InterfaceHelper {
 		return listOfValues;
 	}
 
+	/**
+	 * Process a chunk which contains children.
+	 * 
+	 * @param currentChunk
+	 *            the current chunk
+	 * @param column
+	 *            the column which the data must be read from
+	 * @return the list with values
+	 * @throws Exception
+	 *             Exception with message
+	 */
+	private ArrayList<Double> processChunkWithChildren(Chunk currentChunk,
+			String column) throws Exception {
+		ArrayList<Double> listOfValues = new ArrayList<Double>();
+		ArrayList<Chunk> children = currentChunk.getChildren();
+		for (int i = 0; i < children.size(); i++) {
+			listOfValues.addAll(loopThroughChunks(children.get(i), column));
+		}
+		return listOfValues;
+	}
+
+	/**
+	 * Get the data of a chunk as a double.
+	 * 
+	 * @param chunk
+	 *            the current chunk
+	 * @param column
+	 *            the column of the chunk data
+	 * @return the double value of the data
+	 * @throws Exception
+	 *             the SQL Exception
+	 */
 	private double getChunkData(Chunk chunk, String column) throws Exception {
 		Db data = SingletonDb.getDb();
 		try {
-			ResultSet rs = data.selectResultSet("result", column, "resultid = "
-					+ chunk.getLine());
-			String value = "";
-			if (rs.next()) {
-				if (rs.getObject(column) != null) {
-					value = rs.getObject(column).toString();
-				} else {
-					return Integer.MIN_VALUE;
-				}
-			}
-			rs.close();
-			return parseToDouble(value);
+			return getDataChunkFromDB(
+					data.selectResultSet("result", column, "resultid = "
+							+ chunk.getLine()), column);
 		} catch (SQLException | NumberFormatException e) {
 			throw new Exception(e.getMessage());
 		}
 	}
 
 	/**
-	 * Parses the string from the db to a value.
+	 * Read the data from the ResultSet and parses it to a double.
+	 * 
+	 * @param rs
+	 *            the ResultSet
+	 * @param column
+	 *            the column name
+	 * @return the value as a double
+	 * @throws SQLException
+	 *             the SQL Exception
+	 */
+	private double getDataChunkFromDB(ResultSet rs, String column)
+			throws SQLException {
+		String value = "";
+		if (rs.next()) {
+			if (rs.getObject(column) != null) {
+				value = rs.getObject(column).toString();
+			} else {
+				return Integer.MIN_VALUE;
+			}
+		}
+		rs.close();
+		return parseToDouble(value);
+	}
+
+	/**
+	 * Parses the string from the database to a Double value.
 	 * 
 	 * @param value
 	 *            the value

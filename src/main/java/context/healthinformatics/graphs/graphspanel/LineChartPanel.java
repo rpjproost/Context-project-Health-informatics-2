@@ -3,6 +3,7 @@ package context.healthinformatics.graphs.graphspanel;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JCheckBox;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import context.healthinformatics.graphs.GraphInputContainer;
@@ -74,10 +75,14 @@ public class LineChartPanel extends GraphPanel {
 
 	@Override
 	public void plot() {
-		lineChart.createLineChart(container.getGraphTitleValue());
-		lineChartGraph = lineChart.getPanel();
-		lineChartGraph.setVisible(true);
-
+		try {
+			lineChart.createLineChart(container.getGraphTitleValue());
+			lineChartGraph = lineChart.getPanel();
+			lineChartGraph.setVisible(true);
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, e.getMessage(),
+					"Error creating LineChart!", JOptionPane.WARNING_MESSAGE);
+		}
 	}
 
 	@Override

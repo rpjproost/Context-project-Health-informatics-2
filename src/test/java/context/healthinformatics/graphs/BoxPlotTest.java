@@ -36,7 +36,7 @@ public class BoxPlotTest {
 	private Db data = SingletonDb.getDb();
 
 	private BoxPlot boxplot;
-	
+
 	/**
 	 * preparing db for test.
 	 */
@@ -45,7 +45,7 @@ public class BoxPlotTest {
 		SingletonDb.dropAll(data);
 		boxplot = new BoxPlot();
 	}
-	
+
 	/**
 	 * Empty the interpreter.
 	 */
@@ -62,36 +62,42 @@ public class BoxPlotTest {
 
 	/**
 	 * Tests set data with column for box plot.
-	 * @throws Exception possible error of interpreter.
+	 * 
+	 * @throws Exception
+	 *             possible error of interpreter.
 	 */
 	@Test
 	public void testSetDataPerColumn() throws Exception {
 		ArrayList<String> data = new ArrayList<String>();
-		boxplot.setDataPerColumn(data);
+		boxplot.setDataBoxPlot(data, "All");
 		writeInterpret();
 		data.add("value");
-		boxplot.setDataPerColumn(data);
+		boxplot.setDataBoxPlot(data, "All");
 		assertNotNull(boxplot.getPanel());
 	}
 
 	/**
 	 * Tests set data with per chunk for box plot.
-	 * @throws Exception possible error of interpreter.
+	 * 
+	 * @throws Exception
+	 *             possible error of interpreter.
 	 */
 	@Test
 	public void testSetDataPerChunk() throws Exception {
 		ArrayList<String> data = new ArrayList<String>();
-		boxplot.setDataPerChunk(data);
+		boxplot.setDataBoxPlot(data, "Chunks");
 		writeInterpret();
 		data.add("value");
-		boxplot.setDataPerChunk(data);
+		boxplot.setDataBoxPlot(data, "Chunks");
 		boxplot.createBoxPlot("test");
 		assertNotNull(boxplot.getPanel());
 	}
-	
+
 	/**
 	 * Writes all lines for the interpreter.
-	 * @throws Exception could be thrown.
+	 * 
+	 * @throws Exception
+	 *             could be thrown.
 	 */
 	private void writeInterpret() throws Exception {
 		xmlp = new XMLParser(path + "twoDocs.xml");

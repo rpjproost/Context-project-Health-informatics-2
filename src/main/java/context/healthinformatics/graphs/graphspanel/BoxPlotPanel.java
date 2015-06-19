@@ -98,11 +98,7 @@ public class BoxPlotPanel extends GraphPanel {
 		ArrayList<String> columns = new ArrayList<String>();
 		columns.add(container.getSelectedColumnY());
 		try {
-			if (type.equals("All")) {
-				boxPlot.setDataPerColumn(columns);
-			} else if (type.equals("Chunks")) {
-				boxPlot.setDataPerChunk(columns);
-			}
+			boxPlot.setDataBoxPlot(columns, type);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(),
 					"Error creating BoxPlot!", JOptionPane.WARNING_MESSAGE);
