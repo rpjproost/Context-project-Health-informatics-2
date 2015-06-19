@@ -65,7 +65,7 @@ public class BoxPlotPanel extends GraphPanel {
 	}
 
 	/**
-	 * Performs an action if the checkbox is clicked.
+	 * Performs an action if the CheckBox is clicked.
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {

@@ -48,8 +48,6 @@ public class LineChartPanel extends GraphPanel {
 
 	@Override
 	public void updateContainer() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
