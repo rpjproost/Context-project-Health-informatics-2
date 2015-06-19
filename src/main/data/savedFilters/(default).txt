@@ -1,2 +1,0 @@
-meeting.createdby = 'admire2'
-hospital.createdby = '2.0'

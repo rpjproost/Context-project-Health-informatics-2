@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map.Entry;
+
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
@@ -32,7 +33,7 @@ public class Chunk {
 	private double difference = Integer.MIN_VALUE;
 
 	/**
-	 * 
+	 * Chunk class constructor.
 	 */
 	public Chunk() {
 		chunks = new ArrayList<Chunk>();
@@ -207,17 +208,9 @@ public class Chunk {
 	 */
 	public ArrayList<String> toArray() {
 		ArrayList<String> res = new ArrayList<String>();
-		if (difference != Integer.MIN_VALUE) {
-			res.add("difference to connection " + difference);
-		}
-		else if (isCompute()) {
-			toArrayComputed(res);
-			return res;
-		} else if (hasChild()) {
+		if (hasChild()) {
 			res.add("Chunk contains childs, code = " + code + " comment = "
 					+ comment);
-			return res;
-
 		} else {
 			Db data = SingletonDb.getDb();
 			try {
@@ -227,11 +220,43 @@ public class Chunk {
 				processResultSet(rsmd.getColumnCount(), res);
 				rs.close();
 			} catch (SQLException e) {
-				System.out.println(e);
 				return res;
 			}
 		}
+		toArrayDifference(res);
+		toArrayConnections(res);
+		toArrayComputedCheck(res);
 		return res;
+	}
+
+	private void toArrayDifference(ArrayList<String> res) {
+		if (difference != Integer.MIN_VALUE) {
+			res.add("difference = " + difference);
+		}
+		else {
+			res.add("no difference");
+		}
+	}
+
+	private void toArrayConnections(ArrayList<String> res) {
+		if (hasConnection()) {
+			for (String key : pointer.values()) {
+				res.add(key);
+			}
+		}
+		else {
+			res.add("no connection");
+		}
+		
+	}
+
+	private void toArrayComputedCheck(ArrayList<String> res) {
+		if (isCompute()) {
+			toArrayComputed(res);
+		}
+		else {
+			res.add("no computations");
+		}
 	}
 
 	private void toArrayComputed(ArrayList<String> res) {
@@ -365,7 +390,7 @@ public class Chunk {
 	 * @param column the column to be computed.
 	 * @throws SQLException if column is not in table.
 	 */
-	public void computeChunkValues(String column) throws SQLException {
+	private void computeChunkValues(String column) throws SQLException {
 		double sum = 0;
 		double min = Integer.MAX_VALUE;
 		double max = Integer.MIN_VALUE;
@@ -488,6 +513,10 @@ public class Chunk {
 		return computations[comp];
 	}
 	
+	/**
+	 * Returns difference of value to other connection.
+	 * @return difference double.
+	 */
 	public double getDifference() {
 			return difference;
 	}

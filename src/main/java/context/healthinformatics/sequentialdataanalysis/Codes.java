@@ -18,6 +18,7 @@ public class Codes extends Task {
 	private ArrayList<Chunk> changedChunks;
 	private ArrayList<String> oldCodes;
 	private int index = 0;
+	
 	/**
 	 * Constructor for codes without an argument.
 	 * @param c Code what is going to be set.
@@ -45,7 +46,7 @@ public class Codes extends Task {
 	 * @param code
 	 *            the code to be set.
 	 */
-	public void setCodeOfLine(int line, String code) {
+	protected void setCodeOfLine(int line, String code) {
 		Chunk temp = getChunkByLine(line, getChunks());
 		if (temp != null) {
 			temp.setCode(code);
@@ -53,43 +54,17 @@ public class Codes extends Task {
 	}
 
 	/**
-	 * Set the code on the chunk at index in the chunks ArrayList with the
-	 * string code.
-	 * 
-	 * @param indexInChunks
-	 *            the index of the chunk in the ArrayList chunks.
-	 * @param code
-	 *            the code to be set.
-	 */
-	public void setCodeOfChunks(int indexInChunks, String code) {
-		try {
-			Chunk c = getChunks().get(indexInChunks);
-			c.setCode(code);
-		} catch (Exception e) {
-			throw e;
-		}
-	}
-
-	/**
-	 * Method which sets the code for every chunk in a list.
-	 * @param list of chunks.
-	 * @param code code to be set.
-	 */
-	public void setCodeOfListOfChunks(ArrayList<Chunk> list, String code) {
-		for (Chunk c : list) {
-			c.setCode(code);
-		}
-	}
-
-	/**
 	 * Method which sets the code of every chunk with the comment : comment, to code.
 	 * @param comment comment to set the code on.
 	 */
-	public void setCodeOnComment(String comment) {
+	protected void setCodeOnComment(String comment) {
 		try {
 			for (int i = 0; i < getChunks().size(); i++) {
 				Chunk chunk = getChunks().get(i);
-				if (chunk.getComment().equals(comment)) {
+				if (chunk.hasChild()) {
+					codeOnChildOnEqualsComment(chunk.getChildren(), comment);
+				}
+				else if (chunk.getComment().equals(comment)) {
 					oldCodes.add(chunk.getCode());
 					changedChunks.add(chunk);
 					chunk.setCode(code);
@@ -102,6 +77,35 @@ public class Codes extends Task {
 	}
 	
 	/**
+	 * Sets new code on child chunk if equals prevCode.
+	 * @param childs Arraylist of chunks from parent chunk.
+	 * @param prevCode String of previous code.
+	 */
+	private void codeOnChildOnOldCode(ArrayList<Chunk> childs, String prevCode) {
+		for (Chunk c : childs) {
+			if (c.getCode().equals(prevCode)) {
+				c.setCode(code);
+			}
+		}
+	}
+	
+	private void codeOnChildOnEqualsComment(ArrayList<Chunk> childs, String comment) {
+		for (Chunk c : childs) {
+			if (c.getComment().equals(comment)) {
+				c.setCode(code);
+			}
+		}
+	}
+	
+	private void codeOnChildOnContainsComment(ArrayList<Chunk> childs, String comment) {
+		for (Chunk c : childs) {
+			if (c.getComment().contains(comment)) {
+				c.setCode(code);
+			}
+		}
+	}
+	
+	/**
 	 * Method which sets the code of every chunk with the comment : comment, to code.
 	 * @param comment comment to set the code on.
 	 */
@@ -109,11 +113,13 @@ public class Codes extends Task {
 		try {
 			for (int i = 0; i < getChunks().size(); i++) {
 				Chunk chunk = getChunks().get(i);
-				if (chunk.getComment().contains(comment)) {
+				if (chunk.hasChild()) {
+					codeOnChildOnContainsComment(chunk.getChildren(), comment);
+				}
+				else if (chunk.getComment().contains(comment)) {
 					oldCodes.add(chunk.getCode());
 					changedChunks.add(chunk);
 					chunk.setCode(code);
-					
 				}
 			}
 		} catch (Exception e) {
@@ -128,7 +134,10 @@ public class Codes extends Task {
 	public void setCodeOnCode(String previousCode) {
 		for (int i = 0; i < getChunks().size(); i++) {
 			Chunk chunk = getChunks().get(i);
-			if (chunk.getCode().equals(previousCode)) {
+			if (chunk.hasChild()) {
+				codeOnChildOnOldCode(chunk.getChildren(), previousCode);
+			}
+			else if (chunk.getCode().equals(previousCode)) {
 				oldCodes.add(chunk.getCode());
 				changedChunks.add(chunk);
 				chunk.setCode(code);
@@ -147,6 +156,11 @@ public class Codes extends Task {
 		index = 0;
 	}
 	
+	/**
+	 * Set code on child of current chunk.
+	 * @param childs Arraylist of childs.
+	 * @param list result list.
+	 */
 	private void setCodesOnChild(ArrayList<Chunk> childs, ArrayList<Integer> list) {
 		for (int i = 0; i < childs.size(); i++) {
 			Chunk temp = childs.get(i);
@@ -159,7 +173,6 @@ public class Codes extends Task {
 			else if (temp.hasChild()) {
 				setCodesOnChild(temp.getChildren(), list);
 			}
-
 		}
 	}
 
@@ -205,7 +218,7 @@ public class Codes extends Task {
 				setCodeDate();
 			}
 			else if (query.part().equals("difference")) {
-				setCodeOndifference(query.next());
+				setCodeOnDifference(query.next());
 			}
 			else {
 				throw new Exception(e.getMessage() + "/date");
@@ -213,7 +226,11 @@ public class Codes extends Task {
 		}
 	}
 	
-	private void setCodeOndifference(String number) {
+	/**
+	 * Sets code when difference smaller than number.
+	 * @param number integer of difference constraint.
+	 */
+	private void setCodeOnDifference(String number) {
 		for (Chunk c : getChunks()) {
 			if (c.getDifference() != Integer.MIN_VALUE) {
 				double smallerThan = Integer.parseInt(number);
@@ -225,9 +242,12 @@ public class Codes extends Task {
 			}
 		}
 		setResult(getChunks());
-		
 	}
 
+	/**
+	 * Sets code (monday/tuesday/..) on date of the chunk.
+	 * @throws SQLException If chunk has no date.
+	 */
 	private void setCodeDate() throws SQLException {
 		Db data = SingletonDb.getDb();
 		for (Chunk c : getChunks()) {

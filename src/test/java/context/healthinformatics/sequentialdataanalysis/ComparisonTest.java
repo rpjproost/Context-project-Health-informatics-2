@@ -57,7 +57,7 @@ public class ComparisonTest {
 		ip.interpret("code(meas) data where beschrijving = 'Kreatinine (stat)' "
 				+ "OR beschrijving = 'Kreatinine2 (stat)'");
 		
-		Query q = new Query("compare code = meas on value"); //TODO usefull query
+		Query q = new Query("compare code = meas on value");
 		c.run(q);
 		
 		final int nothingAdvice = 8;

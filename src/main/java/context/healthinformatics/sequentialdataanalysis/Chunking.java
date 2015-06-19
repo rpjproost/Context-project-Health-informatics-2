@@ -59,7 +59,7 @@ public class Chunking extends Task {
 	 * @param res arraylist result.
 	 * @param index for list to check
 	 */
-	public void addChunkOnEqualsData(ArrayList<Integer> ints, Chunk curChunk,
+	private void addChunkOnEqualsData(ArrayList<Integer> ints, Chunk curChunk,
 			ArrayList<Chunk> res, int index) {
 		if (indexcheck < ints.size() && curChunk.getLine() == ints.get(indexcheck)) {
 			temp.setChunk(curChunk);
@@ -237,23 +237,11 @@ public class Chunking extends Task {
 	/**
 	 * Chunks the data repeatedly on dates.
 	 * @param q Query to run.
-	 * @return The output of the query.
 	 * @throws Exception throws an exception if chunking on date goes wrong.
 	 */
-	protected ArrayList<Chunk> chunkOnDate(Query q) throws Exception {
-		ArrayList<Chunk> res = new ArrayList<Chunk>();
+	protected void chunkOnDate(Query q) throws Exception {
 		int days = Integer.parseInt(q.next());
-		ArrayList<Integer> sizes = intsOnDate(getStartDate(), days);
-		int chunkIndex = 0;
-		for (int i = 0; i < sizes.size(); i++) {
-			Chunk temp = new Chunk();
-			for (int k = 0; k < sizes.get(i); k++) {
-				temp.setChunk(getChunks().get(chunkIndex));
-				chunkIndex++;
-			}
-			res.add(temp);
-		}
-		return res;
+		addChunksOnDate(getStartDate(), days);
 	}
 
 	private Date getStartDate() throws SQLException {
@@ -268,26 +256,27 @@ public class Chunking extends Task {
 	 * gives a list of integers with the number of chunks between the dates.
 	 * @param start Start date of the method
 	 * @param days number of days to chunk.
-	 * @return list with the sizes of the chunks.
 	 * @throws SQLException 
 	 */
-	@SuppressWarnings("static-access")
-	protected ArrayList<Integer> intsOnDate(Date start, int days) throws SQLException {
-		ArrayList<Integer> res = new ArrayList<Integer>();
+	protected void addChunksOnDate(Date start, int days) throws SQLException {
 		Calendar c = Calendar.getInstance();
 		c.setTime(start);
 		Date startDate = start;
 		Date endDate = null;
 		Date end = getLastDate();
 		while (startDate.before(end)) {
-			c.add(c.DAY_OF_MONTH, days);
+			c.add(Calendar.DAY_OF_MONTH, days);
 			endDate = c.getTime();
 			setUpNewChunks(startDate, endDate);
 			startDate = endDate;
 		}
-		return res;
 	}
 
+	/**
+	 * gets last date of chunk list.
+	 * @return Date object of last date in chunk list.
+	 * @throws SQLException Has no date object.
+	 */
 	private Date getLastDate() throws SQLException {
 		Db data = SingletonDb.getDb();
 		Chunk lastChunk = getChunks().get(getChunks().size() - 1);
@@ -300,12 +289,14 @@ public class Chunking extends Task {
 		}
 	}
 
+	/**
+	 * Fills result list of chunk objects.
+	 * @param start start Date.
+	 * @param end end Date.
+	 */
 	private void setUpNewChunks(Date start, Date end) {
-		Db data = SingletonDb.getDb();
-		Chunk res = new Chunk();
-		final int hours = 24;
-		final int seconds = 3600;
-		final int ms = 1000;
+		Db data = SingletonDb.getDb(); Chunk res = new Chunk();
+		final int hours = 24; final int seconds = 3600; final int ms = 1000;
 		Date before = new Date(start.getTime() - 1 * hours * seconds * ms);
 		Date after = new Date(end.getTime() + 1 * hours * seconds * ms);
 		for (int i = indexcheck; i < getChunks().size(); i++) {

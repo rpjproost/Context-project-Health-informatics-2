@@ -122,7 +122,7 @@ public class Comparison extends Task {
 	
 	private KreatinineStatus getNextStatus(int index) {
 		KreatinineStatus nextStatus = status.get(index);
-		if (nextStatus instanceof NullStatus) {
+		if (nextStatus.toString().equals("NULL")) {
 			if (currentDate.equals(dates.get(index))) {
 				return getNextStatus(index - 1);
 			} else {

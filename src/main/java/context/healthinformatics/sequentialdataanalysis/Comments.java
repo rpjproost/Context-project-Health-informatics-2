@@ -119,6 +119,11 @@ public class Comments extends Task {
 		indexcheck = 0;
 	}
 
+	/**
+	 * Sets comment on child of current Chunk.
+	 * @param childs ArrayList of childs.
+	 * @param list result list.
+	 */
 	private void setCommentOnChild(ArrayList<Chunk> childs, ArrayList<Integer> list) {
 		for (int i = 0; i < childs.size(); i++) {
 			Chunk temp = childs.get(i);
