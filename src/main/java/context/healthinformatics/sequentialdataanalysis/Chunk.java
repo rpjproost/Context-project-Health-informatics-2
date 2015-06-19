@@ -26,7 +26,6 @@ public class Chunk {
 	private String comment;
 	private ArrayList<Chunk> chunks;
 	private int line;
-	private int amountOfChilds;
 	private ResultSet rs;
 	private boolean compute;
 	private double[] computations;
@@ -40,7 +39,6 @@ public class Chunk {
 		pointer = new HashMap<Chunk, String>();
 		comment = "";
 		code = "";
-		amountOfChilds = Integer.MIN_VALUE;
 	}
 
 	/**
@@ -134,23 +132,13 @@ public class Chunk {
 	public void setChunks(ArrayList<Chunk> chunks) {
 		this.chunks = chunks;
 	}
-
-	/**
-	 * setter for sum.
-	 * 
-	 * @param i
-	 *            sum to set.
-	 */
-	public void setAmountOfChilds(int i) {
-		amountOfChilds = i;
-	}
 	
 	/**
 	 * Returns amount of children.
 	 * @return integer of amount of children.
 	 */
 	public int getAmountOfChilds() {
-		return amountOfChilds;
+		return chunks.size();
 	}
 
 	/**
@@ -269,7 +257,7 @@ public class Chunk {
 			res.add("min of values = " + computations[2]);
 		}
 		res.add("average of values = " + computations[comp]);
-		res.add("Childs sum = " + amountOfChilds);
+		res.add("Childs sum = " + getAmountOfChilds());
 	}
 
 	/**
@@ -380,7 +368,6 @@ public class Chunk {
 		if (hasChild()) {
 			computations = new double[comp];
 			setCompute(true);
-			this.amountOfChilds = getChildren().size();
 			computeChunkValues(column);
 		}
 	}
