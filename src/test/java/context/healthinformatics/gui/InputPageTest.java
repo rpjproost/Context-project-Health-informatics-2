@@ -63,6 +63,7 @@ public class InputPageTest {
 			SingletonDb.dropAll(data);
 			SingletonInterpreter.getInterpreter().interpret("undoAll");
 		} catch (Exception e) {
+			folder.toString();
 		}
 		SingletonInterpreter.getInterpreter().setIntialChunks(null);
 	}
