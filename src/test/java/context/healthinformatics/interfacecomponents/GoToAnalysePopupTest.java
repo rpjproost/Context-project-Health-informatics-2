@@ -20,15 +20,15 @@ import context.healthinformatics.writer.XMLDocument;
 public class GoToAnalysePopupTest {
 	
 	private XMLDocument xmlDocFull;
-	private GoToAnalysePopup popup;
-	private GoToAnalysePopupController control;
+	private GoToAnalyzePopup popup;
+	private GoToAnalyzePopupController control;
 
 	/**
 	 * Creates files and docs to work with.
 	 */
 	@Before
 	public void setUp() {
-		control = mock(GoToAnalysePopupController.class);
+		control = mock(GoToAnalyzePopupController.class);
 		ArrayList<Column> cols = new ArrayList<Column>();
 		Column col = new Column(2, "date", "Date");
 		col.setColumnType("dd-MM-yyyy");
@@ -37,7 +37,7 @@ public class GoToAnalysePopupTest {
 				cols);
 		ArrayList<XMLDocument> list = new ArrayList<XMLDocument>();
 		list.add(xmlDocFull);
-		popup = new GoToAnalysePopup(list, control);
+		popup = new GoToAnalyzePopup(list, control);
 	}
 
 	/**

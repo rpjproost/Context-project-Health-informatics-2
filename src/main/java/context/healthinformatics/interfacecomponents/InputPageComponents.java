@@ -59,7 +59,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 	public static final int HELPBUTTONWIDTH = 300;
 	public static final int FOLDERSECTIONHEIGHT = 100;
 	private HelpController helpController;
-	private GoToAnalysePopupController popUpController;
+	private GoToAnalyzePopupController popUpController;
 
 	/**
 	 * Constructor.
@@ -76,7 +76,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 		box = new JComboBox<String>(ip.getProjects());
 		helpController = new HelpController(
 				"src/main/data/guihelpdata/inputpagehelp.txt");
-		popUpController = new GoToAnalysePopupController(this);
+		popUpController = new GoToAnalyzePopupController(this);
 	}
 
 	/**

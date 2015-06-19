@@ -13,10 +13,10 @@ import context.healthinformatics.writer.XMLDocument;
 /**
  * Class to handle the popup.
  */
-public class GoToAnalysePopupController {
+public class GoToAnalyzePopupController {
 	private InputPageComponents ipc;
 	private boolean isOpen;
-	private GoToAnalysePopup currentPopUp;
+	private GoToAnalyzePopup currentPopUp;
 	private String projectName;
 
 	/**
@@ -25,7 +25,7 @@ public class GoToAnalysePopupController {
 	 * @param ipc
 	 *            get this input page components
 	 */
-	public GoToAnalysePopupController(InputPageComponents ipc) {
+	public GoToAnalyzePopupController(InputPageComponents ipc) {
 		this.isOpen = false;
 		this.ipc = ipc;
 
@@ -43,7 +43,7 @@ public class GoToAnalysePopupController {
 			String projectName) {
 		this.projectName = projectName;
 		if (!isOpen) {
-			currentPopUp = new GoToAnalysePopup(selectedDocs, this);
+			currentPopUp = new GoToAnalyzePopup(selectedDocs, this);
 			ReadWriteAnalyseFilter rwaf = new ReadWriteAnalyseFilter(
 					"src/main/data/savedFilters/" + projectName + ".txt");
 			try {
