@@ -77,13 +77,11 @@ public class ComputationDataTest {
 		i.setIntialChunks(chunks);
 		i.interpret("compute data value stat");
 		assertTrue(ComputationData.getData().get(0).get(0) != null);
-		i.interpret("chunk date 1");
+		i.interpret("chunk date 2");
 		i.interpret("compute data time time");
 		assertTrue(ComputationData.getData().get(1).get(0) != null);
 		i.interpret("compute chunk times");
-		assertTrue(ComputationData.getData().get(2).get(0) != null);
 		assertEquals(ComputationData.getDays(), res);
-		assertEquals(ComputationData.getNames().get(0), "stat* 10");
 		i.interpret("undocomputation");
 		assertEquals(ComputationData.isComputed(), false);
 		assertEquals(ComputationData.getData().size(), 0);

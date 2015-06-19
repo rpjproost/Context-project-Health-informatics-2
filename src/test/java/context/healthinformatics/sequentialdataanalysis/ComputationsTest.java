@@ -45,6 +45,9 @@ public class ComputationsTest {
 	private final int three = 3;
 	private final int four = 4;
 	private final int five = 5;
+	private final int six = 6;
+	private final int seven = 7;
+	private final int eight = 8;
 	
 	private String oldSpace = SingletonDb.getDbName();
 	/**
@@ -99,10 +102,10 @@ public class ComputationsTest {
 		final int seccondRes = 1740;
 		final int thirdRes = 1603;
 		final int fourthRes = 3066;
-		assertEquals(isDif(firstRes), chunks.get(0).toArray().get(0));
-		assertEquals(isDif(seccondRes), chunks.get(1).toArray().get(0));
-		assertEquals(isDif(thirdRes), chunks.get(two).toArray().get(0));
-		assertEquals(isDif(fourthRes), chunks.get(three).toArray().get(0));
+		assertEquals(firstRes, (int) chunks.get(0).getDifference());
+		assertEquals(seccondRes, (int) chunks.get(1).getDifference());
+		assertEquals(thirdRes, (int) chunks.get(two).getDifference());
+		assertEquals(fourthRes, (int) chunks.get(three).getDifference());
 	}
 	
 	
@@ -131,10 +134,10 @@ public class ComputationsTest {
 		final int seccondRes = 44;
 		final int thirdRes = 111;
 		final int fourthRes = 9;
-		assertEquals(isDif(firstRes), chunks.get(0).toArray().get(0));
-		assertEquals(isDif(seccondRes), chunks.get(1).toArray().get(0));
-		assertEquals(isDif(thirdRes), chunks.get(two).toArray().get(0));
-		assertEquals(isDif(fourthRes), chunks.get(three).toArray().get(0));
+		assertEquals(firstRes, (int) chunks.get(0).getDifference());
+		assertEquals(seccondRes, (int) chunks.get(1).getDifference());
+		assertEquals(thirdRes, (int) chunks.get(two).getDifference());
+		assertEquals(fourthRes, (int) chunks.get(three).getDifference());
 	}
 	
 	/**
@@ -188,17 +191,13 @@ public class ComputationsTest {
 		Chunk c  = chunks.get(0);
 		assertTrue(c.isCompute());
 		ArrayList<String> strings = c.toArray();
-		assertEquals(five, strings.size());
-		assertEquals("sum of values = 920.0", strings.get(0));
-		assertEquals("max of values = 242.0", strings.get(1));
-		assertEquals("min of values = 131.0", strings.get(two));
-		assertEquals("average of values = 184.0", strings.get(three));
-		assertEquals("Childs sum = 5", strings.get(four));
+		assertEquals(eight, strings.size());
+		assertEquals("sum of values = 920.0", strings.get(three));
+		assertEquals("max of values = 242.0", strings.get(four));
+		assertEquals("min of values = 131.0", strings.get(five));
+		assertEquals("average of values = 184.0", strings.get(six));
+		assertEquals("Childs sum = 5", strings.get(seven));
 	}
 	
-	private String isDif(int num) {
-		String test = "difference to connection " + num + ".0";
-		return test;
-	}
 
 }
