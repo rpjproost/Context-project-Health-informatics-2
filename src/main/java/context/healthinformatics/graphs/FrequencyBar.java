@@ -25,21 +25,32 @@ import context.healthinformatics.gui.InterfaceHelper;
  * Creates a frequency bar.
  */
 public class FrequencyBar extends InterfaceHelper {
+
 	private static final long serialVersionUID = 1L;
+
 	private JPanel chartContainerPanel;
 	private JPanel mainPanel;
+
 	private static final int BOX_PLOT_PANEL_HEIGHT = 400;
 	private static final int BOX_PLOT_HEIGHT = 350;
+
 	private int width;
 
 	/**
-	 * Constructor of FrequencyBar initialises the panels.
+	 * Constructor of FrequencyBar initializes the panels.
 	 */
 	public FrequencyBar() {
 		width = getScreenWidth() / 2 - FOUR * INSETS;
 		chartContainerPanel = createEmptyWithGridBagLayoutPanel();
 		chartContainerPanel.setPreferredSize(new Dimension(width,
 				BOX_PLOT_HEIGHT));
+		initMainPanel();
+	}
+
+	/**
+	 * Initialize the main panel of the frequency bar.
+	 */
+	private void initMainPanel() {
 		mainPanel = createEmptyWithGridBagLayoutPanel();
 		mainPanel.setPreferredSize(new Dimension(width, BOX_PLOT_PANEL_HEIGHT));
 		mainPanel.add(chartContainerPanel, setGrids(0, 0));
@@ -81,23 +92,33 @@ public class FrequencyBar extends InterfaceHelper {
 					createDataset(SingletonInterpreter.getInterpreter()
 							.countCodes()));
 			mainPanel.remove(chartContainerPanel);
-			chartContainerPanel = createEmptyWithGridBagLayoutPanel();
-			chartContainerPanel.setPreferredSize(new Dimension(width,
-					BOX_PLOT_HEIGHT));
-			ChartPanel chartPanelTest = new ChartPanel(chart);
-			chartPanelTest.setPreferredSize(new Dimension(width - 1,
-					BOX_PLOT_HEIGHT));
-			chartContainerPanel.add(chartPanelTest, setGrids(0, 0));
+			renewChartPanelAndContainer(chart);
 			mainPanel.add(chartContainerPanel, setGrids(0, 0));
 			mainPanel.revalidate();
 		}
 	}
 
 	/**
+	 * Renew the panels of the chart.
+	 * 
+	 * @param chart
+	 *            the chart of the Frequency Bar
+	 */
+	private void renewChartPanelAndContainer(JFreeChart chart) {
+		chartContainerPanel = createEmptyWithGridBagLayoutPanel();
+		chartContainerPanel.setPreferredSize(new Dimension(width,
+				BOX_PLOT_HEIGHT));
+		ChartPanel chartPanel = new ChartPanel(chart);
+		chartPanel.setPreferredSize(new Dimension(width - 1,
+				BOX_PLOT_HEIGHT));
+		chartContainerPanel.add(chartPanel, setGrids(0, 0));
+	}
+
+	/**
 	 * Creates the frequency chart.
 	 * 
 	 * @param dataset
-	 *            the dataset.
+	 *            the DataSet.
 	 * 
 	 * @return The chart.
 	 */
@@ -122,7 +143,6 @@ public class FrequencyBar extends InterfaceHelper {
 		plot.setRangeGridlinePaint(Color.white);
 		BarRenderer barRenderer = (BarRenderer) plot.getRenderer();
 		barRenderer.setBarPainter(new StandardBarPainter());
-		// set the range axis to display integers only...
 		final NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
 		rangeAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
 	}

@@ -48,8 +48,6 @@ public class LineChartPanel extends GraphPanel {
 
 	@Override
 	public void updateContainer() {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -77,7 +75,6 @@ public class LineChartPanel extends GraphPanel {
 		lineChart.createLineChart(container.getGraphTitleValue());
 		lineChartGraph = lineChart.getPanel();
 		lineChartGraph.setVisible(true);
-
 	}
 
 	@Override

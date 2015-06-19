@@ -65,8 +65,6 @@ public class FrequencyBarPanel extends GraphPanel {
 
 	@Override
 	public void updateContainer() {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	@Override

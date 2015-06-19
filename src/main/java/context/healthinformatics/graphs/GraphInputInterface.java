@@ -49,6 +49,13 @@ public class GraphInputInterface extends InterfaceHelper {
 		graphInputParentPanel = createEmptyWithGridBagLayoutPanel(color);
 		graphInputParentPanel.setPreferredSize(new Dimension(graphInputWidth,
 				graphInputHeight));
+		initAllPanels();
+	}
+
+	/**
+	 * Initialize all panels for the GraphInputInterface.
+	 */
+	private void initAllPanels() {
 		initPanels();
 		initScrollPane();
 		initGraphPanels();

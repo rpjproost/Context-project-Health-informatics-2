@@ -65,7 +65,7 @@ public class BoxPlotPanel extends GraphPanel {
 	}
 
 	/**
-	 * Performs an action if the checkbox is clicked.
+	 * Performs an action if the CheckBox is clicked.
 	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -98,11 +98,7 @@ public class BoxPlotPanel extends GraphPanel {
 		ArrayList<String> columns = new ArrayList<String>();
 		columns.add(container.getSelectedColumnY());
 		try {
-			if (type.equals("All")) {
-				boxPlot.setDataPerColumn(columns);
-			} else if (type.equals("Chunks")) {
-				boxPlot.setDataPerChunk(columns);
-			}
+			boxPlot.setDataBoxPlot(columns, type);
 		} catch (Exception e) {
 			JOptionPane.showMessageDialog(null, e.getMessage(),
 					"Error creating BoxPlot!", JOptionPane.WARNING_MESSAGE);

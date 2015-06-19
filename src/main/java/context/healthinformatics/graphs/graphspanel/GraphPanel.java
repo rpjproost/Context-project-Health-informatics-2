@@ -36,7 +36,7 @@ public abstract class GraphPanel extends InterfaceHelper implements ActionListen
 	public abstract JPanel loadPanel();
 	
 	/**
-	 * @return the checkbox of the panel
+	 * @return the CheckBox of the panel
 	 */
 	public abstract JCheckBox getCheckbox();
 	
@@ -62,7 +62,7 @@ public abstract class GraphPanel extends InterfaceHelper implements ActionListen
 	}
 
 	/**
-	 * @return boolean if the checkbox is selected or not.
+	 * @return boolean if the CheckBox is selected or not.
 	 */
 	public abstract boolean isSelected();
 
