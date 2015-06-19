@@ -25,7 +25,6 @@ import context.healthinformatics.database.SingletonDb;
 
 /**
  * The ExcelParser class. Parses a Excel sheet.
- *
  */
 public class ExcelParser extends Parser {
 	private int startLine;
@@ -81,7 +80,7 @@ public class ExcelParser extends Parser {
 	/**
 	 * Get Column array.
 	 * 
-	 * @return the column array
+	 * @return the column array.
 	 */
 	public ArrayList<Column> getColumns() {
 		return columns;
@@ -91,7 +90,7 @@ public class ExcelParser extends Parser {
 	 * Set columns array.
 	 * 
 	 * @param columns
-	 *            column array
+	 *            column array.
 	 */
 	public void setColumns(ArrayList<Column> columns) {
 		this.columns = columns;
@@ -104,7 +103,7 @@ public class ExcelParser extends Parser {
 	 *            the name of the file.
 	 * @return the file.
 	 * @throws FileNotFoundException
-	 *             throw filenotfoundexception if file not found
+	 *             throw file not found exception if file not found.
 	 */
 	private FileInputStream openFile(String fileName)
 			throws FileNotFoundException {
@@ -122,13 +121,12 @@ public class ExcelParser extends Parser {
 	 * because they are handled differently.
 	 * 
 	 * @throws IOException
-	 *             if the excel file was not found
+	 *             if the excel file was not found.
 	 */
 	@Override
 	public void parse() throws IOException {
 		FileInputStream fis = openFile(this.getFileName());
 		if (this.getFileName().endsWith(".xls")) {
-			// Open .xls file
 			Workbook wb = null;
 			try {
 				wb = WorkbookFactory.create(fis);
@@ -138,7 +136,6 @@ public class ExcelParser extends Parser {
 			processXLSSheet(wb.getSheetAt(sheet - 1));
 			wb.close();
 		} else {
-			// Open .xlsx file
 			XSSFWorkbook wb = new XSSFWorkbook(fis);
 			processXLSXSheet(wb.getSheetAt(sheet - 1));
 			wb.close();
@@ -151,7 +148,7 @@ public class ExcelParser extends Parser {
 	 * @param sheet
 	 *            the sheet processed.
 	 * @throws IOException
-	 *             the exception for sql
+	 *             the exception for sql.
 	 */
 	private void processXLSSheet(Sheet sheet) throws IOException {
 		for (int i = startLine; i < sheet.getLastRowNum() + 1; i++) {
@@ -165,7 +162,7 @@ public class ExcelParser extends Parser {
 	 * @param ws
 	 *            the sheet processed.
 	 * @throws IOException
-	 *             the exception for sql
+	 *             the exception for sql.
 	 */
 	private void processXLSXSheet(XSSFSheet sheet) throws IOException {
 		for (int i = startLine; i < sheet.getLastRowNum() + 1; i++) {
@@ -182,7 +179,7 @@ public class ExcelParser extends Parser {
 	 * @param row
 	 *            the row processed.
 	 * @throws IOException
-	 *             the exception for sql
+	 *             the exception for sql.
 	 */
 	private void processXLSRow(Row row) throws IOException {
 		String[] cells = new String[columns.size()];
@@ -201,7 +198,7 @@ public class ExcelParser extends Parser {
 	 * @param row
 	 *            the row processed.
 	 * @throws IOException
-	 *             the exception for sql
+	 *             the exception for sql.
 	 */
 	private void processXLSXRow(XSSFRow row) throws IOException {
 		String[] cells = new String[columns.size()];
@@ -218,10 +215,10 @@ public class ExcelParser extends Parser {
 	 * Process a single xls cell.
 	 * 
 	 * @param curCell
-	 *            the current cell to be processed
+	 *            the current cell to be processed.
 	 * @param c
-	 *            the integer of the current column
-	 * @return the right formatted cell
+	 *            the integer of the current column.
+	 * @return the right formatted cell.
 	 */
 	private String processCellXLS(Cell curCell, int c) {
 		if (columns.get(c).getColumnType().equals("INT")) {
@@ -238,10 +235,10 @@ public class ExcelParser extends Parser {
 	 * Process a single cell.
 	 * 
 	 * @param curCell
-	 *            the current cell to be processed
+	 *            the current cell to be processed.
 	 * @param c
-	 *            the integer of the current column
-	 * @return the right formatted cell
+	 *            the integer of the current column.
+	 * @return the right formatted cell.
 	 */
 	private String processCellXLSX(Cell curCell, int c) {
 		if (columns.get(c).getColumnType().equals("Int")) {
@@ -264,8 +261,8 @@ public class ExcelParser extends Parser {
 	 * Format int for database.
 	 * 
 	 * @param curCell
-	 *            current cell
-	 * @return if not a double then -1 else the cell
+	 *            current cell.
+	 * @return if not a double then -1 else the cell.
 	 */
 	private String formatInt(Cell curCell) {
 		if (curCell == null) {
@@ -302,8 +299,8 @@ public class ExcelParser extends Parser {
 	 * Check if a string is a double.
 	 * 
 	 * @param str
-	 *            the string to be checked
-	 * @return true if is double else false
+	 *            the string to be checked.
+	 * @return true if is double else false.
 	 */
 	private boolean isDouble(String str) {
 		try {
@@ -318,8 +315,8 @@ public class ExcelParser extends Parser {
 	 * If there are enough cells in the sheet returns true.
 	 * 
 	 * @param cellnums
-	 *            the number of cells on a row
-	 * @return true if there are enough cells
+	 *            the number of cells on a row.
+	 * @return true if there are enough cells.
 	 */
 	private boolean canSplit(int cellnums) {
 		return cellnums >= columns.size();
@@ -329,8 +326,8 @@ public class ExcelParser extends Parser {
 	 * Check if a row is empty.
 	 * 
 	 * @param row
-	 *            the row
-	 * @return true if all columns are type blank
+	 *            the row.
+	 * @return true if all columns are type blank.
 	 */
 	private static boolean isRowEmpty(Row row) {
 		for (int c = row.getFirstCellNum(); c < row.getLastCellNum(); c++) {
@@ -346,9 +343,9 @@ public class ExcelParser extends Parser {
 	 * Insert a row to the db.
 	 * 
 	 * @param cells
-	 *            the string array with the cell values
+	 *            the string array with the cell values.
 	 * @throws IOException
-	 *             the exception if data can not be inserted in database
+	 *             the exception if data can not be inserted in database.
 	 */
 	private void insertToDb(String[] cells) {
 		Db data = SingletonDb.getDb();
@@ -367,8 +364,8 @@ public class ExcelParser extends Parser {
 	 * Test function to return the parsed line as a string.
 	 * 
 	 * @param cells
-	 *            the splitted line
-	 * @return the string build
+	 *            the splitted line.
+	 * @return the string build.
 	 */
 	public String printCells(String[] cells) {
 		StringBuilder sb = new StringBuilder();

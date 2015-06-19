@@ -117,16 +117,6 @@ public class TXTParser extends Parser {
 	}
 
 	/**
-	 * setter for the document name.
-	 * 
-	 * @param docName
-	 *            document name to set.
-	 */
-	public void setDocName(String docName) {
-		this.docName = docName;
-	}
-
-	/**
 	 * Open the file to parse.
 	 * 
 	 * @param filename

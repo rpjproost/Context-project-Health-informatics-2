@@ -66,7 +66,6 @@ public class XMLParser extends Parser {
 					.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			doc = dBuilder.parse(xml);
-
 			doc.getDocumentElement().normalize();
 			NodeList nList = doc.getChildNodes().item(0).getChildNodes();
 			for (int i = 0; i < nList.getLength(); i++) {
@@ -139,7 +138,7 @@ public class XMLParser extends Parser {
 				}
 			}
 		} catch (IOException e) {
-			System.out.println("DB was not created!"); 
+			parsers.toString();
 		}
 	}
 	
@@ -158,7 +157,7 @@ public class XMLParser extends Parser {
 				}
 			}
 		} catch (IOException e) {
-			System.out.println("Table not created!");
+			parsers.toString();
 		}
 	}
 
@@ -179,7 +178,6 @@ public class XMLParser extends Parser {
 	 */
 	private void clear() {
 		setDocName(null);
-		setPath(null);
 		setStartLine(1);
 		setDelimiter(null);
 		setPath(null);
@@ -262,7 +260,6 @@ public class XMLParser extends Parser {
 			if (nList.item(0) != null) {
 				res = nList.item(0).getTextContent();
 			}
-
 		} else {
 			res = doc.getElementsByTagName(s).item(0).getTextContent();
 		}
@@ -304,7 +301,7 @@ public class XMLParser extends Parser {
 	 * @param delimiter
 	 *            the new delimiter.
 	 */
-	void setDelimiter(String delimiter) {
+	private void setDelimiter(String delimiter) {
 		this.delimiter = delimiter;
 	}
 
@@ -342,7 +339,7 @@ public class XMLParser extends Parser {
 	 * @param startLine
 	 *            the new starting line.
 	 */
-	void setStartLine(int startLine) {
+	private void setStartLine(int startLine) {
 		this.startLine = startLine;
 	}
 

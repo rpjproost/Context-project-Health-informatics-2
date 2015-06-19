@@ -27,7 +27,7 @@ public abstract class Parser {
 	}
 	
 	/**
-	 * @return the source path of the file
+	 * @return the source path of the file.
 	 */
 	protected String getFileName() {
 		return filename;
