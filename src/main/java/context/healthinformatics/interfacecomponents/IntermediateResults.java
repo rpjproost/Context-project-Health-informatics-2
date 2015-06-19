@@ -28,9 +28,12 @@ public class IntermediateResults extends InterfaceHelper {
 	private JPanel interMediateResultParentPanel;
 	private JEditorPane displayHtmlPane = new JEditorPane();
 	private JScrollPane scroll;
-
+	private Db database;
 	private int globalChunkCounter = 1;
+	private int numberOfDataColumns;
 	private String title;
+	private static final int THREE = 3;
+	private static final int FOUR = 4;
 
 	/**
 	 * Constructor of the IntermediateResults class.
@@ -122,7 +125,8 @@ public class IntermediateResults extends InterfaceHelper {
 		ArrayList<Chunk> chunks = SingletonInterpreter.getInterpreter()
 				.getChunks();
 		StringBuilder buildString = new StringBuilder();
-		Db database = SingletonDb.getDb();
+		database = SingletonDb.getDb();
+		numberOfDataColumns = database.getColumns().size();
 		String htmlOfColumnTableRow = buildColumnsHTMLTableRow(database
 				.getColumns());
 		String htmlOfTableContent = loopThroughChunks(chunks);
@@ -130,16 +134,14 @@ public class IntermediateResults extends InterfaceHelper {
 				.append("<html><body><h2>Number of chunks: "
 						+ (globalChunkCounter - 1)
 						+ "</h2><table style='width:100%;'>");
-
 		buildString.append(htmlOfColumnTableRow);
 		buildString.append(htmlOfTableContent);
-
 		buildString.append("</table></body></html>");
 		return buildString.toString();
 	}
 
 	/**
-	 * Make HTML table row for the columns of the results.
+	 * Make HTML table header with column names for the results.
 	 * 
 	 * @param columns
 	 *            the columns
@@ -147,14 +149,103 @@ public class IntermediateResults extends InterfaceHelper {
 	 */
 	private String buildColumnsHTMLTableRow(ArrayList<Column> columns) {
 		StringBuilder buildString = new StringBuilder();
-		buildString
-				.append("<tr><td><h2>Line:</h2></td><td><h2>Code:</h2></td>");
-		buildString.append("<td><h2>Comment:</h2></td>");
+		buildString.append("<tr>");
+		buildString.append("<td><h2>line:</h2></td>");
+		buildString.append("<td><h2>haschildren:</h2></td>");
+		buildString.append("<td><h2>code:</h2></td>");
+		buildString.append("<td><h2>comment:</h2></td>");
 		for (int i = 0; i < columns.size(); i++) {
 			buildString.append("<td><h2>" + columns.get(i).getColumnName()
 					+ ":</h2></td>");
 		}
-		buildString.append("</tr>");
+		buildString.append("<td><h2>difference:</h2></td>");
+		buildString.append("<td><h2>connection:</h2></td>");
+		buildString.append("<td><h2>computation:</h2></td>");
+		buildString.append("</td>");
+		return buildString.toString();
+	}
+
+	/**
+	 * Build a HTML table row for the chunks.
+	 * 
+	 * @param chunks
+	 *            the list of chunks
+	 * @return a string of HTML formatted for a table.
+	 */
+	private String loopThroughChunks(ArrayList<Chunk> chunks) {
+		StringBuilder buildString = new StringBuilder();
+		for (int i = 0; i < setMaxNumberOfDisplay(chunks); i++) {
+			Chunk currentChunk = chunks.get(i);
+			if (currentChunk.hasChild()) {
+				buildString.append("<tr><td>" + globalChunkCounter + "</td>");
+				globalChunkCounter++;
+				buildString.append(processChunkWithChildren(currentChunk));
+			} else {
+				buildString.append("<tr><td></td>");
+				buildString.append(processChunk(currentChunk));
+			}
+			buildString.append("</tr>");
+		}
+		return buildString.toString();
+	}
+
+	/**
+	 * Check if the number of chunks is not larger then the max number to
+	 * display.
+	 * 
+	 * @param chunks
+	 *            the current number of chunks
+	 * @return the total number to display
+	 */
+	private int setMaxNumberOfDisplay(ArrayList<Chunk> chunks) {
+		int total = chunks.size();
+		if (total > MAX_RESULTS_TO_DISPLAY) {
+			total = MAX_RESULTS_TO_DISPLAY;
+		}
+		return total;
+	}
+
+	/**
+	 * Build HTML table content of a chunk.
+	 * 
+	 * @param currentChunk
+	 *            the currentChunk
+	 * @return HTML string with table row
+	 */
+	private String processChunk(Chunk currentChunk) {
+		StringBuilder buildString = new StringBuilder();
+		buildString
+				.append("<td>no</td><td>" + currentChunk.getCode() + "</td>");
+		buildString.append("<td>" + currentChunk.getComment() + "</td>");
+		ArrayList<String> values = currentChunk.toArray();
+		for (int j = 0; j < values.size(); j++) {
+			buildString.append("<td>" + values.get(j) + "</td>");
+		}
+		return buildString.toString();
+	}
+
+	/**
+	 * Build HTML table content of a chunk with children.
+	 * 
+	 * @param currentChunk
+	 *            the current chunk with children.
+	 * @return HTML string with table rows for every child and the chunk itself
+	 */
+	private String processChunkWithChildren(Chunk currentChunk) {
+		StringBuilder buildString = new StringBuilder();
+		buildString.append("<td>yes</td><td><h2>");
+		ArrayList<String> chunkWithChildren = currentChunk.toArray();
+		buildString.append("<td>" + chunkWithChildren.get(0) + "</td>");
+		buildString.append("<td>" + chunkWithChildren.get(1) + "</td>");
+		for (int i = 1; i < numberOfDataColumns; i++) {
+			buildString.append("<td></td>");
+		}
+		buildString.append("<td>" + chunkWithChildren.get(2) + "</td>");
+		buildString.append("<td>" + chunkWithChildren.get(THREE) + "</td>");
+		buildString.append("<td>" + chunkWithChildren.get(FOUR) + "</td>");
+		buildString.append("</h2></td>");
+		buildString.append(getChildrenOfChunk(currentChunk));
+		buildString.append("<tr><td><h2>[End Of Chunk]</h2></td></tr>");
 		return buildString.toString();
 	}
 
@@ -165,72 +256,9 @@ public class IntermediateResults extends InterfaceHelper {
 	 *            chunk with children
 	 * @return HTML list with the children
 	 */
-	private String getChildsOfChunk(Chunk chunk) {
-		ArrayList<Chunk> childChunks = chunk.getChildren();
+	private String getChildrenOfChunk(Chunk chunk) {
 		StringBuilder buildString = new StringBuilder();
-		buildString.append(loopThroughChunks(childChunks));
-		return buildString.toString();
-	}
-
-	/**
-	 * Build a table row for the chunk values.
-	 * 
-	 * @param chunks
-	 *            the list of chunks
-	 * @return a string of html formatted for a table.
-	 */
-	private String loopThroughChunks(ArrayList<Chunk> chunks) {
-		StringBuilder buildString = new StringBuilder();
-		int total = chunks.size();
-		if (total > MAX_RESULTS_TO_DISPLAY) {
-			total = MAX_RESULTS_TO_DISPLAY;
-		}
-		for (int i = 0; i < total; i++) {
-			Chunk currentChunk = chunks.get(i);
-			buildString.append("<tr><td>" + globalChunkCounter + "</td>");
-			globalChunkCounter++;
-			if (currentChunk.hasChild()) {
-				buildString.append(processChunkWithChilds(currentChunk));
-			} else {
-				buildString.append(processChunk(currentChunk));
-			}
-			buildString.append("</tr>");
-		}
-		return buildString.toString();
-	}
-
-	/**
-	 * Build html table content of a chunk.
-	 * 
-	 * @param currentChunk
-	 *            the currentChunk
-	 * @return HTML string with table row
-	 */
-	private String processChunk(Chunk currentChunk) {
-		StringBuilder buildString = new StringBuilder();
-		buildString.append("<td>" + currentChunk.getCode() + "</td>");
-		buildString.append("<td>" + currentChunk.getComment() + "</td>");
-		ArrayList<String> values = currentChunk.toArray();
-		for (int j = 0; j < values.size(); j++) {
-			buildString.append("<td>" + values.get(j) + "</td>");
-		}
-		return buildString.toString();
-	}
-
-	/**
-	 * Build HTML table content of a chunk with childs.
-	 * 
-	 * @param currentChunk
-	 *            the current chunk with childs.
-	 * @return HTML string with table rows for every child and the chunk itself
-	 */
-	private String processChunkWithChilds(Chunk currentChunk) {
-		StringBuilder buildString = new StringBuilder();
-		buildString.append("<td><h2>");
-		buildString.append(currentChunk.toArray());
-		buildString.append("</h2></td>");
-		buildString.append(getChildsOfChunk(currentChunk));
-		buildString.append("<td><h2>[End Of Chunk]</h2></td>");
+		buildString.append(loopThroughChunks(chunk.getChildren()));
 		return buildString.toString();
 	}
 }

@@ -197,8 +197,8 @@ public class Chunk {
 	public ArrayList<String> toArray() {
 		ArrayList<String> res = new ArrayList<String>();
 		if (hasChild()) {
-			res.add("Chunk contains childs, code = " + code + " comment = "
-					+ comment);
+			res.add(code);
+			res.add(comment);
 		} else {
 			Db data = SingletonDb.getDb();
 			try {
