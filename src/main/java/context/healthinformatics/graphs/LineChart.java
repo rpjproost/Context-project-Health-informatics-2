@@ -64,10 +64,8 @@ public class LineChart extends InterfaceHelper {
 	 * 
 	 * @param title
 	 *            the title of the chart.
-	 * @throws Exception
-	 *             the exception if DataSet could not be created
 	 */
-	public void createLineChart(String title) throws Exception {
+	public void createLineChart(String title) {
 		initDataset();
 		final JFreeChart chart = ChartFactory.createXYLineChart(title, "Days",
 				"Measurements", dataset, PlotOrientation.VERTICAL, true, true,
@@ -112,11 +110,9 @@ public class LineChart extends InterfaceHelper {
 	 * @throws Exception
 	 *             the exception if data can't be computed
 	 */
-	protected void initDataset() throws Exception {
+	protected void initDataset() {
 		if (ComputationData.isComputed()) {
 			createDataSet();
-		} else {
-			throw new Exception("There is no data to show in the linechart!");
 		}
 	}
 
