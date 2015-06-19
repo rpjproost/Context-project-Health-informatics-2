@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 
+
+
 import context.healthinformatics.help.HelpFrameInfoContainer;
 
 /**
@@ -17,6 +19,9 @@ public class ReadHelpInfoFromTXTFile extends Parser {
 	private File file;
 	private Scanner sc;
 	private ArrayList<HelpFrameInfoContainer> helpFrameInfoContainer;
+	private StringBuilder buildInfoString;
+	private String title;
+	private int count;
 
 	/**
 	 * Constructor of the ReadHelpInfoFromTXTFile.
@@ -60,6 +65,10 @@ public class ReadHelpInfoFromTXTFile extends Parser {
 		return new File(filename);
 	}
 
+	/**
+	 * Parses the help files from a text file.
+	 * @throws IOException could be thrown by file.
+	 */
 	@Override
 	public void parse() throws IOException {
 		try {
@@ -76,41 +85,40 @@ public class ReadHelpInfoFromTXTFile extends Parser {
 	 * Initialize variables to read the lines.
 	 */
 	private void readRelevantLines() {
-		StringBuilder buildInfoString = new StringBuilder();
-		String title = "";
-		int count = 0;
-		readLines(title, count, buildInfoString);
+		buildInfoString = new StringBuilder();
+		title = "";
+		count = 0;
+		readLines();
 	}
 
 	/**
 	 * Read the actual lines.
-	 * 
-	 * @param title
-	 *            the title of the info
-	 * @param count
-	 *            count how many lines are read.
-	 * @param buildInfoString
-	 *            the string with HTML info
 	 */
-	private void readLines(String title, int count,
-			StringBuilder buildInfoString) {
+	private void readLines() {
 		while (sc.hasNextLine()) {
 			String thisLine = sc.nextLine();
 			if (!sc.hasNextLine()) {
 				helpFrameInfoContainer.add(new HelpFrameInfoContainer(title,
 						buildInfoString.toString()));
 			} else if (thisLine.equals("%%")) {
-				if (count > 0) {
-					helpFrameInfoContainer.add(new HelpFrameInfoContainer(
-							title, buildInfoString.toString()));
-				}
-				count++;
-				title = sc.nextLine();
-				buildInfoString.setLength(0);
+				readSpecificLines();
 			} else {
 				buildInfoString.append(thisLine);
 			}
 		}
+	}
+	
+	/**
+	 * Reads the specific lines.
+	 */
+	private void readSpecificLines() {
+		if (count > 0) {
+			helpFrameInfoContainer.add(new HelpFrameInfoContainer(
+					title, buildInfoString.toString()));
+		}
+		count++;
+		title = sc.nextLine();
+		buildInfoString.setLength(0);
 	}
 
 	/**
