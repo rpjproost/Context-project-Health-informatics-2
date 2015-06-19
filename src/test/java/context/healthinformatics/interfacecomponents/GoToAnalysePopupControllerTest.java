@@ -19,7 +19,7 @@ import context.healthinformatics.writer.XMLDocument;
 public class GoToAnalysePopupControllerTest {
 
 	private InputPageComponents components;
-	private GoToAnalysePopupController controller;
+	private GoToAnalyzePopupController controller;
 	private String projectName = "TestGoToAnalyseTest";
 
 	/**
@@ -28,7 +28,7 @@ public class GoToAnalysePopupControllerTest {
 	@Before
 	public void setUp() {
 		components = mock(InputPageComponents.class);
-		controller = new GoToAnalysePopupController(components);
+		controller = new GoToAnalyzePopupController(components);
 	}
 
 	/**

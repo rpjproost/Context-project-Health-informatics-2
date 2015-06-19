@@ -156,7 +156,7 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	}
 
 	/**
-	 * Get the XMLDocument with the excel values or txt/csv values.
+	 * Get the XMLDocument with the excel values or TXT/CSV values.
 	 * 
 	 * @param columns
 	 *            the columns of the document
@@ -397,7 +397,7 @@ public class DocumentFieldsContainer extends InterfaceHelper implements
 	 * @param labelName
 	 *            the name of the label: sheet or delimiter
 	 * @param theTextField
-	 *            one of the two textfields
+	 *            one of the two TextFields
 	 */
 	private void changeLastDocumentRow(String labelName, JTextField theTextField) {
 		panelForDocTypeSpecificInput.setVisible(false);
