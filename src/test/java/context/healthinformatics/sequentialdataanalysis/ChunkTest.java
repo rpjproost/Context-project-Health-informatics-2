@@ -117,7 +117,7 @@ public class ChunkTest {
 		children.add(new Chunk());
 		chunk.setChunks(children);
 		assertEquals(chunk.toArray().get(0),
-				"Chunk contains childs, code =  comment = ");
+				"");
 	}
 
 	/**

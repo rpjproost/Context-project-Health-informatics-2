@@ -48,6 +48,7 @@ public class ComputationsTest {
 	private final int six = 6;
 	private final int seven = 7;
 	private final int eight = 8;
+	private final int nine = 9;
 	
 	private String oldSpace = SingletonDb.getDbName();
 	/**
@@ -191,12 +192,12 @@ public class ComputationsTest {
 		Chunk c  = chunks.get(0);
 		assertTrue(c.isCompute());
 		ArrayList<String> strings = c.toArray();
-		assertEquals(eight, strings.size());
-		assertEquals("sum of values = 920.0", strings.get(three));
-		assertEquals("max of values = 242.0", strings.get(four));
-		assertEquals("min of values = 131.0", strings.get(five));
-		assertEquals("average of values = 184.0", strings.get(six));
-		assertEquals("Childs sum = 5", strings.get(seven));
+		assertEquals(nine, strings.size());
+		assertEquals("sum of values = 920.0", strings.get(four));
+		assertEquals("max of values = 242.0", strings.get(five));
+		assertEquals("min of values = 131.0", strings.get(six));
+		assertEquals("average of values = 184.0", strings.get(seven));
+		assertEquals("Childs sum = 5", strings.get(eight));
 	}
 	
 
