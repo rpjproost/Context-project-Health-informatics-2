@@ -10,11 +10,9 @@
 
 	<groupId>context.healthinformatics</groupId>
 	<artifactId>health-informatics</artifactId>
-	<version>0.8</version>
 	<url>https://github.com/rpjproost/Context-project-Health-informatics-2</url>
-	<description>
-        Context project.
-    </description>
+	<description>Context project.
+Analytic tool for multiple data formats like .txt and .xls/xlsx</description>
 	<organization>
 		<url></url>
 		<name>Context health informatics 2</name>
@@ -203,4 +201,5 @@
 			</plugin>
 		</plugins>
 	</reporting>
+	<version>1,0</version>
 </project>
