@@ -50,7 +50,7 @@ public class LoadingScreen extends InterfaceHelper {
 	}
 
 	/**
-	 * Initialise the TextArea with the loading message.
+	 * Initialize the TextArea with the loading message.
 	 */
 	private void initTextAreaWithLoadingMessage() {
 		displayHtmlPane = new JEditorPane();
@@ -66,7 +66,7 @@ public class LoadingScreen extends InterfaceHelper {
 	}
 
 	/**
-	 * Initialise the loading animation.
+	 * Initialize the loading animation.
 	 */
 	private void initLoadingAnimation() {
 		Icon icon = new ImageIcon("src/main/data/loadingscreen/loading.gif");
@@ -93,7 +93,7 @@ public class LoadingScreen extends InterfaceHelper {
 	}
 
 	/**
-	 * Set the textarea to display some message.
+	 * Set the text area to display some message.
 	 * 
 	 * @param message
 	 *            the message

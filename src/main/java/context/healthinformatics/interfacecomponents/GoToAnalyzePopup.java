@@ -17,10 +17,10 @@ import context.healthinformatics.gui.InterfaceHelper;
 import context.healthinformatics.writer.XMLDocument;
 
 /**
- * Class go to analyse popup shows a popup to set which constraints must be
- * applied before we are going to analyse the data.
+ * Class go to analyze PopUp shows a PopUp to set which constraints must be
+ * applied before we are going to analyze the data.
  */
-public class GoToAnalysePopup extends InterfaceHelper implements ActionListener {
+public class GoToAnalyzePopup extends InterfaceHelper implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private static final int FILTERSCREEN_WIDTH = 400;
@@ -34,7 +34,7 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 
 	private ArrayList<String> docNames;
 	private HashMap<String, String[]> columnNames = new HashMap<String, String[]>();
-	private ArrayList<AnalysePopupRowContainer> rows = new ArrayList<AnalysePopupRowContainer>();
+	private ArrayList<AnalyzePopupRowContainer> rows = new ArrayList<AnalyzePopupRowContainer>();
 	private JPanel filterPanel;
 
 	private JButton addFilter;
@@ -44,24 +44,30 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 
 	private JScrollPane scroll;
 
-	private GoToAnalysePopupController popupController;
+	private GoToAnalyzePopupController popupController;
 
 	/**
-	 * Constructor of the Go to analyse popup.
+	 * Constructor of the Go to analyze PopUp.
 	 * 
 	 * @param selectedDocs
-	 *            the selected xml documents
+	 *            the selected XML documents
 	 * @param controller
-	 *            the controller which handles the popupframe
+	 *            the controller which handles the PopUp frame
 	 */
-	public GoToAnalysePopup(ArrayList<XMLDocument> selectedDocs,
-			GoToAnalysePopupController controller) {
+	public GoToAnalyzePopup(ArrayList<XMLDocument> selectedDocs,
+			GoToAnalyzePopupController controller) {
 		initButtons();
 		setupTheLoadingMainFrame();
 		this.popupController = controller;
-
 		initDropDownMenus(selectedDocs);
+		initializePopupPanels();
+		setWindowListener();
+	}
 
+	/**
+	 * Initialize the panels for the analyze PopUp row.
+	 */
+	private void initializePopupPanels() {
 		filterPanel = createEmptyWithGridBagLayoutPanel();
 		scroll = new JScrollPane(filterPanel);
 		scroll.setPreferredSize(new Dimension(ELEMENT_WIDTH,
@@ -70,11 +76,10 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 		mainPanel.add(scroll, setGrids(0, 0));
 		mainPanel.add(buttonPanel, setGrids(0, 1));
 		popupMainFrame.add(mainPanel);
-		setWindowListener();
 	}
 
 	/**
-	 * Initialise the comboboxes with values of the documents and columns.
+	 * Initialize the ComboBoxes with values of the documents and columns.
 	 * 
 	 * @param selectedDocs
 	 *            the selected documents
@@ -106,7 +111,7 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 	}
 
 	/**
-	 * Get the mainframe of the popup to the front.
+	 * Get the mainframe of the PopUp to the front.
 	 */
 	public void getToFront() {
 		popupMainFrame.toFront();
@@ -122,9 +127,23 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 		addFilter = new JButton("Add filter");
 		goToAnalyse = new JButton("Go to analyse");
 		removeFilter = new JButton("Remove filter");
+		addActionListenersToButtons();
+		addButtonsToButtonPanel();
+	}
+
+	/**
+	 * Add the ActionListeners to the buttons.
+	 */
+	private void addActionListenersToButtons() {
 		addFilter.addActionListener(this);
 		goToAnalyse.addActionListener(this);
 		removeFilter.addActionListener(this);
+	}
+
+	/**
+	 * Add the buttons to the ButtonPanel.
+	 */
+	private void addButtonsToButtonPanel() {
 		buttonPanel.add(addFilter, setGrids(0, 0));
 		buttonPanel.add(removeFilter, setGrids(1, 0));
 		buttonPanel.add(goToAnalyse, setGrids(2, 0));
@@ -138,6 +157,13 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 		popupMainFrame.setPreferredSize(new Dimension(FILTERSCREEN_WIDTH,
 				FILTERSCREEN_HEIGTH));
 		popupMainFrame.pack();
+		setLoadingScreenSettings();
+	}
+
+	/**
+	 * Set specific settings for the MainFrame.
+	 */
+	private void setLoadingScreenSettings() {
 		popupMainFrame.setVisible(true);
 		popupMainFrame.setResizable(false);
 		Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -157,7 +183,7 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 	}
 
 	/**
-	 * Set all the saved filter values in the popup.
+	 * Set all the saved filter values in the PopUp.
 	 * 
 	 * @param filters
 	 *            the saved filters
@@ -165,24 +191,32 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 	public void setFilters(ArrayList<String[]> filters) {
 		for (int i = 0; i < filters.size(); i++) {
 			if (docNames.contains(filters.get(i)[0])) {
-				AnalysePopupRowContainer popupRowContainer = new AnalysePopupRowContainer(
-						docNames.toArray(new String[docNames.size()]),
-						columnNames);
-				popupRowContainer.setValues(filters.get(i)[0],
-						filters.get(i)[1], filters.get(i)[2]);
-				rows.add(popupRowContainer);
-				filterPanel.add(rows.get(rows.size() - 1).getPanelOfRow(),
-						setGrids(0, rows.size() - 1));
+				addFilter(filters.get(i));
 			}
 		}
 		filterPanel.revalidate();
 	}
 
 	/**
+	 * Add the current filter.
+	 * 
+	 * @param filter
+	 *            the filters
+	 */
+	private void addFilter(String[] filter) {
+		AnalyzePopupRowContainer popupRowContainer = new AnalyzePopupRowContainer(
+				docNames.toArray(new String[docNames.size()]), columnNames);
+		popupRowContainer.setValues(filter[0], filter[1], filter[2]);
+		rows.add(popupRowContainer);
+		filterPanel.add(rows.get(rows.size() - 1).getPanelOfRow(),
+				setGrids(0, rows.size() - 1));
+	}
+
+	/**
 	 * Add an empty filter.
 	 */
 	public void addEmptyFilter() {
-		rows.add(new AnalysePopupRowContainer(docNames
+		rows.add(new AnalyzePopupRowContainer(docNames
 				.toArray(new String[docNames.size()]), columnNames));
 		filterPanel.add(rows.get(rows.size() - 1).getPanelOfRow(),
 				setGrids(0, rows.size() - 1));
@@ -210,15 +244,21 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 			addEmptyFilter();
 		}
 		if (e.getSource() == removeFilter && rows.size() > 0) {
-			JPanel panel = rows.remove(rows.size() - 1).getPanelOfRow();
-			panel.setVisible(false);
-			filterPanel.remove(panel);
-			scroll.revalidate();
+			handleRemoveFilter();
 		}
 		if (e.getSource() == goToAnalyse) {
 			popupController.handleSpecifiedFilter(getAllFilterValues());
 		}
+	}
 
+	/**
+	 * Handle the remove filter button.
+	 */
+	private void handleRemoveFilter() {
+		JPanel panel = rows.remove(rows.size() - 1).getPanelOfRow();
+		panel.setVisible(false);
+		filterPanel.remove(panel);
+		scroll.revalidate();
 	}
 
 }

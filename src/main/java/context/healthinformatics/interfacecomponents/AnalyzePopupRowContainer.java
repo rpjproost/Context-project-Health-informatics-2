@@ -12,9 +12,9 @@ import javax.swing.JTextField;
 import context.healthinformatics.gui.InterfaceHelper;
 
 /**
- * Class to contain a row of the Analyse popup.
+ * Class to contain a row of the Analyze PopUp.
  */
-public class AnalysePopupRowContainer extends InterfaceHelper implements
+public class AnalyzePopupRowContainer extends InterfaceHelper implements
 		ActionListener {
 
 	private static final long serialVersionUID = 1L;
@@ -22,22 +22,24 @@ public class AnalysePopupRowContainer extends InterfaceHelper implements
 	private static final int ROW_WIDTH = 350;
 	private static final int ROW_HEIGHT = 30;
 	private static final int TEXT_FIELD_LENGTH = 10;
+	
+	private JPanel filterRow;
 	private JComboBox<String> docNameDropDown;
 	private JComboBox<String> docDropDown;
 	private JTextField filterValue;
 	private String[] docNames;
 	private HashMap<String, String[]> columnNames;
-	private JPanel filterRow;
+	
 
 	/**
-	 * The constructor of the row container which inits all values.
+	 * The constructor of the row container which initializes all values.
 	 * 
 	 * @param docNamesIn
-	 *            the names of the documents for the combobox
+	 *            the names of the documents for the ComboBox
 	 * @param columnNamesIn
-	 *            the names of the columns per document in a hashmap
+	 *            the names of the columns per document in a HashMap
 	 */
-	public AnalysePopupRowContainer(String[] docNamesIn,
+	public AnalyzePopupRowContainer(String[] docNamesIn,
 			HashMap<String, String[]> columnNamesIn) {
 		this.docNames = docNamesIn.clone();
 		this.columnNames = columnNamesIn;
@@ -57,7 +59,7 @@ public class AnalysePopupRowContainer extends InterfaceHelper implements
 	}
 
 	/**
-	 * Set the values of the analyse filter row to the specified values.
+	 * Set the values of the analyze filter row to the specified values.
 	 * 
 	 * @param docName
 	 *            the document name
@@ -78,7 +80,7 @@ public class AnalysePopupRowContainer extends InterfaceHelper implements
 	}
 
 	/**
-	 * Get the values of the checkboxes and the textfield in a string.
+	 * Get the values of the CheckBoxes and the TextField in a string.
 	 * 
 	 * @return the string of values
 	 */
