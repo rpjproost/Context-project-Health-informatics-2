@@ -25,6 +25,8 @@ public final class ComputationData {
 	private static int days;
 	private static ArrayList<String> names;
 	public static final int DIVIDE = 10;
+	private static Interpreter interpreter;
+	private static Db database;
 
 	private ComputationData() {
 
@@ -36,6 +38,8 @@ public final class ComputationData {
 	 */
 	public static void init() {
 		setComputed(true);
+		interpreter = SingletonInterpreter.getInterpreter();
+		database = SingletonDb.getDb();
 		if (data == null) {
 			data = new ArrayList<HashMap<Integer, Double>>();
 			names = new ArrayList<String>();
@@ -49,29 +53,48 @@ public final class ComputationData {
 	 * @throws SQLException iff data can not be found at a chunk.
 	 */
 	public static void createHashMap(String column, String name) throws SQLException {
-		init(); setDays(xAs()); Interpreter interpreter = SingletonInterpreter.getInterpreter();
-		ArrayList<Chunk> chunks = interpreter.getChunks();
+		init(); setDays(xAs()); 
 		HashMap<Integer, Double> res = new HashMap<Integer, Double>();
-		Db database = SingletonDb.getDb();
 		if (name.equals("times")) {
-			createTimesMeasured(chunks, res);
+			createTimesMeasured(res);
 			names.add(name);
 		}
 		else {
-			for (Chunk c : chunks) {
-				if (c.hasChild()) {
-					computeDiffAndValueChild(column, database, c, res);
-				}
-				else {
-					computeDiffAndValue(column, database, c, res);
-				}
-			}
-			names.add(name + "* 10");
+			computeDiffValue(column, res, name);
 		}
 		data.add(res);
 	}
 
-	private static void computeDiffAndValue(String column, Db database, Chunk c,
+	/**
+	 * Computes difference in value.
+	 * @param chunks Arraylist of chunks
+	 * @param column column of chunk to be checked in difference.
+	 * @param res Hashmap with computations.
+	 * @param name name of this computation.
+	 * @throws SQLException if column could not be found in this chunk.
+	 */
+	private static void computeDiffValue(String column, HashMap<Integer, Double> res, 
+			String name) throws SQLException {
+		for (Chunk c : interpreter.getChunks()) {
+			if (c.hasChild()) {
+				computeDiffAndValueChild(column, c, res);
+			}
+			else {
+				computeDiffAndValue(column, c, res);
+			}
+		}
+		names.add(name + "* 10");
+	}
+
+
+	/**
+	 * Compute difference on this parent chunk.
+	 * @param column column to be checked.
+	 * @param c chunk to be checked.
+	 * @param res result hashmap with computations.
+	 * @throws SQLException if column could not be found in this chunk.
+	 */
+	private static void computeDiffAndValue(String column, Chunk c,
 			HashMap<Integer, Double> res) throws SQLException {
 		int difference = differsFromDate(new DateTime(database.selectDate(c.getLine())));
 		double value = c.getValue(column);
@@ -79,7 +102,14 @@ public final class ComputationData {
 		res.put(difference, value);
 	}
 	
-	private static void computeDiffAndValueChild(String column, Db database, Chunk c,
+	/**
+	 * Compute difference on this child chunk.
+	 * @param column column to be checked.
+	 * @param c chunk to be checked.
+	 * @param res result hashmap with computations.
+	 * @throws SQLException if column could not be found in this chunk.
+	 */
+	private static void computeDiffAndValueChild(String column, Chunk c,
 			HashMap<Integer, Double> res) throws SQLException {
 		c.initializeComputations(column);
 		double value = c.getAverageValue();
@@ -90,14 +120,13 @@ public final class ComputationData {
 
 	/**
 	 * Sets children size in a HashMap with difference in date measured by first child.
-	 * @param chunks the list of chunks to be checked.
 	 * @param res the result hashmap to be filled.
 	 * @throws SQLException Date can not be found by chunk.
 	 */
-	public static void createTimesMeasured(ArrayList<Chunk> chunks, HashMap<Integer, Double> res)
+	public static void createTimesMeasured(HashMap<Integer, Double> res)
 			throws SQLException {
 		Db database = SingletonDb.getDb();
-		for (Chunk c : chunks) {
+		for (Chunk c : interpreter.getChunks()) {
 			double value = c.getChildren().size();
 			int difference = differsFromDate(new DateTime(
 					database.selectDate(c.getChildren().get(0).getLine())));
@@ -113,18 +142,17 @@ public final class ComputationData {
 	 *             if data is not found
 	 */
 	public static int xAs() throws SQLException {
-		Interpreter interpreter = SingletonInterpreter.getInterpreter();
 		ArrayList<Chunk> chunks = interpreter.getChunks();
-		Db data = SingletonDb.getDb();
 		Date first;
 		Date last;
 		if (chunks.get(0).hasChild()) {
-			first = data.selectDate(chunks.get(0).getChildren().get(0).getLine());
-			last = data.selectDate(chunks.get(chunks.size() - 1).getChildren().get(0).getLine());
+			first = database.selectDate(chunks.get(0).getChildren().get(0).getLine());
+			last = database.selectDate(chunks.get(chunks.size() - 1).
+					getChildren().get(0).getLine());
 		}
 		else {
-			first = data.selectDate(chunks.get(0).getLine());
-			last = data.selectDate(chunks.get(chunks.size() - 1).getLine());
+			first = database.selectDate(chunks.get(0).getLine());
+			last = database.selectDate(chunks.get(chunks.size() - 1).getLine());
 		}
 		if (f == null) {
 			f = new DateTime(first);
