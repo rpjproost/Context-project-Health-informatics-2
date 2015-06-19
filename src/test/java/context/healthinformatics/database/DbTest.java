@@ -171,24 +171,6 @@ public class DbTest {
 	}
 
 	/**
-	 * Test get database path.
-	 */
-	@Test
-	public void testDBPath() {
-		assertEquals(data.getDbPath(), "C:/db/");
-	}
-
-	/**
-	 * Test set database path.
-	 */
-	@Test
-	public void testSetDBPath() {
-		data.setDbPath("test");
-		assertEquals(data.getDbPath(), "test");
-		data.setDbPath(path);
-	}
-
-	/**
 	 * Test setDB.
 	 */
 	@Test
@@ -287,29 +269,6 @@ public class DbTest {
 		SingletonDb.setDbName("analyze");
 		assertEquals(SingletonDb.getPath(), "C:/db/");
 		assertEquals(SingletonDb.getDbName(), "analyze");
-	}
-	
-	/**
-	 * Tests set/get mergeTable name.
-	 */
-	@Test
-	public void testMergeTableName() {
-		Db data = SingletonDb.getDb();
-		assertEquals("result", data.getMergeTable());
-		data.setMergeTable("result2");
-		assertEquals("result2", data.getMergeTable());
-		data.setMergeTable("result");
-	}
-	
-	/**
-	 * Tests creating new project.
-	 */
-	@Test
-	public void testProjectName() {
-		SingletonDb.setDbName("test");
-		SingletonDb.setPath("C:/db/");
-		data = SingletonDb.setDb();
-		assertEquals("test", data.getDbName());
 	}
 
 }
