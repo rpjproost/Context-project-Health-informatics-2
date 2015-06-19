@@ -5,8 +5,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,14 +39,16 @@ public class StateTransitionMatrix extends InterfaceHelper {
 	private static final int MINUSTWO = -2;
 	private static final int STATE_TRANSITION_PANEL_HEIGHT = 400;
 	private static final int STATE_TRANSITION_TABLE_HEIGHT = 350;
+	private int width;
+
 	private ArrayList<String> codes;
 	private HashMap<ConnectionSet, Integer> countMap;
+
 	private JTable table;
 	private JScrollPane scroll;
 	private JPanel mainPanel;
 	private JPanel tableContainerPanel;
 	private JTable headerTable;
-	private int width;
 	private JLabel graphTitle;
 	private JFileChooser savePopup;
 	private JPopupMenu menu = new JPopupMenu("Popup");
@@ -60,6 +60,14 @@ public class StateTransitionMatrix extends InterfaceHelper {
 		width = getScreenWidth() / 2 - FOUR * INSETS;
 		codes = new ArrayList<String>();
 		countMap = new HashMap<ConnectionSet, Integer>();
+		initMatrixPanels();
+		addItemsToPopUp();
+	}
+
+	/**
+	 * Initialize the panels of the StateTransitionMatrix.
+	 */
+	private void initMatrixPanels() {
 		tableContainerPanel = createEmptyWithGridBagLayoutPanel();
 		tableContainerPanel.setPreferredSize(new Dimension(width,
 				STATE_TRANSITION_TABLE_HEIGHT));
@@ -67,35 +75,18 @@ public class StateTransitionMatrix extends InterfaceHelper {
 		mainPanel.setPreferredSize(new Dimension(width,
 				STATE_TRANSITION_PANEL_HEIGHT));
 		mainPanel.add(tableContainerPanel, setGrids(0, 0));
-		addItemsToPopUp();
 	}
 
 	/**
 	 * Initialize the table.
 	 * 
-	 * @param string
+	 * @param title
 	 *            the title of the matrix.
 	 */
-	public void createStateTransitionMatrix(String string) {
+	public void createStateTransitionMatrix(String title) {
 		mainPanel.remove(tableContainerPanel);
-		tableContainerPanel = createEmptyWithGridBagLayoutPanel();
-		tableContainerPanel.setPreferredSize(new Dimension(width,
-				STATE_TRANSITION_TABLE_HEIGHT));
-		graphTitle = new JLabel("State-Transition Matrix: " + string);
-		graphTitle.setFont(new Font("SansSerif", Font.BOLD, TEXTSIZE));
-		tableContainerPanel.add(graphTitle, setGrids(0, 0));
-		table = new JTable(getTableData(), getColumnNames());
-		TableModel model = createModel();
-		headerTable = new JTable(model);
-		for (int i = 0; i < table.getRowCount(); i++) {
-			headerTable.setValueAt(codes.get(i), i, 0);
-		}
-		headerTable.setShowGrid(false);
-		headerTable.setPreferredScrollableViewportSize(new Dimension(ROW_WIDTH,
-				0));
-		headerTable.getColumnModel().getColumn(0).setPreferredWidth(ROW_WIDTH);
-		headerTable.getColumnModel().getColumn(0)
-				.setCellRenderer(createTableCellRenderer());
+		reinitStateTransitionMatrix(title);
+		reinitHeaderTable();
 		scroll = new JScrollPane(table);
 		scroll.setPreferredSize(new Dimension(width, codes.size() * HEIGHT));
 		scroll.setRowHeaderView(headerTable);
@@ -105,29 +96,68 @@ public class StateTransitionMatrix extends InterfaceHelper {
 		addMouseListeners();
 	}
 
-	private void addMouseListeners() {
-		mainPanel.addMouseListener(new PopupTriggerListener());
-		scroll.addMouseListener(new PopupTriggerListener());
-		headerTable.addMouseListener(new PopupTriggerListener());
-		table.addMouseListener(new PopupTriggerListener());
-		graphTitle.addMouseListener(new PopupTriggerListener());
+	/**
+	 * Reinitialize all the panels for the StateTransitionMatrix.
+	 * 
+	 * @param title
+	 *            the title of the matrix
+	 */
+	private void reinitStateTransitionMatrix(String title) {
+		tableContainerPanel = createEmptyWithGridBagLayoutPanel();
+		tableContainerPanel.setPreferredSize(new Dimension(width,
+				STATE_TRANSITION_TABLE_HEIGHT));
+		graphTitle = new JLabel("State-Transition Matrix: " + title);
+		graphTitle.setFont(new Font("SansSerif", Font.BOLD, TEXTSIZE));
+		tableContainerPanel.add(graphTitle, setGrids(0, 0));
+		table = new JTable(getTableData(), getColumnNames());
 	}
 
+	/**
+	 * Reinitialize the HeaderTable.
+	 */
+	private void reinitHeaderTable() {
+		headerTable = new JTable(createModel());
+		for (int i = 0; i < table.getRowCount(); i++) {
+			headerTable.setValueAt(codes.get(i), i, 0);
+		}
+		headerTable.setShowGrid(false);
+		headerTable.setPreferredScrollableViewportSize(new Dimension(ROW_WIDTH,
+				0));
+		headerTable.getColumnModel().getColumn(0).setPreferredWidth(ROW_WIDTH);
+		headerTable.getColumnModel().getColumn(0)
+				.setCellRenderer(createTableCellRenderer());
+	}
+
+	/**
+	 * Add the MouseListeners.
+	 */
+	private void addMouseListeners() {
+		mainPanel.addMouseListener(new PopupTriggerListener(menu));
+		scroll.addMouseListener(new PopupTriggerListener(menu));
+		headerTable.addMouseListener(new PopupTriggerListener(menu));
+		table.addMouseListener(new PopupTriggerListener(menu));
+		graphTitle.addMouseListener(new PopupTriggerListener(menu));
+	}
+
+	/**
+	 * Add the items to PopUp.
+	 */
 	private void addItemsToPopUp() {
 		JMenuItem item = new JMenuItem("Save as...");
 		item.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				savePopup = saveFileChooser("png");
 				saveImage(savePopup, savePopup.showSaveDialog(table));
-				System.out.println("Save as.. Test");
 			}
 		});
 		menu.add(item);
 	}
 
 	/**
-	 * Saves the matrix in a png file.
-	 * @param chooser the chooser where you must check.
+	 * Saves the matrix in a PNG file.
+	 * 
+	 * @param chooser
+	 *            the chooser where you must check.
 	 * @param choice
 	 *            the choice of the user.
 	 */
@@ -179,6 +209,9 @@ public class StateTransitionMatrix extends InterfaceHelper {
 		};
 	}
 
+	/**
+	 * @return a TableCellRenderer.
+	 */
 	private TableCellRenderer createTableCellRenderer() {
 		return new TableCellRenderer() {
 
@@ -224,21 +257,47 @@ public class StateTransitionMatrix extends InterfaceHelper {
 		Object[][] data = new Object[codes.size()][codes.size()];
 		for (int i = 0; i < codes.size(); i++) {
 			for (int j = 0; j < codes.size(); j++) {
-				if (i == j) {
-					data[i][j] = "x";
-				} else {
-					ConnectionSet current = new ConnectionSet(codes.get(i),
-							codes.get(j));
-					Integer value = countMap.get(current);
-					if (value != null) {
-						data[i][j] = value;
-					} else {
-						data[i][j] = 0;
-					}
-				}
+				data[i][j] = getValue(i, j);
 			}
 		}
 		return data;
+	}
+
+	/**
+	 * Get the value from the ConnectionSet. If i == j no connection return "x"
+	 * 
+	 * @param i
+	 *            the x-as
+	 * @param j
+	 *            the y-as
+	 * @return the value
+	 */
+	private String getValue(int i, int j) {
+		if (i == j) {
+			return "x";
+		} else {
+			return getValue(i, j,
+					countMap.get(new ConnectionSet(codes.get(i), codes.get(j))));
+		}
+	}
+
+	/**
+	 * Get the real value of the connection.
+	 * 
+	 * @param i
+	 *            the x-as
+	 * @param j
+	 *            the y-as
+	 * @param value
+	 *            the current value of the number of connections
+	 * @return the value
+	 */
+	private String getValue(int i, int j, Integer value) {
+		if (value != null) {
+			return value.toString();
+		} else {
+			return "0";
+		}
 	}
 
 	/**
@@ -266,14 +325,24 @@ public class StateTransitionMatrix extends InterfaceHelper {
 			Chunk currentChunk = chunks.get(i);
 			if (!currentChunk.getCode().isEmpty()
 					&& !currentChunk.getPointer().isEmpty()) {
-				String code = currentChunk.getCode();
-				if (codes.contains(code)) {
-					processChunkWithPointer(currentChunk);
-				} else {
-					codes.add(code);
-					processChunkWithPointer(currentChunk);
-				}
+				processChunk(currentChunk);
 			}
+		}
+	}
+
+	/**
+	 * Process a chunk and decides if its code is already added or not.
+	 * 
+	 * @param currentChunk
+	 *            the current chunk
+	 */
+	private void processChunk(Chunk currentChunk) {
+		String code = currentChunk.getCode();
+		if (codes.contains(code)) {
+			processChunkWithPointer(currentChunk);
+		} else {
+			codes.add(code);
+			processChunkWithPointer(currentChunk);
 		}
 	}
 
@@ -286,57 +355,29 @@ public class StateTransitionMatrix extends InterfaceHelper {
 	private void processChunkWithPointer(Chunk currentChunk) {
 		HashMap<Chunk, String> pointerMap = currentChunk.getPointer();
 		for (Entry<Chunk, String> e : pointerMap.entrySet()) {
-			String currentCodeFromPointer = e.getKey().getCode();
-			if (!codes.contains(currentCodeFromPointer)) {
-				codes.add(currentCodeFromPointer);
-			}
-			ConnectionSet currentSet = new ConnectionSet(
-					currentChunk.getCode(), currentCodeFromPointer);
-			if (countMap.get(currentSet) != null) {
-				Integer value = countMap.remove(currentSet) + 1;
-				countMap.put(currentSet, value);
-			} else {
-				countMap.put(currentSet, 1);
-			}
+			addPointers(e.getKey().getCode(), currentChunk);
 		}
 	}
 
 	/**
-	 * Triggers the right-click pop up event.
+	 * Handle different cases for the pointers.
+	 * 
+	 * @param currentCodeFromPointer
+	 *            the current pointer
+	 * @param currentChunk
+	 *            the current chunk
 	 */
-	class PopupTriggerListener extends MouseAdapter {
-		/**
-		 * Triggers the event when the mouse is pressed.
-		 * 
-		 * @param ev
-		 *            the mouse event.
-		 */
-		public void mousePressed(MouseEvent ev) {
-			if (ev.isPopupTrigger()) {
-				menu.show(ev.getComponent(), ev.getX(), ev.getY());
-			}
+	private void addPointers(String currentCodeFromPointer, Chunk currentChunk) {
+		if (!codes.contains(currentCodeFromPointer)) {
+			codes.add(currentCodeFromPointer);
 		}
-
-		/**
-		 * Triggers the pop up event when the mouse is released.
-		 * 
-		 * @param ev
-		 *            the mouse event.
-		 */
-		public void mouseReleased(MouseEvent ev) {
-			if (ev.isPopupTrigger()) {
-				menu.show(ev.getComponent(), ev.getX(), ev.getY());
-			}
-		}
-
-		/**
-		 * Do nothing when the mouse is clicked.
-		 * 
-		 * @param ev
-		 *            the mouse event.
-		 */
-		public void mouseClicked(MouseEvent ev) {
+		ConnectionSet currentSet = new ConnectionSet(currentChunk.getCode(),
+				currentCodeFromPointer);
+		if (countMap.get(currentSet) != null) {
+			Integer value = countMap.remove(currentSet) + 1;
+			countMap.put(currentSet, value);
+		} else {
+			countMap.put(currentSet, 1);
 		}
 	}
-
 }
