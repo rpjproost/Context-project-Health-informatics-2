@@ -4,23 +4,19 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.logging.Logger;
 
-/** Class for setting up database.
- * 
- * 
- *
+/** 
+ * Class for setting up database.
  */
 public final class SingletonDb {
 
 	private static Db data;
 	private static String path = "C:/db/";
 	private static String dbName = "analyze";
-	private static Logger log = Logger.getLogger(SingletonDb.class.getName());
 	private static HashMap<String , Db> databases = new HashMap<String, Db>();
 
 	/**
-	 * 
+	 * Constructor for database.
 	 */
 	private SingletonDb() {
 		
@@ -43,8 +39,8 @@ public final class SingletonDb {
 		return data;
 	}
 
-	/** Sets up a database at default path for now.
-	 * 
+	/** 
+	 * Sets up a database at default path for now. 
 	 * @return database
 	 */
 	protected static Db setDb() {
@@ -57,11 +53,10 @@ public final class SingletonDb {
 	}
 
 	/**
-	 * drop everything from the given database.
+	 * Drop everything from the given database.
 	 * @param data database to drop from.
 	 */
 	public static void dropAll(Db data) {
-		boolean ignore = false;
 		if (data == null) {
 			return;
 		}
@@ -69,25 +64,28 @@ public final class SingletonDb {
 			try {
 				data.dropView("workspace");
 			} catch (SQLException e) {
-				ignore = true;
+				errorsThrown(true);
 			}
 		}
-		try {
 		dropTables();
-		} catch (SQLException e) {
-			ignore = true;
-		}
-		if (ignore) {
-			log.info("Exceptions where ignored in dropAll()");
-		}
 	}
 	
-	private static void dropTables() throws SQLException {
-		boolean ignore = false;
+	/**
+	 * @param b boolean the will be given back.
+	 * @return the inserted boolean.
+	 */
+	private static boolean errorsThrown(boolean b) {
+		return b;
+	}
+	
+	/**
+	 * Drops all tables that aren't needed anymore.
+	 */
+	private static void dropTables() {
 		try {
 			data.dropTable("result");
 		} catch (SQLException e) {
-			ignore = true;
+			errorsThrown(true);
 		}
 		Set<String> tables = new TreeSet<String>();
 		tables.addAll(data.getTables().keySet());
@@ -95,40 +93,37 @@ public final class SingletonDb {
 			try {
 				data.dropTable(s);
 			} catch (SQLException e) {
-				ignore = true;
+				errorsThrown(true);
 			}
-		}
-		if (ignore) {
-			throw new SQLException("Exceptions where ignored.");
 		}
 	}
 
-	/**Sets path where database will be stored.
-	 * 
+	/**
+	 * Sets path where database will be stored.
 	 * @param p path directory.
 	 */
 	public static void setPath(String p) {
 		path = p;
 	}
 
-	/** Sets name of database.
-	 * 
+	/** 
+	 * Sets name of database.
 	 * @param d name of database.
 	 */
 	public static void setDbName(String d) {
 		dbName = d;
 	}
 
-	/** Returns directory where database is stored.
-	 * 
+	/** 
+	 * Returns directory where database is stored.
 	 * @return directory where database is stored.
 	 */
 	public static String getPath() {
 		return path;
 	}
 
-	/** Returns database name.
-	 * 
+	/** 
+	 * Returns database name.
 	 * @return database name.
 	 */
 	public static String getDbName() {

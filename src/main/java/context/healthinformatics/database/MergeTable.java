@@ -15,8 +15,7 @@ import context.healthinformatics.parser.Column;
 import context.healthinformatics.sequentialdataanalysis.Chunk;
 
 /**
- * 
- *
+ * Merge the tables that are current in the database.
  */
 public class MergeTable {
 
@@ -25,7 +24,7 @@ public class MergeTable {
 	private String mergeTable = SingletonDb.getDb().getMergeTable();
 
 	/**
-	 * 
+	 * Sets the data to the one in the database.
 	 */
 	public MergeTable() {
 		data = SingletonDb.getDb();
@@ -93,7 +92,6 @@ public class MergeTable {
 		ArrayList<Column> columns = new ArrayList<Column>();
 		Set<String> allTables = new TreeSet<String>();
 		allTables.addAll(tables.keySet());
-
 		for (Entry<String, ArrayList<Column>> entries : tables.entrySet()) {
 			for (int i = 0; i < entries.getValue().size(); i++) {
 				if (!(columns.contains(entries.getValue().get(i)))) {

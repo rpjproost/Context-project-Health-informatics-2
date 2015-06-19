@@ -19,7 +19,6 @@ import context.healthinformatics.parser.Column;
 public final class SqlBuilder {
 
 	private SqlBuilder() {
-
 	}
 
 	/**
@@ -66,32 +65,23 @@ public final class SqlBuilder {
 	private static void createTableWithColumnsFromArrayList(ArrayList<Column> columns, 
 			StringBuffer res) {
 		for (int i = 0; i < columns.size(); i++) {
+			res.append(columns.get(i).getColumnName());
+			res.append(" ");
+			if (columns.get(i).isTime()) {
+				res.append("INT");
+			}
+			else {
+				res.append(columns.get(i).getColumnType());
+			}
 			if (i == columns.size() - 1) {
-				res.append(columns.get(i).getColumnName());
-				res.append(" ");
-				if (columns.get(i).isTime()) {
-					res.append("INT");
-				}
-				else {
-					res.append(columns.get(i).getColumnType());
-				}
 				res.append(")");
 			} else {
-				res.append(columns.get(i).getColumnName());
-				res.append(" ");
-				if (columns.get(i).isTime()) {
-					res.append("INT");
-				}
-				else {
-					res.append(columns.get(i).getColumnType());
-				}
 				res.append(",");
 			}
 		}
 	}
 
 	/**
-	 * 
 	 * @param tableName Name of table to be queried.
 	 * @return query for executing.
 	 */
@@ -100,7 +90,7 @@ public final class SqlBuilder {
 	}
 
 	/**
-	 * Gets highest indentifier out of table.
+	 * Gets highest identifier out of table.
 	 * @param rs Resultset to be searched for max ID.
 	 * @return max ID as integer or 0.
 	 * @throws SQLException if resultset is empty. Cannot happen here.
@@ -143,11 +133,10 @@ public final class SqlBuilder {
 	 */
 	private static void appendQueryColumns(StringBuilder sql, ArrayList<Column> columns) {
 		for (int i = 0; i < columns.size(); i++) {
+			sql.append(columns.get(i).getColumnName());
 			if (i == columns.size() - 1) {
-				sql.append(columns.get(i).getColumnName());
 				sql.append(")");
 			} else {
-				sql.append(columns.get(i).getColumnName());
 				sql.append(",");
 			}
 		}
@@ -220,15 +209,21 @@ public final class SqlBuilder {
 		}
 	}
 
+	/**
+	 * Converts the time.
+	 * @param time the time to be converted.
+	 * @param dateT input string.
+	 * @return the parsed time.
+	 */
 	private static int convertTime(String time, String dateT) {
 		SimpleDateFormat input = new SimpleDateFormat(dateT);
 		int res = 0;
 		final int hundred = 100;
 		try {
 			java.util.Date date = input.parse(time);
-			DateTime tijd = new DateTime(date);
-			int h = tijd.getHourOfDay();
-			int m = tijd.getMinuteOfHour();
+			DateTime dateTime = new DateTime(date);
+			int h = dateTime.getHourOfDay();
+			int m = dateTime.getMinuteOfHour();
 			int timeToString = h * hundred + m;
 			String temp = timeToString + "";
 			res = Integer.parseInt(temp);
@@ -240,7 +235,7 @@ public final class SqlBuilder {
 
 	/**
 	 * Inserts an integer into an preparedStatement.
-	 * @param p Preparedstatement.
+	 * @param p Prepared statement.
 	 * @param values String of values where one is a integer.
 	 * @param i index of value String[] and preparedStatement.
 	 * @throws SQLException Iff integer could not be inserted.
@@ -271,7 +266,6 @@ public final class SqlBuilder {
 		try {
 			java.util.Date date = input.parse(s);
 			sqlDate = new java.sql.Date(date.getTime());
-
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}

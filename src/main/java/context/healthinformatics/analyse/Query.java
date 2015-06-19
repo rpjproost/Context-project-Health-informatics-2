@@ -42,7 +42,7 @@ public class Query {
 	}
 	
 	/**
-	 * checks the splitted line for empty strings in case of dubble " ".
+	 * checks the splitted line for empty strings in case of double " ".
 	 * @param splittedLine ArrayList of strings with the splitted line.
 	 * @return A list of strings without empty places.
 	 */
@@ -88,8 +88,8 @@ public class Query {
 	/**
 	 * find char in a string.
 	 * @param string string to find for
-	 * @param cha character (first cha of string)
-	 * @return the location of the cha in the string.
+	 * @param cha character (first char of string)
+	 * @return the location of the char in the string.
 	 */
 	private int findChar(String string, String cha) {
 		for (int i = 0; i < string.length(); i++) {
@@ -105,14 +105,14 @@ public class Query {
 	 * @param s given string
 	 * @return boolean containing the answer. True for 1 word. False for more then 1 word.
 	 */
-	protected boolean checkForCommand(String s) { //checks if the string is 1 word.
+	protected boolean checkForCommand(String s) {
 		return Pattern.matches("^\\s*[A-Za-z]+\\s*$", s);
 	}
 	
 	/**
 	 * set the queryPointer to the int.
 	 * does nothing if outOfBounds.
-	 * @param i int to point to.
+	 * @param i integer to point to.
 	 */
 	public void setPointer(int i) {
 		if (i >= 0 && i < query.size()) {
@@ -136,14 +136,14 @@ public class Query {
 	}
 	
 	/**
-	 * increment index with 1.
+	 * increments index with 1.
 	 */
 	public void inc() {
 		setPointer(index + 1);
 	}
 	
 	/**
-	 * increment index with given number.
+	 * increments index with given number.
 	 * @param i number to add.
 	 */
 	public void inc(int i) {
@@ -159,7 +159,7 @@ public class Query {
 	}
 	
 	/**
-	 * return the next Querypart. 
+	 * return the next Query part. 
 	 * @return the next part of the query.
 	 */
 	public String next() {

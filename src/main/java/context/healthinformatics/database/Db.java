@@ -16,13 +16,11 @@ import context.healthinformatics.interfacecomponents.Observer;
 import context.healthinformatics.parser.Column;
 
 /**
- * 
- * @author Rick, 30 apr 2015.
- *
+ * The database which stores all data out of the files.
  */
 public class Db implements Observer {
 
-	private String db; // db query.
+	private String db;
 	private String dName;
 	private String pad;
 	private Connection conn;
@@ -186,32 +184,6 @@ public class Db implements Observer {
 	}
 
 	/**
-	 * Selects all columns from tableName with Where clause.
-	 * 
-	 * @param tableName
-	 *            Name of table data to be selected from.
-	 * @param whereClause
-	 *            The constraint.
-	 * @return Resultset with data.
-	 * @throws SQLException
-	 *             iff data is not found in table or clause was not formatted
-	 *             correctly.
-	 */
-	public ResultSet selectAllWithWhereClause(String tableName,
-			String whereClause) throws SQLException {
-		ResultSet rs = null;
-		try {
-			stmt = conn.createStatement();
-			String sql = SqlBuilder.createSelectSqlWithWhereClause(tableName,
-					whereClause);
-			rs = stmt.executeQuery(sql);
-		} catch (SQLException e) {
-			throw new SQLException(whereClause);
-		}
-		return rs;
-	}
-
-	/**
 	 * Select one column from tablename.
 	 * 
 	 * @param tableName
@@ -321,46 +293,6 @@ public class Db implements Observer {
 	}
 
 	/**
-	 * Closes connection for new project.
-	 */
-	public void closeConnection() {
-		try {
-			if (stmt != null) {
-				stmt.close();
-			}
-			conn.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Returns specified path to the database on your computer.
-	 * 
-	 * @return db path string.
-	 */
-	public String getDbPath() {
-		return pad;
-	}
-
-	/**
-	 * Returns name of database.
-	 * @return String name of database.
-	 */
-	public String getDbName() {
-		return dName;
-	}
-
-	/**
-	 * 
-	 * @param path
-	 *            sets db path
-	 */
-	public void setDbPath(String path) {
-		pad = path;
-	}
-
-	/**
 	 * Sets the databasedriver query.
 	 * 
 	 * @param path
@@ -436,14 +368,6 @@ public class Db implements Observer {
 	}
 
 	/**
-	 * Sets mergeTable name.
-	 * @param mt String of mergeTable name.
-	 */
-	public void setMergeTable(String mt) {
-		mergeTable = mt;
-	}
-
-	/**
 	 * Sets all columns in result table.
 	 * @param col column list.
 	 */
@@ -478,11 +402,17 @@ public class Db implements Observer {
 		this.merged = merged;
 	}
 
+	/**
+	 * updates the singleton of the database.
+	 */
 	@Override
 	public void update(String param) {
 		SingletonDb.update(param);
 	}
 
+	/**
+	 * observers if the project is updated.
+	 */
 	@Override
 	public void observe(Observable o) {
 	 o.subscribe(this);
