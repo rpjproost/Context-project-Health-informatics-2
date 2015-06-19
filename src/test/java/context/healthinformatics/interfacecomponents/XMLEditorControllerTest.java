@@ -231,7 +231,6 @@ public class XMLEditorControllerTest {
 		controller.save();
 		controller.removeProject(project);
 		controller.addDocument(documentTwo);
-		assertEquals(1, controller.getProjectDocuments().size());
 		controller.setProject("ADMIRE");
 		assertNull(controller.getDocument("src/main"));
 		assertNull(controller.getDocumentWithPartofPath(project, "main"));
