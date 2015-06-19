@@ -37,83 +37,25 @@ public class MainFrame extends InterfaceHelper {
 	private JPanel varPanel = new JPanel();
 
 	/**
-	 * Constructor, which initialises the mainFrame in the inputState.
+	 * Constructor, which initializes the mainFrame in the inputState.
 	 */
 	public MainFrame() {
 		state = inputState;
+		makeFrame();
+		mainPanel = new JPanel(new GridBagLayout());
+		c = new GridBagConstraints();
+		setTabX(getScreenWidth() / NMBROFTABS);
 		load();
+		f.add(mainPanel);
+		f.setVisible(true);
 	}
-
-	/**
-	 * Method which sets the state of the GUI.
-	 * 
-	 * @param p
-	 *            which is the desired state.
-	 */
-	public void setState(PanelState p) {
-		state = p;
-	}
-
-	/**
-	 * Method which sets the state of the GUI.
-	 * 
-	 * @return inputpage
-	 */
-	public PanelState getInputPage() {
-		return inputState;
-	}
-
-	/**
-	 * Method which sets the state of the GUI.
-	 * 
-	 * @return codePAge
-	 */
-	public PanelState getCodePage() {
-		return codeState;
-	}
-
-	/**
-	 * Method which sets the state of the GUI.
-	 * 
-	 * @return outputPage
-	 */
-	public PanelState getOutputPage() {
-		return outputState;
-	}
-
-	/**
-	 * @return input tab as JPanel.
-	 */
-	public JPanel getInputTab() {
-		return inputTab;
-	}
-
-	/**
-	 * @return code tab as JPanel.
-	 */
-	public JPanel getCodeTab() {
-		return codeTab;
-	}
-
-	/**
-	 * @return output tab as JPanel.
-	 */
-	public JPanel getOutputTab() {
-		return outputTab;
-	}
-
+	
 	/**
 	 * Method which creates the frame of the GUI and creates the tabs.
 	 */
-	public void load() {
-		makeFrame();
-		c = new GridBagConstraints();
-		mainPanel = new JPanel(new GridBagLayout());
-		setTabX(getScreenWidth() / NMBROFTABS);
-
+	private void load() {		
 		JPanel tabs = createPanel(null, getScreenWidth(), getTabsY());
 		tabs.setLayout(new GridBagLayout());
-
 		createTabs(tabs);
 		c = setGrids(0, 0);
 		mainPanel.add(tabs, c);
@@ -122,22 +64,98 @@ public class MainFrame extends InterfaceHelper {
 		varPanel.add(state.loadPanel());
 		c = setGrids(0, 1);
 		mainPanel.add(varPanel, c);
-
-		f.add(mainPanel);
-		f.setVisible(true);
 	}
 
-	private void createTabs(JPanel tabs) {
-		inputTab = createTab("Input", INPUTTABCOLOR);
-		inputTab.addMouseListener(new MouseHandler());
-		c = setGrids(0, 0);
-		tabs.add(inputTab, c);
+	/**
+	 * Method which sets the state of the GUI.
+	 * @param p which is the desired state.
+	 */
+	public void setState(PanelState p) {
+		state = p;
+	}
 
+	/**
+	 * Method which sets the state of the GUI.
+	 * @return InputPage
+	 */
+	protected PanelState getInputPage() {
+		return inputState;
+	}
+
+	/**
+	 * Method which sets the state of the GUI.
+	 * @return codePAge
+	 */
+	public PanelState getCodePage() {
+		return codeState;
+	}
+
+	/**
+	 * Method which sets the state of the GUI.
+	 * @return outputPage
+	 */
+	protected PanelState getOutputPage() {
+		return outputState;
+	}
+
+	/**
+	 * @return input tab as JPanel.
+	 */
+	protected JPanel getInputTab() {
+		return inputTab;
+	}
+
+	/**
+	 * @return code tab as JPanel.
+	 */
+	protected JPanel getCodeTab() {
+		return codeTab;
+	}
+
+	/**
+	 * @return output tab as JPanel.
+	 */
+	protected JPanel getOutputTab() {
+		return outputTab;
+	}
+
+	/**
+	 * Method which creates the tabs.
+	 * @param tabs to which the panel has to be added.
+	 */
+	private void createTabs(JPanel tabs) {
+		createInputTab(tabs);
+		createCodeTab(tabs);
+		createOutputTab(tabs);
+	}
+	
+	/**
+	 * Method which creates the CodeTab.
+	 * @param tabs to which the panel has to be added
+	 */
+	private void createCodeTab(JPanel tabs) {
 		codeTab = createTab("Analyse", CODETABCOLOR);
 		codeTab.addMouseListener(new MouseHandler());
 		c = setGrids(1, 0);
 		tabs.add(codeTab, c);
-
+	}
+	
+	/**
+	 * Method which creates the InputTab.
+	 * @param tabs to which the panel has to be added
+	 */
+	private void createInputTab(JPanel tabs) {
+		inputTab = createTab("Input", INPUTTABCOLOR);
+		inputTab.addMouseListener(new MouseHandler());
+		c = setGrids(0, 0);
+		tabs.add(inputTab, c);
+	}
+	
+	/**
+	 * Method which creates the OutputTab.
+	 * @param tabs to which the panel has to be added
+	 */
+	private void createOutputTab(JPanel tabs) {
 		outputTab = createTab("Output", OUTPUTTABCOLOR);
 		outputTab.addMouseListener(new MouseHandler());
 		c = setGrids(2, 0);
@@ -147,14 +165,14 @@ public class MainFrame extends InterfaceHelper {
 	/**
 	 * @return the panel state.
 	 */
-	public PanelState getPanelState() {
+	protected PanelState getPanelState() {
 		return state;
 	}
 
 	/**
 	 * Method which makes the outer-container-frame.
 	 */
-	public void makeFrame() {
+	private void makeFrame() {
 		f = new JFrame();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		String[] arr = { "WI", "RI", "JE", "AR", "PA" };
@@ -163,14 +181,11 @@ public class MainFrame extends InterfaceHelper {
 	}
 
 	/**
-	 * Creates the title of the program consisting of the first two letters of
-	 * our names.
-	 * 
-	 * @param ar
-	 *            the array with first two letters
+	 * Creates the title of the program consisting of the first two letters of our names.
+	 * @param ar the array with first two letters
 	 * @return the title
 	 */
-	static String shuffleArray(String[] ar) {
+	private static String shuffleArray(String[] ar) {
 		Random rnd = new Random();
 		StringBuilder title = new StringBuilder();
 		for (int i = ar.length - 1; i >= 0; i--) {
@@ -186,7 +201,7 @@ public class MainFrame extends InterfaceHelper {
 	/**
 	 * Method which closes the GUI.
 	 */
-	public void closeFrame() {
+	protected void closeFrame() {
 		f.dispose();
 	}
 
@@ -203,14 +218,9 @@ public class MainFrame extends InterfaceHelper {
 	}
 
 	/**
-	 * Class which handles moue events.
+	 * Class which handles mouse events.
 	 */
 	class MouseHandler implements MouseListener {
-
-		@Override
-		public void mouseClicked(MouseEvent e) {
-			// Do nothing
-		}
 
 		@Override
 		public void mousePressed(MouseEvent e) {
@@ -224,20 +234,17 @@ public class MainFrame extends InterfaceHelper {
 			}
 			reloadStatePanel();
 		}
+		
+		@Override
+		public void mouseClicked(MouseEvent e) { }
 
 		@Override
-		public void mouseReleased(MouseEvent e) {
-			// Do nothing
-		}
+		public void mouseReleased(MouseEvent e) { }
 
 		@Override
-		public void mouseEntered(MouseEvent e) {
-			// Do nothing
-		}
+		public void mouseEntered(MouseEvent e) { }
 
 		@Override
-		public void mouseExited(MouseEvent e) {
-			// Do nothing
-		}
+		public void mouseExited(MouseEvent e) { }
 	}
 }
