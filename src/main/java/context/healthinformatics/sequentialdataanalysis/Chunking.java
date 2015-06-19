@@ -258,7 +258,6 @@ public class Chunking extends Task {
 	 * @param days number of days to chunk.
 	 * @throws SQLException 
 	 */
-	@SuppressWarnings("static-access")
 	protected void addChunksOnDate(Date start, int days) throws SQLException {
 		Calendar c = Calendar.getInstance();
 		c.setTime(start);
@@ -266,7 +265,7 @@ public class Chunking extends Task {
 		Date endDate = null;
 		Date end = getLastDate();
 		while (startDate.before(end)) {
-			c.add(c.DAY_OF_MONTH, days);
+			c.add(Calendar.DAY_OF_MONTH, days);
 			endDate = c.getTime();
 			setUpNewChunks(startDate, endDate);
 			startDate = endDate;
