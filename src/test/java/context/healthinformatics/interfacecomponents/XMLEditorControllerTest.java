@@ -128,7 +128,7 @@ public class XMLEditorControllerTest {
 	 */
 	@Test
 	public void testGetDocumentWithPartofPath() {
-		XMLDocument test = controller.getDocumentWithPartofPath("main");
+		XMLDocument test = controller.getDocumentWithPartofPath(project, "main");
 		assertEquals("main", test.getDocName());
 	}
 	
@@ -137,7 +137,7 @@ public class XMLEditorControllerTest {
 	 */
 	@Test
 	public void testGetDocumentWithPartofPathWrong() {
-		assertNull(controller.getDocumentWithPartofPath("test"));
+		assertNull(controller.getDocumentWithPartofPath(project, "test"));
 	}
 	
 	/**
@@ -234,7 +234,7 @@ public class XMLEditorControllerTest {
 		assertEquals(1, controller.getProjectDocuments().size());
 		controller.setProject("ADMIRE");
 		assertNull(controller.getDocument("src/main"));
-		assertNull(controller.getDocumentWithPartofPath("main"));
+		assertNull(controller.getDocumentWithPartofPath(project, "main"));
 	}
 	
 	/**

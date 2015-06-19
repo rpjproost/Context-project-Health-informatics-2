@@ -152,14 +152,14 @@ public class XMLEditorController implements Observable {
 	/**
 	 * Search in all documents if a document with only a piece of the file path
 	 * exists if not return a null Object.
-	 * 
+	 * @param currentProject the selected project which file path must contains.
 	 * @param filePath
 	 *            the part of a entire path.
 	 * @return Document that corresponds to that little piece of path.
 	 */
-	public XMLDocument getDocumentWithPartofPath(String filePath) {
+	public XMLDocument getDocumentWithPartofPath(String currentProject, String filePath) {
 		ArrayList<XMLDocument> projectDocs = allDocs.get(project);
-		if (projectDocs != null) {
+		if (projectDocs != null && project.equals(currentProject)) {
 			for (int i = 0; i < projectDocs.size(); i++) {
 				String path = projectDocs.get(i).getPath();
 				if (obtainFileName(path).equals(filePath)) {
