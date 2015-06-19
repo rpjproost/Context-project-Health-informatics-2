@@ -134,7 +134,7 @@ public class MainFrame extends InterfaceHelper {
 	 * @param tabs to which the panel has to be added
 	 */
 	private void createCodeTab(JPanel tabs) {
-		codeTab = createTab("Analyse", CODETABCOLOR);
+		codeTab = createTab("Analyze", CODETABCOLOR);
 		codeTab.addMouseListener(new MouseHandler());
 		c = setGrids(1, 0);
 		tabs.add(codeTab, c);

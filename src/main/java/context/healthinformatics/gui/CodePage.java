@@ -113,7 +113,7 @@ public class CodePage extends InterfaceHelper implements PanelState,
 	private void initButtons() {
 		importScriptButton = createButton("Import Script", ANALYZEBUTTONWIDTH,
 				ANALYZEBUTTONHEIGHT);
-		analyseButton = createButton("Analyse", ANALYZEBUTTONWIDTH,
+		analyseButton = createButton("Analyze", ANALYZEBUTTONWIDTH,
 				ANALYZEBUTTONHEIGHT);
 		saveScriptButon = createButton("Save Script", ANALYZEBUTTONWIDTH,
 				ANALYZEBUTTONHEIGHT);
