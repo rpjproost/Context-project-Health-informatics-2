@@ -41,7 +41,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 	private JButton projectButton;
 	private JButton openFileButton;
 	private JButton helpButton;
-	private JButton analyseButton;
+	private JButton analyzeButton;
 	private int screenWidth;
 
 	private JButton removeProjectButton;
@@ -96,7 +96,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 	}
 
 	/**
-	 * @return section1 Panel.
+	 * @return the panel for the project selection.
 	 */
 	public JPanel loadProjectSelection() {
 		JPanel projectSelectionPanel = MainFrame.createPanel(
@@ -113,7 +113,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 
 	/**
 	 * @param panel
-	 *            to which the projectlabel will be added.
+	 *            to which the project label will be added.
 	 */
 	private void addProjectLabel(JPanel panel) {
 		JLabel projectLabel = new JLabel("   Project :   ");
@@ -209,15 +209,15 @@ public class InputPageComponents implements Serializable, ActionListener {
 	 *            to which the addAnalyseButton will be added.
 	 */
 	private void addAnalyseButton(JPanel panel) {
-		analyseButton = ip.createButton("Save & Go to Analyse",
+		analyzeButton = ip.createButton("Save & Go to Analyse",
 				HELPBUTTONWIDTH, HELPBUTTONHEIGHT);
-		analyseButton.addActionListener(this);
+		analyzeButton.addActionListener(this);
 		GridBagConstraints c = ip.setGrids(0, 0);
 		c.weightx = 1;
 		c.insets = new Insets(BUTTONINSETS, BUTTONINSETS, BUTTONINSETS,
 				BUTTONINSETS);
 		c.anchor = GridBagConstraints.EAST;
-		panel.add(analyseButton, c);
+		panel.add(analyzeButton, c);
 	}
 
 	/**
@@ -242,21 +242,24 @@ public class InputPageComponents implements Serializable, ActionListener {
 			handleRemoveProjectButton();
 		}
 		if (e.getSource() == openFileButton
-				&& ip.openFileChooser().showOpenDialog(openFileButton)
-				== JFileChooser.APPROVE_OPTION) {
+				&& ip.openFileChooser().
+				showOpenDialog(openFileButton) == JFileChooser.APPROVE_OPTION) {
 			ip.openFiles(ip.getFileSelecter().getSelectedFiles());
 		}
 		if (e.getSource() == helpButton) {
 			helpController.handleHelpButton("Input Page Help");
 		}
-		if (e.getSource() == analyseButton) {
-			handleAnalystButton();
+		if (e.getSource() == analyzeButton) {
+			handleAnalyzeButton();
 		}
 		if (e.getSource() == box) {
 			updateProject();
 		}
 	}
 
+	/**
+	 * Handle the remove project button.
+	 */
 	private void handleRemoveProjectButton() {
 		int reply = JOptionPane.showConfirmDialog(null,
 				"Are you sure you want to remove the project?",
@@ -266,17 +269,23 @@ public class InputPageComponents implements Serializable, ActionListener {
 		}
 	}
 
-	private void handleAnalystButton() {
+	/**
+	 * Handle the analyze button.
+	 */
+	private void handleAnalyzeButton() {
 		if (ip.getXMLController().getSelectedDocs() != null) {
-			analyseIfXMLIsCorrect();
+			analyzeIfXMLIsCorrect();
 		} else {
 			JOptionPane.showMessageDialog(null,
-					"You have no file selected to analyse!!", "Analyse Error",
+					"You have no file selected to analyze!!", "Analyse Error",
 					JOptionPane.WARNING_MESSAGE);
 		}
 	}
 
-	private void analyseIfXMLIsCorrect() {
+	/**
+	 * Analyze if the XML is correct.
+	 */
+	private void analyzeIfXMLIsCorrect() {
 		if (!ip.getEditor().checkAllXMLDocumentsOnError()) {
 			popUpController.createPopup(
 					ip.getXMLController().getSelectedDocs(), ip
@@ -285,7 +294,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 	}
 
 	/**
-	 * Merge the tables for the codepage with the specified filters.
+	 * Merge the tables for the CodePage with the specified filters.
 	 * 
 	 * @param clauses
 	 *            the filters
@@ -297,15 +306,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 			public void run() {
 				ip.loadDatabase();
 				mergeTables(clauses);
-				Random r = new Random(System.currentTimeMillis());
-				double rand = r.nextDouble();
-				final double chance = 0.01;
-				if (rand >= chance) {
-					ls.displayMessage("Almost done we are loading the results for you!");
-				}
-				else {
-					ls.displayMessage("This should work!");
-				}
+				setDisplayMessage(ls);
 				SwingUtilities.invokeLater(new Runnable() {
 					@Override
 					public void run() {
@@ -315,16 +316,36 @@ public class InputPageComponents implements Serializable, ActionListener {
 					}
 				});
 			}
-
 		}).start();
 	}
 
-	private void mergeTables(String[] clause) {
+	/**
+	 * Set display message which tells the user we are almost done.
+	 * 
+	 * @param ls
+	 *            the loading screen
+	 */
+	private void setDisplayMessage(LoadingScreen ls) {
+		Random r = new Random(System.currentTimeMillis());
+		double rand = r.nextDouble();
+		final double chance = 0.1;
+		if (rand >= chance) {
+			ls.displayMessage("Almost done we are loading the results for you!");
+		} else {
+			ls.displayMessage("This should work!");
+		}
+	}
+
+	/**
+	 * Merge tables with given clauses.
+	 * @param clauses the clauses
+	 */
+	private void mergeTables(String[] clauses) {
 		Db db = SingletonDb.getDb();
 		if (db.getTables().size() > 0 && !db.getTables().containsKey("result")) {
 			MergeTable mergeTables = new MergeTable();
 			try {
-				mergeTables.merge(clause, "date, time, resultid");
+				mergeTables.merge(clauses, "date, time, resultid");
 			} catch (SQLException e) {
 				JOptionPane.showMessageDialog(null,
 						"The files you are trying to merge can't be merged!!",
