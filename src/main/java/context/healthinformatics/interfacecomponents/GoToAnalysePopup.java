@@ -34,7 +34,7 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 
 	private ArrayList<String> docNames;
 	private HashMap<String, String[]> columnNames = new HashMap<String, String[]>();
-	private ArrayList<AnalysePopupRowContainer> rows = new ArrayList<AnalysePopupRowContainer>();
+	private ArrayList<AnalyzePopupRowContainer> rows = new ArrayList<AnalyzePopupRowContainer>();
 	private JPanel filterPanel;
 
 	private JButton addFilter;
@@ -165,7 +165,7 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 	public void setFilters(ArrayList<String[]> filters) {
 		for (int i = 0; i < filters.size(); i++) {
 			if (docNames.contains(filters.get(i)[0])) {
-				AnalysePopupRowContainer popupRowContainer = new AnalysePopupRowContainer(
+				AnalyzePopupRowContainer popupRowContainer = new AnalyzePopupRowContainer(
 						docNames.toArray(new String[docNames.size()]),
 						columnNames);
 				popupRowContainer.setValues(filters.get(i)[0],
@@ -182,7 +182,7 @@ public class GoToAnalysePopup extends InterfaceHelper implements ActionListener 
 	 * Add an empty filter.
 	 */
 	public void addEmptyFilter() {
-		rows.add(new AnalysePopupRowContainer(docNames
+		rows.add(new AnalyzePopupRowContainer(docNames
 				.toArray(new String[docNames.size()]), columnNames));
 		filterPanel.add(rows.get(rows.size() - 1).getPanelOfRow(),
 				setGrids(0, rows.size() - 1));
