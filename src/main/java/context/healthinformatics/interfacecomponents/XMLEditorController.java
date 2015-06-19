@@ -309,8 +309,8 @@ public class XMLEditorController implements Observable {
 	public void removeProject(String project) {
 		File file = new File(getFileLocation());
 		File filterFile = new File(getFilterFileLocation());
-		filterFile.delete();
 		boolean deleted = file.delete();
+		deleted = filterFile.delete();
 		if (deleted) {
 			allDocs.remove(project);
 		}
