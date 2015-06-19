@@ -72,6 +72,11 @@ public class HelpFrame extends InterfaceHelper {
 		initMainPanel();
 	}
 
+	/**
+	 * Setup the mainFrame, TextArea settings and HyperLinkListener.
+	 * @param titleFrame the title of the frame
+	 * @param listOfHelpFrameInfo the list of help documents
+	 */
 	private void setUpHelpFrame(String titleFrame,
 			ArrayList<HelpFrameInfoContainer> listOfHelpFrameInfo) {
 		this.listOfHelpFrameInfo = listOfHelpFrameInfo;
@@ -233,7 +238,7 @@ public class HelpFrame extends InterfaceHelper {
 	 * Try to open browser with given link.
 	 * 
 	 * @param e
-	 *            the hyperlink event
+	 *            the HyperLink event
 	 */
 	private void tryToOpenLink(HyperlinkEvent e) {
 		try {
