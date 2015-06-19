@@ -70,7 +70,7 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	/**
 	 * Load the parent panel.
 	 * 
-	 * @return the parent panel
+	 * @return the parent panel.
 	 */
 	public JPanel loadPanel() {
 		JPanel scrollPaneContainerPanel = new JPanel();
@@ -89,7 +89,7 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	 * Add an XMLDocument object the container panel with the scroll bar.
 	 * 
 	 * @param xmlDocument
-	 *            the XMLDocument which is read
+	 *            the XMLDocument which is read.
 	 */
 	public void addXMLDocumentToContainerScrollPanel(XMLDocument xmlDocument) {
 		documentFieldsContainers.add(new DocumentFieldsContainer(xmlDocument,
@@ -109,8 +109,8 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	 * Create a panel for a XML document.
 	 * 
 	 * @param documentFieldContainer
-	 *            the container with the fields for the XML document
-	 * @return the panel with the added components
+	 *            the container with the fields for the XML document.
+	 * @return the panel with the added components.
 	 */
 	private JPanel createDocumentPanel(
 			DocumentFieldsContainer documentFieldContainer) {
@@ -129,8 +129,7 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	 * 
 	 * @param documentFieldContainer
 	 *            the container which contains all GUI elements for the XML;
-	 *            containerPanel.add(dateTypePanel, setGrids(0, THREE));
-	 * @return the panel with the components
+	 * @return the panel with the components.
 	 */
 	private JPanel createStandardDocumentSettingFields(
 			DocumentFieldsContainer documentFieldContainer) {
@@ -151,8 +150,8 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	 * depending on document type.
 	 * 
 	 * @param documentFieldContainer
-	 *            the container containing the document type
-	 * @return the panel
+	 *            the container containing the document type.
+	 * @return the panel.
 	 */
 	private JPanel createSpecificFormRow(
 			DocumentFieldsContainer documentFieldContainer) {
@@ -172,8 +171,8 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	 * Create the setting fields which every document has.
 	 * 
 	 * @param documentFieldContainer
-	 *            the container of the elements
-	 * @return a panel with the fields
+	 *            the container of the elements.
+	 * @return a panel with the fields.
 	 */
 	private JPanel createStandardSettingFields(
 			DocumentFieldsContainer documentFieldContainer) {
@@ -202,8 +201,8 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	 * Add all columns to the panel for the columns.
 	 * 
 	 * @param documentFieldContainer
-	 *            the container
-	 * @return the panel with the columns
+	 *            the container.
+	 * @return the panel with the columns.
 	 */
 	private JPanel createColumnFormPanel(
 			DocumentFieldsContainer documentFieldContainer) {
@@ -226,8 +225,8 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	 * Create a panel for a column.
 	 * 
 	 * @param currentColumnFieldContainer
-	 *            the container of all input elements for the current columns
-	 * @return the panel with all field for a column
+	 *            the container of all input elements for the current columns.
+	 * @return the panel with all field for a column.
 	 */
 	protected JPanel createColumnForm(
 			ColumnFieldContainer currentColumnFieldContainer) {
@@ -247,8 +246,8 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	 * Create the date type panel and set it at the currentColumnFieldcontainer.
 	 * 
 	 * @param currentColumnFieldContainer
-	 *            the container for the columns
-	 * @return the panel with the date type panel
+	 *            the container for the columns.
+	 * @return the panel with the date type panel.
 	 */
 	private JPanel getDateTypePanel(
 			ColumnFieldContainer currentColumnFieldContainer) {
@@ -264,8 +263,8 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	 * Create the column settings fields which every column needs.
 	 * 
 	 * @param currentColumnFieldContainer
-	 *            the column field container
-	 * @return the panel with the fields
+	 *            the column field container.
+	 * @return the panel with the fields.
 	 */
 	private JPanel createStandardColumnSettingFields(
 			ColumnFieldContainer currentColumnFieldContainer) {
@@ -288,7 +287,7 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	/**
 	 * Get all documents from the fields in the xml editor.
 	 * 
-	 * @return a list of XMLDocuments
+	 * @return a list of XMLDocuments.
 	 */
 	public ArrayList<XMLDocument> getAllXMLDocuments() {
 		ArrayList<XMLDocument> xmlDocuments = new ArrayList<XMLDocument>();
@@ -301,7 +300,7 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	/**
 	 * Check if there is wrong input in the XMLEditor.
 	 * 
-	 * @return true if there is
+	 * @return true if there is.
 	 */
 	public boolean checkAllXMLDocumentsOnError() {
 		XMLDocumentFormController xdfc = new XMLDocumentFormController(
@@ -343,6 +342,9 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 		}
 	}
 
+	/**
+	 * Handles the remove button of the xml editor.
+	 */
 	private void handleRemoveButton() {
 		if (documentFieldsContainers.size() > 0) {
 			removeDocument();
@@ -365,6 +367,9 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 				getAllXMLDocuments());
 	}
 
+	/**
+	 * Action perform method, method will be called if a event is triggered.
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == addDocument) {

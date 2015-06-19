@@ -347,6 +347,9 @@ public class XMLEditorController implements Observable {
 		return this.project;
 	}
 
+	/**
+	 * Notifies if the project is updated.
+	 */
 	@Override
 	public void notifyObservers(String param) {
 		for (Observer o : observers) {
@@ -354,6 +357,9 @@ public class XMLEditorController implements Observable {
 		}
 	}
 
+	/**
+	 * Subscribes if the project is updated.
+	 */
 	@Override
 	public void subscribe(Observer o) {
 		if (!observers.contains(o)) {
@@ -361,6 +367,9 @@ public class XMLEditorController implements Observable {
 		}
 	}
 
+	/**
+	 * Describes if the project is updated.
+	 */
 	@Override
 	public void unsubscribe(Observer o) {
 		if (observers.contains(o)) {
