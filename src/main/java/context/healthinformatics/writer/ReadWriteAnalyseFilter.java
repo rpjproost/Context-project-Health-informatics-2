@@ -76,28 +76,23 @@ public class ReadWriteAnalyseFilter {
 	}
 
 	/**
-	 * Get the printwriter to save filters.
+	 * Get the PrintWriter to save filters.
 	 * 
 	 * @return the print writer
 	 * @throws FileNotFoundException
-	 *             filenotfoundexception
+	 *             FileNotFoundException
 	 * @throws UnsupportedEncodingException
-	 *             unsupportedencodingexception
+	 *             UnsupportedEncodingException
 	 */
-	public PrintWriter getPrintWriter() throws FileNotFoundException,
+	private PrintWriter getPrintWriter() throws FileNotFoundException,
 			UnsupportedEncodingException {
 		PrintWriter writer = null;
-
 		try {
 			writer = new PrintWriter(fileName, "UTF-8");
-		} catch (FileNotFoundException e) {
+		} catch (FileNotFoundException | UnsupportedEncodingException e) {
 			throw new FileNotFoundException(
 					"The path to write to is not found!");
-		} catch (UnsupportedEncodingException e) {
-			throw new UnsupportedEncodingException(
-					"The encoding for the write to file is not supported!");
 		}
-
 		return writer;
 	}
 
@@ -108,9 +103,9 @@ public class ReadWriteAnalyseFilter {
 	 *            the specified filters which need to be stored
 	 * 
 	 * @throws FileNotFoundException
-	 *             filenotfoundexception
+	 *             FileNotFoundException
 	 * @throws UnsupportedEncodingException
-	 *             unsupportedencodingexception
+	 *             UnsupportedEncodingException
 	 */
 	public void writeToFile(String[] filters) throws FileNotFoundException,
 			UnsupportedEncodingException {

@@ -4,6 +4,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.swing.JOptionPane;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
 import context.healthinformatics.gui.InputPage;
 import context.healthinformatics.writer.XMLDocument;
 import context.healthinformatics.writer.XMLWriter;
@@ -152,12 +156,15 @@ public class XMLEditorController implements Observable {
 	/**
 	 * Search in all documents if a document with only a piece of the file path
 	 * exists if not return a null Object.
-	 * @param currentProject the selected project which file path must contains.
+	 * 
+	 * @param currentProject
+	 *            the selected project which file path must contains.
 	 * @param filePath
 	 *            the part of a entire path.
 	 * @return Document that corresponds to that little piece of path.
 	 */
-	public XMLDocument getDocumentWithPartofPath(String currentProject, String filePath) {
+	public XMLDocument getDocumentWithPartofPath(String currentProject,
+			String filePath) {
 		ArrayList<XMLDocument> projectDocs = allDocs.get(project);
 		if (projectDocs != null && project.equals(currentProject)) {
 			for (int i = 0; i < projectDocs.size(); i++) {
@@ -270,7 +277,7 @@ public class XMLEditorController implements Observable {
 	public String getFileLocation() {
 		return "src/main/data/savedXML/" + project + ".xml";
 	}
-	
+
 	/**
 	 * @return the path to where projects filters will be saved and opened.
 	 */
@@ -278,14 +285,19 @@ public class XMLEditorController implements Observable {
 		return "src/main/data/savedFilters/" + project + ".txt";
 	}
 
-
 	/**
 	 * Saves multiple files in a xml from the project the user is working in.
 	 */
 	public void save() {
 		ArrayList<XMLDocument> xmlDocuments = allDocs.get(project);
-		XMLWriter writeToXMLFile = new XMLWriter(xmlDocuments);
-		writeToXMLFile.writeXML(getFileLocation());
+		XMLWriter writeToXMLFile;
+		try {
+			writeToXMLFile = new XMLWriter(xmlDocuments);
+			writeToXMLFile.writeXML(getFileLocation());
+		} catch (TransformerException | ParserConfigurationException e1) {
+			JOptionPane.showMessageDialog(null, "Couldn't save the XML file",
+					"Write to XML Error", JOptionPane.WARNING_MESSAGE);
+		}
 	}
 
 	/**

@@ -22,7 +22,7 @@ import javax.swing.SwingUtilities;
 
 
 //Class imported from http://www.camick.com/java/source/ScreenImage.java
-//It wasn't a package, but a good way help our panels to save as png.
+//It wasn't a package, but a good way help our panels to save as PNG.
 /**
  *  Convenience class to create and optionally save to a file a
  *  BufferedImage of an area on the screen. Generally there are
