@@ -123,7 +123,7 @@ public final class ComputationData {
 	 * @param res the result hashmap to be filled.
 	 * @throws SQLException Date can not be found by chunk.
 	 */
-	public static void createTimesMeasured(HashMap<Integer, Double> res)
+	private static void createTimesMeasured(HashMap<Integer, Double> res)
 			throws SQLException {
 		Db database = SingletonDb.getDb();
 		for (Chunk c : interpreter.getChunks()) {
@@ -141,7 +141,7 @@ public final class ComputationData {
 	 * @throws SQLException
 	 *             if data is not found
 	 */
-	public static int xAs() throws SQLException {
+	private static int xAs() throws SQLException {
 		ArrayList<Chunk> chunks = interpreter.getChunks();
 		Date first;
 		Date last;
@@ -171,7 +171,7 @@ public final class ComputationData {
 	 * @param actual date to be checked.
 	 * @return difference in integer.
 	 */
-	public static int differsFromDate(DateTime actual) {
+	private static int differsFromDate(DateTime actual) {
 		return Days.daysBetween(f, actual).getDays();
 	}
 
@@ -217,7 +217,7 @@ public final class ComputationData {
 	 * Sets computed on true.
 	 * @param computed true.
 	 */
-	public static void setComputed(boolean computed) {
+	private static void setComputed(boolean computed) {
 		ComputationData.computed = computed;
 	}
 

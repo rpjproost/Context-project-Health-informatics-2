@@ -365,7 +365,7 @@ public class Chunk {
 	 * @param column the column to be computed.
 	 * @throws SQLException if column is not in table.
 	 */
-	public void computeChunkValues(String column) throws SQLException {
+	private void computeChunkValues(String column) throws SQLException {
 		double sum = 0;
 		double min = Integer.MAX_VALUE;
 		double max = Integer.MIN_VALUE;

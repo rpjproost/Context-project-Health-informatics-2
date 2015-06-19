@@ -59,7 +59,7 @@ public class Chunking extends Task {
 	 * @param res arraylist result.
 	 * @param index for list to check
 	 */
-	public void addChunkOnEqualsData(ArrayList<Integer> ints, Chunk curChunk,
+	private void addChunkOnEqualsData(ArrayList<Integer> ints, Chunk curChunk,
 			ArrayList<Chunk> res, int index) {
 		if (indexcheck < ints.size() && curChunk.getLine() == ints.get(indexcheck)) {
 			temp.setChunk(curChunk);

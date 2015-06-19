@@ -56,34 +56,6 @@ public class CodesTest {
 		codes.setChunks(chunks);
 		codes.setCodeOfLine(-1, "test");
 	}
-
-	/**
-	 * Test if you can set the codes on a chunk of chunks.
-	 */
-	@Test
-	public void testSetCodeOfChunks() {
-		ArrayList<Chunk> combined = new ArrayList<Chunk>();
-		Chunk combi = new Chunk();
-		combi.setChunks(chunks);
-		combined.add(combi);
-
-		Codes codes = new Codes("A");
-		codes.setChunks(combined);
-		codes.setCodeOfChunks(0, "A");
-		assertEquals("A", combined.get(0).getCode());
-	}
-	
-	/**
-	 * Test if you can set the codes on every chunk in a list of chunks.
-	 */
-	@Test
-	public void testSetCodeOfListOfChunks() {
-		Codes codes = new Codes("test");
-		codes.setChunks(chunks);
-		codes.setCodeOfListOfChunks(chunks, "test");
-		assertEquals("test", chunks.get(0).getCode());
-		assertEquals("test", chunks.get(1).getCode());
-	}
 	
 	/**
 	 * Test if the chunk with comment "CommentB" will have its code set to the correct code.
@@ -129,16 +101,5 @@ public class CodesTest {
 		Codes codes = new Codes("CommentA");
 		codes.setChunks(chunks);
 		assertEquals("CommentA", codes.getChunkByLine(1, chunks).getComment());
-	}
-
-	/**
-	 * Test the exception handling of coding the chunk of chunks.
-	 */
-	@Test(expected = Exception.class)
-	public void testSetCodeOfChunksException() {
-		ArrayList<Chunk> combined = new ArrayList<Chunk>();
-		Codes codes = new Codes("test");
-		codes.setChunks(combined);
-		codes.setCodeOfChunks(0, "test");
 	}
 }
