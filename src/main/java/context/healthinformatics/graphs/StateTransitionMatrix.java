@@ -276,8 +276,8 @@ public class StateTransitionMatrix extends InterfaceHelper {
 		if (i == j) {
 			return "x";
 		} else {
-			return getValue(i, j,
-					countMap.get(new ConnectionSet(codes.get(i), codes.get(j))));
+			return getValue(countMap.get(new ConnectionSet(codes.get(i), codes
+					.get(j))));
 		}
 	}
 
@@ -292,7 +292,7 @@ public class StateTransitionMatrix extends InterfaceHelper {
 	 *            the current value of the number of connections
 	 * @return the value
 	 */
-	private String getValue(int i, int j, Integer value) {
+	private String getValue(Integer value) {
 		if (value != null) {
 			return value.toString();
 		} else {
