@@ -120,7 +120,6 @@ public class Codes extends Task {
 					oldCodes.add(chunk.getCode());
 					changedChunks.add(chunk);
 					chunk.setCode(code);
-					
 				}
 			}
 		} catch (Exception e) {
@@ -174,7 +173,6 @@ public class Codes extends Task {
 			else if (temp.hasChild()) {
 				setCodesOnChild(temp.getChildren(), list);
 			}
-
 		}
 	}
 
