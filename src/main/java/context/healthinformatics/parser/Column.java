@@ -159,6 +159,9 @@ public class Column  implements Comparable<Column> {
 		return result;
 	}
 
+	/**
+	 * Checks of columns have the same name.
+	 */
 	@Override
 	public boolean equals(Object o) {
 		if (o == null) {
@@ -174,7 +177,7 @@ public class Column  implements Comparable<Column> {
 	}
 
 	/**
-	 * 
+	 * compare if the columns have the same hash-code.
 	 * @param o column object.
 	 * @return true or false.
 	 */
