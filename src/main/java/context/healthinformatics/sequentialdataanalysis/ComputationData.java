@@ -35,8 +35,8 @@ public final class ComputationData {
 	 * Initializes class first time computation is run.
 	 */
 	public static void init() {
+		setComputed(true);
 		if (data == null) {
-			setComputed(true);
 			data = new ArrayList<HashMap<Integer, Double>>();
 			names = new ArrayList<String>();
 		}
@@ -49,9 +49,7 @@ public final class ComputationData {
 	 * @throws SQLException iff data can not be found at a chunk.
 	 */
 	public static void createHashMap(String column, String name) throws SQLException {
-		init();
-		setDays(xAs());
-		Interpreter interpreter = SingletonInterpreter.getInterpreter();
+		init(); setDays(xAs()); Interpreter interpreter = SingletonInterpreter.getInterpreter();
 		ArrayList<Chunk> chunks = interpreter.getChunks();
 		HashMap<Integer, Double> res = new HashMap<Integer, Double>();
 		Db database = SingletonDb.getDb();
@@ -203,5 +201,8 @@ public final class ComputationData {
 		setComputed(false);
 		data = new ArrayList<HashMap<Integer, Double>>();
 		names = new ArrayList<String>();
+		days = 0;
+		f = new DateTime();
+		firstDate = new Date();
 	}
 }

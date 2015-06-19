@@ -32,7 +32,7 @@ public class Chunk {
 	private double difference = Integer.MIN_VALUE;
 
 	/**
-	 * 
+	 * Chunk class constructor.
 	 */
 	public Chunk() {
 		chunks = new ArrayList<Chunk>();
@@ -488,6 +488,10 @@ public class Chunk {
 		return computations[comp];
 	}
 	
+	/**
+	 * Returns difference of value to other connection.
+	 * @return difference double.
+	 */
 	public double getDifference() {
 			return difference;
 	}
