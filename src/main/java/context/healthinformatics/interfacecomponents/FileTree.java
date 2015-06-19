@@ -172,7 +172,9 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	 * @param node is the selected TreeNode.
 	 */
 	private void setNodeToSelected(String selected, DefaultMutableTreeNode node) {
-		XMLDocument doc = ip.getXMLController().getDocumentWithPartofPath(selected);
+		DefaultMutableTreeNode project = (DefaultMutableTreeNode) node.getParent();
+		XMLDocument doc = ip.getXMLController().getDocumentWithPartofPath(
+				project.getUserObject().toString(), selected);
 		if (doc != null) {
 			ip.getXMLController().selectDocument(doc.getPath());
 			node.setUserObject(node.getUserObject().toString()
@@ -188,7 +190,9 @@ public class FileTree implements TreeSelectionListener, Serializable {
 	 */
 	private void setNodeToNotSelected(String selected, DefaultMutableTreeNode node) {
 		String origin = selected.substring(0, selected.length() - FLAGLENGTH);
-		XMLDocument doc = ip.getXMLController().getDocumentWithPartofPath(origin);
+		DefaultMutableTreeNode project = (DefaultMutableTreeNode) node.getParent();
+		XMLDocument doc = ip.getXMLController().getDocumentWithPartofPath(
+				project.getUserObject().toString(), origin);
 		if (doc != null) {
 			ip.getXMLController().deselectDocument(doc.getPath());
 			node.setUserObject(origin);
