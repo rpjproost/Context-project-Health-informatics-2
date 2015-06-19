@@ -147,6 +147,11 @@ public class Codes extends Task {
 		index = 0;
 	}
 	
+	/**
+	 * Set code on child of current chunk.
+	 * @param childs Arraylist of childs.
+	 * @param list result list.
+	 */
 	private void setCodesOnChild(ArrayList<Chunk> childs, ArrayList<Integer> list) {
 		for (int i = 0; i < childs.size(); i++) {
 			Chunk temp = childs.get(i);
@@ -213,6 +218,10 @@ public class Codes extends Task {
 		}
 	}
 	
+	/**
+	 * Sets code when difference smaller than number.
+	 * @param number integer of difference constraint.
+	 */
 	private void setCodeOndifference(String number) {
 		for (Chunk c : getChunks()) {
 			if (c.getDifference() != Integer.MIN_VALUE) {
@@ -228,6 +237,10 @@ public class Codes extends Task {
 		
 	}
 
+	/**
+	 * Sets code (monday/tuesday/..) on date of the chunk.
+	 * @throws SQLException If chunk has no date.
+	 */
 	private void setCodeDate() throws SQLException {
 		Db data = SingletonDb.getDb();
 		for (Chunk c : getChunks()) {
