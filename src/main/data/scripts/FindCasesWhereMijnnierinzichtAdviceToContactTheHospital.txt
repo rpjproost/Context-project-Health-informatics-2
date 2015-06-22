@@ -1,0 +1,8 @@
+--Set code crea where the beschrijving column equals 'Kreatinine (stat)' or 'Kreatinine2 (stat)'
+code (crea) data where beschrijving = 'Kreatinine (stat)'
+code (crea) data where beschrijving = 'Kreatinine2 (stat)'
+--Generate the website advice.
+compare code = crea on value
+--Set a code docteradvice where the website advice contains the word doctor.
+code(docteradvice) comment contains doctor
+--Now loook for the codes docteradvices to see cases where Mijnnierinzicht advices to contact the hospital.

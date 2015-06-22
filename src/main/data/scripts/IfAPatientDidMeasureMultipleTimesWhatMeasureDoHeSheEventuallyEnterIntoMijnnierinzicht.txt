@@ -1,0 +1,16 @@
+--Set a code called stat on data where the beschrijving column equals 'Crea'.
+code(stat) data where beschrijving = 'Crea'
+--Set a code called website on data where the beschrijving column equals 'Kretinine (stat)'
+code(website) data where beschrijving = 'Kreatinine (stat)'
+--Set a connection from the code called stat to the code called website.
+connect code = stat to code = website
+--Compute the difference in value between the start and end of the connection.
+compute difference value
+--Filter the data where the beschrijving column equals 'Crea' or 'Kreatinine (stat)'.
+filter data where beschrijving = 'Crea' or beschrijving = 'Kreatinine (stat)'
+--Chunk with code website where code is website
+chunk(website) code = website
+--Set a code possibleentered where the difference is smaller then one
+code(possibleentered) difference 1
+--You can now look for the codes possible entered to see which measurements patients
+--could have entered into mijnnierinzicht.

@@ -1,0 +1,24 @@
+--Group the data per 7 days.
+chunk date 7
+--Compute number of records within a group.
+compute chunk times
+--Filter data where beschrijving column equals 'Crea'.
+filter data where beschrijving = 'Crea'
+--Compute the average value per chunk.
+compute data value Stat
+--Undo last two operations so the program only keeps the computation
+undo
+undo
+--Filter the data where the beschrijving column equals 'Kreatinine (stat)'.
+filter data where beschrijving = 'Kreatinine (stat)'
+--Compute the average value of the website
+compute data value Website
+--Undo last two operations so the program only keeps the computation
+undo
+undo
+--Filter the data where the beschrijving column equals 'Bloeddruk'.
+filter data where beschrijving = 'Bloeddruk'
+--Compute the average value of the bloed code.
+compute data value Bloed
+--View this in the linechart. Now you can check if there are conditions why people
+--start deviating from their normal measurement routine.
