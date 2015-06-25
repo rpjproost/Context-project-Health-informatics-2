@@ -270,7 +270,7 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 			ColumnFieldContainer currentColumnFieldContainer) {
 		JPanel containerPanel = createEmptyWithGridBagLayoutPanel();
 		containerPanel.add(
-				makeFormRowPanelWithTextField("Column id: ",
+				makeFormRowPanelWithTextField("Column number: ",
 						currentColumnFieldContainer.getColumnID(),
 						XML_EDITOR_WIDTH, FORM_ELEMENT_HEIGHT), setGrids(0, 0));
 		containerPanel.add(

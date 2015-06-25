@@ -129,11 +129,9 @@ public class IntermediateResults extends InterfaceHelper {
 		numberOfDataColumns = database.getColumns().size();
 		String htmlOfColumnTableRow = buildColumnsHTMLTableRow(database
 				.getColumns());
-		String htmlOfTableContent = loopThroughChunks(chunks);
-		buildString
-				.append("<html><body><h2>Number of chunks: "
-						+ (globalChunkCounter - 1)
-						+ "</h2><table style='width:100%;'>");
+		String htmlOfTableContent = loopThroughChunks(chunks, true);
+		buildString.append("<html><body><h2>Number of chunks: "
+				+ (chunks.size()) + "</h2><table style='width:100%;'>");
 		buildString.append(htmlOfColumnTableRow);
 		buildString.append(htmlOfTableContent);
 		buildString.append("</table></body></html>");
@@ -172,16 +170,19 @@ public class IntermediateResults extends InterfaceHelper {
 	 *            the list of chunks
 	 * @return a string of HTML formatted for a table.
 	 */
-	private String loopThroughChunks(ArrayList<Chunk> chunks) {
+	private String loopThroughChunks(ArrayList<Chunk> chunks, boolean topLevel) {
 		StringBuilder buildString = new StringBuilder();
 		for (int i = 0; i < setMaxNumberOfDisplay(chunks); i++) {
 			Chunk currentChunk = chunks.get(i);
-			if (currentChunk.hasChild()) {
+			if (topLevel) {
 				buildString.append("<tr><td>" + globalChunkCounter + "</td>");
 				globalChunkCounter++;
-				buildString.append(processChunkWithChildren(currentChunk));
 			} else {
 				buildString.append("<tr><td></td>");
+			}
+			if (currentChunk.hasChild()) {
+				buildString.append(processChunkWithChildren(currentChunk));
+			} else {
 				buildString.append(processChunk(currentChunk));
 			}
 			buildString.append("</tr>");
@@ -245,7 +246,7 @@ public class IntermediateResults extends InterfaceHelper {
 		buildString.append("<td>" + chunkWithChildren.get(FOUR) + "</td>");
 		buildString.append("</h2></td>");
 		buildString.append(getChildrenOfChunk(currentChunk));
-		buildString.append("<tr><td><h2>[End Of Chunk]</h2></td></tr>");
+		buildString.append("<tr><td>[Chunk ends here]</td></tr>");
 		return buildString.toString();
 	}
 
@@ -258,7 +259,7 @@ public class IntermediateResults extends InterfaceHelper {
 	 */
 	private String getChildrenOfChunk(Chunk chunk) {
 		StringBuilder buildString = new StringBuilder();
-		buildString.append(loopThroughChunks(chunk.getChildren()));
+		buildString.append(loopThroughChunks(chunk.getChildren(), false));
 		return buildString.toString();
 	}
 }
