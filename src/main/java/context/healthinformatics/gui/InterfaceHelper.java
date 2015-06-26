@@ -51,9 +51,12 @@ public class InterfaceHelper extends JPanel {
 
 	/**
 	 * @return JPanel with attributes specified by the arguments.
-	 * @param color of panel
-	 * @param width of panel
-	 * @param height of panel
+	 * @param color
+	 *            of panel
+	 * @param width
+	 *            of panel
+	 * @param height
+	 *            of panel
 	 */
 	public static JPanel createPanel(Color color, int width, int height) {
 		JPanel tempPanel = new JPanel();
@@ -67,8 +70,10 @@ public class InterfaceHelper extends JPanel {
 
 	/**
 	 * @return a panel which represents a tab indicating one of the states.
-	 * @param tabName is the name of the tab.
-	 * @param col is the color of the tab.
+	 * @param tabName
+	 *            is the name of the tab.
+	 * @param col
+	 *            is the color of the tab.
 	 */
 	protected JPanel createTab(String tabName, Color col) {
 		JPanel page = createPanel(col, tabsX, TABSY);
@@ -80,9 +85,13 @@ public class InterfaceHelper extends JPanel {
 
 	/**
 	 * Set the GridBag location of a Component with margin top.
-	 * @param x coordinate.
-	 * @param y coordinate.
-	 * @param insets set insets on the gridBagConstraints
+	 * 
+	 * @param x
+	 *            coordinate.
+	 * @param y
+	 *            coordinate.
+	 * @param insets
+	 *            set insets on the gridBagConstraints
 	 * @return the location for the Component.
 	 */
 	protected GridBagConstraints setGrids(int x, int y, Insets insets) {
@@ -93,8 +102,11 @@ public class InterfaceHelper extends JPanel {
 
 	/**
 	 * Set the GridBag location of a Component.
-	 * @param x coordinate.
-	 * @param y coordinate.
+	 * 
+	 * @param x
+	 *            coordinate.
+	 * @param y
+	 *            coordinate.
 	 * @return the location for the Component.
 	 */
 	public GridBagConstraints setGrids(int x, int y) {
@@ -106,6 +118,7 @@ public class InterfaceHelper extends JPanel {
 
 	/**
 	 * Create a text field with given font.
+	 * 
 	 * @return the text area
 	 */
 	protected JTextArea creatTextArea() {
@@ -116,11 +129,13 @@ public class InterfaceHelper extends JPanel {
 
 	/**
 	 * Create a TextArea which has focus.
+	 * 
 	 * @return the text area
 	 */
 	protected JTextArea createTextAreaWithFocus() {
 		JTextArea area = new JTextArea() {
 			private static final long serialVersionUID = 1L;
+
 			public void addNotify() {
 				super.addNotify();
 				requestFocus();
@@ -133,9 +148,13 @@ public class InterfaceHelper extends JPanel {
 	/**
 	 * Creates a button width a specified name width and height. Default font is
 	 * Arial with letter size 20.
-	 * @param name the text in the button.
-	 * @param width of the button.
-	 * @param height of the button.
+	 * 
+	 * @param name
+	 *            the text in the button.
+	 * @param width
+	 *            of the button.
+	 * @param height
+	 *            of the button.
 	 * @return a new button with no actionhandler.
 	 */
 	public JButton createButton(String name, int width, int height) {
@@ -147,7 +166,9 @@ public class InterfaceHelper extends JPanel {
 
 	/**
 	 * Creates a label with special letter size.
-	 * @param titleName the text of the title.
+	 * 
+	 * @param titleName
+	 *            the text of the title.
 	 * @return a Label with the title.
 	 */
 	public JLabel createTitle(String titleName) {
@@ -158,7 +179,9 @@ public class InterfaceHelper extends JPanel {
 
 	/**
 	 * set the width of the tabs.
-	 * @param i the new width.
+	 * 
+	 * @param i
+	 *            the new width.
 	 */
 	protected void setTabX(int i) {
 		tabsX = i;
@@ -187,6 +210,13 @@ public class InterfaceHelper extends JPanel {
 	}
 
 	/**
+	 * @return the height of the users screen.
+	 */
+	public int getScreenHeight() {
+		return Toolkit.getDefaultToolkit().getScreenSize().height;
+	}
+
+	/**
 	 * @return the height of the state panel.
 	 */
 	public int getStatePanelSize() {
@@ -195,10 +225,15 @@ public class InterfaceHelper extends JPanel {
 
 	/**
 	 * Create a row with a single button to add columns.
-	 * @param buttonLeft the button on the left side of the panel
-	 * @param buttonRight the button on the right side of the panel
-	 * @param buttonWidth the width of the button
-	 * @param buttonHeight the height of the button
+	 * 
+	 * @param buttonLeft
+	 *            the button on the left side of the panel
+	 * @param buttonRight
+	 *            the button on the right side of the panel
+	 * @param buttonWidth
+	 *            the width of the button
+	 * @param buttonHeight
+	 *            the height of the button
 	 * @return the panel with white space and the button
 	 */
 	public JPanel makeFormRowPanelWithTwoButton(JButton buttonLeft,
@@ -213,11 +248,17 @@ public class InterfaceHelper extends JPanel {
 
 	/**
 	 * Make a Panel containing 3 buttons.
-	 * @param buttonLeft the button on the left.
-	 * @param middleButton the button in the middle
-	 * @param buttonRight the button on the right.
-	 * @param width the with of the panel
-	 * @param height the height of the panel
+	 * 
+	 * @param buttonLeft
+	 *            the button on the left.
+	 * @param middleButton
+	 *            the button in the middle
+	 * @param buttonRight
+	 *            the button on the right.
+	 * @param width
+	 *            the with of the panel
+	 * @param height
+	 *            the height of the panel
 	 * @return the panel containing the buttons
 	 */
 	public JPanel makeFormRowPanelWithThreeButton(JButton buttonLeft,
@@ -232,10 +273,15 @@ public class InterfaceHelper extends JPanel {
 
 	/**
 	 * Make a row with display text field and field to fill in value.
-	 * @param name the name of the label.
-	 * @param comboBox the given comboBox
-	 * @param width the width of the panel
-	 * @param height the height of the panel
+	 * 
+	 * @param name
+	 *            the name of the label.
+	 * @param comboBox
+	 *            the given comboBox
+	 * @param width
+	 *            the width of the panel
+	 * @param height
+	 *            the height of the panel
 	 * @return panel with the two text fields
 	 */
 	public JPanel makeFormRowPanelWithComboBox(String name,
@@ -249,10 +295,15 @@ public class InterfaceHelper extends JPanel {
 
 	/**
 	 * Make a row with display text field and field to fill in value.
-	 * @param labelName the name of the label.
-	 * @param textField the text field of the row
-	 * @param width the width of the panel
-	 * @param height the height of the panel
+	 * 
+	 * @param labelName
+	 *            the name of the label.
+	 * @param textField
+	 *            the text field of the row
+	 * @param width
+	 *            the width of the panel
+	 * @param height
+	 *            the height of the panel
 	 * @return panel with the the text field and label
 	 */
 	public JPanel makeFormRowPanelWithTextField(String labelName,
@@ -266,9 +317,13 @@ public class InterfaceHelper extends JPanel {
 
 	/**
 	 * Make a scrollPanefor the container.
-	 * @param containerPanel the panel for which the scroll pane is made
-	 * @param width the width of the scroll pane
-	 * @param height the height of the scroll pane
+	 * 
+	 * @param containerPanel
+	 *            the panel for which the scroll pane is made
+	 * @param width
+	 *            the width of the scroll pane
+	 * @param height
+	 *            the height of the scroll pane
 	 * @return the scrollPane
 	 */
 	public JScrollPane makeScrollPaneForContainerPanel(JPanel containerPanel,
@@ -282,9 +337,13 @@ public class InterfaceHelper extends JPanel {
 
 	/**
 	 * Make a scrollPanefor the TextArea.
-	 * @param textAreaWithScollPane the TextArea for which the Scroll Pane is made
-	 * @param width the width of the scrollPane
-	 * @param height the height of the scrollPane
+	 * 
+	 * @param textAreaWithScollPane
+	 *            the TextArea for which the Scroll Pane is made
+	 * @param width
+	 *            the width of the scrollPane
+	 * @param height
+	 *            the height of the scrollPane
 	 * @return the scrollPane
 	 */
 	protected JScrollPane makeScrollPaneForTextArea(
@@ -298,8 +357,11 @@ public class InterfaceHelper extends JPanel {
 
 	/**
 	 * Create a container panel for the document of XML files to container.
-	 * @param width the width of the panel
-	 * @param height the height of the panel
+	 * 
+	 * @param width
+	 *            the width of the panel
+	 * @param height
+	 *            the height of the panel
 	 * @return the panel to container the documents
 	 */
 	public JPanel createContainerWithGivenSizePanel(int width, int height) {
@@ -311,6 +373,7 @@ public class InterfaceHelper extends JPanel {
 
 	/**
 	 * Create a panel with GridBag layout.
+	 * 
 	 * @return the panel
 	 */
 	public JPanel createEmptyWithGridBagLayoutPanel() {
@@ -321,7 +384,9 @@ public class InterfaceHelper extends JPanel {
 
 	/**
 	 * Create a panel with GridBagLayout and a color.
-	 * @param color the color of the background
+	 * 
+	 * @param color
+	 *            the color of the background
 	 * @return the panel
 	 */
 	public JPanel createEmptyWithGridBagLayoutPanel(Color color) {
@@ -332,8 +397,11 @@ public class InterfaceHelper extends JPanel {
 
 	/**
 	 * Creates a check box.
-	 * @param title the title of the check box.
-	 * @param color the color of the background of the check box.
+	 * 
+	 * @param title
+	 *            the title of the check box.
+	 * @param color
+	 *            the color of the background of the check box.
 	 * @return a check box.
 	 */
 	public JCheckBox createCheckBox(String title, Color color) {
@@ -344,9 +412,12 @@ public class InterfaceHelper extends JPanel {
 	}
 
 	/**
-	 * @param titleName the name of that will be shown on the screen.
-	 * @param width the width of the label with the title.
-	 * @param height the height of the label with the title.
+	 * @param titleName
+	 *            the name of that will be shown on the screen.
+	 * @param width
+	 *            the width of the label with the title.
+	 * @param height
+	 *            the height of the label with the title.
 	 * @return a subtitle in italic with a size of 20.
 	 */
 	protected JLabel createSubTitle(String titleName, int width, int height) {
@@ -359,8 +430,11 @@ public class InterfaceHelper extends JPanel {
 	/**
 	 * Checks for a check-box if its selected or not. On this basis it will
 	 * determined whether the panel is visible or not.
-	 * @param checkbox the check-box that will be checked.
-	 * @param panel the panel that must be set visible or not.
+	 * 
+	 * @param checkbox
+	 *            the check-box that will be checked.
+	 * @param panel
+	 *            the panel that must be set visible or not.
 	 */
 	public void checkVisibility(JCheckBox checkbox, JPanel panel) {
 		if (checkbox.isSelected()) {
@@ -388,7 +462,8 @@ public class InterfaceHelper extends JPanel {
 	}
 
 	/**
-	 * @param filter which file type will be saved.
+	 * @param filter
+	 *            which file type will be saved.
 	 * @return the answer of the FileChooser.
 	 */
 	public JFileChooser saveFileChooser(String filter) {
@@ -398,7 +473,8 @@ public class InterfaceHelper extends JPanel {
 	}
 
 	/**
-	 * @param filter which file will be opened.
+	 * @param filter
+	 *            which file will be opened.
 	 * @return the answer of the FileChooser.
 	 */
 	protected JFileChooser openFileChooser(String filter) {
@@ -410,9 +486,13 @@ public class InterfaceHelper extends JPanel {
 
 	/**
 	 * Method to set the file pop-up window.
-	 * @param popup the pop-up
-	 * @param filtername the name of the filter
-	 * @param filter the filter
+	 * 
+	 * @param popup
+	 *            the pop-up
+	 * @param filtername
+	 *            the name of the filter
+	 * @param filter
+	 *            the filter
 	 * @return the window
 	 */
 	protected JFileChooser setFilePopUp(JFileChooser popup, String filtername,

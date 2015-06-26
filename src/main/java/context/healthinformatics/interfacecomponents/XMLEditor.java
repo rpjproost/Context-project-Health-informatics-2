@@ -24,12 +24,15 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	private static final int MARGINTOP = 10;
 
 	private static final int THREE = 3;
+	private static final int MARGIN_SIDES_INNERPANEL = 100;
+	private static final int MARGIN_SIDES_PARENT = 10;
+	private static final double PERCENTAGE_HEIGHT = 0.6;
 
-	private static final int PARENTWIDTH = 900;
-	private static final int PARENTHEIGHT = 650;
+	private int parentHeight;
 	private static final int FORM_ELEMENT_HEIGHT = 25;
 	private static final int BUTTON_PANEL_HEIGHT = 35;
-	private static final int XML_EDITOR_WIDTH = 800;
+	private int parentwidth;
+	private int xmlEditorWidth;
 
 	private JPanel containerScrollPanel;
 	private JScrollPane scrollPane;
@@ -50,11 +53,14 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 	 */
 	public XMLEditor(InputPage inputPage) {
 		this.inputPage = inputPage;
+		parentwidth = getScreenWidth() / 2 - MARGIN_SIDES_PARENT;
+		xmlEditorWidth = parentwidth - MARGIN_SIDES_INNERPANEL;
+		parentHeight = (int) Math.round(getScreenHeight() * PERCENTAGE_HEIGHT);
 		this.documentFieldsContainers = new ArrayList<DocumentFieldsContainer>();
-		containerScrollPanel = createContainerWithGivenSizePanel(PARENTWIDTH,
-				PARENTHEIGHT);
+		containerScrollPanel = createContainerWithGivenSizePanel(parentwidth,
+				parentHeight);
 		scrollPane = makeScrollPaneForContainerPanel(containerScrollPanel,
-				PARENTWIDTH, PARENTHEIGHT);
+				parentwidth, parentHeight);
 		addActionListeners();
 	}
 
@@ -80,7 +86,7 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 		parentPanel.add(scrollPaneContainerPanel, setGrids(0, 1));
 		parentPanel.add(
 				makeFormRowPanelWithThreeButton(addDocument, saveXMLDocument,
-						removeDocument, XML_EDITOR_WIDTH, BUTTON_PANEL_HEIGHT),
+						removeDocument, xmlEditorWidth, BUTTON_PANEL_HEIGHT),
 				setGrids(0, 2, new Insets(MARGINTOP, 0, 0, 0)));
 		return parentPanel;
 	}
@@ -158,11 +164,11 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 		if (documentFieldContainer.getDocumentTypeValue().toLowerCase()
 				.equals("excel")) {
 			return makeFormRowPanelWithTextField("Document sheet: ",
-					documentFieldContainer.getSheet(), XML_EDITOR_WIDTH,
+					documentFieldContainer.getSheet(), xmlEditorWidth,
 					FORM_ELEMENT_HEIGHT);
 		} else {
 			return makeFormRowPanelWithTextField("Document delimiter: ",
-					documentFieldContainer.getDelimiter(), XML_EDITOR_WIDTH,
+					documentFieldContainer.getDelimiter(), xmlEditorWidth,
 					FORM_ELEMENT_HEIGHT);
 		}
 	}
@@ -180,20 +186,19 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 		standardSettingsPanel.add(
 				makeFormRowPanelWithTextField("Document name: ",
 						documentFieldContainer.getDocumentName(),
-						XML_EDITOR_WIDTH, FORM_ELEMENT_HEIGHT), setGrids(0, 0));
+						xmlEditorWidth, FORM_ELEMENT_HEIGHT), setGrids(0, 0));
 		standardSettingsPanel.add(
 				makeFormRowPanelWithComboBox("Document type: ",
 						documentFieldContainer.getDocumentType(),
-						XML_EDITOR_WIDTH, FORM_ELEMENT_HEIGHT), setGrids(0, 1));
+						xmlEditorWidth, FORM_ELEMENT_HEIGHT), setGrids(0, 1));
 		standardSettingsPanel.add(
 				makeFormRowPanelWithTextField("Document path: ",
 						documentFieldContainer.getDocumentPath(),
-						XML_EDITOR_WIDTH, FORM_ELEMENT_HEIGHT), setGrids(0, 2));
+						xmlEditorWidth, FORM_ELEMENT_HEIGHT), setGrids(0, 2));
 		standardSettingsPanel.add(
 				makeFormRowPanelWithTextField("Document start line: ",
-						documentFieldContainer.getStartLine(),
-						XML_EDITOR_WIDTH, FORM_ELEMENT_HEIGHT),
-				setGrids(0, THREE));
+						documentFieldContainer.getStartLine(), xmlEditorWidth,
+						FORM_ELEMENT_HEIGHT), setGrids(0, THREE));
 		return standardSettingsPanel;
 	}
 
@@ -213,7 +218,7 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 				makeFormRowPanelWithTwoButton(
 						documentFieldContainer.getAddColumnButton(),
 						documentFieldContainer.getRemoveColumnButton(),
-						XML_EDITOR_WIDTH, BUTTON_PANEL_HEIGHT), setGrids(0, 0));
+						xmlEditorWidth, BUTTON_PANEL_HEIGHT), setGrids(0, 0));
 		for (int i = 0; i < columnsOfDocument.size(); i++) {
 			columnFormPanel.add(createColumnForm(columnsOfDocument.get(i)),
 					setGrids(0, i + 1));
@@ -253,7 +258,7 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 			ColumnFieldContainer currentColumnFieldContainer) {
 		JPanel dateTypePanel = makeFormRowPanelWithTextField(
 				"Specified datetype: ",
-				currentColumnFieldContainer.getDateType(), XML_EDITOR_WIDTH,
+				currentColumnFieldContainer.getDateType(), xmlEditorWidth,
 				FORM_ELEMENT_HEIGHT);
 		currentColumnFieldContainer.setDateTypePanel(dateTypePanel);
 		return dateTypePanel;
@@ -272,15 +277,15 @@ public class XMLEditor extends InterfaceHelper implements ActionListener {
 		containerPanel.add(
 				makeFormRowPanelWithTextField("Column number: ",
 						currentColumnFieldContainer.getColumnID(),
-						XML_EDITOR_WIDTH, FORM_ELEMENT_HEIGHT), setGrids(0, 0));
+						xmlEditorWidth, FORM_ELEMENT_HEIGHT), setGrids(0, 0));
 		containerPanel.add(
 				makeFormRowPanelWithTextField("Column name: ",
 						currentColumnFieldContainer.getColumnName(),
-						XML_EDITOR_WIDTH, FORM_ELEMENT_HEIGHT), setGrids(0, 1));
+						xmlEditorWidth, FORM_ELEMENT_HEIGHT), setGrids(0, 1));
 		containerPanel.add(
 				makeFormRowPanelWithComboBox("Select type: ",
 						currentColumnFieldContainer.getColumnType(),
-						XML_EDITOR_WIDTH, FORM_ELEMENT_HEIGHT), setGrids(0, 2));
+						xmlEditorWidth, FORM_ELEMENT_HEIGHT), setGrids(0, 2));
 		return containerPanel;
 	}
 
