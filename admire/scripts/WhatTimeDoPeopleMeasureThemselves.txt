@@ -1,3 +1,4 @@
+--ATTENTION: You might want to add hour which are not covered.
 --Just to make sure nothing is saved from your last script:
 undoall
 --Set codes per hour.
