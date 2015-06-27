@@ -1,0 +1,9 @@
+--Chunk the data where beschrijving column equals 'Crea'. This way you group
+--measurements of the statsensor.
+chunk data where beschrijving = 'Crea'
+--Now filter the data where beschrijving column equals 'Crea'
+filter data where beschrijving = 'Crea'
+--Compute the number of records per chunk, which is the number of times they
+--measured before they entered.
+compute chunk times
+--You can show this in the linechart in the output page.

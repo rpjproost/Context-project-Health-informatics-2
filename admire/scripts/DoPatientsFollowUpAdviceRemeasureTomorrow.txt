@@ -1,0 +1,19 @@
+--Set a code crea where the beschrijving column equals 'Kreatinine (stat)' or 'Kreatinine2 (stat)'
+code (crea) data where beschrijving = 'Kreatinine (stat)'
+code (crea) data where beschrijving = 'Kreatinine2 (stat)'
+--Generate the advice the website should give for the data.
+compare code = crea on value
+--Set a code called measuretomorrow where the advice contains the word tomorrow.
+code(measuretomorrow) comment contains tomorrow
+--Remove the codes where beschrijving equals 'Kreatinine2 (stat)'
+code() data where beschrijving = 'Kreatinine2 (stat)'
+--Connect the code measuretomorrow to code crea
+connect code = measuretomorrow to code = crea
+--Compute the difference in time between start and end of the connections.
+compute difference time
+--Set a code followed if the difference is smaller then 2880 minutes which is
+--two days.
+code(followed) difference 2880
+--Set a code not followed if there is still a code measuretomorrow, because if this
+--was not replaced by the previous query they did not follow the advice.
+code(notfollowed) code = measuretomorrow
