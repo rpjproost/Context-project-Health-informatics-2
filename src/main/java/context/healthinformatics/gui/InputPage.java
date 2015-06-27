@@ -1,17 +1,14 @@
 package context.healthinformatics.gui;
 
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import javax.swing.Action;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import context.healthinformatics.analyse.SingletonInterpreter;
 import context.healthinformatics.database.SingletonDb;
@@ -41,9 +38,6 @@ public class InputPage extends InterfaceHelper implements PanelState,
 
 	public static final int BUTTONFONTSIZE = 15;
 	public static final int THREE = 3;
-
-	private static final int SELECTERHEIGHT = 500;
-	private static final int SELECTERWIDTH = 600;
 
 	private XMLEditor xmledit;
 	private XMLEditorController xmlController;
@@ -210,14 +204,8 @@ public class InputPage extends InterfaceHelper implements PanelState,
 	 */
 	public JFileChooser openFileChooser() {
 		selecter = new JFileChooser();
-		selecter.setMultiSelectionEnabled(true);
-		FileNameExtensionFilter filter = new FileNameExtensionFilter(
-				"Only text, excel and xml", "txt", "csv", "xlsx", "xls", "xml");
-		selecter.setFileFilter(filter);
-		selecter.setPreferredSize(new Dimension(SELECTERWIDTH, SELECTERHEIGHT));
-		selecter.setFileSelectionMode(JFileChooser.FILES_ONLY);
-		Action details = selecter.getActionMap().get("viewTypeDetails");
-		details.actionPerformed(null);
+		selecter = setFilePopUp(selecter, "Only text, excel and xml", 
+				new String[]{"txt", "csv", "xlsx", "xls", "xml"});
 		return selecter;
 	}
 

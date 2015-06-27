@@ -69,6 +69,7 @@ public class Interpreter implements Observer {
 		}
 		else if (key.equals("undoall") || key.equals("revertall")) {
 			undoAll();
+			ComputationData.undo();
 		}
 		else if (key.equals("undocomputation")) {
 			ComputationData.undo();

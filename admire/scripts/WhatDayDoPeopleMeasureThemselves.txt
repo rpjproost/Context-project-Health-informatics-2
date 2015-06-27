@@ -1,0 +1,7 @@
+--Just to make sure nothing is saved from your last script:
+undoall
+--filter the data where the beschrijving column equals 'Crea'
+filter data where beschrijving = 'Crea'
+--set a code on date
+code date
+--in the output page you can now check the frequency bar

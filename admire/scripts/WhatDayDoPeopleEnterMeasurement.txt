@@ -1,0 +1,7 @@
+--Just to make sure nothing is saved from your last script:
+undoall
+--Filter the data where the beschrijving column equals 'Kreatinine (stat)'.
+filter data where beschrijving = 'Kreatinine (stat)'
+--Set a code on date.
+code date
+--Display in the frequency bar to see what day they enter measurement.

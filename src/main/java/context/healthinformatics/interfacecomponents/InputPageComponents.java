@@ -245,6 +245,7 @@ public class InputPageComponents implements Serializable, ActionListener {
 				&& ip.openFileChooser().
 				showOpenDialog(openFileButton) == JFileChooser.APPROVE_OPTION) {
 			ip.openFiles(ip.getFileSelecter().getSelectedFiles());
+			ip.setLastDirectory(ip.getFileSelecter().getCurrentDirectory());
 		}
 		if (e.getSource() == helpButton) {
 			helpController.handleHelpButton("Input Page Help");

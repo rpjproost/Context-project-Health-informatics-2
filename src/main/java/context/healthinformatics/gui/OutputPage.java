@@ -233,6 +233,7 @@ public class OutputPage extends InterfaceHelper implements PanelState,
 			write.writeSPSSDataToFile(
 					SingletonInterpreter.getInterpreter().getChunks(),
 					SingletonDb.getDb());
+			setLastDirectory(savePopup.getCurrentDirectory());
 		}
 	}
 }

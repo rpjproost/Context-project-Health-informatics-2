@@ -1,0 +1,26 @@
+--Just to make sure nothing is saved from your last script:
+undoall
+--Set a code crea where the beschrijving column equals 'Kreatinine (stat)' or 'Kreatinine2 (stat)'
+code (crea) data where beschrijving = 'Kreatinine (stat)'
+code (crea) data where beschrijving = 'Kreatinine2 (stat)'
+--Generate the advice the website should give for the data.
+compare code = crea on value
+--Set a code called contact where the website advice contains contact
+code(contact) comment contains contact
+--Set a code called contactopgenomen to all hospital data.
+--ATTENTION: CREATEDBY = '3.0' IS SPECIFIC FOR ADMIRE 3 ADJUST ACCORDINGLY
+code(contactopgenomen) data where createdby = '3.0'
+--Set a connection from the code contact to the code contactopgenomen.
+connect code = contact to code = contactopgenomen
+--Compute the difference in time between the start and end of the connection.
+compute difference time
+--Set a code followed where the difference in time is smaller then 1440 minutes
+--which meanes they contacted the hospital within a day.
+code(followed) difference 1440
+--Set a code notfollowed where there is still a code contact, because if this code
+--is not set to followed they didnt contact the hospital and thus not contacted the hospital.
+code(notfollowed) code = contact
+--Remove the remaining contactopgenomen codes.
+code() code = contactopgenomen
+--Remove the crea codes.
+code() code = crea

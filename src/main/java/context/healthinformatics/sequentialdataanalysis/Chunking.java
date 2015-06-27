@@ -256,7 +256,7 @@ public class Chunking extends Task {
 	 * gives a list of integers with the number of chunks between the dates.
 	 * @param start Start date of the method
 	 * @param days number of days to chunk.
-	 * @throws SQLException 
+	 * @throws SQLException will be thrown if sql can't do the execution.
 	 */
 	protected void addChunksOnDate(Date start, int days) throws SQLException {
 		Calendar c = Calendar.getInstance();

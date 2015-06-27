@@ -248,8 +248,6 @@ public class ExcelParser extends Parser {
 			return new SimpleDateFormat(columns.get(c).getDateType())
 					.format(curCell.getDateCellValue());
 		} else if (columns.get(c).getColumnType().equals("DATE")) {
-			log.info("this cell could not be parsed to a date: '"
-					+ "' in column: " + c + " in file: " + docName);
 			return new SimpleDateFormat(columns.get(c).getDateType())
 					.format(new Date());
 		} else {

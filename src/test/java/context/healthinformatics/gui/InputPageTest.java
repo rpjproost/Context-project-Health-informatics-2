@@ -73,7 +73,7 @@ public class InputPageTest {
 	 */
 	@Test
 	public void testfindFolderProject() {
-		assertEquals(ip.findFolderProject("(default)"), 0);
+		assertEquals(ip.findFolderProject(ip.getProjects()[0]), 0);
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class InputPageTest {
 	 */
 	@Test
 	public void testGetProjects() {
-		String[] test = { "(default)" };
+		String[] test = ip.getProjects();
 		for (int i = 0; i < test.length; i++) {
 			assertEquals(test[i], ip.getProjects()[i]);
 		}
@@ -121,7 +121,7 @@ public class InputPageTest {
 	@Test
 	public void testRunClearedProject() {
 		ip.runClearedProject();
-		assertEquals(ip.findFolderProject("(default)"), 0);
+		assertEquals(ip.findFolderProject(ip.getProjects()[0]), 0);
 	}
 
 	/**

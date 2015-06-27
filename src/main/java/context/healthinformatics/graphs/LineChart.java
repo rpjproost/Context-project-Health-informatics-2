@@ -106,9 +106,6 @@ public class LineChart extends InterfaceHelper {
 
 	/**
 	 * new method for initializing data on dates.
-	 * 
-	 * @throws Exception
-	 *             the exception if data can't be computed
 	 */
 	protected void initDataset() {
 		if (ComputationData.isComputed()) {

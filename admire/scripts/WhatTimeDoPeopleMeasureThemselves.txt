@@ -1,0 +1,17 @@
+--ATTENTION: You might want to add hour which are not covered.
+--Just to make sure nothing is saved from your last script:
+undoall
+--Set codes per hour.
+code(6 am) data where time < 600 AND time >= 500
+code(7 am) data where time < 700 AND time >= 600
+code(8 am) data where time < 800 AND time >= 700
+code(9 am) data where time < 900 AND time >= 800
+code(10 am) data where time < 1000 AND time >= 900
+code(11 am) data where time < 1100 AND time >= 1000
+code(12 am) data where time < 1200 AND time >= 1100
+code(1 pm) data where time < 1300 AND time >= 1200
+code(5 pm) data where time < 1800 AND time >= 1700
+code(10 pm) data where time < 2200 AND time >= 2100
+--Filter the data where the beschrijving column equals 'Crea'.
+filter data where beschrijving = 'Crea'
+--Display this in the frequency bar to see what time people measure themselves.
