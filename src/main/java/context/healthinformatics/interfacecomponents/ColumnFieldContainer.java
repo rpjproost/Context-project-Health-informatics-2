@@ -17,7 +17,7 @@ public class ColumnFieldContainer extends InterfaceHelper implements
 		ActionListener {
 	private static final long serialVersionUID = 1L;
 
-	private static final int XML_EDITOR_WIDTH = 800;
+	private static final int XML_EDITOR_WIDTH = 690;
 	private static final int FORM_ELEMENT_HEIGHT = 25;
 
 	private JTextField columnID;
