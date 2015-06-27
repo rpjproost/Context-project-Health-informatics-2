@@ -148,6 +148,7 @@ public class StateTransitionMatrix extends InterfaceHelper {
 			public void actionPerformed(ActionEvent e) {
 				savePopup = saveFileChooser("png");
 				saveImage(savePopup, savePopup.showSaveDialog(table));
+				setLastDirectory(savePopup.getCurrentDirectory());
 			}
 		});
 		menu.add(item);

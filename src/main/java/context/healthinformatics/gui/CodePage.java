@@ -376,6 +376,7 @@ public class CodePage extends InterfaceHelper implements PanelState,
 			WriteToTXT write = new WriteToTXT(savePopup.getSelectedFile()
 					.getAbsolutePath());
 			write.writeOldCodeArea(oldCodeArea.getText());
+			setLastDirectory(savePopup.getCurrentDirectory());
 		}
 	}
 
@@ -390,6 +391,7 @@ public class CodePage extends InterfaceHelper implements PanelState,
 			ReadHelpInfoFromTXTFile textParser = new ReadHelpInfoFromTXTFile(
 					savePopup.getSelectedFile().getAbsolutePath());
 			codeTextArea.append(textParser.readByLine());
+			setLastDirectory(savePopup.getCurrentDirectory());
 		}
 	}
 }

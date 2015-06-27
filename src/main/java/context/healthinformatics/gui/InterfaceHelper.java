@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.Toolkit;
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.Action;
@@ -35,6 +36,8 @@ public class InterfaceHelper extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	private int tabsX;
+
+	private File lastDirectory;
 	private static final int TABSY = 120;
 	private static final int TABTEXTFONTSIZE = 40;
 	public static final int TITLEFONT = 28;
@@ -469,7 +472,7 @@ public class InterfaceHelper extends JPanel {
 	public JFileChooser saveFileChooser(String filter) {
 		JFileChooser savePopup = new JFileChooser();
 		savePopup.setMultiSelectionEnabled(true);
-		return setFilePopUp(savePopup, "save as *." + filter, filter);
+		return setFilePopUp(savePopup, "save as *." + filter, new String[]{filter});
 	}
 
 	/**
@@ -480,7 +483,7 @@ public class InterfaceHelper extends JPanel {
 	protected JFileChooser openFileChooser(String filter) {
 		JFileChooser popup = new JFileChooser();
 		popup.setMultiSelectionEnabled(true);
-		return setFilePopUp(popup, "*." + filter, filter);
+		return setFilePopUp(popup, "*." + filter, new String[]{filter});
 
 	}
 
@@ -496,7 +499,7 @@ public class InterfaceHelper extends JPanel {
 	 * @return the window
 	 */
 	protected JFileChooser setFilePopUp(JFileChooser popup, String filtername,
-			String filter) {
+			String[] filter) {
 		FileNameExtensionFilter extenstionFilter = new FileNameExtensionFilter(
 				filtername, filter);
 		popup.setFileFilter(extenstionFilter);
@@ -504,6 +507,17 @@ public class InterfaceHelper extends JPanel {
 		popup.setFileSelectionMode(JFileChooser.FILES_ONLY);
 		Action details = popup.getActionMap().get("viewTypeDetails");
 		details.actionPerformed(null);
+		if (lastDirectory != null) {
+			popup.setCurrentDirectory(lastDirectory);
+		}
 		return popup;
+	}
+	
+	/**
+	 * Set the current directory to a new one.
+	 * @param directory the new directory.
+	 */
+	public void setLastDirectory(File directory) {
+		lastDirectory = directory;
 	}
 }
