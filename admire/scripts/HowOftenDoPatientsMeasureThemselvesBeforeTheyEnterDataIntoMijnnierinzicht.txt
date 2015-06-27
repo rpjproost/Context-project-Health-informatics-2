@@ -1,3 +1,5 @@
+--Just to make sure nothing is saved from your last script:
+undoall
 --Chunk the data where beschrijving column equals 'Crea'. This way you group
 --measurements of the statsensor.
 chunk data where beschrijving = 'Crea'

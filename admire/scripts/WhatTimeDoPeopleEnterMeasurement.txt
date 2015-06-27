@@ -1,3 +1,5 @@
+--Just to make sure nothing is saved from your last script:
+undoall
 --Set codes per hour.
 code(6 am) data where time < 600 AND time >= 500
 code(7 am) data where time < 700 AND time >= 600

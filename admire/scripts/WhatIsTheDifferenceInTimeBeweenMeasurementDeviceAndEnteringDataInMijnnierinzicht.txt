@@ -1,3 +1,5 @@
+--Just to make sure nothing is saved from your last script:
+undoall
 --Set a code named stat on the data where the beschrijving column equals 'Crea'.
 code(stat) data where beschrijving = 'Crea'
 --Set a code named website on data where the beschrijving column equals 'Kreatine (stat)'.

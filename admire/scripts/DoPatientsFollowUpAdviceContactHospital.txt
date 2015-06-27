@@ -1,3 +1,5 @@
+--Just to make sure nothing is saved from your last script:
+undoall
 --Set a code crea where the beschrijving column equals 'Kreatinine (stat)' or 'Kreatinine2 (stat)'
 code (crea) data where beschrijving = 'Kreatinine (stat)'
 code (crea) data where beschrijving = 'Kreatinine2 (stat)'
@@ -20,3 +22,5 @@ code(followed) difference 1440
 code(notfollowed) code = contact
 --Remove the remaining contactopgenomen codes.
 code() code = contactopgenomen
+--Remove the crea codes.
+code() code = crea

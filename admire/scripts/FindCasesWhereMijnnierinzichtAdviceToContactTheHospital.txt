@@ -1,3 +1,5 @@
+--Just to make sure nothing is saved from your last script:
+undoall
 --Set code crea where the beschrijving column equals 'Kreatinine (stat)' or 'Kreatinine2 (stat)'
 code (crea) data where beschrijving = 'Kreatinine (stat)'
 code (crea) data where beschrijving = 'Kreatinine2 (stat)'
@@ -5,4 +7,6 @@ code (crea) data where beschrijving = 'Kreatinine2 (stat)'
 compare code = crea on value
 --Set a code docteradvice where the website advice contains the word doctor.
 code(docteradvice) comment contains doctor
+--Remove the remaining code crea
+code() code = crea
 --Now loook for the codes docteradvices to see cases where Mijnnierinzicht advices to contact the hospital.
