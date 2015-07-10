@@ -11,7 +11,7 @@ import java.util.TreeSet;
 public final class SingletonDb {
 
 	private static Db data;
-	private static String path = "C:/db/";
+	private static String path = "src";
 	private static String dbName = "analyze";
 	private static HashMap<String , Db> databases = new HashMap<String, Db>();
 
